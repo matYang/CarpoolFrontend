@@ -1,0 +1,76 @@
+<div id='searchEventTab'>
+  <form id="searchForm" name="searchForm">
+    <div id = 'searchbox' class = 'searchContainer'>
+      <div id = 'searchPlaceContainer'>
+            <div id = 'searchInputPlaceLabel' class = 'searchInputLabel'>地方</div> 
+
+            <div id = 'searchSchoolInputTagContainer' class = 'searchInputTagContainer'>
+              <input type="text" id = 'searchSchoolInput' class = 'searchInput' />
+            </div>
+      </div>
+
+      <div id = 'searchDateContainer'>
+            <div id = 'searchInputDateLabel' class = 'searchInputLabel'>日子</div>  
+
+            <div id = 'searchDateInputTagContainer' class = 'searchInputTagContainer'>
+              <input type="text" id = 'searchDateInput' class = 'searchInput' />
+
+            </div>
+      </div>
+      <div id = 'searchTypeContainer'>
+        <ul >
+          <li id="searchHelp">帮</li>
+          <li id='searchAsk'>找</li>
+        </ul>
+      </div>
+      <div id = 'searchResultDoneContainer'>
+            有<span id ="searchResultNote">   </span>条结果
+            <div id = 'searchResultButton' class = 'searchResultButton button'>可以了</div>
+      </div>
+    </div>
+
+    <div id = 'filterBox' class = 'searchContainer'>
+          <div id = 'searchFilterGenderContainer'>
+            <div id = 'filterInputGenderLabel' class = 'searchInputLabel'>人群</div>  
+            <div id = 'filterInputGenderTagContainer' class = 'searchInputTagContainer'>
+              <ul id = 'genderSelections'>
+                <li id='genderSelectionMale' data-id='male' class='selected genderList button'>男生</li>
+                <li id='genderSelectionFemale' data-id='female' class='notSelected genderList button'>女生</li>
+                <li id='genderSelectionNoPreference' data-id='other' class='notSelected genderList button'>无所谓</li>
+              </ul>
+            </div>
+          </div>
+
+          <div id = 'searchFilterTimeContainer'>
+            <div id = 'filterInputTimeLabel' class = 'searchInputLabel'>时辰</div>  
+
+            <div id = 'filterInputTimeTagContainer' class = 'searchInputTagContainer'>
+              <ul id = 'timeSelections'>
+                <li id = 'timeSelectionMorning' data-id='morning' class='selected timeList button'>上午</li>
+                <li id = 'timeSelectionAfternoon' data-id='afternoon' class='notSelected timeList button'>下午</li>
+                <li id = 'timeSelectionNight' data-id='night' class='notSelected timeList button'>晚上</li>
+                <!-- need to add tooltip text here with js -->
+              </ul>
+            </div>
+          </div>
+
+          <div id = 'searchFilterPriceContainer'>
+            <div id = 'filterInputPriceLabel' class = 'searchInputLabel'>价格</div> 
+
+            <div id = 'filterPriceInputTagContainer' class = 'searchInputTagContainer'>
+              <!-- use a JQuery Slider here? -->
+              <!-- need to add tooltip text here with js -->
+            </div>
+            <span id = "priceRangeDisplay"></span>
+          </div>
+
+          <div id = 'searchResultRefreshContainer'>
+            <div id = 'refreshButton' class = 'searchResultButton button'>刷新</div>
+          </div>
+    </div>
+  </form>
+  <div id = 'searchResultDisplayPanel' class = 'searchResultDisplay'>
+    <!-- home to the searchResultView on mainPage-->
+  </div>
+</div>
+<div id = 'advertisement' class = 'advertisement'></div>

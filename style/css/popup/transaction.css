@@ -1,0 +1,150 @@
+#transactionDetail_container{
+	position: absolute;
+	left: 50%;
+	margin-left: -400px;
+	margin-top: 50px;
+	width:800px;
+	height:530px;
+	border-style: solid;
+	border-color: rgb(157, 157, 157);
+	border-width: 1px;
+	background-color: rgb(242, 242, 242);
+}
+#transaction_close{
+	background-image: url("../../../res/datePicker/close.png");
+	float:right;
+	margin-top: 13px;
+	height:32px;
+	width:32px;
+	z-index:10;
+}
+#transaction_id{
+	position: relative;
+	height:20px;
+	padding:10px 0 10px 20px;
+	width:780px;
+	margin-top:10px;
+	margin-left:10px;
+	background: #78cb9f; /* Old browsers */
+	background: -moz-linear-gradient(left,  #78cb9f 0%, #359a64 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#78cb9f), color-stop(100%,#359a64)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  #78cb9f 0%, #359a64 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  #78cb9f 0%, #359a64 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  #78cb9f 0%, #359a64 100%); /* IE10+ */
+	background: linear-gradient(to right, #78cb9f 0%, #359a64 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#78cb9f', endColorstr='#359a64',GradientType=0 ); /* IE6-9 */
+
+
+}
+#transaction_user{
+	border:1px black solid;
+	width:450px;
+	height:225px;
+	margin-left:20px;
+	margin-top:20px;
+	float:left;
+}
+#transaction_user>div{
+	float:left;
+}
+
+#transaction_user_img{
+	width:200px;
+	height:200px;
+	padding:5px;
+	margin:5px;
+
+	border:2px solid rgb(87,83,172);
+}
+#transaction_user_name{
+	height:30px;
+	padding-top:10px;
+	margin-top:10px;
+	margin-left:20px;
+	font-size:2em;
+	float:left;
+}
+#transaction_user_level{
+	color:red;
+	float:left;
+	width:50px;
+	margin-top:35px;
+	margin-left:10px;
+	font-weight:bolder;
+}
+#transaction_user_eval{
+	margin-top:10px;
+	width:200px;
+	height:20px;
+	margin-left:20px;
+	float:left;
+}
+#transaction_user_info{
+	width:200px;
+	float:left;
+	margin-left:20px;	
+}
+#transaction_note{
+	
+}
+#transaction_payment{
+	
+}
+#transaction_time{
+	
+}
+#transaction_time_start{
+	
+}
+#transaction_time_end{
+	
+}
+#transaction_location{
+	
+}
+#transaction_state{
+	position:relative;
+	margin-top:20px;
+	margin-left:10px;
+	width:75px;
+	height:30px;
+	padding-top:10px;
+	float:left;
+	text-align:center;
+	font-size:20px;
+	border:solid 1px #999999;
+}
+#transaction_creation{
+	
+}
+
+#transaction_info{
+	width:450px;
+	height:150px;
+	margin-left:20px;
+	margin-top:10px;
+	border: 1px solid rgb(157, 157, 157);
+	float:left;
+}
+
+#accept, #cancel, #evaluate {
+	width:75px;
+	height:30px;
+	margin-left:20px;
+	margin-top:20px;
+	padding-top: 10px;	
+	float:left;
+	text-align:center;
+	color:#ffffff;
+	font-weight: bolder;
+	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
+}
+#accept{
+	background-color:#359a64;
+}
+#cancel{
+	background-color:rgb(228,52,27);
+}
+#evaluate{
+	background-color:rgb(38,101,217);
+}

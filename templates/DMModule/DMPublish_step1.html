@@ -1,0 +1,34 @@
+<form id='publish_info'>
+	<div id='publish_type'>
+		<div class = 'publish_label'>我要</div>
+		<div class = 'selectBox selectBox_selected' id = 'publish_help' >
+			<div id='publish_help_img'></div>
+			<div id='publish_help_text' class='button'>
+				帮助别人点名
+			</div>
+		</div>
+	<div class = 'selectBox' id = 'publish_ask' >
+		<div id='publish_ask_img'></div>
+		<div id='publish_ask_text'  class='button'>
+			找人帮我点名
+		</div>
+	</div>
+	<!-- I suggest that we highlight the border instead of using radio button -->
+	</div>
+	<div id='publish_gender'>
+		<div class='publish_label'>我需要</div>
+		<input type="radio" class='publish_gender_first' name='gender' value="male" />男生
+		<input type="radio" name='gender' value="female" />女生
+		<input type="radio" name='gender' value="both" />无所谓
+	</div>
+	<div id='publish_location'>
+		<div class='publish_label'>我的地区在</div>
+		<input type='text' id='publish_locationInput'/>
+	</div>
+	<div id='publish_school'>
+		<div class='publish_label'>学校是</div>
+		<input type='text' id='publish_schoolInput'/>
+		<div id='publish_tip'>只有这个地区的学校显示哦</div>
+	</div>	      
+	<div id='publish_nextStep' class='button'>下一步</div>
+</form>

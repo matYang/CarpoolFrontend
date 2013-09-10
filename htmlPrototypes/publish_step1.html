@@ -1,0 +1,78 @@
+<!--publish-->
+ <!doctype html>
+  <html>
+    <head>
+      <meta charset='utf-8' />   <!--allow to display chinese-->
+
+      <title></title>
+
+      <link href='style/Global.css' rel='stylesheet' type='text/css'>
+      <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+      <link href='style/Publish.css' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+	    <div id = 'topBar' class = 'unselectable'>
+	      <div id = 'centerTopBar'>
+	        <div id = 'logo'></div>
+	        <ul id = 'subTitles'>
+	          <li class = 'subTitle button'>找事儿</li>
+	          <li class = 'subTitle button'>个人主页</li>
+	          <li class = 'subTitle button'>提供意见</li>
+	        </ul>
+	        <div id = 'notifications'>
+	          <ul>
+	            <li id = 'messages'></li>
+	            <li id = 'likes'></li>
+	            <li id = 'favorites'></li>
+	          </ul>
+	          <div id = 'profilePicture'></div>
+	        </div>
+	      </div>
+	    </div>
+
+      <div id = 'main'>
+        <div id = 'content' class='content_fullwidth'>
+		  <div id = 'publish_progress' class='publish_progress_step1'></div>
+		  <div id = 'publish_requirement'>
+		    <form id='publish_info'>
+		      <div id='publish_type'>
+				<div class = 'publish_label'>我要</div>
+				<div class = 'selectBox selectBox_selected' id = 'publish_helpOthers' >
+					<div id='publish_helpOthers_img'></div>
+					<div id='publish_helpOthers_text'>
+						帮助别人点名
+					</div>
+				</div>
+				<div class = 'selectBox' id = 'publish_helpMe' >
+					<div id='publish_helpMe_img'></div>
+					<div id='publish_helpMe_text'>
+						找人帮我点名
+					</div>
+				</div>
+				<!-- I suggest that we highlight the border instead of using radio button -->
+		      </div>
+		      <div id='publish_gender'>
+				<div class='publish_label'>我需要</div>
+				  <input type="radio" class='publish_gender_first' name='gender' value="male" >男生
+				  <input type="radio" name='gender' value="female" >女生
+				  <input type="radio" name='gender' value="other" >无所谓
+		      </div>
+		      <div id='publish_location'>
+			<div class='publish_label'>我的地区在</div>
+			<input type='text' id='publish_locationInput'/>
+		      </div>
+		      <div id='publish_school'>
+				<div class='publish_label'>学校是</div>
+				<input type='text' id='publish_schoolInput'/>
+				<div id='publish_tip'>只有这个地区的学校显示哦</div>
+		      </div>	      
+		      <div id='publish_nextStep' class='button'>下一步</div>
+		    </form>
+		  </div>
+		  <div id = 'publish_map'></div>
+        </div>
+      </div>
+    </body>
+  </html>
+

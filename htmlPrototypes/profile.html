@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />   <!--allow to display chinese-->
+    <title></title>
+    <link href='style/Global.css' rel='stylesheet' type='text/css'>
+    <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+    <link href='style/Circle.css' rel='stylesheet' type='text/css'>
+    <link href='style/Advertisement.css' rel='stylesheet' type='text/css'>
+    <link href='style/Profile.css' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <div id = 'topBar' class = 'unselectable'>
+      <div id = 'centerTopBar'>
+        <div id = 'logo'></div>
+        <ul id = 'subTitles'>
+          <li class = 'subTitle button'>找事儿</li>
+          <li class = 'subTitle button'>个人主页</li>
+          <li class = 'subTitle button'>提供意见</li>
+        </ul>
+        <div id = 'notifications'>
+          <ul>
+            <li id = 'messages'></li>
+            <li id = 'likes'></li>
+            <li id = 'favorites'></li>
+          </ul>
+          <div id = 'profilePicture'></div>
+        </div>
+      </div>
+    </div>
+    <div id = 'main'>
+      <div id = 'circles'>
+          <ul id = 'circle'>
+            <li class = 'university'>东北农业大学</li>
+            <li class = 'university'>三大动力大学城</li>
+            <li class = 'university'>＋添加圈子</li>
+          </ul>
+      </div>
+      <div id = 'content'>
+        <!-- profile tab
+          content below go into content tab
+        -->
+        <div id='profilePage'>
+          <div id='profilePage_dashboard'>
+                <div id='profilePage_profilePicture'></div>
+                <div id='profilePage_profileOverview'>
+                  <div id='profilePage_accountLevel' class = 'profileOverviewBlock'>
+                    <div id='profilePage_accountLevelLabel'>等级</div>
+                    <div id='profilePage_accountLevelValue'></div>
+                  </div>
+                  <div id='profilePage_accountScore' class = 'profileOverviewBlock'>
+                    <div id='profilePage_accountScoreLabel'>平均分</div>
+                    <div id='profilePage_accountScoreHolder'>
+                      <div id='profilePage_accountScoreValue' class = "dashboard_text">100</div>
+                      <div class='unit_1'>%</div>
+                    </div>
+                  </div>
+                  <div id='profilePage_tradeCount' class = 'profileOverviewBlock'>
+                    <div id='profilePage_accountTradeCountLabel'>交易次数</div>
+                    <div id='profilePage_accountTradeCountValue' class = "dashboard_text">120</div>
+                  </div>
+                </div>
+          </div>
+          <div id='profilePage_accountInfo'>
+            <div id='profilePage_accountInfoHeader'>
+              <div id='profilePage_userName'>乔帮主</div>
+              <div id='profilePage_userGender'></div>
+              <div id='profilePage_userAge'>30岁</div>
+              <div id='profilePage_userUrl'>http://dianming.com/people/steve</div>
+            </div>
+            <div id='profilePage_accountInfoContent'>
+              <div id='profilePage_userRealName'>
+                <div class='label'>名字</div>
+                <div class='attributeValue'>乔布斯</div>
+              </div>
+              <div id='profilePage_userEmail'>
+                <div class='label'>邮件</div>
+                <div class='attributeValue'>steve@apple.com</div>
+              </div>
+              <div id='profilePage_userCellphone'>
+                <div class='label'>手机</div>
+                <div class='attributeValue'>158-0100-1234</div>
+              </div>
+              <div id='profilePage_userQQ'>
+                <div class='label'>QQ</div>
+                <div class='attributeValue'>1246718</div>
+              </div>
+            </div>
+          </div>
+          <div id='profilePage_tabButton'>
+            <!-- we can use background images for the tabs-->
+            <div id='profilePage_homepageTab' class='button tabButton selectedTabButton'>
+              个人主页
+            </div>
+            <div id='profilePage_historyTab' class='button tabButton nonSelectedTabButton'>
+              历史记录
+            </div>
+            <div id='profilePage_followTab' class='button tabButton nonSelectedTabButton'>
+              我的关注
+            </div>
+            <div id='profilePage_settingTab' class='button tabButton lastTabButton nonSelectedTabButton'>
+              修改密码
+            </div>
+          </div>
+          <div id='profilePage_homeTabContent'>
+            <div id='profilePage_eventTabContent'>
+              <div id='profilePage_eventsPublished'>
+                <div id='profilePage_eventsPublishedHeader'>我发布的消息</div>
+                <div id='profilePage_eventsPublishedContent'>
+                  <div id='profilePage_activeEventsPublished'>
+                    <div id='profilePage_eventBoxSpam' class = 'profilePage_eventBox'>
+                        <div id = 'profilePage_profilePictureSpam' class = 'profilePage_profilePicture'></div>
+                        <div id = 'profilePage_containerInfoSpam' class = 'profilePage_containerInfo'>
+                          <div class = 'profilePage_schoolName'>清华大学</div>  
+                          <div class = 'profilePage_date'>明天下午</div>
+                          <div class = 'profilePage_time'>17:00～19:30</div>
+                          <div id = 'profilePage_boxContentPriceSpam' class='profilePage_containerPrice'>
+                            <div class = 'profilePage_priceUnit'>￥</div>
+                            <div class = 'profilePage_price'>40</div>
+                          </div>
+                        </div>
+
+                        <div id = 'profilePage_boxContentFollowSpam' class = 'profilePage_containerFollow'>
+                          <div class = 'profilePage_follow'>关 注</div>  
+                          <div class = 'profilePage_followNumber'>78</div>
+                        </div>
+                    </div>
+                    <div id='profilePage_eventBox1' class = 'profilePage_eventBox'>
+                        <div id = 'profilePage_profilePicture1' class = 'profilePage_profilePicture'></div>
+                        <div id = 'profilePage_containerInfo1' class = 'profilePage_containerInfo'>
+                          <div class = 'profilePage_schoolName'>清华大学</div>  
+                          <div class = 'profilePage_date'>明天下午</div>
+                          <div class = 'profilePage_time'>17:00～19:30</div>
+                          <div id = 'profilePage_boxContentPrice1' class='profilePage_containerPrice'>
+                            <div class = 'profilePage_priceUnit'>￥</div>
+                            <div class = 'profilePage_price'>40</div>
+                          </div>
+                        </div>
+
+                        <div id = 'profilePage_boxContentFollow1' class = 'profilePage_containerFollow'>
+                          <div class = 'profilePage_follow'>关 注</div>  
+                          <div class = 'profilePage_followNumber'>78</div>
+                        </div>
+                    </div>
+                  </div>
+                  <div id='profilePage_moreActiveEventsPublished'>更多进行中信息</div>
+                  <div id='profilePage_finishedEventsPublished'>
+                    <div id='profilePage_eventBox2' class = 'profilePage_eventBox'>
+                        <div id = 'profilePage_profilePicture2' class = 'profilePage_profilePicture'></div>
+                        <div id = 'profilePage_containerInfo2' class = 'profilePage_containerInfo'>
+                          <div class = 'profilePage_schoolName'>清华大学</div>  
+                          <div class = 'profilePage_date'>明天下午</div>
+                          <div class = 'profilePage_time'>17:00～19:30</div>
+                          <div id = 'profilePage_boxContentPrice2' class='profilePage_containerPrice'>
+                            <div class = 'profilePage_priceUnit'>￥</div>
+                            <div class = 'profilePage_price'>40</div>
+                          </div>
+                        </div>
+
+                        <div id = 'profilePage_boxContentFollow2' class = 'profilePage_containerFollow'>
+                          <div class = 'profilePage_finished'>已完成</div>  
+                          <div class = 'profilePage_followNumberFinished'>78</div>
+                        </div>
+                    </div>
+                    <div id='profilePage_eventBox3' class = 'profilePage_eventBox'>
+                        <div id = 'profilePage_profilePicture3' class = 'profilePage_profilePicture'></div>
+                        <div id = 'profilePage_containerInfo3' class = 'profilePage_containerInfo'>
+                          <div class = 'profilePage_schoolName'>清华大学</div>  
+                          <div class = 'profilePage_date'>明天下午</div>
+                          <div class = 'profilePage_time'>17:00～19:30</div>
+                          <div id = 'profilePage_boxContentPrice3' class='profilePage_containerPrice'>
+                            <div class = 'profilePage_priceUnit'>￥</div>
+                            <div class = 'profilePage_price'>40</div>
+                          </div>
+                        </div>
+
+                        <div id = 'profilePage_boxContentFollow3' class = 'profilePage_containerFollow'>
+                          <div class = 'profilePage_finished'>已完成</div>  
+                          <div class = 'profilePage_followNumberFinished'>78</div>
+                        </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div id='profilePage_eventsParticipated'>
+                <div id='profilePage_eventsParticipatedHeader'>我参与的信息</div>
+                <div id='profilePage_eventsParticipatedContent'>
+                  <div id='profilePage_activeEventsParticipated'></div>
+                  <div id='profilePage_moreActiveEventsParticipated'>更多未完成信息</div>
+                  <div id='profilePage_finishedEventsParticipated'></div>
+                </div>
+              </div>
+            </div>
+            <div id='profilePage_historyTabContent'></div>
+            <div id='profilePage_followTabContent'></div>
+            <div id='profilePage_settingTabContent'></div>
+          </div>
+        </div>
+        <!-- content div end -->
+      </div>
+      <div id="advertisement"></div>
+    </div>
+  </body>
+</html>

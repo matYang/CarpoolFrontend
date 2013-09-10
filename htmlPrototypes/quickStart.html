@@ -1,0 +1,151 @@
+  <!doctype html>
+  <html>
+    <head>
+      <meta charset='utf-8' />   <!--allow to display chinese-->
+
+      <title></title>
+
+      <link href='style/Global.css' rel='stylesheet' type='text/css'>
+      <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+      <link href='style/Advertisement.css' rel='stylesheet' type='text/css'>
+      <link href='style/QuickStart.css' rel='stylesheet' type='text/css'>
+      <link href='style/searchContent.css' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+      <div id = 'topBar' class = 'unselectable not-loggedIn'>
+        <div id = 'centerTopBar'>
+          <div id = 'logo2'></div>
+          <form id='login'>
+            <input id='login_username' class = 'no-input-value' type = 'text' />
+            <input id='login_password' class = 'no-input-value' type = 'text' />
+            <div id='login_button' class='button'>登陆</div>
+            <div id='signup_button' class='button'>注册</div>
+          </form>
+        </div>
+      </div>
+
+      <div id = 'main'>
+        <div id = 'content'>
+          <!-- search event tab-->
+          <div id = 'quickStart'>
+            <div id = 'quickStart_city' class='quickStart_box'>
+              <div class = 'quickStart_value'>北京 海淀大学城</div>
+              <div class = 'quickStart_description'>
+                点名网已帮<span id = 'quickStart_cityInDescription'>海淀大学城</span><span id = 'quickStart_numInCity'>3028</span>人点名
+              </div>
+            </div>
+            <div id = 'quickStart_school' class='quickStart_box'>
+              <div class = 'quickStart_value'>首都经济贸易大学</div>
+              <div class = 'quickStart_description'>
+                在<span id = 'quickStart_schoolInDescription'>首都经济贸易大学</span>为您找到了一共<span id = 'quickStart_numInSchool'>557</span>条点名信息
+              </div>
+            </div>
+            <div id = 'quickStart_day' class='quickStart_box'>
+              <div class = 'quickStart_value'>下周三</div>
+              <div class = 'quickStart_description'>
+                <span id = 'quickStart_selectedDate'>
+                下周三</span>是
+                <div id = 'quickStart_selectedDateDescription'>
+                清明节
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id = 'quickStart_resultPanel' class = 'searchResultDisplay'>
+            <!-- spam this div for repeat results -->
+            <!-- TODO:replace "spam" with real id -->
+            <div id = 'quickStart_BoxSpam' class = 'searchResultBoxContainer  quickStart_searchResultBox'>
+              <div id = 'quickStart_profilePictureSpam' class = 'searchResultProfilePicture'></div>
+              <div id = 'quickStart_ContainerInfoSpam' class = 'searchResultContainerInfo quickStart_searchResultInfo'>
+                <div class = 'searchResultSchoolName'>清华大学</div>	
+                <div class = 'searchResultDate'>明天下午</div>
+                <div class = 'searchResultTime'>17:00～19:30</div>
+                <div class = 'searchResultMessage'>Whatever</div>
+                <div class = 'searchResultPublishTime'>publish time</div>
+                <div class = 'searchResultGender'>男</div>
+                <div class = 'searchResultUserName'>皮卡丘</div>
+                <div class = 'searchResultUserLevel'></div>
+                <div class = 'searchResultFollowNote'>关注 </div>
+              </div>
+              <div id = 'quickStart_ContainerFollowSpam' class = 'searchResultContainerFollow'>
+                <div class = 'searchResultFollow'>关注</div>	
+                <div class = 'searchResultFollowLogo'></div>
+              </div>
+              <div id = 'quickStart_ContainerPriceSpam' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>24小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+              </div>
+            </div>
+            <div id = 'quickStart_BoxSpam' class = 'searchResultBoxContainer  quickStart_searchResultBox'>
+              <div id = 'quickStart_profilePictureSpam' class = 'searchResultProfilePicture'></div>
+              <div id = 'quickStart_ContainerInfoSpam' class = 'searchResultContainerInfo quickStart_searchResultInfo'>
+                <div class = 'searchResultSchoolName'>清华大学</div>  
+                <div class = 'searchResultDate'>明天下午</div>
+                <div class = 'searchResultTime'>17:00～19:30</div>
+                <div class = 'searchResultMessage'>Whatever</div>
+                <div class = 'searchResultPublishTime'>publish time</div>
+                <div class = 'searchResultGender'>男</div>
+                <div class = 'searchResultUserName'>皮卡丘</div>
+                <div class = 'searchResultUserLevel'></div>
+                <div class = 'searchResultFollowNote'>关注 </div>
+              </div>
+              <div id = 'quickStart_ContainerFollowSpam' class = 'searchResultContainerFollow'>
+                <div class = 'searchResultFollow'>关注</div>  
+                <div class = 'searchResultFollowLogo'></div>
+              </div>
+              <div id = 'quickStart_ContainerPriceSpam' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>24小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+              </div>
+            </div>
+                        <div id = 'quickStart_BoxSpam' class = 'searchResultBoxContainer  quickStart_searchResultBox'>
+              <div id = 'quickStart_profilePictureSpam' class = 'searchResultProfilePicture'></div>
+              <div id = 'quickStart_ContainerInfoSpam' class = 'searchResultContainerInfo quickStart_searchResultInfo'>
+                <div class = 'searchResultSchoolName'>清华大学</div>  
+                <div class = 'searchResultDate'>明天下午</div>
+                <div class = 'searchResultTime'>17:00～19:30</div>
+                <div class = 'searchResultMessage'>Whatever</div>
+                <div class = 'searchResultPublishTime'>publish time</div>
+                <div class = 'searchResultGender'>男</div>
+                <div class = 'searchResultUserName'>皮卡丘</div>
+                <div class = 'searchResultUserLevel'></div>
+                <div class = 'searchResultFollowNote'>关注 </div>
+              </div>
+              <div id = 'quickStart_ContainerFollowSpam' class = 'searchResultContainerFollow'>
+                <div class = 'searchResultFollow'>关注</div>  
+                <div class = 'searchResultFollowLogo'></div>
+              </div>
+              <div id = 'quickStart_ContainerPriceSpam' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>24小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+              </div>
+            </div>
+          </div>
+          <div id = 'quickStart_go'>
+            <div id = 'quickStartButton1' class='quickStartButton'>我要帮人点名</div>
+            <div id = 'quickStartButton2' class='quickStartButton'>我要找人帮我</div>
+            <div id = 'homeAdvertisement'></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </body>
+  </html>

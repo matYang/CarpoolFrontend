@@ -1,0 +1,30 @@
+<div id="transactionDetail_container">
+	<div id="transaction_close"></div>
+	<div id="transaction_id">交易编号 <%= transactionId %></div>
+	<div id="transaction_user">
+		<div id="transaction_user_img">
+			<img src="<%= userImgPath %>" />
+		</div>
+		<div id="transaction_user_name"><%= userName %></div>
+		<div id="transaction_user_level">Lv.<%= userLevel %></div>
+		<div id="transaction_user_eval"><%= userEval %></div>
+		<div id="transaction_user_info"><%= userInfo %></div>
+	</div>
+	<div id="transaction_state" class="transactionState<%= state %>"><%= stateText %></div>
+	<div id="transaction_control"></div>
+	<div id="transaction_info">
+		<div id="transaction_note">
+			<%= messageNote %>
+		</div>
+		<div id="transaction_payment">
+			<%= paymentMethod %>
+		</div>
+		<div id="transaction_time">
+			<div id="transaction_time_start"><%= startTime %></div>
+			<div id="transaction_time_end"><%= endTime %></div>
+		</div>
+		<div id="transaction_location"><%= location %></div>
+		<div id="transaction_creation"><%= creationDate %></div>
+	</div>
+
+</div>

@@ -1,0 +1,58 @@
+<div id='publish_time_<%= id %>' class='publish_time_box'>
+  <div id='publish_time_header_<%= id %>' class='publish_time_header'>第一批点名</div>
+  <div class='publish_time_info'>
+    <div class='publish_time_date'>
+      <!--name value is defined as publish_typeOfInput_componentId-->
+      <input type='checkbox' name='publish_continuous_<%= id %>' class='input_checkbox' value='continuous' checked='true'/>连续有空
+      <input type='text' name='publish_startDate_<%= id %>' class='input_date'/>
+      <span name='to_<%= id %>'>到</span>
+      <input type='text' name='publish_endDate_<%= id %>' class='input_date'/>
+      <!-- To be honest, this date field looks terrible, we have to replace it with something else.
+      also, this is no surprise that it's not supported by IE8 (nor firefox)
+       -->
+    </div>
+    <div class='publish_classTime'>
+      <div class='publish_label'>上课时间</div>
+      <select name='class_time_<%= id %>'>
+        <option value="7">早上7点</option>
+        <option value="8">早上8点</option>
+        <option value="9">早上9点</option>
+        <option value="10">早上10点</option>
+        <option value="11">早上11点</option>
+        <option value="12">中午12点</option>
+        <option value="13">下午1点</option>
+        <option value="14">下午2点</option>
+        <option value="15">下午3点</option>
+        <option value="16">下午4点</option>
+        <option value="17">傍晚5点</option>
+        <option value="18">傍晚6点</option>
+        <option value="19">晚上7点</option>
+        <option value="20">晚上8点</option>
+        <option value="21">晚上9点</option>
+      </select>
+      <div class='publish_label'>上课持续</div>
+      <select name='class_duration_<%= id %>'>
+        <option value="1">1小时</option>
+        <option value="2">2小时</option>
+        <option value="3">3小时</option>
+        <option value="4">4小时</option>
+        <option value="5">5小时</option>
+        <option value="6">6小时</option>
+        <option value="7">7小时</option>
+        <option value="8">8小时</option>
+        <option value="9">9小时</option>
+        <option value="10">10小时</option>
+        <option value="11">11小时</option>
+        <option value="12">12小时</option>
+      </select>
+    </div>
+    <div class='publish_time_hourRate'>
+      <div class='publish_label'>每个小时我收取</div>
+      <div class='publish_label_larger'>￥</div>
+      <input type='number' name='publish_rate_<%= id %>' min='1'/>
+    </div>
+    <div id='publish_delete_<%= id %>' class='publish_delete button'>
+      删除
+    </div>
+  </div>
+</div>

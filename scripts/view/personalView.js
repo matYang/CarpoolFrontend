@@ -1,0 +1,217 @@
+var PersonalView = Backbone.View.extend({
+	/*
+	//could use:
+	el: $('#content'),
+
+	events: {
+		"click #profilePage_historyTab": "onSelectTab",
+		"click #profilePage_eventTab": "onSelectTab",
+		"click #profilePage_watchTab": "onSelectTab",
+		"click #profilePage_utilityTab": "onSelectTab"
+	},
+	*/
+	initialize: function (params) {
+		_.bindAll(this, 'preRender','render', 'switchChildView', 'createChildView', 'getCurrentUserId', 'bindEvents', 'close');
+		app.viewRegistration.register("personal", this, true);
+		this.isClosed = false;
+
+		this.template = _.template(tpl.get('personalPage/personal'));
+
+		//this curUserId is used to record the id of the user the personalPage is currently displaying
+		this.curUserId = Utilities.toInt(params.intendedUserId);
+		this.activeViewState = params.viewState;
+		this.childrenViews = {};
+		this.domContainer = $('#content');
+
+		app.userManager.fetchUser(this.curUserId, this.preRender);
+
+	},
+
+	preRender: function(){
+		this.user = app.userManager.getUser();
+		this.render();
+		this.switchChildView(this.activeViewState);
+		if (this.user.get("userId") !== this.curUserId){
+			$("#profilePage_utilityTab").html(" + 关注");
+		}
+		this.bindEvents();
+	},
+
+	render: function () {
+		this.domContainer.append(this.template(this.user.toJSON()));
+	},
+
+	switchChildView: function(viewState){
+
+		//validity of viewState is guranteed on the URL level, since deep linking is applied
+		//reduncy of safety check is not necessary here because in development, we need to know where things go wrong
+		this.activeViewState = viewState;
+		this.createChildView();
+	},
+
+	getCurrentUserId: function(){
+		return this.curUserId;
+	},
+
+
+	createChildView: function(){
+		if (this.activeChildView){
+			this.activeChildView.close();
+		}
+		var create = true;
+		$('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
+		switch (this.activeViewState) {
+
+			case "watch":
+				$('#profilePage_watchTab').addClass('selectedTabButton');
+				this.activeChildView = new PersonalWatchView({'intendedUserId': this.curUserId});
+				break;
+			case "message":
+				$('#profilePage_messageTab').addClass('selectedTabButton');
+				this.activeChildView = new PersonalMessageView({'intendedUserId': this.curUserId});
+				break;
+			case "history":
+				$('#profilePage_historyTab').addClass('selectedTabButton');
+				this.activeChildView = new PersonalHistoryView({'intendedUserId': this.curUserId});
+				break;
+			case "utility":
+					$('#profilePage_utilityTab').addClass('selectedTabButton');
+					this.activeChildView = new PersonalUtilityView({'intendedUserId': this.curUserId});
+					break;
+			default:
+				console.warn("PersonalView:: createChildView:: this.viewState matchin failed in switch, using Watch as default");
+				this.activeChildView = new PersonalWatchView({'intendedUserid': this.curUserId});
+				break;
+		}
+
+		this.childrenViews[this.activeViewState] = this.activeChildView;
+	},
+
+	bindEvents: function(){
+		var that = this;
+		$('#profilePage_watchTab').on('click', function(){
+			//I have grouped the four states into one session entity in router, thus doing a navigation will not alter the state of the rouer, which means the url function will not fire, a manuel switch is mandatory
+			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/watch");
+			that.switchChildView("watch");
+		});
+
+		$('#profilePage_messageTab').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/message");
+			that.switchChildView("message");
+		});
+
+		$('#profilePage_historyTab').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/history");
+			that.switchChildView("history");
+		});
+
+		$('#profilePage_utilityTab').on('click', function(){
+			if (app.sessionManager.getUserId() === that.curUserId) {
+				app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/utility");
+				that.switchChildView("utility");
+			} else {
+				var user = app.userManager.getTopBarUser().get('socialList').get(that.curUserId);
+				//if user has watched this user
+				if (typeof user === 'object'){
+					app.userManager.deWatchUser(that.curUserId, function(){
+						alert("User with id: " + that.curUserId + " successfully been watched");
+					});
+				}
+				else{
+					app.userManager.watchUser(that.curUserId, function(){
+						alert("User with id: " + that.curUserId + " successfully been deWatched");
+					});
+				}
+			}
+		});
+	},
+
+	close: function () {
+		if (!this.isClosed){
+			if (this.activeChildView){
+				this.activeChildView.close();
+			}
+			$('#profilePage_watchTab').off();
+			$('#profilePage_messageTab').off();
+			$('#profilePage_historyTab').off();
+			$('#profilePage_utilityTab').off();
+
+			this.unbind();
+			this.domContainer.empty();
+			this.isClosed = true;
+		}
+	}
+
+
+
+	/*
+	loadData: function () {
+		var e;
+		for (e in profileMap) {
+			$(profileMap[e]).text(userData.get(e));
+		}
+	},
+
+	loadMessage: function (num) {
+		var i, data, end;
+		num = num || 6;
+		if (this.currentPage === "profilePage_historyTab"){
+			data = this.userData.get('history');
+			end = (data.length < num ? data.length : num)
+			for (i = 0; i < end; i++ ) {
+				_.template(tpl.get('personalPage/historyTemplate'), data[i]);
+			}
+		} else if (this.currentPage === "profilePage_watchTab"){
+			data = this.userData.get('watch');
+			end = (data.length < num ? data.length : num)
+			for (i = 0; i < end; i++ ) {
+				_.template(tpl.get('personalPage/watchTemplate'), data[i]);
+			}
+		} else if (this.currentPage === "profilePage_messageTab"){
+			data = this.userData.get('message');
+			end = (data.length < num ? data.length : num)
+			for (i = 0; i < end; i++ ) {
+				_.template(tpl.get('personalPage/messageTemplate'), data[i]);
+			}
+		} else {
+			return;
+		}
+	},
+	onSelectTab: function (e) {
+		var targetId = e.target.getAttribute('id');
+		if (currentPage === targetId) {
+			return;
+		}
+
+		var me = $('#' + targetId),
+			holder = $('#profilePage_homeTabContent');
+			$('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
+		me.removeClass('nonSelectedTabButton').addClass('selectedTabButton');
+		holder.children().hide();
+		if (targetId === 'profilePage_historyTab'){
+			if (me === null || me === undefined){
+				holder.append(_.template(tpl.get('personalPage/personalHistory')));
+			}
+
+		} else if (targetId === 'profilePage_eventTab') {
+			if (me === null || me === undefined) {
+				holder.append(_.template(tpl.get('personalPage/personalMessage')));
+			}
+		} else if (targetId === 'profilePage_watchTab') {
+			if (me === null || me === undefined) {
+				holder.append(_.template(tpl.get('personalPage/personalWatch')));
+			}
+		} else if (targetId === 'profilePage_utilityTab') {
+			if (me === null || me === undefined) {
+				holder.append(_.template(tpl.get('personalPage/personalUtility')));
+			}
+		}
+		me.show();
+		this.loadMessage();
+	},*/
+
+
+
+
+
+});

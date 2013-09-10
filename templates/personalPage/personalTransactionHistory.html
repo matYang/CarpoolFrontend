@@ -1,0 +1,10 @@
+<div id='personal_transactionHistory_<%= transactionId %>' class = 'personal_transactionHistory_message'>
+    <div id = 'personal_transactionHistory_state_<%= transactionId %>' class = 'personal_transactionHistory_state transactionState<%= state %>'><%= stateText %></div>
+    <div id = 'personal_transactionHistory_containerInfo_<%= transactionId %>' class = 'personal_transactionHistory_containerInfo'>
+      <div class = 'personal_transactionHistory_userName'><%= targetUserName %></div>  
+      <div class = 'personal_transactionHistory_date'><%= startDateText %></div>
+      <div id = 'personal_transactionHistory_priceBox_<%= transactionId %>' class='personal_transactionHistory_priceBox'>
+        <div class = 'personal_transactionHistory_price'>￥<%= price %></div>
+      </div>
+    </div>
+</div>

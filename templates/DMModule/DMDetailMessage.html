@@ -1,0 +1,104 @@
+<div id = 'view_panel_left'>
+  <div id = 'view_header'>
+    <div id = 'view_header_info'>
+      <div id = 'view_school'><%= school %></div>
+      <div id = 'view_city'><%= city %></div>
+      <div id = 'view_headerUser'><%= ownerUser %></div>
+    </div>
+    <div id = 'view_delete' class = 'button'>删除本条信息</div>
+  </div>
+  <div id = 'view_event_info_left'>
+    <div id = 'view_event_info_tbar'>
+      <div class='view_infoContainer1'>
+	      <div id = 'view_eventTime'>
+          <%= startTime %>
+        </div>
+      </div>
+      <div class='view_infoContainer2'>
+        <div id = 'view_eventGender'>
+          <%= gender %>
+        </div>
+      </div>
+      <div class='view_infoContainer3'>
+        <div id = 'view_eventDescription'>
+          <%= note %>
+        </div>
+      </div>
+    </div>
+    <div id='view_map'></div>
+    <div id='view_event_info_bbar'>
+      <div id='view_publishTime'><%= creationTime %></div>
+      <div id='view_social'>
+        <div class='weibo_icon_small'></div>
+        <div class='renren_icon_small'></div>
+        <div class='qq_icon_small'></div>
+        <div class='douban_icon_small'></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id = 'view_panel_right'>
+  <div id = 'view_event_info_right'>
+    <div id = 'view_event_info_right_container'>
+      <div id = 'view_price'>
+        ￥ <%= price %> 
+        <span class='view_edit_inline button'>编辑</span>
+      </div>
+      <div id='view_price_rate'>每小时约合14</div>
+      <div id = 'view_contactInfo'>
+        <div id='view_cellphone'>
+          <div class='label view_label'>电话</div>
+          <div class='description'><%= phone %></div>
+        </div>
+        <div id='view_qq'>
+          <div class='label view_label'>ＱＱ</div>
+          <div class='description'><%= qq %></div>
+        </div>
+        <div id='view_email'>
+          <div class='label view_label'>邮箱</div>
+          <div class='description'><%= email %><span class='view_edit_inline button'>编辑</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id = 'view_userInfo'>
+    <div id='view_profilePicture'></div>
+    <div id = 'view_profile_right'>
+      <div id='view_account'>
+        <div id = 'view_account_name'>乔帮主</div>
+        <div id = 'view_account_gender' value='M'></div>
+   	    <div id = 'view_account_age'>30岁</div>
+        <div id = 'view_account_url'>http://dianming.com/people/steve</div>
+      </div>
+      <div id='view_profileOverview'>
+        <div id='view_accountLevel' class = 'view_profileOverviewBlock'>
+          <div id='view_accountLevelLabel'>等级</div>
+          <div id='view_accountLevelValue'></div>
+        </div>
+        <div class='verticalSpacer'></div>
+        <div id='view_accountScore' class = 'view_profileOverviewBlock'>
+          <div id='view_accountScoreLabel'>平均分</div>
+          <div id='view_accountScoreHolder'>
+            <div id='view_accountScoreValue' class = "dashboard_text">100
+            <span class='view_unit1'>%</span>
+            </div>
+          </div>
+        </div>
+        <div class='verticalSpacer'></div>
+        <div id='view_tradeCount' class = 'view_profileOverviewBlock'>
+          <div id='view_accountTradeCountLabel'>交易次数</div>
+          <div id='view_accountTradeCountValue' class = "dashboard_text">120</div>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div id = 'view_transactions'>
+    <div id = 'view_transactions_header'>
+      <div id = 'view_transactions_button'></div>
+      <div id = 'view_transactions_title'>这条信息已经被预定了<span id = 'reservation_count'> <%= transactionCount %> </span>次</div>
+    </div>
+    <div id = 'view_transactions_content'>
+    </div>
+  </div>
+</div>

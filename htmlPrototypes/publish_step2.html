@@ -1,0 +1,92 @@
+<!--publish-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />   <!--allow to display chinese-->
+
+    <title></title>
+
+    <link href='style/Global.css' rel='stylesheet' type='text/css'>
+    <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+    <link href='style/Publish.css' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+  <div id = 'topBar' class = 'unselectable'>
+    <div id = 'centerTopBar'>
+      <div id = 'logo'></div>
+      <ul id = 'subTitles'>
+        <li class = 'subTitle button'>找事儿</li>
+        <li class = 'subTitle button'>个人主页</li>
+        <li class = 'subTitle button'>提供意见</li>
+      </ul>
+      <div id = 'notifications'>
+        <ul>
+          <li id = 'messages'></li>
+          <li id = 'likes'></li>
+          <li id = 'favorites'></li>
+        </ul>
+        <div id = 'profilePicture'></div>
+      </div>
+    </div>
+  </div>
+
+    <div id = 'main'>
+      <div id = 'content' class='content_fullwidth'>
+    	  <div id = 'publish_progress' class='publish_progress_step2'></div>
+    	  <div id = 'publish_requirement'>
+    	    <form id='publish_info'>
+            <div class='publish_time_container_wrapper'>
+      	      <div id='publish_time_container'>
+                <div id='publish_time_1' class='publish_time_box'>
+                  <div id='publish_time_header_1' class='publish_time_header'>第一批点名</div>
+                  <div class='publish_time_info'>
+                    <div class='publish_time_date'>
+                      <!--name value is defined as publish_typeOfInput_componentId-->
+                      <input type='checkbox' name='publish_continuous_1' class='input_checkbox' value='true' />连续有空
+                      <input type='text' name='publish_startDate_1' class='input_date'/>到
+                      <input type='text' name='publish_endDate_1' class='input_date'/>
+                      <!-- To be honest, this date field looks terrible, we have to replace it with something else.
+                      also, this is no surprise that it's not supported by IE8 (nor firefox)
+                       -->
+                    </div>
+                    <div class='publish_time_availableTime'>
+                      <div class='publish_label'>每天</div>
+                      <div class='publish_time_availableTimeSelection'>
+                      <input type='checkbox' name='publish_morning_1' class='input_checkbox' value='morning' />上午
+                      <input type='checkbox' name='publish_noon_1' class='input_checkbox' value='noon' />中午
+                      <!-- what is noon? I don't think it's a valid option-->
+                      <input type='checkbox' name='publish_afternoon_1' class='input_checkbox' value='afternoon' />下午
+                      <input type='checkbox' name='publish_night_1' class='input_checkbox' value='night' />晚上
+                      </div>有空
+                    </div>
+                    <div class='publish_time_hourRate'>
+                      <div class='publish_label'>每个小时我收取</div>
+                      <div class='publish_label_larger'>￥</div>
+                      <input type='text' name='publish_rate_1' />
+                    </div>
+                    <div id='publish_delete_1' class='publish_delete'>
+                      删除
+                    </div>
+                  </div>
+                </div>
+                <div id='publish_time_add' class='button'>+ 添加一组点名</div>
+              </div>
+              <div id = 'publish_back' class='button'>
+                返回修改
+              </div>
+              <div id = 'publish_finish' class='button'>
+                直接发布
+              </div>
+              <div id = 'publish_nextStep' class='button'>
+                填写详细信息
+              </div>
+            </div>
+    	    </form>
+    	  </div>
+        <div id = 'publish_map'>MAP</div>
+      </div>
+    </div>
+  </body>
+</html>
+

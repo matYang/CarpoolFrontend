@@ -1,0 +1,29 @@
+<div id='publish_time_<%= id %>' class='publish_time_box'>
+  <div id='publish_time_header_<%= id %>' class='publish_time_header'>第一批点名</div>
+  <div class='publish_time_info'>
+    <div class='publish_time_date'>
+      <!--name value is defined as publish_typeOfInput_componentId-->
+      <input type='checkbox' name='publish_continuous_<%= id %>' class='input_checkbox' value='continuous' checked='true'/>连续有空
+      <input type='text' name='publish_startDate_<%= id %>' class='input_date'/>
+      <span name='to_<%= id %>'>到</span>
+      <input type='text' name='publish_endDate_<%= id %>' class='input_date'/>
+    </div>
+    <div class='publish_time_availableTimeSelection'>
+      <div class='publish_label'>每天</div>
+      <div class='publish_time_availableTime'>
+        <input type='checkbox' name='publish_morning_<%= id %>' class='input_checkbox' value='morning' />上午
+        <input type='checkbox' name='publish_afternoon_<%= id %>' class='input_checkbox' value='afternoon' />下午
+        <input type='checkbox' name='publish_night_<%= id %>' class='input_checkbox' value='night' />晚上
+      </div>
+      <div class='publish_label' style="float:right;">有空</div>
+    </div>
+    <div class='publish_time_hourRate'>
+      <div class='publish_label'>每个小时我收取</div>
+      <div class='publish_label_larger'>￥</div>
+      <input type='number' name='publish_rate_<%= id %>' min='1'/>
+    </div>
+    <div id='publish_delete_<%= id %>' class='publish_delete button'>
+      删除
+    </div>
+  </div>
+</div>

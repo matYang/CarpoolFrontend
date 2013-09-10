@@ -1,0 +1,217 @@
+<!--view-->
+<!doctype html>
+  <html>
+    <head>
+      <meta charset='utf-8' />   <!--allow to display chinese-->
+
+      <title></title>
+
+      <link href='style/Global.css' rel='stylesheet' type='text/css'>
+      <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+      <link href='style/View.css' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+      <div id = 'topBar' class = 'unselectable'>
+        <div id = 'centerTopBar'>
+          <div id = 'logo'></div>
+          <ul id = 'subTitles'>
+            <li class = 'subTitle button'>找事儿</li>
+            <li class = 'subTitle button'>个人主页</li>
+            <li class = 'subTitle button'>提供意见</li>
+          </ul>
+    	    <div id = 'notifications'>
+        		<ul>
+        		<li id = 'messages'></li>
+        		<li id = 'likes'></li>
+        		<li id = 'favorites'></li>
+        		</ul>
+            <div id = 'profilePicture'></div>
+          </div>
+        </div>
+      </div>
+
+      <div id = 'main'>
+        <div id = 'content' class='content_fullwidth'>
+      	  <div id = 'view_panel_left'>
+            <div id = 'view_header'>
+              <div id = 'view_header_info'>
+                <div id = 'view_school'>北京大学</div>
+                <div id = 'view_city'>
+                北京 中关村大学城
+                <span class='view_edit_inline button'>编辑</span>
+                </div>
+               
+                <div id = 'view_headerUser'>卢卡修</div>
+              </div>
+              <div id = 'view_delete' class = 'button'>删除本条信息</div>
+            </div>
+            <div id = 'view_event_info_left'>
+              <div id = 'view_event_info_tbar'>
+                <div class='view_infoContainer1'>
+          	      <div id = 'view_eventTime'>
+                    2013年5月20日 星期三 上午 8:00-10:00 
+                    <span class='view_edit_inline button'>编辑</span>
+                  </div>
+                </div>
+                <div class='view_infoContainer2'>
+                  <div id = 'view_eventGender'>
+                    必须是女生
+                    <span class='view_edit_inline button'>编辑</span>
+                  </div>
+                </div>
+                <div class='view_infoContainer3'>
+                  <div id = 'view_eventDescription'>
+                    留言
+                    <span class='view_edit_inline button'>编辑</span>
+                  </div>
+                </div>
+              </div>
+              <div id='view_map'></div>
+              <div id='view_event_info_bbar'>
+                <div id='view_publishTime'>已发布2天6小时</div>
+                <div id='view_social'>
+                  <div class='weibo_icon_small'></div>
+                  <div class='renren_icon_small'></div>
+                  <div class='qq_icon_small'></div>
+                  <div class='douban_icon_small'></div>
+                </div>
+              </div>
+            </div>
+      	  </div>
+      	  <div id = 'view_panel_right'>
+            <div id = 'view_event_info_right'>
+              <div id = 'view_event_info_right_container'>
+                <div id = 'view_price'>
+                  $28
+                  <span class='view_edit_inline button'>
+                    编辑
+                  </span>
+                </div>
+                <div id='view_price_rate'>每小时约合14</div>
+                <div id = 'view_contactInfo'>
+                  <div id='view_cellphone'>
+                    <div class='label view_label'>电话</div>
+                    <div class='description'>139<span class='cipher'>****</span>0000</div>
+                  </div>
+                  <div id='view_qq'>
+                    <div class='label view_label'>ＱＱ</div>
+                    <div class='description'><span class='cipher'>****</span>2536</div>
+                  </div>
+                  <div id='view_email'>
+                    <div class='label view_label'>邮箱</div>
+                    <div class='description'><span class='cipher'>****</span>@hotmail.com <span class='view_edit_inline button'>编辑</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id = 'view_userInfo'>
+              <div id='view_profilePicture'></div>
+              <div id = 'view_profile_right'>
+                <div id='view_account'>
+                  <div id = 'view_account_name'>乔帮主</div>
+                  <div id = 'view_account_gender' value='M'></div>
+             	    <div id = 'view_account_age'>30岁</div>
+                  <div id = 'view_account_url'>http://dianming.com/people/steve</div>
+                </div>
+                <div id='view_profileOverview'>
+                  <div id='view_accountLevel' class = 'view_profileOverviewBlock'>
+                    <div id='view_accountLevelLabel'>等级</div>
+                    <div id='view_accountLevelValue'></div>
+                  </div>
+                  <div class='verticalSpacer'></div>
+                  <div id='view_accountScore' class = 'view_profileOverviewBlock'>
+                    <div id='view_accountScoreLabel'>平均分</div>
+                    <div id='view_accountScoreHolder'>
+                      <div id='view_accountScoreValue' class = "dashboard_text">100
+                      <span class='view_unit1'>%</span>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <div class='verticalSpacer'></div>
+                  <div id='view_tradeCount' class = 'view_profileOverviewBlock'>
+                    <div id='view_accountTradeCountLabel'>交易次数</div>
+                    <div id='view_accountTradeCountValue' class = "dashboard_text">120</div>
+                  </div>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='overlay'>
+        <div class = 'mask'></div>
+        <div class='editWindow hourRateEditWindow hidden'>
+          <div class='editContentWrapper hourRateEditWindow'>
+            <div class='editContent hourRateEditWindow'>
+              <div id = 'editHourRate'>
+                每小时我收取 ￥ <input type='text'/>
+              </div>
+            </div>
+          </div>
+          <div class = 'editButtonWrapper'>
+            <div class='editCancel button'>返回</div>
+            <div class='editSave button'>保存修改</div>
+          </div>
+        </div>
+        <div class='editWindow timeDateEditWindow '>
+          <div class='editContentWrapper timeDateEditWindow'>
+            <div class='editContent timeDateEditWindow'>
+              <div id = 'editTimeDate'>
+                上课日期 <input type='text' name='date'/><br />
+                上课时间 <input type='text' name='time'/><br />
+                课堂持续 <input type='text' name='duration'/><br />
+              </div>
+            </div>
+          </div>
+          <div class = 'editButtonWrapper'>
+            <div class='editCancel button'>返回</div>
+            <div class='editSave button'>保存修改</div>
+          </div>
+        </div>
+        <div class='editWindow locationEditWindow hidden'>
+          <div class='editContentWrapper locationEditWindow hidden'>
+            <div class='editContent locationEditWindow'>
+              <div id = 'editLocation'>
+                <div class='input_block'>
+                  我的地区在 <input type='text' name='city'/>
+                </div>
+                <div class='input_block'>
+                  学校是 <input type='text' name='school'/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class = 'editButtonWrapper'>
+            <div class='editCancel button'>返回</div>
+            <div class='editSave button'>保存修改</div>
+          </div>
+        </div>
+        <div class='editWindow genderEditWindow hidden'>
+          <div class='editContentWrapper genderEditWindow'>
+            <div class='editContent genderEditWindow'>
+              <div id = 'editGender'>
+                <div class='input_block'>
+                  <input type='radio' name='gender' value='male'/>男生
+                </div>
+                <div class='input_block'>
+                  <input type='radio' name='gender' value='female'/>女生
+                </div>
+                <div class='input_block'>
+                  <input type='radio' name='gender' value='other'/>无所谓
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class = 'editButtonWrapper'>
+            <div class='editCancel button'>返回</div>
+            <div class='editSave button'>保存修改</div>
+          </div>
+        </div>
+      </div>
+
+    </body>
+  </html>
+

@@ -1,0 +1,99 @@
+(function () {
+	'use strict';
+	//wooooooola, no more global objects, globals are bad, very bad
+
+	//note this is not a global helper function, it is encapsulated inside this modular function scope
+	var isStorageSupported = function() {
+		if (typeof(localStorage) === "undefined" || typeof(sessionStorage) === "undefined") {
+			alert("您的浏览器已经成为历史，强烈建议您使用Chrome浏览器. PS: 神马傻逼360，搜狗，遨游浏览器都是IE内核，跟Chrome比起来基本处于石器时代");
+			return false;
+		}
+		return true;
+	};
+
+	//constructor
+	this.StorageService = function(){
+		this.searchQueryState = {
+			"searchLocation": new UserLocation(),
+			"seachDate": new Date(),
+			"searchType": Constants.messageType.ask
+		};
+		this.searchFilterState = {
+			"searchGender": Constants.gender.both,
+			"searchTimeSlot": Constants.timeSlot.unspecified,
+			"searchPriceInterval": {
+				"min": 0,
+				"max": 999
+			}
+		};
+
+		//detect once upon initialization
+		this.isSupported = isStorageSupported();
+		//if local storage supported, reinitialize the storage variables from local storage, now control hands over to live storage variables
+		if (this.isSupported){
+			this.searchQueryState = {
+				"searchLocation": new UserLocation(true, localStorage.searchLocation),
+				"searchDate": new Date(localStorage.searchDate),
+				"searchType": localStorage.searchType
+			};
+
+			this.searchFilterState = {
+				"searchGender": localStorage.searchGender,
+				"searchTimeSlot": localStorage.searchTimeSlot,
+				"searchPriceInterval": {
+					"min": localStorage.searchPriceMin,
+					"max": localStorage.searchPriceMax
+				}
+			};
+		}
+	};
+
+
+	/**
+	* expecting: UserLocaton object, date object, searchType
+	*/
+	StorageService.prototype.updateSearchQueryState = function(newSearchLocation, newSearchDate, newSearchType) {
+		this.searchQueryState = {
+			"searchLocation": newSearchLocation,
+			"searchDate": newSearchDate,
+			"searchType": newSearchType
+		};
+
+		//if has local storage, update the storage as well
+		if (this.isSupported){
+			localStorage.searchLocation = newSearchLocation.castToString();
+			localStorage.searchDate = newSearchDate.toString();
+			localStorage.searchType = newSearchType;
+		}
+	};
+
+	StorageService.prototype.getSearchQueryState = function(){
+		return this.searchQueryState;
+	};
+
+
+	StorageService.prototype.updateSearchFilterState = function(newSearchGender, newSearchTimeSlot, newSearchPriceInterval){
+		this.searchFilterState = {
+			"searchGender": newSearchGender,
+			"searchTimeSlot": newSearchTimeSlot,
+			"searchPriceInterval": {
+				"min": newSearchPriceInterval.min,
+				"max": newSearchPriceInterval.max
+			}
+		};
+
+		if (this.isSupported){
+			localStorage.searchGender = newSearchGender;
+			localStorage.searchTimeSlot = newSearchTimeSlot;
+			localStorage.searchPriceMin = newSearchPriceInterval.min;
+			localStorage.searchPriceMax = newSearchPriceInterval.max;
+		}
+	};
+
+	StorageService.prototype.getSearchFilterState = function(){
+		return this.searchFilterState;
+	};
+
+
+
+}).call(this);

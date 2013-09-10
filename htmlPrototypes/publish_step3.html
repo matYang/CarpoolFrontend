@@ -1,0 +1,52 @@
+<!--publish-->
+ <!doctype html>
+  <html>
+    <head>
+      <meta charset='utf-8' />   <!--allow to display chinese-->
+
+      <title></title>
+
+      <link href='style/Global.css' rel='stylesheet' type='text/css'>
+      <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+      <link href='style/Publish.css' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+      <div id = 'topBar' class = 'unselectable'>
+        <div id = 'centerTopBar'>
+          <div id = 'logo'></div>
+          <ul id = 'subTitles'>
+            <li class = 'subTitle button'>找事儿</li>
+            <li class = 'subTitle button'>个人主页</li>
+            <li class = 'subTitle button'>提供意见</li>
+          </ul>
+          <div id = 'notifications'>
+            <ul>
+              <li id = 'messages'></li>
+              <li id = 'likes'></li>
+              <li id = 'favorites'></li>
+            </ul>
+            <div id = 'profilePicture'></div>
+          </div>
+        </div>
+      </div>
+      <div id = 'main'>
+        <div id = 'content' class='content_fullwidth'>
+          <div id = 'publish_progress' class='publish_progress_step3'></div>
+      	  <div id = 'publish_requirement'>
+      	    <form id='publish_info'>
+      	      <div class = 'publish_header'>其他信息</div>
+      	      <div id = 'publish_description'>
+              <textarea id='publish_description_input'>其他详细信息</textarea>
+              </div>
+              <div id = 'publish_finish' class='button'>
+                就这样吧
+              </div>
+      	    </form>
+      	  </div>
+      	  <div id = 'publish_map'>MAP</div>
+        </div>
+      </div>
+    </body>
+  </html>
+

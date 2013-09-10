@@ -1,0 +1,148 @@
+/*
+no matter who we are, where we are from, each of us is a part
+of something greater, more consequential, than we individualy are
+wonders can only be achieved, by hardwork and unity
+I believe we can, we must, get the project going fast
+we do big things from the days of our funding, 
+big things, cause we dare to dream
+our destiny is our choice, and we share common hopes common creed
+while all of us have different backgrounds, different stories different beliefs,
+we do not give up, not this time
+*/
+
+
+(function () {
+	'use strict';
+
+	this.ApiResource = function(){
+
+		/*---------------  API level constants   --------------*/
+		var api_modules = {
+
+			rootPrefix: Constants.origin + '/api',
+
+			versionPrefix: '/v1.0',
+
+			moduleResource: {
+				'DM': '/dianming',
+				'users': '/users',
+				'transaction': '/transaction',
+				'notification': '/notification',
+				'general': '/general',
+				'location': '/location'
+			},
+
+			moduleSufixResource: {
+				'DM': {
+					dianming: '/dianming',
+					gender: '/gender',
+					location: '/location',
+					note: '/note',
+					paymentMethod: '/paymentMethod',
+					price: '/price',
+					timing: '/timing',
+					recent: '/recent',
+					search: '/search'
+				},
+
+				'users': {
+					findSession: '/findSession',
+					user: '/user',
+					login: '/login',
+					logout: '/logout',
+					img: '/img',
+					email: '/email',
+					changePassword: '/changePassword',
+					contactInfo: '/contactInfo',
+					singleLocation: '/singleLocation',
+					circleLocation: '/circleLocation',
+					emailActivation: '/emailActivation',
+					resendActivationEmail: '/resendActivationEmail',
+					topBar: '/topBar',
+					forgetPassword: '/forgetPassword',
+					toggleEmailNotice: '/toggleEmailNotice',
+					togglePhoneNotice: '/togglePhoneNotice',
+					watchUser: '/watchUser',
+					watchDMMessage: '/watchDMMessage',
+					messageHistory: '/messageHistory',
+					transaction: '/transaction',
+					notification: '/notification'
+				},
+
+				'transaction': {
+					transaction: '/transaction',
+					admin: '/admin'
+				},
+
+				'notification': {
+					notification: '/notification'
+				},
+
+				'general': {
+					feedBack: '/feedBack'
+				},
+
+				'location': {
+					location: '/location'
+				}
+			}
+		};
+
+		var api_maker = function(moduleName, actionName){
+			return api_modules.rootPrefix + api_modules.versionPrefix + api_modules.moduleResource[moduleName] + api_modules.moduleSufixResource[moduleName][actionName];
+		};
+
+		var api_assembler = function(){
+
+			return {
+
+				DM_dianming : api_maker('DM', 'dianming'),
+				DM_gender : api_maker('DM', 'gender'),
+				DM_location : api_maker('DM', 'location'),
+				DM_note : api_maker('DM', 'note'),
+				DM_paymentMethod : api_maker('DM', 'paymentMethod'),
+				DM_price : api_maker('DM', 'price'),
+				DM_timing : api_maker('DM', 'timing'),
+				DM_recent : api_maker('DM', 'recent'),
+				DM_search : api_maker('DM', 'search'),
+
+
+				users_findSession : api_maker('users', 'findSession'),		//GET added to session manaegr
+				users_user : api_maker('users', 'user'),					//GET and POST added to user manager
+				users_login : api_maker('users', 'login'),					//GET dded to session manager
+				users_logout : api_maker('users', 'logout'),				//GET added to session manager
+				users_img : api_maker('users', 'img'),						//
+				users_email : api_maker('users', 'email'),
+				users_changePassword : api_maker('users', 'changePassword'),
+				users_contactInfo : api_maker('users', 'contactInfo'),
+				users_singleLocation : api_maker('users', 'singleLocation'),
+				users_circleLocation : api_maker('users', 'circleLocation'),
+				users_emailActivation : api_maker('users', 'emailActivation'),
+				users_resendActivationEmail : api_maker('users', 'resendActivationEmail'),
+				users_topBar : api_maker('users', 'topBar'),				//added to user manager
+				users_forgetPassword : api_maker('users', 'forgetPassword'),
+				users_toggleEmailNotice : api_maker('users', 'toggleEmailNotice'),
+				users_togglePhoneNotice : api_maker('users', 'togglePhoneNotice'),
+				users_watchUser : api_maker('users', 'watchUser'),
+				users_watchDMMessage : api_maker('users', 'watchDMMessage'),
+				users_messageHistory : api_maker('users', 'messageHistory'),
+				users_transaction : api_maker('users', 'transaction'),
+				users_notification : api_maker('users', 'notification'),
+
+				transaction_transaction : api_maker('transaction', 'transaction'),
+				transaction_admin : api_maker('transaction', 'admin'),
+
+
+				notification_notification: api_maker('notification', 'notification'),
+
+				general_feedBack : api_maker('general', 'feedBack'),
+
+
+				location_location : api_maker('location', 'location')
+			};
+		};
+
+		return api_assembler();
+	};
+
+}).call(this);

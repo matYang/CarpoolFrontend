@@ -1,0 +1,243 @@
+  <!doctype html>
+  <html>
+    <head>
+      <meta charset='utf-8' />   <!--allow to display chinese-->
+
+      <title></title>
+
+      <link href='style/css/Global.css' rel='stylesheet' type='text/css'>
+      <link href='style/css/TopBar.css' rel='stylesheet' type='text/css'>
+      <link href='style/css/Circle.css' rel='stylesheet' type='text/css'>
+      <link href='style/css/SearchContent.css' rel='stylesheet' type='text/css'>
+      <link href='style/css/Advertisement.css' rel='stylesheet' type='text/css'>
+      <link href='style/css/profile.css' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+      <div id = 'topBar' class = 'unselectable'>
+        <div id = 'centerTopBar'>
+          <div id = 'logo'></div>
+          <ul id = 'subTitles'>
+            <li class = 'subTitle button'>找事儿</li>
+            <li class = 'subTitle button'>个人主页</li>
+            <li class = 'subTitle button'>提供意见</li>
+          </ul>
+          <div id = 'notifications'>
+            <ul>
+              <li id = 'messages'></li>
+              <li id = 'likes'></li>
+              <li id = 'favorites'></li>
+            </ul>
+            <div id = 'profilePicture'></div>
+          </div>
+        </div>
+      </div>
+
+      <div id = 'main'>
+
+        <div id = 'circles'>
+          <ul id = 'circle'>
+            <li class = 'university'>东北农业大学</li>
+            <li class = 'university'>三大动力大学城</li>
+            <li class = 'university'>＋添加圈子</li>
+          </ul>
+        </div>
+          
+        <div id = 'content'>
+          <!-- search event tab-->
+          <div id='searchEventTab'>
+        		<form id="searchForm" name="searchForm">
+              <div id = 'searchbox' class = 'searchContainer'>
+                <div id = 'searchPlaceContainer'>
+                      <div id = 'searchInputPlaceLabel' class = 'searchInputLabel'>地方</div>	
+
+                      <div id = 'searchSchoolInputTagContainer' class = 'searchInputTagContainer'>
+                        <input type="text" id = 'searchSchoolInput' class = 'searchInput' />
+                      </div>
+                </div>
+
+                <div id = 'searchDateContainer'>
+                      <div id = 'searchInputDateLabel' class = 'searchInputLabel'>日子</div>	
+
+                      <div id = 'searchDateInputTagContainer' class = 'searchInputTagContainer'>
+                        <input type="text" id = 'searchDateInput' class = 'searchInput' />
+                      </div>
+                </div>
+                <div id = 'searchResultDoneContainer'>
+                      <div id = 'searchResultNote1' class = 'searchResultNote'>有</div>
+                      <div id = 'searchResultNote2' class = 'searchResultNote'>230</div>
+                      <div id = 'searchResultNote3' class = 'searchResultNote'>条结果</div>
+
+                      <div id = 'searchResultButton' class = 'searchResultButton button'>可以了</div>
+                </div>
+              </div>
+
+              <div id = 'filterBox' class = 'searchContainer'>
+                    <div id = 'searchFilterGenderContainer'>
+                      <div id = 'filterInputGenderLabel' class = 'searchInputLabel'>人群</div>	
+                      <div id = 'filterInputGenderTagContainer' class = 'searchInputTagContainer'>
+                        <ul id = 'genderSelections'>
+                          <li id='genderSelectionMale' class='selected genderList button'>男生</li>
+                          <li id='genderSelectionFemale' class='notSelected genderList button'>女生</li>
+                          <li id='genderSelectionNoPreference' class='notSelected genderList button'>无所谓</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div id = 'searchFilterTimeContainer'>
+                      <div id = 'filterInputTimeLabel' class = 'searchInputLabel'>时辰</div>	
+
+                      <div id = 'filterInputTimeTagContainer' class = 'searchInputTagContainer'>
+                        <ul id = 'timeSelections'>
+                          <li id = 'timeSelectionMorning' class='selected timeList button'>上午</li>
+                          <li id = 'timeSelectionAfternoon' class='notSelected timeList button'>下午</li>
+                          <li id = 'timeSelectionNight' class='notSelected timeList button'>晚上</li>
+                          <!-- need to add tooltip text here with js -->
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div id = 'searchFilterPriceContainer'>
+                      <div id = 'filterInputPriceLabel' class = 'searchInputLabel'>价格</div>	
+
+                      <div id = 'filterPriceInputTagContainer' class = 'searchInputTagContainer'>
+                        <!-- use a JQuery Slider here? -->
+                        <!-- need to add tooltip text here with js -->
+                      </div>
+                    </div>
+
+                    <div id = 'searchResultRefreshContainer'>
+                      <div id = 'refreshButton' class = 'searchResultButton button'>刷新</div>
+                    </div>
+              </div>
+            </form>
+            <div id = 'searchResultDisplayPanel' class = 'searchResultDisplay'>
+              <!-- spam this div for repeat results -->
+              <!-- TODO:replace "spam" with real id -->
+              <div id = 'searchResultBoxSpam' class = 'searchResultBoxContainer'>
+                <div id = 'profilePictureSpam' class = 'searchResultProfilePicture'></div>
+                <div id = 'searchResultContainerInfoSpam' class = 'searchResultContainerInfo'>
+                  <div class = 'searchResultSchoolName'>清华大学</div>	
+                  <div class = 'searchResultDate'>明天下午</div>
+                  <div class = 'searchResultTime'>17:00～19:30</div>
+                  <div class = 'searchResultMessage'>Whatever</div>
+                  <div class = 'searchResultPublishTime'>publish time</div>
+                  <div class = 'searchResultGender'>男</div>
+                  <div class = 'searchResultUserName'>皮卡丘</div>
+                  <div class = 'searchResultUserLevel'></div>
+                  <div class = 'searchResultFollowNote'>关注 </div>
+                </div>
+
+                <div id = 'searchResultContainerFollowSpam' class = 'searchResultContainerFollow'>
+                  <div class = 'searchResultFollow'>关注</div>	
+                  <div class = 'searchResultFollowLogo'></div>
+                </div>
+
+                <div id = 'searchResultContainerPriceSpam' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>24小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+                </div>
+              </div>
+              <div id = 'searchResultBox2' class = 'searchResultBoxContainer'>
+                <div id = 'profilePicture2' class = 'searchResultProfilePicture'></div>
+                <div id = 'searchResultContainerInfo2' class = 'searchResultContainerInfo'>
+                  <div class = 'searchResultSchoolName'>清华大学</div>  
+                  <div class = 'searchResultDate'>明天下午</div>
+                  <div class = 'searchResultTime'>17:00～19:30</div>
+                  <div class = 'searchResultMessage'>Whatever</div>
+                  <div class = 'searchResultPublishTime'>publish time</div>
+                  <div class = 'searchResultGender'>男</div>
+                  <div class = 'searchResultUserName'>皮卡丘</div>
+                  <div class = 'searchResultUserLevel'></div>
+                  <div class = 'searchResultFollowNote'>关注 </div>
+                </div>
+
+                <div id = 'searchResultContainerFollow2' class = 'searchResultContainerFollow'>
+                  <div class = 'searchResultFollow'>关注</div>  
+                  <div class = 'searchResultFollowLogo'></div>
+                </div>
+
+                <div id = 'searchResultContainerPrice2' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>2小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+                </div>
+              </div>
+              <div id = 'searchResultBox3' class = 'searchResultBoxContainer'>
+                <div id = 'profilePicture3' class = 'searchResultProfilePicture'></div>
+                <div id = 'searchResultContainerInfo3' class = 'searchResultContainerInfo'>
+                  <div class = 'searchResultSchoolName'>清华大学</div>  
+                  <div class = 'searchResultDate'>明天下午</div>
+                  <div class = 'searchResultTime'>17:00～19:30</div>
+                  <div class = 'searchResultMessage'>Whatever</div>
+                  <div class = 'searchResultPublishTime'>publish time</div>
+                  <div class = 'searchResultGender'>男</div>
+                  <div class = 'searchResultUserName'>皮卡丘</div>
+                  <div class = 'searchResultUserLevel'></div>
+                  <div class = 'searchResultFollowNote'>关注 </div>
+                </div>
+
+                <div id = 'searchResultContainerFollow3' class = 'searchResultContainerFollow'>
+                  <div class = 'searchResultFollow'>关注</div>  
+                  <div class = 'searchResultFollowLogo'></div>
+                </div>
+
+                <div id = 'searchResultContainerPrice3' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>2小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+                </div>
+              </div>
+              <div id = 'searchResultBox4' class = 'searchResultBoxContainer'>
+                <div id = 'profilePicture4' class = 'searchResultProfilePicture'></div>
+                <div id = 'searchResultContainerInfo4' class = 'searchResultContainerInfo'>
+                  <div class = 'searchResultSchoolName'>清华大学</div>  
+                  <div class = 'searchResultDate'>明天下午</div>
+                  <div class = 'searchResultTime'>17:00～19:30</div>
+                  <div class = 'searchResultMessage'>Whatever</div>
+                  <div class = 'searchResultPublishTime'>publish time</div>
+                  <div class = 'searchResultGender'>男</div>
+                  <div class = 'searchResultUserName'>皮卡丘</div>
+                  <div class = 'searchResultUserLevel'></div>
+                  <div class = 'searchResultFollowNote'>关注 </div>
+                </div>
+
+                <div id = 'searchResultContainerFollow4' class = 'searchResultContainerFollow'>
+                  <div class = 'searchResultFollow'>关注</div>  
+                  <div class = 'searchResultFollowLogo'></div>
+                </div>
+
+                <div id = 'searchResultContainerPrice4' class='searchResultContainerPrice'>
+                  <div class = 'searchResultPriceLogo'>￥</div>
+                  <div class = 'searchResultPrice'>40</div>
+                  <div class = 'searchResultDuration'>2小时30分钟</div>
+                  <!--TODO: rename this-->
+                  <div class = 'searchResultPaymentPerHour1'>每小时</div>
+                  <div class = 'searchResultPaymentPerHour2'>16</div>
+                  <div class = 'searchResultPaymentPerHour3'>元</div>
+                </div>
+              </div>
+              <div id = 'searchResultMore' class = 'searchResultMore'>查看更多</div>
+              </div>
+            </div>
+          </div>
+            
+          <div id = 'advertisement' class = 'advertisement'></div>
+        </div>
+
+    </body>
+  </html>
+

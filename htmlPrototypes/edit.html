@@ -1,0 +1,79 @@
+<!--publish-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />   <!--allow to display chinese-->
+
+    <title></title>
+
+    <link href='style/Global.css' rel='stylesheet' type='text/css'>
+    <link href='style/TopBar.css' rel='stylesheet' type='text/css'>
+    <link href='style/Publish.css' rel='stylesheet' type='text/css'>
+  </head>
+
+  <body>
+  <div id = 'topBar' class = 'unselectable'>
+    <div id = 'centerTopBar'>
+      <div id = 'logo'></div>
+      <ul id = 'subTitles'>
+        <li class = 'subTitle button'>找事儿</li>
+        <li class = 'subTitle button'>个人主页</li>
+        <li class = 'subTitle button'>提供意见</li>
+      </ul>
+      <div id = 'notifications'>
+        <ul>
+          <li id = 'messages'></li>
+          <li id = 'likes'></li>
+          <li id = 'favorites'></li>
+        </ul>
+        <div id = 'profilePicture'></div>
+      </div>
+    </div>
+  </div>
+
+    <div id = 'main'>
+      <div id = 'content' class='content_fullwidth'>
+    	  <div id = 'circles'></div>
+    	  <div id = 'edit_requirement'>
+    	    <form id='edit_info'>
+            <div id='edit_myInfo'>
+              <div id='edit_myGender'>
+                <div class='edit_label'>我需要</div>
+                <input name='gender' type='radio' value='male'/>男
+                <input name='gender' type='radio' value='female'/>女
+                <input name='gender' type='radio' value='other'/>无所谓
+              </div>
+              <div id='edit_myLocation'>
+                <div class='edit_label'>我的地区在</div>
+                <input name='location' type='text' />
+              </div>
+              <div id='edit_mySchool'>
+                <div class='edit_label'>学校是</div>
+                <input name='school' type='text' />
+              </div>
+              <div id='edit_myDetail'>
+                <div class='edit_label'>其他信息</div>
+                <input name='detail' type='text' />
+              </div>
+            </div>
+            <div class='publish_time_container_wrapper'>
+      	      <div id='publish_time_container'>
+                <div id='publish_time_add' class='button'>+ 添加一组点名</div>
+              </div>
+              <div id = 'publish_back' class='button'>
+                返回修改
+              </div>
+              <div id = 'publish_finish' class='button'>
+                直接发布
+              </div>
+              <div id = 'publish_nextStep' class='button'>
+                填写详细信息
+              </div>
+            </div>
+    	    </form>
+    	  </div>
+      </div>
+    </div>
+  </body>
+</html>
+

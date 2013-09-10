@@ -1,0 +1,430 @@
+#searchEventTab{
+  float:left;
+  width:765px;
+}
+.searchInputLabel{
+  letter-spacing: 10px;
+  width:50px;
+  float:left;
+}
+
+.searchInput{
+  width:200px;
+  float:left;
+}
+#notifications {
+
+}
+#searchForm{
+  position:relative;
+  width:750px;
+  height:120px;
+  margin:0;
+}
+#searchbox{
+  background-color:#e5e5e5;
+  height:110px;
+  width:310px;
+  float:left;
+}
+
+#searchPlaceContainer{
+  width: 300px;
+  height: 25px;
+  margin-top:12px;
+  margin-left:20px;
+}
+/*#searchPlaceContainer > div {
+  display:inline-block;
+}
+#searchDateContainer > div {
+  display:inline-block;
+}*/
+/*#searchResultDoneContainer > div{
+  display:inline-block;
+}*/
+#searchSchoolInputTagContainer {
+  margin-left:10px;
+}
+#searchDateContainer{
+  margin-top:10px;
+  margin-left:20px;
+  width:300px;
+  height:25px;
+  position:relative;
+}
+#searchDateInputTagContainer {
+  margin-left:10px;
+
+}
+#searchResultDoneContainer {
+  margin-left:155px;
+  width:120px;
+  margin-top:10px;
+}
+.searchResultNote{
+  display:inline-block;
+}
+#searchResultButton{
+   background-color:#3dbe6e;
+   border-color:#000000;
+   border-style:solid;
+   border-width:1px;
+   width:50px;
+   height:19px;
+   color:#ffffff;
+   font-weight:bold;
+   font-size:13px;
+   text-align: center;
+   padding:2px 0 1px 0;
+   left:12px;
+   float:right;
+}
+
+#filterBox {
+  background-color:#e5e5e5;
+  height:95px;
+  width:400px;
+  margin-left:10px;
+  padding-top:15px;
+  float:left;
+}
+#filterBox > div{
+  display:inline-blcok;
+}
+#searchFilterGenderContainer {
+  width:250px;
+  height: 22px;
+  position:relative;
+  margin-left:20px;
+}
+#searchFilterGenderContainer > div {
+  display:inline-block;
+}
+
+#filterInputGenderTagContainer {
+  margin-left:20px;
+}
+#searchFilterTimeContainer > div {
+  display:inline-block;
+}
+#searchFilterTimeContainer {
+  width:250px;
+  height: 22px;
+  position:relative;
+  margin-top:5px;
+  margin-left:20px;
+}
+#filterInputTimeTagContainer {
+  margin-left:20px;
+}
+#datepicker{
+  position: absolute;
+  z-index: 10;
+}
+#searchFilterPriceContainer {
+  width:50px;
+  height: 22px;
+  position:relative;
+  margin-top:5px;
+  margin-left:20px;
+  float:left;
+}
+#filterInputPriceLabel {
+  float:left;
+}
+#filterPriceInputTagContainer{
+  width:150px;
+  margin-left:80px;
+  margin-top:7px;
+  height: 3px;
+}
+
+#priceRangeDisplay {
+  color:#6666ff;
+  font-size:1.3em;
+  width: 60px;
+  height: 20px;
+  float: left;
+
+  left: 251px;
+  top: -15px;
+  background:#ffffff;
+  text-align:center;
+}
+#searchResultRefreshContainer {
+  width:80px;
+  height:30px;
+  float:right;
+}
+#refreshButton{
+  background-color:#3dbe6e;
+  border-color:#000000;
+  border-style:solid;
+  border-width:1px;
+  width:45px;
+  height:19px;
+  color:#ffffff;
+  font-weight:bold;
+  font-size:13px;
+  text-align: center;
+  padding:2px 0 1px 0;
+  margin-top:15px;
+  margin-left:25px;
+}
+
+.genderList{
+   width:80px;
+   margin-left:5px;
+   margin-right:5px;  
+}
+
+.selected{
+   padding:2px 4px 2px 4px;
+   background-color:#00aaff;
+   color:#ffffff;
+}
+
+.notSelected{
+   padding:2px 4px 2px 4px;
+   color:#000000;
+}
+.notSelected:hover{
+   padding:2px 4px 2px 4px;
+   background-color:#888888;
+   color:#ffffff;
+}
+
+.timeList{
+   width:80px;
+   margin-left:5px;
+   margin-right:5px; 
+}
+
+/*Search Result Info containers*/
+.searchResultDisplay{
+    width:735px;
+    height:600px;
+    overflow:auto;
+    padding:0 10px 0 0;
+    overflow-y:auto;
+}
+.searchResultBoxContainer {
+  width:698px;
+	height:90px;
+	padding:8px 10px 8px 10px;
+	margin:0;
+	border-color:#aaaaaa;
+	border-style:solid;
+	border-width:2px;
+  border-bottom-width: 0;
+	
+}
+
+.searchResultProfilePicture {
+  background-color:#aaaaaa;
+	height:86px;
+	width:86px;
+	float:left;
+}
+.searchResultContainerInfo {
+  margin-left:3px;
+	margin-top:0;
+	height:80px;
+	width:400px;
+	color:#444444;
+	float:left;
+}
+.searchResultSchoolName{
+	font-size:18px;
+	font-weight:bold;
+	float:left;
+	margin-left:8px;
+	margin-top:3px;
+  min-width:50px;
+}
+.searchResultDate{
+  font-size:12px;
+	float:left;
+	margin-left:5px;
+	margin-top:5px;
+}
+.searchResultTime{
+  position:relative;
+	margin-left:10px;
+	margin-top:5px;
+  font-size:12px;
+  color:#ff1211;
+}
+
+.searchResultMessage{
+  position:relative;
+  margin-left:8px;
+	margin-top:9px;
+	font-size:12px;
+}
+
+.searchResultPublishTime{
+  margin-left:8px;
+	margin-top:7px;
+	font-size:12px;
+	color:#666666;
+}
+
+.searchResultGender{
+  margin-left:8px;
+	float:left;
+}
+
+.searchResultUserName{
+  margin-left:2px;
+  float:left;
+  font-size:14px;
+}
+.searchResultUserLevel{
+  position: relative;
+  margin-left:3px;
+	float:left;
+	width:40px;
+}
+.searchResultFollow{
+  position: relative;
+	margin-left:8px;
+	margin-top:7px;
+  float:left;
+	font-size:12px;
+  width:30px;
+
+}
+.searchResultFollowNote{
+  float:left;
+  width:40px;
+}
+.searchResultFollowUserName{
+  float:left;
+}
+.searchResultFollowLogo{
+  color:#ffffff;
+  text-align: center;
+  background-color:rgb(0,189,169);
+  height:20px;
+  width:25px;
+  border:1px solid #000000;
+  float:left;
+  font-weight: bold;
+  margin-top:3px;
+}
+.searchResultContainerFollow{
+  float:left;
+	height:20px;
+	width:110px;
+	margin-left:3px;
+	margin-top:55px;
+}
+.searchResultPriceLogo{
+  font-size:30px;
+  width:25px;
+  height:34px;
+  position:relative;
+  margin-top:8px;
+  margin-left:0;
+  float:left;
+}
+.searchResultContainerPrice{
+  position:relative;
+  color:#3dbe6e;
+  height:80px;
+  width:90px;
+  margin-left: 0;
+  float:left;
+	
+}
+.searchResultPrice{
+  height:42px;
+  width:60px;
+  letter-spacing: 3px;
+
+  float:left;
+  position:relative;
+  font-size:38px;
+  text-align: center;
+}
+.searchResultDuration{
+  width:90px;
+  height:14px;
+  position: relative;
+  margin-left:auto;
+  margin-right:auto;
+  text-align: center;
+  color:#ffffff;
+  margin-top:1px;
+  padding-bottom: 5px;
+  background-color:#36be6e;
+  float:left;
+}
+.searchResultPaymentPerHour1{
+  width:42px;
+  height:15px;
+  position:relative;
+  color:#333333;
+  float:left;
+}
+.searchResultPaymentPerHour2{
+  width:30px;
+  height:15px;
+  position:relative;
+  float:left;
+  text-align: center;
+}
+.searchResultPaymentPerHour3{
+  width:10px;
+  height:15px;
+  position:relative;
+  color:#333333;
+  float:left;
+}
+#searchResultMore {
+  width:722px;
+  height:15px;
+  position:relative;
+  text-align:center;
+  border-width: 0;
+  border-top-width: 2px;
+  border-color: #aaaaaa;
+  border-style: solid;
+}
+
+#locationPicker{
+  position:absolute;
+  top:100px;
+  bottom:0;
+  float:left;
+  width:800px;
+  height:450px;
+  left:50%;
+  margin-left:-400px;
+  z-index: 10;
+}
+
+#searchHelp{
+  float:left;
+  width:20px;
+   margin-left:5px;
+   margin-right:5px; 
+   text-align:center;
+   display: inline-block;
+}
+
+#searchAsk{
+  float:left; 
+  width:20px;
+   margin-left:5px;
+   margin-right:5px;
+   text-align:center; 
+   display: inline-block;
+}
+
+#searchTypeContainer{
+  margin-left:10px;
+  margin-top:5px;
+}

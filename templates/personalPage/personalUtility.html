@@ -1,0 +1,112 @@
+<form id="utility">
+	<div id='profilePage_utilityTabContent'>
+		<div id='utility_personalInfo'>
+			<div class="expandableHeader button">
+				<div class="title">个人资料</div>
+				<div class="collapsed"></div>
+			</div>
+			<div class="utilityBoxContent">
+				<div id="utility_name">
+					<div class='label'>名字</div>
+					<div class='value'>乔布斯</div>
+					<input type='text' name='name' />
+					<div id='name_validator' class="validator">
+						<div id='name_validator_message'></div>
+					</div>
+				</div>
+				<div id="utility_phone">
+					<div class='label'>电话</div>
+					<div class='value'>158-0100-1234</div>
+					<input type='text' name='phone' />
+					<div id='phone_validator' class="validator">
+						<div id='phone_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="utility_QQ">
+					<div class='label'>QQ</div>
+					<div class='value'>1246718</div>
+					<input type='text' name='qq' />
+					<div id='qq_validator' class="validator">
+						<div id='qq_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="utility_location">
+					<div class='label'>位置</div>
+					<div class='value'>1246718</div>
+					<input type='text' name='location' />
+					<div id='location_validator' class="validator">
+						<div id='location_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="edit_personalInfo" class="button">编辑</div>
+				<div id="cancel_personalInfo" class="button">取消</div>
+				<div id="save_personalInfo" class="button">保存</div>
+			</div>
+		</div>
+		<div id='utility_displayPicture'>
+			<div class="expandableHeader button">
+				<div class="title">头像</div>
+				<div class="collapsed"></div>
+			</div>
+			<div class="utilityBoxContent">
+				<div id='utility_picture'></div>
+				<div id='file_picture'></div>
+				<div id='useDefault_picture' class="button">使用默认头像</div>
+				<div id='upload_picture' class="button">上传新头像</div>
+			</div>
+		</div>
+		<div id='utility_password'>
+			<div class="expandableHeader button">
+				<div class="title">修改密码</div>
+				<div class="collapsed"></div>
+			</div>
+			<div class="utilityBoxContent">
+				<div id="oldPassword">
+					<div class='label'>原密码</div>
+					<input type='password' name='oldPassword' />
+					<div id='oldpassword_validator' class="validator">
+						<div id='oldpassword_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="newPassword">
+					<div class='label'>新密码</div>
+					<input type='password' name='newPassword' />
+					<div id='newPassword_validator' class="validator">
+						<div id='newPassword_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="confirmNewPassword">
+					<div class='label'>确认新密码</div>
+					<input type='password' name='confirmNewPassword' />
+					<div id='confirmNewPassword_validator' class="validator">
+						<div id='confirmNewPassword_validator_message' class="validator_message"></div>
+					</div>
+				</div>
+				<div id="reset_password" class="button">清空</div>
+				<div id="submit_password" class="button">提交</div>
+			</div>
+		</div>
+		<div id='utility_accountSetting'>
+			<div class="expandableHeader button">
+				<div class="title">帐户设定</div>
+				<div class="collapsed"></div>
+			</div>
+			<div class="utilityBoxContent">
+				<div id="notificationMethod">
+					<div class='label'>提示方式</div>
+					<select name='notificationMethod' id = 'toggleNotificationMethods'>
+						<option value="both">phone+email</option>
+						<option value="phone">phone only</option>
+						<option value="email">email only</option>
+					</select>
+				</div>
+				<div id="paymentMethod">
+					<div class='label'>默认支付方式</div>
+					<select name='paymentMethod'>
+						<option value="0">线下</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
