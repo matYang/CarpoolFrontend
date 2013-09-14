@@ -1,7 +1,6 @@
 (function () {
 	'use strict';
-
-
+	var testMode = true;
 	this.SessionManager = function(){
 
 		this.apis = new ApiResource();
@@ -27,6 +26,7 @@
 	};
 
 	SessionManager.prototype.hasSession = function(){
+		if (this.testMode) return true;
 		return this.isLoggedIn;
 	};
 
@@ -48,6 +48,14 @@
 		var self = this;
 		
 		this.sessionUser = new User(this.apis.users_findSession);
+		if (this.testMode) {
+			this.sessionUser.id = 1;
+			this.isLoggedIn = true;
+			if(callback){
+				callback();
+			}
+			return;
+		}
 		//make sure the session user is new, and sends Get to /findSession
 		this.sessionUser.fetch({
 

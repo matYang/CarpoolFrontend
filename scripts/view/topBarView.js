@@ -16,7 +16,6 @@ var TopBarView = Backbone.View.extend({
 		this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
 
 
-
 		var self = this;
 
 		if (!app.sessionManager.hasSession()){

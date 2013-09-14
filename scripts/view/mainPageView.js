@@ -12,7 +12,7 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	initialize: function (params) {
-		_.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickGender', 'onClickTime', 'onClickLocation','submitSearch', 'refresh', 'bindEvents', 'close');
+		_.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickTime', 'onClickLocation','submitSearch', 'refresh', 'bindEvents', 'close');
 		app.viewRegistration.register("mainPage", this, true);
 		this.isClosed = false;
 		this.user = app.userManager.getTopBarUser();
@@ -63,7 +63,7 @@ var MainPageView = Backbone.View.extend ({
 			}
 		});
 
-		$("#searchDateInput").datepicker({
+		$("#searchDateInput_depart").datepicker({
 			buttonImageOnly: true,
 			buttonImage: "calendar.gif",
 			buttonText: "Calendar",
@@ -72,33 +72,29 @@ var MainPageView = Backbone.View.extend ({
 				var d = new Date();
 			}
 		});
-		$("#searchSchoolInput").val(this.targetLocation.get("university"));
-		$("#searchDateInput").val(Utilities.getDateString(this.targetDate));
+		$("#searchLocationInput_from").val(this.targetLocation.get("university"));
+		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDate));
 		if (this.searchState%2 === 0 ) {
-			$("#searchAsk").attr("class","selected button");
-			$("#searchHelp").attr("class","notSelected button");
+			$("#oneWay").attr("class","selected button");
+			$("#round").attr("class","notSelected button");
+			$("#searchDateInput_return").hide();
 		} else {
-			$("#searchAsk").attr("class","notSelected button");
-			$("#searchHelp").attr("class","selected button");
+			$("#oneWay").attr("class","notSelected button");
+			$("#round").attr("class","selected button");
+			$("#searchDateInput_return").show();
 		}
-		$("#searchAsk").on("click", function(){
-			$("#searchAsk").attr("class","selected button");
-			$("#searchHelp").attr("class","notSelected button");
+		$("#oneWay").on("click", function(){
+			$("#oneWay").attr("class","selected button");
+			$("#round").attr("class","notSelected button");
+			$("#searchDateInput_return").hide();
 			this.searchState = Constants.userSearchState.universityAsk;
 		});
-		$("#searchHelp").on("click", function(){
-			$("#searchAsk").attr("class","notSelected button");
-			$("#searchHelp").attr("class","selected button");
+		$("#round").on("click", function(){
+			$("#oneWay").attr("class","notSelected button");
+			$("#round").attr("class","selected button");
+			$("#searchDateInput_return").show();
 			this.searchState = Constants.userSearchState.universityHelp;
 		});
-		$("#genderSelections>.selected").removeClass('selected').addClass('notSelected');
-		if (this.filter.gender === Constants.gender.both) {
-			$("#genderSelectionNoPreference").removeClass('notSelected').addClass('selected');
-		} else if (this.filter.gender === Constants.gender.both) {
-			$("#genderSelectionMale").removeClass('notSelected').addClass('selected');
-		} else {
-			$("#genderSelectionFemale").removeClass('notSelected').addClass('selected');
-		}
 		$("#priceRangeDisplay").html(this.filter.priceMin + "-" + this.filter.priceMax);
 	},
 
@@ -111,15 +107,6 @@ var MainPageView = Backbone.View.extend ({
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 	},
-
-	onClickGender:function(e){
-		var me = $('#'+e.target.getAttribute('id'));
-		$("#genderSelections>.selected").removeClass('selected').addClass('notSelected');
-		me.removeClass('notSelected').addClass('selected');
-		var gender = e.target.getAttribute("data-id");
-		this.filter.gender = gender;
-	},
-
 	onClickTime: function (e) {
 		var me = $('#'+e.target.getAttribute('id'));
 		$("#timeSelections>.selected").removeClass('selected').addClass('notSelected');
@@ -174,13 +161,13 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	updateLocation: function () {
-		$("#searchSchoolInput").val(this.targetLocation.get("university"));
+		$("#searchLocationInput_from").val(this.targetLocation.get("university"));
 	},
 
 	bindEvents: function(){
 		var that = this;
 
-		$("#searchSchoolInput").on('click', function(e){
+		$("#searchLocationInput_from").on('click', function(e){
 			that.onClickLocation(e);
 		});
 
@@ -196,10 +183,6 @@ var MainPageView = Backbone.View.extend ({
 			that.refresh(e);
 		});
 
-		$("#genderSelections>.button").on('click', function(e){
-			that.onClickGender(e);
-		});
-
 	},
 
 	close: function () {
@@ -210,7 +193,6 @@ var MainPageView = Backbone.View.extend ({
 			$("#searchResultButton").off();
 			$("#refreshButton").off();
 			$("#genderSelections>.button").off();
-			$("#searchDateInputTagContainer").off();
 
 			this.searchResultView.close();
 

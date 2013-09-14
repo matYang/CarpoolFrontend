@@ -2,14 +2,14 @@ var SearchResultView = Backbone.View.extend({
 
 
 	initialize: function(messageList, isSearchResult){
-		_.bindAll(this, 'render', 'transferURL', 'bindMore', 'close');
+		_.bindAll(this, 'render', 'transferURL', 'bindPageNumber', 'setPageNavigator', 'close');
 		this.entries = 6 < messageList.length ? 6 : messageList.length;
+		this.currentPage = 1;
+		this.isSearchResult = isSearchResult;
 		if (isSearchResult){
 			this.singleSearchResultTemplate = _.template(tpl.get('DMModule/DMSimpleMessage'));
-			this.showMoreResultsDOM = "<div id = 'searchResultMore' class = 'searchResultMore button'>查看更多</div>";
 		} else {
 			this.singleSearchResultTemplate = _.template(tpl.get('DMModule/DMFront'));
-			this.showMoreResultsDOM = "";
 		}
 		
 
@@ -22,38 +22,33 @@ var SearchResultView = Backbone.View.extend({
 			this.domContainer = $("#quickStart_resultPanel");
 		}
 		this.render(0);
-		this.bindMore();
+		this.bindPageNumber();
 	},
 
 	render: function(start){
 		var i = start,
 			that = this,
 			toBeAppended = [];
-
+		$(".searchResultBoxContainer").fadeOut();
+		$(".searchResultBoxContainer").remove();
 		for (i = start; i < this.entries; i++){
 			toBeAppended[i] = this.singleSearchResultTemplate(this.messageList.at(i).toJSON());
 		}
-		toBeAppended[toBeAppended.length]=this.showMoreResultsDOM;
 		this.domContainer.append(toBeAppended.join(""));
 		for (i = start; i < this.entries; i++){
 			$('#searchResultBox_' + this.messageList.at(i).id).on('click', that.transferURL(this.messageList.at(i).id));
 		}
-
+		if (this.isSearchResult){
+			this.setPageNavigator();
+		}
 	},
-	bindMore: function() {
+	bindPageNumber: function() {
 		var that = this;
-		$("#searchResultMore").on("click",function(e){
-			
-			if (that.entries < that.messageLength) {
-				var addNum = 6;
-				if (that.messageLength - that.entries < 6){
-					addNum = that.messageLength - that.entries;
-				}
-				that.entries = that.entries+ addNum;
-				that.render(that.entries - addNum);
-			} else {
-				$("#searchResultMore").html("暂无更多消息");
-			}
+		$(".pageNumber").off();
+		$(".pageNumber").on("click",function(e){
+			if (!e.target.id) return;
+			debugger;
+			that.render((Utilities.toInt(Utilities.getId(e.target.id)) -1 )*this.entries);
 		});
 	},
 	transferURL: function(messageId){
@@ -66,7 +61,30 @@ var SearchResultView = Backbone.View.extend({
 			}
 		};
 	},
+	setPageNavigator: function(){
 
+		var pages = this.messageList.length / 6 + 1;
+		var buf = [];
+		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'>"+ 1 +"</span>";
+
+		if (this.currentPage>=5) {
+			buf[1] =  "<span class = 'pageNumber' >...</span>";
+		}
+
+		for (var i = 0; i < 3; i++) {
+			var pageNumber = this.currentPage - 1 + i;
+			if (pageNumber < pages && pageNumber > 0){
+				buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+ pageNumber + ">"+ pageNumber +"</span>";
+			}
+		}
+		if (this.currentPage + 1 < pages) {
+			buf[buf.length] =  "<span class = 'pageNumber' >...</span>";
+			buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+pages+">"+ pages +"</span>";
+		}
+		var html = buf.join("");
+		$("#pages").empty();
+		$("#pages").append(html);
+	},
 	close: function(){
 		for (i = 0; i < this.entries; i++){
 			$('#searchResultBox' + this.messageList.at(i).id).off();

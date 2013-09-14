@@ -3,7 +3,7 @@ $('input, textarea').placeholder();
 
 
 var AppRouter = Backbone.Router.extend({
-
+	testMode:true,
 	routes:{
 		"": "defaultRoute",
 
