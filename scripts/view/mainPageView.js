@@ -20,6 +20,7 @@ var MainPageView = Backbone.View.extend ({
 		this.template = _.template(tpl.get('main'));
 		this.filter.gender = Constants.gender.both;
 		var result;
+		this.currentPage = 0;
 		if (params) {
 			result = Utilities.decodeSearchKey(params.searchKey);
 		}
@@ -72,6 +73,15 @@ var MainPageView = Backbone.View.extend ({
 				var d = new Date();
 			}
 		});
+		$("#searchDateInput_return").datepicker({
+			buttonImageOnly: true,
+			buttonImage: "calendar.gif",
+			buttonText: "Calendar",
+			minDate: new Date(),
+			onSelect:function(text,inst){
+				var d = new Date();
+			}
+		});
 		$("#searchLocationInput_from").val(this.targetLocation.get("university"));
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDate));
 		if (this.searchState%2 === 0 ) {
@@ -106,6 +116,7 @@ var MainPageView = Backbone.View.extend ({
 		this.allMessages = app.messageManager.getSearchResults();
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
+		this.toPage(1);
 	},
 	onClickTime: function (e) {
 		var me = $('#'+e.target.getAttribute('id'));
@@ -152,7 +163,6 @@ var MainPageView = Backbone.View.extend ({
 				}
 			}
 		}
-
 		return filtered;
 	},
 
@@ -184,7 +194,42 @@ var MainPageView = Backbone.View.extend ({
 		});
 
 	},
+	toPage: function(page){
+		this.searchResultView.toPage(page);
+		this.currentPage = page;
+		this.setPageNavigator();
+	},
+	setPageNavigator: function(){
+		$(".pageNumber").off();
+		var pages = this.messageList.length / 6 + 1;
+		var buf = [];
+		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'>"+ 1 +"</span>";
 
+		if (this.currentPage>=5) {
+			buf[1] =  "<span class = 'pageNumber' >...</span>";
+		}
+
+		for (var i = 0; i < 3; i++) {
+			var pageNumber = this.currentPage - 1 + i;
+			if (pageNumber < pages && pageNumber > 0){ff
+				buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+ pageNumber + ">"+ pageNumber +"</span>";
+			}
+		}
+		if (this.currentPage + 1 < pages) {
+			buf[buf.length] =  "<span class = 'pageNumber' >...</span>";
+			buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+pages+">"+ pages +"</span>";
+
+		}
+		var html = buf.join("");
+		$("#pages").empty();
+		$("#pages").append(html);
+		var that = this;
+		$(".pageNumber").on("click", function(e){
+			if (!e.target.id) return;
+			var id = Utilities.toInt(Utilities.getId(e.target.id));
+			that.toPage(id);
+		});
+	},
 	close: function () {
 		if (!this.isClosed){
 			//removing all event handlers

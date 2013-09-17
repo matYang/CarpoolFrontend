@@ -2,9 +2,8 @@ var SearchResultView = Backbone.View.extend({
 
 
 	initialize: function(messageList, isSearchResult){
-		_.bindAll(this, 'render', 'transferURL', 'bindPageNumber', 'setPageNavigator', 'close');
+		_.bindAll(this, 'render', 'transferURL', 'bindPageNumber', 'close');
 		this.entries = 6 < messageList.length ? 6 : messageList.length;
-		this.currentPage = 1;
 		this.isSearchResult = isSearchResult;
 		if (isSearchResult){
 			this.singleSearchResultTemplate = _.template(tpl.get('DMModule/DMSimpleMessage'));
@@ -38,9 +37,6 @@ var SearchResultView = Backbone.View.extend({
 		for (i = start; i < this.entries; i++){
 			$('#searchResultBox_' + this.messageList.at(i).id).on('click', that.transferURL(this.messageList.at(i).id));
 		}
-		if (this.isSearchResult){
-			this.setPageNavigator();
-		}
 	},
 	bindPageNumber: function() {
 		var that = this;
@@ -61,30 +57,10 @@ var SearchResultView = Backbone.View.extend({
 			}
 		};
 	},
-	setPageNavigator: function(){
+	toPage: function(page){
 
-		var pages = this.messageList.length / 6 + 1;
-		var buf = [];
-		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'>"+ 1 +"</span>";
-
-		if (this.currentPage>=5) {
-			buf[1] =  "<span class = 'pageNumber' >...</span>";
-		}
-
-		for (var i = 0; i < 3; i++) {
-			var pageNumber = this.currentPage - 1 + i;
-			if (pageNumber < pages && pageNumber > 0){
-				buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+ pageNumber + ">"+ pageNumber +"</span>";
-			}
-		}
-		if (this.currentPage + 1 < pages) {
-			buf[buf.length] =  "<span class = 'pageNumber' >...</span>";
-			buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+pages+">"+ pages +"</span>";
-		}
-		var html = buf.join("");
-		$("#pages").empty();
-		$("#pages").append(html);
 	},
+
 	close: function(){
 		for (i = 0; i < this.entries; i++){
 			$('#searchResultBox' + this.messageList.at(i).id).off();

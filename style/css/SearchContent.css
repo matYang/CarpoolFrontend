@@ -371,15 +371,24 @@
   color:#333333;
   float:left;
 }
-#searchResultMore {
+#pageNavigator {
   width:722px;
   height:15px;
   position:relative;
-  text-align:center;
   border-width: 0;
   border-top-width: 2px;
   border-color: #aaaaaa;
   border-style: solid;
+}
+
+#pages{
+    float:right;
+    height:15px;
+    width:100px;
+}
+
+#number {
+  width:50px;
 }
 
 #locationPicker{
