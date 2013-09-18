@@ -7,12 +7,13 @@ var MainPageView = Backbone.View.extend ({
 	filter: {
 		"gender": Constants.gender.both,
 		"time": "morning",
+		"type": "all",
 		"priceMin": PRICE_MIN,
 		"priceMax": PRICE_MAX
 	},
 
 	initialize: function (params) {
-		_.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickTime', 'onClickLocation','submitSearch', 'refresh', 'bindEvents', 'close');
+		_.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickTime', 'onClickType', 'submitSearch', 'refresh', 'bindEvents', 'close');
 		app.viewRegistration.register("mainPage", this, true);
 		this.isClosed = false;
 		this.user = app.userManager.getTopBarUser();
@@ -25,12 +26,14 @@ var MainPageView = Backbone.View.extend ({
 			result = Utilities.decodeSearchKey(params.searchKey);
 		}
 		if (result) {
-			this.targetLocation = result[0];
-			this.targetDate = result[1];
-			this.searchState = result[2];
+			this.fromLocation = result[0];
+			this.toLocation = result[1];
+			this.targetDate = result[2];
+			this.searchState = result[3];
 		} else {
 			//assign parameters to current object, use defaults of not specified
-			this.targetLocation = this.user.get("location");
+			this.fromLocation = this.user.get("location");
+			this.toLocation = this.user.get("location");
 			this.targetDate = new Date();
 			this.searchState = this.user.get("searchState");
 		}
@@ -44,7 +47,8 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	messageSearch: function(){
-		app.messageManager.searchMessage(this.targetLocation, this.targetDate, this.searchState, this.renderSearchResults);
+		app.messageManager.searchMessage(this.fromLocation, this.targetDate, this.searchState, this.renderSearchResults);
+
 	},
 
 	render: function () {
@@ -82,7 +86,8 @@ var MainPageView = Backbone.View.extend ({
 				var d = new Date();
 			}
 		});
-		$("#searchLocationInput_from").val(this.targetLocation.get("university"));
+		$("#searchLocationInput_from").val(this.fromLocation.get("university"));
+		$("#searchLocationInput_to").val(this.toLocation.get("university"));
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDate));
 		if (this.searchState%2 === 0 ) {
 			$("#oneWay").attr("class","selected button");
@@ -97,15 +102,31 @@ var MainPageView = Backbone.View.extend ({
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
 			$("#searchDateInput_return").hide();
-			this.searchState = Constants.userSearchState.universityAsk;
+			me.searchState = Constants.userSearchState.universityAsk;
 		});
 		$("#round").on("click", function(){
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
 			$("#searchDateInput_return").show();
-			this.searchState = Constants.userSearchState.universityHelp;
+			me.searchState = Constants.userSearchState.universityHelp;
 		});
-		$("#priceRangeDisplay").html(this.filter.priceMin + "-" + this.filter.priceMax);
+		$("#goToSpecificPage>button").on("click", function(){
+			var page = $("#pageNumberInput").val();
+			if(!page) page = 1;
+			else if (page>me.pages) page = me.pages;
+			me.toPage(page);
+		})
+		$('#pageNumberInput').on('keypress', function(e){
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if (code === 13){
+				var page = $('#pageNumberInput').val();
+				if(!page) page = 1;
+				else if (page>me.pages) page = that.pages;
+				me.toPage(page);
+			} else if (code<48 || code>57) {
+				e.preventDefault();
+			}
+		});
 	},
 
 	renderSearchResults: function(){
@@ -125,16 +146,22 @@ var MainPageView = Backbone.View.extend ({
 		var time = e.target.getAttribute("data-id");
 		this.filter.time = time;
 	},
-
+	onClickType: function (e) {
+		var me = $('#'+e.target.getAttribute('id'));
+		$("#typeSelections>.selected").removeClass('selected').addClass('notSelected');
+		me.removeClass('notSelected').addClass('selected');
+		var type = e.target.getAttribute("data-id");
+		this.filter.type = type;
+	},
 	submitSearch: function () {
-		var encodedSearchKey = Utilities.encodeSearchKey([this.targetLocation, this.targetDate, this.searchState]);
+		var encodedSearchKey = Utilities.encodeSearchKey([this.fromLocation, this.targetDate, this.searchState]);
 		if (app.sessionManager.hasSession()) {
 			app.navigate(this.user.get("userId") + "/main/" + encodedSearchKey);
 		} else {
 			app.navigate("main/" + encodedSearchKey);
 		}
 		
-		app.messageManager.searchMessage(this.targetLocation, this.targetDate, this.searchState, this.renderSearchResults);
+		app.messageManager.searchMessage(this.fromLocation, this.targetDate, this.searchState, this.renderSearchResults);
 
 	},
 	refresh: function () {
@@ -148,41 +175,42 @@ var MainPageView = Backbone.View.extend ({
 	filterMessage: function(dmMessages){
 		var filtered = new DMMessages();
 		var l = dmMessages.length;
+		debugger;
 		for (var i = 0; i < l; i++ ) {
 			var m = dmMessages.at(i);
-			if (this.filter.gender === m.get("genderRequirement") || m.get("genderRequirement") === Constants.gender.both ){
-				if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
-					if ( this.filter.time === "morning" && m.get("startTime").getHours()<12 && m.get("startTime").getHours() >= 6) {
-						filtered.add(m);
-					} else if ( this.filter.time === "afternoon" && m.get("startTime").getHours()<19 && m.get("startTime").getHours() >=12) {
-						filtered.add(m);
-					} else if ( this.filter.time === "night" && (m.get("startTime").getHours()>=19 || m.get("startTime").getHours() < 6)) {
-						filtered.add(m);
-					}
-
+			if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
+				if ( this.filter.time === "morning" && m.get("startTime").getHours()<12 && m.get("startTime").getHours() >= 6) {
+					filtered.add(m);
+				} else if ( this.filter.time === "afternoon" && m.get("startTime").getHours()<19 && m.get("startTime").getHours() >=12) {
+					filtered.add(m);
+				} else if ( this.filter.time === "night" && (m.get("startTime").getHours()>=19 || m.get("startTime").getHours() < 6)) {
+					filtered.add(m);
 				}
 			}
 		}
 		return filtered;
 	},
-
-	onClickLocation: function () {
-		this.locationPickerView = new LocationPickerView(this.targetLocation, this);
-	},
-
-	updateLocation: function () {
-		$("#searchLocationInput_from").val(this.targetLocation.get("university"));
+	updateLocation: function (id) {
+		$("#"+id).val(this.fromLocation.get("university"));
 	},
 
 	bindEvents: function(){
 		var that = this;
 
 		$("#searchLocationInput_from").on('click', function(e){
-			that.onClickLocation(e);
+			this.locationPickerView = new LocationPickerView(this.fromLocation, this, "searchLocationInput_from");
+		});
+
+		$("#searchLocationInput_to").on('click', function(e){
+			this.locationPickerView = new LocationPickerView(this.toLocation, this, "searchLocationInput_from");
 		});
 
 		$("#timeSelections>.button").on('click', function(e){
 			that.onClickTime(e);
+		});
+
+		$("#typeSelections>.button").on('click', function(e){
+			that.onClickType(e);
 		});
 
 		$("#searchResultButton").on('click', function(e){
@@ -201,7 +229,9 @@ var MainPageView = Backbone.View.extend ({
 	},
 	setPageNavigator: function(){
 		$(".pageNumber").off();
-		var pages = this.messageList.length / 6 + 1;
+		var length = this.messageList ? this.messageList.length : 0;
+		var pages = length / 6 + 1;
+		this.pages = pages;
 		var buf = [];
 		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'>"+ 1 +"</span>";
 
@@ -227,7 +257,7 @@ var MainPageView = Backbone.View.extend ({
 		$(".pageNumber").on("click", function(e){
 			if (!e.target.id) return;
 			var id = Utilities.toInt(Utilities.getId(e.target.id));
-			that.toPage(id);
+			that.toPage(id); 
 		});
 	},
 	close: function () {
@@ -238,7 +268,8 @@ var MainPageView = Backbone.View.extend ({
 			$("#searchResultButton").off();
 			$("#refreshButton").off();
 			$("#genderSelections>.button").off();
-
+			$("#typeSelections>.button").off();
+			$(".pageNumber").off();
 			this.searchResultView.close();
 
 			//get ride of the view

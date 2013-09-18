@@ -37,6 +37,7 @@ var SearchResultView = Backbone.View.extend({
 		for (i = start; i < this.entries; i++){
 			$('#searchResultBox_' + this.messageList.at(i).id).on('click', that.transferURL(this.messageList.at(i).id));
 		}
+
 	},
 	bindPageNumber: function() {
 		var that = this;
@@ -58,7 +59,7 @@ var SearchResultView = Backbone.View.extend({
 		};
 	},
 	toPage: function(page){
-
+		this.render((page-1)*6);
 	},
 
 	close: function(){

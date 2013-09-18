@@ -22,21 +22,25 @@ var Utilities = {
 	},
 
 	encodeSearchKey: function(searchKeys){
-		if (searchKeys !== null && searchKeys.length != 3){
+		debugger;
+		if (searchKeys !== null && searchKeys.length != 4){
 			return null;
 		}
-		return searchKeys[0].toString() + "_" + searchKeys[1].getTime() + "_" + searchKeys[2];
+		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2].getTime() + "_" + searchKeys[3];
 	},
 
 	/*take in an encoded searchkey and decodes it*/
 	decodeSearchKey: function(encodedSearchKey){
 		if (encodedSearchKey !== null){
 			var encodedArray = encodedSearchKey.split("_");
-			if (encodedArray.length === 3){
-				var location = new UserLocation();
-				location.castFromString(encodedArray[0]);
-				encodedArray[0] = location;
-				encodedArray[1] = new Date(this.toInt(encodedArray[1]));
+			if (encodedArray.length === 4){
+				var fromLocation = new UserLocation();
+				var toLocation = new UserLocation();
+				fromLocation.castFromString(encodedArray[0]);
+				fromLocation.castFromString(encodedArray[1]);
+				encodedArray[0] = fromLocation;
+				encodedArray[1] = toLocation;
+				encodedArray[2] = new Date(this.toInt(encodedArray[2]));
 				return encodedArray;
 			}
 			else{

@@ -1,6 +1,6 @@
 #searchEventTab{
   float:left;
-  width:765px;
+  width:950px;
 }
 .searchInputLabel{
   width:50px;
@@ -10,7 +10,7 @@
 .searchInput{
   margin-top:15px;
   margin-left:15px;
-  width:245px;
+  width:225px;
   height:30px;
   padding-left:10px;
   float:left;
@@ -27,7 +27,8 @@
 #searchbox{
   background-color:#e5e5e5;
   height:115px;
-  width:745px;
+  width:730px;
+  margin-bottom:10px;
   float:left;
 }
 
@@ -63,17 +64,18 @@
    padding:8px 0 1px 0;
    left:12px;
    float:right;
+   margin-top:10px;
 }
 
 #filterBox {
-  position:fixed;
+  position:relative;
   background-color:#e5e5e5;
-  height:95px;
+  height:120px;
   width:300px;
-  margin-left:10px;
+  margin-left:-100px;
   padding-top:15px;
-  left:1250px;
-  top:90px;
+  left:120px;
+  float:left;
 }
 #filterBox > div{
   display:inline-blcok;
@@ -91,17 +93,12 @@
 #filterInputGenderTagContainer {
   margin-left:20px;
 }
-#searchFilterTimeContainer > div {
-  display:inline-block;
-}
-#searchFilterTimeContainer {
+
+#searchFilterTimeContainer, #searchFilterTypeContainer {
   width:300px;
   height: 22px;
   position:relative;
   margin-top:5px;
-  margin-left:20px;
-}
-#filterInputTimeTagContainer {
   margin-left:20px;
 }
 #datepicker{
@@ -158,7 +155,7 @@
    left:12px;
    float:right;
    margin-right:20px;
-   margin-top:10px;
+   margin-top:20px;
 }
 
 .genderList{
@@ -384,7 +381,7 @@
 #pages{
     float:right;
     height:15px;
-    width:100px;
+    text-align:right;
 }
 
 #number {
@@ -422,12 +419,12 @@
 }
 #inputFields{
   float:left;
-  width:550px;
+  width:520px;
   height:100px;
 }
 #searchTypeContainer{
   float:left;
-  width: 180px;
+  width: 200px;
   height:20px;
   margin-left:10px;
   margin-top:15px;
@@ -436,4 +433,15 @@
   text-align:center;
   float:left;
   width:80px;
+}
+#searchMain{
+  float:left;
+  width:745px;
+}
+#goToSpecificPage{
+  float:right;
+  margin-right:20px;
+}
+#goToSpecificPage > input {
+  width:50px;
 }

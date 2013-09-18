@@ -2,11 +2,11 @@ var LocationPickerView = Backbone.View.extend({
 
 	tagName: 'div',
 
-	initialize:function(locationObj, initiator){
+	initialize:function(locationObj, initiator, id){
 		_.bindAll(this, 'render','getProvinces','getCities', 'getUniversities','provinceDOMGenerator', 'cityDOMGenerator', 'universityDOMGenerator', 'complete','close', 'highLight');
 		app.viewRegistration.register("locationPicker", this, true);
 		this.isClosed = false;
-
+		this.id = id;
 		this.apis = new ApiResource();
 		this.location = locationObj || new UserLocation();
 		this.provinceName = this.location.get("province");
@@ -189,7 +189,7 @@ var LocationPickerView = Backbone.View.extend({
 			localStorage.locationString = locationString;
 		}
 
-		this.initiator.updateLocation();
+		this.initiator.updateLocation(this.id);
 		this.close();
 	},
 

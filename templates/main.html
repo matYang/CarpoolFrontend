@@ -1,4 +1,5 @@
 <div id='searchEventTab'>
+  <div id = 'searchMain'>
   <div id = 'searchbox' class = 'searchContainer'>
     <div id="inputFields">
     <input type="text" id = 'searchLocationInput_from' class = 'searchInput' />
@@ -7,38 +8,55 @@
     <input type="text" id = 'searchDateInput_return' class = 'searchInput' />
     </div>
     <div id = 'searchTypeContainer'>
-      <div id="oneWay">One Way</div>
-      <div id="round">Round Trip</div>
+      <div id="oneWay">单程</div>
+      <div id="round">往返</div>
     </div>
     <div id = 'searchResultDoneContainer'>
-      <div id = 'searchResultButton' class = 'searchResultButton button'>Find Trips</div>
+      <div id = 'searchResultButton' class = 'searchResultButton button'>查询</div>
     </div>
       
     </div>
       <div id = 'searchResultDisplayPanel' class = 'searchResultDisplay'>
     <!-- home to the searchResultView on mainPage-->
   </div>
-  <div id = 'pageNavigator'><input type='number'></input><button>GO</button><div id ='pages'></div></div>
+
+  <div id = 'pageNavigator'>
+      <div id ='pages'></div>
+    <div id = 'goToSpecificPage'>
+      <input type='number' id='pageNumberInput' value = '1' min='1' /><button>GO</button>
+    </div>
+
+    </div>
+  </div>
     <div id = 'filterBox' class = 'searchContainer'>
           <div id = 'searchFilterTimeContainer'>
-            <div id = 'filterInputTimeLabel' class = 'searchInputLabel'>TIME</div>  
+            <div id = 'filterInputTimeLabel' class = 'searchInputLabel'>时间</div>  
 
             <div id = 'filterInputTimeTagContainer' class = 'searchInputTagContainer'>
               <ul id = 'timeSelections'>
-                <li id = 'timeSelectionMorning' data-id='morning' class='selected timeList button'>Morning</li>
-                <li id = 'timeSelectionAfternoon' data-id='afternoon' class='notSelected timeList button'>Afternoon</li>
-                <li id = 'timeSelectionNight' data-id='night' class='notSelected timeList button'>Night</li>
+                <li id = 'timeSelectionMorning' data-id='morning' class='selected timeList button'>早上</li>
+                <li id = 'timeSelectionAfternoon' data-id='afternoon' class='notSelected timeList button'>下午</li>
+                <li id = 'timeSelectionNight' data-id='night' class='notSelected timeList button'>晚上</li>
                 <!-- need to add tooltip text here with js -->
               </ul>
             </div>
           </div>
 
-          <div id = 'searchFilterPriceContainer'>
-            <div id = 'filterInputPriceLabel' class = 'searchInputLabel'>Price</div> 
-          </div>
 
+          <div id = 'searchFilterTypeContainer'>
+            <div id = 'filterInputTypeLabel' class = 'searchInputLabel'>分类</div>
+            <ul id = 'typeSelections'>
+                <li id = 'typeSelectionAll' data-id='all' class='selected timeList button'>全部</li>
+                <li id = 'typeSelectionOffer' data-id='driver' class='notSelected timeList button'>司机</li>
+                <li id = 'typeSelectionFind' data-id='passenger' class='notSelected timeList button'>乘客</li>
+                <!-- need to add tooltip text here with js -->
+              </ul>
+          </div>
+          <div id = 'searchFilterPriceContainer'>
+            <div id = 'filterInputPriceLabel' class = 'searchInputLabel'>价格</div> 
+          </div>
           <div id = 'searchResultRefreshContainer'>
-            <div id = 'refreshButton' class = 'searchResultButton button'>Apply</div>
+            <div id = 'refreshButton' class = 'searchResultButton button'>应用</div>
           </div>
     </div>
 </div>
