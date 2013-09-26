@@ -3,7 +3,7 @@
   width:950px;
 }
 .searchInputLabel{
-  width:50px;
+  width:65px;
   float:left;
 }
 
@@ -94,7 +94,7 @@
   margin-left:20px;
 }
 
-#searchFilterTimeContainer, #searchFilterTypeContainer {
+#searchFilterTimeContainer1, #searchFilterTimeContainer2, #searchFilterTypeContainer {
   width:300px;
   height: 22px;
   position:relative;

@@ -23,24 +23,31 @@ var Utilities = {
 
 	encodeSearchKey: function(searchKeys){
 		debugger;
-		if (searchKeys !== null && searchKeys.length != 4){
+		if (searchKeys !== null && searchKeys.length < 4){
 			return null;
 		}
-		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2].getTime() + "_" + searchKeys[3];
+		if (searchKeys.length === 4) {
+			return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime();
+		}
+		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime() + "_" + searchKeys[4].getTime();
+
 	},
 
 	/*take in an encoded searchkey and decodes it*/
 	decodeSearchKey: function(encodedSearchKey){
 		if (encodedSearchKey !== null){
 			var encodedArray = encodedSearchKey.split("_");
-			if (encodedArray.length === 4){
+			if (encodedArray.length >= 4){
 				var fromLocation = new UserLocation();
 				var toLocation = new UserLocation();
 				fromLocation.castFromString(encodedArray[0]);
 				fromLocation.castFromString(encodedArray[1]);
 				encodedArray[0] = fromLocation;
 				encodedArray[1] = toLocation;
-				encodedArray[2] = new Date(this.toInt(encodedArray[2]));
+				encodedArray[3] = new Date(this.toInt(encodedArray[3]));
+				if (encodedArray.length === 5) {
+					encodedArray[4] =  new Date(this.toInt(encodedArray[3]));
+				}
 				return encodedArray;
 			}
 			else{

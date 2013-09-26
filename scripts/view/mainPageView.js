@@ -6,7 +6,8 @@ var MainPageView = Backbone.View.extend ({
 
 	filter: {
 		"gender": Constants.gender.both,
-		"time": "morning",
+		"time1": "morning",
+		"time2": "morning",
 		"type": "all",
 		"priceMin": PRICE_MIN,
 		"priceMax": PRICE_MAX
@@ -28,14 +29,16 @@ var MainPageView = Backbone.View.extend ({
 		if (result) {
 			this.fromLocation = result[0];
 			this.toLocation = result[1];
-			this.targetDate = result[2];
-			this.searchState = result[3];
+			this.searchState = result[2];
+			this.targetDepartDate = result[3];
+			this.targetReturnDate = result[4];
 		} else {
 			//assign parameters to current object, use defaults of not specified
 			this.fromLocation = this.user.get("location");
 			this.toLocation = this.user.get("location");
-			this.targetDate = new Date();
 			this.searchState = this.user.get("searchState");
+			this.targetDepartDate = new Date();
+			this.targetReturnDate = new Date();
 		}
 		//after data intialiazation, start render curreny view
 		this.render();
@@ -47,7 +50,9 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	messageSearch: function(){
-		app.messageManager.searchMessage(this.fromLocation, this.targetDate, this.searchState, this.renderSearchResults);
+
+		//Todo: Change to accept return date;
+		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
 
 	},
 
@@ -88,26 +93,38 @@ var MainPageView = Backbone.View.extend ({
 		});
 		$("#searchLocationInput_from").val(this.fromLocation.get("university"));
 		$("#searchLocationInput_to").val(this.toLocation.get("university"));
-		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDate));
+		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDepartDate));
+		$("#searchDateInput_return").val(Utilities.getDateString(this.targetReturnDate));
 		if (this.searchState%2 === 0 ) {
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
+			$("#searchFilterTimeContainer2").hide();
 			$("#searchDateInput_return").hide();
 		} else {
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
+			$("#searchFilterTimeContainer2").show();
 			$("#searchDateInput_return").show();
+			$("#filterBox").css("height","145px");
 		}
 		$("#oneWay").on("click", function(){
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
 			$("#searchDateInput_return").hide();
+			$("#searchFilterTimeContainer2").slideUp(200);
+			$("#filterBox").animate({
+			    height: "120px"
+			}, 200);
 			me.searchState = Constants.userSearchState.universityAsk;
 		});
 		$("#round").on("click", function(){
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
 			$("#searchDateInput_return").show();
+			$("#searchFilterTimeContainer2").slideDown(200);
+			$("#filterBox").animate({
+			    height: '146px'
+			}, 200);
 			me.searchState = Constants.userSearchState.universityHelp;
 		});
 		$("#goToSpecificPage>button").on("click", function(){
@@ -139,12 +156,12 @@ var MainPageView = Backbone.View.extend ({
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 		this.toPage(1);
 	},
-	onClickTime: function (e) {
+	onClickTime: function (e, parentId) {
 		var me = $('#'+e.target.getAttribute('id'));
-		$("#timeSelections>.selected").removeClass('selected').addClass('notSelected');
+		$("#"+parentId+">.selected").removeClass('selected').addClass('notSelected');
 		me.removeClass('notSelected').addClass('selected');
 		var time = e.target.getAttribute("data-id");
-		this.filter.time = time;
+		this.filter.time1 = time;
 	},
 	onClickType: function (e) {
 		var me = $('#'+e.target.getAttribute('id'));
@@ -154,14 +171,14 @@ var MainPageView = Backbone.View.extend ({
 		this.filter.type = type;
 	},
 	submitSearch: function () {
-		var encodedSearchKey = Utilities.encodeSearchKey([this.fromLocation, this.targetDate, this.searchState]);
+		var encodedSearchKey = Utilities.encodeSearchKey([this.fromLocation, this.toLocation, this.searchState, this.targetDepartDate, this.targetReturnDate]);
 		if (app.sessionManager.hasSession()) {
 			app.navigate(this.user.get("userId") + "/main/" + encodedSearchKey);
 		} else {
 			app.navigate("main/" + encodedSearchKey);
 		}
-		
-		app.messageManager.searchMessage(this.fromLocation, this.targetDate, this.searchState, this.renderSearchResults);
+		//TODO: change to accept return date
+		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
 
 	},
 	refresh: function () {
@@ -175,15 +192,15 @@ var MainPageView = Backbone.View.extend ({
 	filterMessage: function(dmMessages){
 		var filtered = new DMMessages();
 		var l = dmMessages.length;
-		debugger;
+
 		for (var i = 0; i < l; i++ ) {
 			var m = dmMessages.at(i);
 			if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
-				if ( this.filter.time === "morning" && m.get("startTime").getHours()<12 && m.get("startTime").getHours() >= 6) {
+				if ( this.filter.time1 === "morning" && m.get("departure_Time").getHours()<12 && m.get("departure_Time").getHours() >= 6) {
 					filtered.add(m);
-				} else if ( this.filter.time === "afternoon" && m.get("startTime").getHours()<19 && m.get("startTime").getHours() >=12) {
+				} else if ( this.filter.time === "afternoon" && m.get("departure_Time").getHours()<19 && m.get("departure_Time").getHours() >=12) {
 					filtered.add(m);
-				} else if ( this.filter.time === "night" && (m.get("startTime").getHours()>=19 || m.get("startTime").getHours() < 6)) {
+				} else if ( this.filter.time === "night" && (m.get("departure_Time").getHours()>=19 || m.get("departure_Time").getHours() < 6)) {
 					filtered.add(m);
 				}
 			}
@@ -205,8 +222,12 @@ var MainPageView = Backbone.View.extend ({
 			this.locationPickerView = new LocationPickerView(this.toLocation, this, "searchLocationInput_from");
 		});
 
-		$("#timeSelections>.button").on('click', function(e){
-			that.onClickTime(e);
+		$("#timeSelections1>.button").on('click', function(e){
+			that.onClickTime(e, "timeSelections1");
+		});
+
+		$("#timeSelections2>.button").on('click', function(e){
+			that.onClickTime(e, "timeSelections2");
 		});
 
 		$("#typeSelections>.button").on('click', function(e){
@@ -264,7 +285,8 @@ var MainPageView = Backbone.View.extend ({
 		if (!this.isClosed){
 			//removing all event handlers
 			$("#genderSelections>.button").off();
-			$("#timeSelections>.button").off();
+			$("#timeSelections1>.button").off();
+			$("#timeSelections2>.button").off();
 			$("#searchResultButton").off();
 			$("#refreshButton").off();
 			$("#genderSelections>.button").off();

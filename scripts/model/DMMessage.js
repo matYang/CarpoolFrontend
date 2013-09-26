@@ -3,38 +3,33 @@ var DMMessage = Backbone.Model.extend({
 	defaults:{
         "messageId": -1,
 		"ownerId": -1,
-
-		"ownerImgPath": "default",
-		"ownerName": "default",
-		"ownerLevel": -1,
-		"ownerAverageScore": -1,
-		"ownerPhone": "default",
-		"ownerEmail": "default",
-		"ownerQq": "default",
-		"paymentMethod": Constants.paymentMethod.offline,
-
-		"location": new UserLocation(),			//new Location(),
-		"startTime": new Date(),
-		"endTime": new Date(),
+		"owner": null,
 
 		"transactionList": new Transactions(),	//new ArrayList<Transaction>(),
 
+		"isRoundTrip":false,
+
+		"departure_Location": new UserLocation(),
+		"departure_Time": new Date(),
+		"departure_seatsNumber":0,
+		"departure_seatsBooked":0,
+		"departure_priceList":[],
+
+		"arrival_Location": new UserLocation(),
+		"arrival_Time": new Date(),
+		"arrival_seatsNumber":0,
+		"arrival_seatsBooked":0,
+		"arrival_priceList":[],
+
+		"paymentMethod": Constants.paymentMethod.offline,
 		"note": "deault",
 		"type": Constants.messageType.ask,
 		"genderRequirement": Constants.gender.both,
 		"state": Constants.messageState.normal,
 
-		"price": 0,
-		"active": false,
-		"historyDeleted": false,
 		"creationTime": new Date(),
-
-
-		"simple_date": "今天",
-		"simple_timeRange": "00:00 - 12:00",
-		"simple_duration": "12小时",
-		"simple_hourlyRate": 0,
-		"simple_startTime": "下午4点"
+		"editTime": new Date(),
+		"historyDeleted": false
 	},
 
 	idAttribute: "messageId",

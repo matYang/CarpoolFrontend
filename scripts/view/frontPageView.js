@@ -82,7 +82,7 @@ var FrontPageView = Backbone.View.extend({
 			}
 		});
 		$("#quickStartButton1").on("click", function(){
-			var params = [that.fromLocation, that.toLocation, that.date, Constants.userSearchState.universityHelp];
+			var params = [that.fromLocation, that.toLocation, Constants.userSearchState.universityHelp, that.date];
 			var key = Utilities.encodeSearchKey(params);
 			if (app.sessionManager.hasSession()) {
 				var id = app;
@@ -92,7 +92,7 @@ var FrontPageView = Backbone.View.extend({
 			}
 		});
 		$("#quickStartButton2").on("click", function(){
-			var params = [that.fromLocation, that.toLocation, that.date, Constants.userSearchState.universityAsk];
+			var params = [that.fromLocation, that.toLocation, Constants.userSearchState.universityAsk, that.date];
 			var key = Utilities.encodeSearchKey(params);
 			if (app.sessionManager.hasSession()) {
 				var id = app;

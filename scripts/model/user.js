@@ -3,36 +3,53 @@ var User = Backbone.Model.extend({
 	defaults:{
         "userId": -1,
         "password": "default",
-        "sessionCode": "default",
-
         "name": "default",
-        "level": 0,
-        "averageScore": 0,
-        "totalTranscations": 0,
-
-        "historyList": new DMMessages(),		//ArrayList<DMMessage>()
-        "watchList": new DMMessages(),			//ArrayList<DMMessage>()
-        "socialList": [],			//ArrayList<User>(),
-        "transactionList": new Transactions(),	//ArrayList<Transaction>(),
-        "notificationList": new Notifications(),	//ArrayList<Notification>(),
-        "universityGroup": [],                  //array of university names
+        "email": "default",
+        "phone": "default",
+        "qq": "default",
         "age": 0,
         "gender": Constants.gender.male,
-        "phone": "default",
-        "email": "default",
-        "qq": "default",
+        "birthday": new Date(),
         "imgPath": "default",
-        "location": new UserLocation(),			//new Location(),
+        "location": new UserLocation(),                 //new Location(),
+        
+        "lastLogin": new Date(),
+        "creationTime": new Date(),
 
+        "historyList": null,
+        "watchList": null,
+        "socialList": [],                       //ArrayList<User>(),
+        "transactionList": new Transactions(),  //ArrayList<Transaction>(),
+        "notificationList": new Notifications(),        //ArrayList<Notification>(),
+        "universityGroup": [],                  //array of university names
+        
         "emailActivated": false,
         "phoneActivated": false,
         "emailNotice": false,
         "phoneNotice": false,
         "state": Constants.userState.normal,
         "searchState": Constants.userSearchState.universityAsk,
-        "lastLogin": new Date(),
-        "creationTime": new Date(),
-        "paypal": "default"
+
+        "level": 0,
+        "averageScore": 0,
+        "totalTranscations": 0,
+
+        "googleToken":"",
+        "facebookToken":"",
+        "twitterToken":"",
+        "paypalToken":"",
+        "id_docType":"",
+        "id_docNum":"",
+        "id_path":"",
+        "id_vehicleImgPath":"",
+
+        "accountId":"",
+        "accountPass":"",
+        "accountToken":"",
+        "accountValue":0,
+
+        "sessionCode": "default",
+
 	},
 
         idAttribute: "userId",

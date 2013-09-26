@@ -101,7 +101,7 @@ var DMMessageEditView = Backbone.View.extend({
 		);
 		$("input[name=school]").val(this.message.get("location").get("university"));
 		$("textarea[name=detail]").val(this.message.get("note"));
-		var startDate = Utilities.getDateString(this.message.get("startTime"));
+		var startDate = Utilities.getDateString(this.message.get("departureTime"));
 		var endDate = Utilities.getDateString(this.message.get("end"));
 		$("input[name=publish_startDate_"+this.message.get("id")+"]").val(startDate);
 		if (startDate !== endDate){
@@ -110,9 +110,9 @@ var DMMessageEditView = Backbone.View.extend({
 			this.toggleDateVisibility();
 			$('input[name=publish_continuous_1]').attr("checked",false);
 		}
-		var time = Utilities.getTimeFromString(this.message.get("simple_startTime"));
+		var time = this.message.get("departure_Time");
 		$("select[name=class_time_"+this.message.get("id")+"]").val(time);
-		time = Utilities.getTimeFromString(this.message.get("simple_duration"));
+		time = this.message.get("arrival_Time");
 		$("select[name=class_duration_"+this.message.get("id")+"]").val(time);
 		$("input[name=publish_rate_"+this.message.get("id")+"]").val(this.message.get("simple_hourlyRate"));
 	},
