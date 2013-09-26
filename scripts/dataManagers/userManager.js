@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-
+	var testMode = true;
 	this.UserManager = function(sessionManager){
 
 		this.apis = new ApiResource();
@@ -94,7 +94,6 @@
 
 	UserManager.prototype.fetchTopBarUser = function(callback){
 		var self = this;
-
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("UserManager::getTopBarUser::currentUser does not have session, exit");
 			return;
@@ -102,6 +101,10 @@
 
 		this.topBarUser.overrideUrl(this.apis.users_topBar);
 		this.topBarUser.set('userId', this.sessionManager.getUserId());
+		if (testMode) {
+			callback();
+			return;
+		}
 		//this will force to add id into api path, correcting it
 		this.topBarUser.fetch({
             dataType:'json',
@@ -947,9 +950,9 @@
 		}
 
 
-		var tempCurMessage = new DMMessage();
+		var tempCurMessage = new Message();
 		//set the id of the temp user to curUserId to confront to API requirements
-		tempCurMessage.overrideUrl(this.apis.users_watchDMMessage);
+		tempCurMessage.overrideUrl(this.apis.users_watchMessage);
 		//adding the userId to this message id to force a correct id append
 		tempCurMessage.set('messageId', self.sessionManager.getUserId());
 
@@ -990,9 +993,9 @@
 		}
 
 
-		var tempCurMessage = new DMMessage();
+		var tempCurMessage = new Message();
 		//set the id of the temp user to curUserId to confront to API requirements
-		tempCurMessage.overrideUrl(this.apis.users_watchDMMessage);
+		tempCurMessage.overrideUrl(this.apis.users_watchMessage);
 		//adding the userId to this message id to force a correct id append
 		tempCurMessage.set('messageId', self.sessionManager.getUserId());
 
@@ -1094,9 +1097,9 @@
 		}
 
 
-		var watchedMessages = new DMMessages();
+		var watchedMessages = new Messages();
 		//confront to API requirements
-		watchedMessages.overrideUrl(this.apis.users_watchDMMessage + '/' + self.sessionManager.getUserId());
+		watchedMessages.overrideUrl(this.apis.users_watchMessage + '/' + self.sessionManager.getUserId());
 
 		//effective fetching the entire watchList
 		watchedMessages.fetch({
@@ -1142,7 +1145,7 @@
 		}
 
 
-		var messageHistory = new DMMessages();
+		var messageHistory = new Messages();
 		//confront to API requirements
 		messageHistory.overrideUrl(this.apis.users_messageHistory + '/' + self.sessionManager.getUserId());
 

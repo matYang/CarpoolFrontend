@@ -1,19 +1,19 @@
-var DMMessageDetailView = Backbone.View.extend({
+var MessageDetailView = Backbone.View.extend({
 
 	el: "",
 
 	initialize: function(id, message){
-		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'openTransactionDetail', 'parseDMMessage', 'parseTransaction', 'close');
-		app.viewRegistration.register("DMMessageDetail", this, true);
+		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'close');
+		app.viewRegistration.register("MessageDetail", this, true);
 		this.isClosed = false;
 		this.message = message;
 		this.userId = id;
 		if (testMockObj.testMode){
-			this.message = testMockObj.sampleDMMessageA;
+			this.message = testMockObj.sampleMessageA;
 			//To allow edit
 			this.transactions = testMockObj.sampleTransactions;
 		}
-		this.parsedMessage = this.parseDMMessage(this.message);
+		this.parsedMessage = this.parseMessage(this.message);
 		this.messageId = this.message.get("messageId");
 		this.ownerId = this.message.get("ownerId");
 
@@ -56,7 +56,7 @@ var DMMessageDetailView = Backbone.View.extend({
 		var that = this;
 		if ( this.ownerId === this.userId){
 			$(".view_edit_inline").on("click", function(){
-				app.navigate(that.userId + "/DMMessage/"+that.messageId+"/edit", true);
+				app.navigate(that.userId + "/Message/"+that.messageId+"/edit", true);
 			});
 		} else {
 			$(".view_edit_inline").hide();
@@ -94,25 +94,19 @@ var DMMessageDetailView = Backbone.View.extend({
 	},
 
 	openTransactionDetail: function(transaction){
-		var link = [this.userId,"/transaction/",transaction.get("transactionId"),"/DMMessage/",this.messageId];
+		var link = [this.userId,"/transaction/",transaction.get("transactionId"),"/Message/",this.messageId];
 		app.navigate(link.join(""));
-		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "DMMessage/"+this.messageId);
+		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "Message/"+this.messageId);
 	},
 
-	parseDMMessage: function(message){
+	parseMessage: function(message){
 		var parsedMessage = {};
-		parsedMessage.school = message.get("location").get("university");
-		parsedMessage.city = message.get("location").get("city") + " " + message.get("location").get("region");
+		var departure = message.get("departure_location");
+		parsedMessage.school = departure.get("university");
+		parsedMessage.city = departure.get("city") + " " + departure.get("region");
 		parsedMessage.ownerUser = message.get("ownerName");
 		parsedMessage.startTime = message.get("simple_date")+message.get("simple_startTime");
-		var gender = message.get("genderRequirement");
-		if (gender === Constants.gender.both ) {
-			parsedMessage.gender = "无所谓";
-		} else if (gender === Constants.gender.male ) {
-			parsedMessage.gender = "必须是男生";
-		} else if (gender === Constants.gender.female ) {
-			parsedMessage.gender = "必须是女生";
-		}
+		parsedMessage.type = message.get("Type");
 		parsedMessage.note = message.get("note");
 		parsedMessage.price = message.get("price");
 		parsedMessage.creationTime = "发布于"+Utilities.getDateString(message.get("creationTime"));

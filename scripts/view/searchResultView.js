@@ -52,7 +52,7 @@ var SearchResultView = Backbone.View.extend({
 		var that = this;
 		return function(){
 			if (app.sessionManager.hasSession()){
-				app.navigate(that.user.id + "/DMMessage/" + messageId, true);
+				app.navigate(that.user.id + "/Message/" + messageId, true);
 			} else {
 				alert("请先登陆");
 			}

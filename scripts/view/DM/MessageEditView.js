@@ -1,16 +1,16 @@
-var DMMessageEditView = Backbone.View.extend({
+var MessageEditView = Backbone.View.extend({
 
 	el: "",
 
 	initialize: function (id, message) {
 		_.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'populate', 'toggleDateVisibility', 'submit', 'close');
-		app.viewRegistration.register("DMMessageEdit", this, true);
+		app.viewRegistration.register("MessageEdit", this, true);
 		this.isClosed = false;
 		this.changed = false;
 		this.message = message;
 		this.location = new UserLocation();
 		if (testMockObj.testMode){
-			this.message = testMockObj.sampleDMMessageA;
+			this.message = testMockObj.sampleMessageA;
 		}
 		this.userid = id;
 		this.template = _.template(tpl.get('DMModule/DMEdit'));
@@ -32,7 +32,7 @@ var DMMessageEditView = Backbone.View.extend({
 	bindEvents: function () {
 		var that = this;
 		$("#publish_back").on("click", function() {
-			app.navigate(that.userId + "/DMMessage/"+that.messageId, true);
+			app.navigate(that.userId + "/Message/"+that.messageId, true);
 		});
 		$("#publish_finish").on("click", function() {
 			that.submit()
@@ -121,9 +121,9 @@ var DMMessageEditView = Backbone.View.extend({
 		$('span[name=to_1]').toggle();
 	},
 	submit: function () {
-		this.DMMessageManager.updateMessage(updatedMessage, function(){
+		this.MessageManager.updateMessage(updatedMessage, function(){
 			alert("Message Update success");
-			app.navigate(app.sessionManager.getUserId() + "/DMMessage/" + app.DMMessageManager.getMessage().id, true);
+			app.navigate(app.sessionManager.getUserId() + "/Message/" + app.MessageManager.getMessage().id, true);
 		});
 	},
 

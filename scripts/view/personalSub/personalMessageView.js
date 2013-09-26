@@ -56,7 +56,7 @@ var PersonalMessageView = Backbone.View.extend({
 		$("#profilePage_activeMessageParticipated>.profilePage_eventBox").off();
 		$("#profilePage_finishedMessageParticipated>.profilePage_eventBox").off();
 		$("#profilePage_activeMessageParticipated>.profilePage_eventBox").on("click", function(e){
-			app.navigate(that.user.get("userId")+/DMMessage/+Utilities.getId(e.delegateTarget.id),true);
+			app.navigate(that.user.get("userId")+/Message/+Utilities.getId(e.delegateTarget.id),true);
 		});
 	},
 
@@ -65,7 +65,7 @@ var PersonalMessageView = Backbone.View.extend({
 		$("#profilePage_activeMessagePublished>.profilePage_eventBox").off();
 		$("#profilePage_finishedMessagePublished>.profilePage_eventBox").off();
 		$("#profilePage_activeMessagePublished>.profilePage_eventBox").on("click", function(e){
-			app.navigate(that.user.get("userId")+/DMMessage/+Utilities.getId(e.delegateTarget.id),true);
+			app.navigate(that.user.get("userId")+/Message/+Utilities.getId(e.delegateTarget.id),true);
 		});
 	},
 

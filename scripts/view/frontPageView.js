@@ -16,7 +16,7 @@ var FrontPageView = Backbone.View.extend({
 
 		this.fromLocation = this.user.get("location");
 		this.toLocation = new UserLocation();
-		this.displayMessages = new DMMessages();
+		this.displayMessages = new Messages();
 		this.date = new Date();
 		this.render();
 		//fire async API call befire entering the time consuming events binding stage
@@ -109,7 +109,7 @@ var FrontPageView = Backbone.View.extend({
 		//define scope functions separately, do not make functions inside loops, use scope functions or function maker patterns
 		var callback_link = function(e){
 			if (app.sessionManager.hasSession()) {
-				app.navigate(that.user.get("userId")+"/DMMessage/" + Utilities.getId(e.delegateTarget.id), true);
+				app.navigate(that.user.get("userId")+"/Message/" + Utilities.getId(e.delegateTarget.id), true);
 			} else {
 				that.loginAlert();
 			}

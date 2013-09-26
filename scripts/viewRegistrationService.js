@@ -35,15 +35,15 @@
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
 			},
-			'DMMessageDetail': {
+			'MessageDetail': {
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
 			},
-			'DMMessageEdit': {
+			'MessageEdit': {
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
 			},
-			'DMMessagePost': {
+			'MessagePost': {
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
 			},

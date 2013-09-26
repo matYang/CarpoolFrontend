@@ -1,6 +1,6 @@
 
-/*dedicated view for DMMessage post, deep linking will not be used for DMMessage post states, this view holds the session data*/
-var DMMessagePostView = Backbone.View.extend({
+/*dedicated view for Message post, deep linking will not be used for Message post states, this view holds the session data*/
+var MessagePostView = Backbone.View.extend({
 
 	el: "",
 	toSubmit:{
@@ -25,8 +25,8 @@ var DMMessagePostView = Backbone.View.extend({
 	*/
 	initialize: function(user){
 		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents',
-			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toDMMessage', 'finish', 'close');
-		app.viewRegistration.register("DMMessagePost", this, true);
+			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'finish', 'close');
+		app.viewRegistration.register("MessagePost", this, true);
 		this.isClosed = false;
 		this.baseTemplate = _.template(tpl.get('DMModule/DMPublish_base'));
 		this.step1Template = _.template(tpl.get('DMModule/DMPublish_step1'));
@@ -568,15 +568,15 @@ var DMMessagePostView = Backbone.View.extend({
 	finish: function() {
 		//TODO
 		//for (var r in toSubmit.requests){
-			app.DMMessageManager.postMessage(this.toDMMessage(), function(){
+			app.MessageManager.postMessage(this.toMessage(), function(){
 				alert("Message Post successful");
-				app.navigate(app.sessionManager.getUserId() + "/DMMessage/" + app.DMMessageManager.getMessage().id, true);
+				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.MessageManager.getMessage().id, true);
 			});
 		//}
 	},
 
-	toDMMessage: function () {
-		var dmm = new DMMessage();
+	toMessage: function () {
+		var dmm = new Message();
 		dmm.set("type", toSubmit.type === "ask" ? Constants.messageType.ask : Constants.messageType.help);
 		var gender;
 		if (toSubmit.gender === "male") {

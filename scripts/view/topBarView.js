@@ -17,7 +17,6 @@ var TopBarView = Backbone.View.extend({
 
 
 		var self = this;
-
 		if (!app.sessionManager.hasSession()){
 			self.topBarUser = app.userManager.getTopBarUser();
 

@@ -1,14 +1,14 @@
 
 var testMockObj = {
 	"testMode": true,
-	"sampleDMMessages": new DMMessages(),
+	"sampleMessages": new Messages(),
 
-	"sampleDMMessageA": (new DMMessage()).set("messageId", 1001).set("ownerId",10000).set("ownerName","路卡修").set("price",20).set("ownerPhone","18651210086").set("ownerQq", "812461202").set("ownerEmail", "badstudent@gmail.com"),
-	"sampleDMMessageB": (new DMMessage()).set("messageId", 1002).set("ownerId",10000),
-	"sampleDMMessageC": (new DMMessage()).set("messageId", 1003).set("ownerId",10000),
-	"sampleDMMessageD": (new DMMessage()).set("messageId", 1004).set("ownerId",20001),
-	"sampleDMMessageE": (new DMMessage()).set("messageId", 1005).set("ownerId",20001),
-	"sampleDMMessageF": (new DMMessage()).set("messageId", 1006).set("ownerId",20001),
+	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("ownerName","路卡修").set("price",20).set("ownerPhone","18651210086").set("ownerQq", "812461202").set("ownerEmail", "badstudent@gmail.com"),
+	"sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",10000),
+	"sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000),
+	"sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",20001),
+	"sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",20001),
+	"sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",20001),
 
 	"sampleUser": (new User()).set("userId", 1560198).set("userName", "卢卡子").set("imgPath","http://tp3.sinaimg.cn/2018108150/180/40023913088/1"),
 	"sampleUsers": new Users(),
@@ -37,6 +37,6 @@ var testMockObj = {
 };
 
 testMockObj.sampleTransactions.add([testMockObj.sampleTransactionA, testMockObj.sampleTransactionB, testMockObj.sampleTransactionC, testMockObj.sampleTransactionD, testMockObj.sampleTransactionE, testMockObj.sampleTransactionF]);
-testMockObj.sampleDMMessages.add([testMockObj.sampleDMMessageA, testMockObj.sampleDMMessageB, testMockObj.sampleDMMessageC, testMockObj.sampleDMMessageD, testMockObj.sampleDMMessageE, testMockObj.sampleDMMessageF]);
+testMockObj.sampleMessages.add([testMockObj.sampleMessageA, testMockObj.sampleMessageB, testMockObj.sampleMessageC, testMockObj.sampleMessageD, testMockObj.sampleMessageE, testMockObj.sampleMessageF]);
 testMockObj.sampleNotifications.add([testMockObj.sampleNotificationA, testMockObj.sampleNotificationB, testMockObj.sampleNotificationC, testMockObj.sampleNotificationD, testMockObj.sampleNotificationE, testMockObj.sampleNotificationF]);
 testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, testMockObj.sampleUserC, testMockObj.sampleUserD, testMockObj.sampleUserE, testMockObj.sampleUserF]);

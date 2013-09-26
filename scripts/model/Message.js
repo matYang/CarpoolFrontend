@@ -1,4 +1,4 @@
-var DMMessage = Backbone.Model.extend({
+var Message = Backbone.Model.extend({
 	//TODO fill in Constants with enum int mapping
 	defaults:{
         "messageId": -1,
@@ -103,9 +103,9 @@ var DMMessage = Backbone.Model.extend({
 
 });
 
-var DMMessages = Backbone.Collection.extend({
+var Messages = Backbone.Collection.extend({
 
-	model: DMMessage,
+	model: Message,
 
 	url: Constants.origin + "/api/v1.0/dianming/dianming",
 

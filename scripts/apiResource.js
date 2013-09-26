@@ -63,7 +63,7 @@ we do not give up, not this time
 					toggleEmailNotice: '/toggleEmailNotice',
 					togglePhoneNotice: '/togglePhoneNotice',
 					watchUser: '/watchUser',
-					watchDMMessage: '/watchDMMessage',
+					watchMessage: '/watchMessage',
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
 					notification: '/notification'
@@ -124,7 +124,7 @@ we do not give up, not this time
 				users_toggleEmailNotice : api_maker('users', 'toggleEmailNotice'),
 				users_togglePhoneNotice : api_maker('users', 'togglePhoneNotice'),
 				users_watchUser : api_maker('users', 'watchUser'),
-				users_watchDMMessage : api_maker('users', 'watchDMMessage'),
+				users_watchMessage : api_maker('users', 'watchMessage'),
 				users_messageHistory : api_maker('users', 'messageHistory'),
 				users_transaction : api_maker('users', 'transaction'),
 				users_notification : api_maker('users', 'notification'),

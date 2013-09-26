@@ -2,51 +2,51 @@
 	'use strict';
 
 
-	this.DMMessageManager = function(sessionManager,  userManager){
+	this.MessageManager = function(sessionManager,  userManager){
 
 		this.apis = new ApiResource();
 
 		this.sessionManager = sessionManager;
 		this.userManager = userManager;
 
-		this.message = new DMMessage();
+		this.message = new Message();
 		this.timeStamp = new Date();
 
-		this.searchResults = new DMMessages();
+		this.searchResults = new Messages();
 		this.searchResults_timeStamp = new Date();
 
-		this.recents = new DMMessages();
+		this.recents = new Messages();
 		this.recents_timeStamp = new Date();
 
 		this.sessionManager.resgisterManager(this);
 	};
 
-	DMMessageManager.prototype.getMessage = function() {
+	MessageManager.prototype.getMessage = function() {
 		return this.message;
 	};
 
-	DMMessageManager.prototype.getSearchResults = function() {
+	MessageManager.prototype.getSearchResults = function() {
 		return this.searchResults;
 	};
 
-	DMMessageManager.prototype.getRecents = function() {
+	MessageManager.prototype.getRecents = function() {
 		return this.recents;
 	};
 
 	//only reset the detailed message upon logout
-	DMMessageManager.prototype.release = function() {
-		this.message = new DMMessage();
+	MessageManager.prototype.release = function() {
+		this.message = new Message();
 		this.timeStamp = new Date();
 	};
 
 
-	DMMessageManager.prototype.fetchMessage = function(messageId, callback){
+	MessageManager.prototype.fetchMessage = function(messageId, callback){
 		if (typeof messageId !== 'number' ){
-			Constants.dWarn("DMMessageManager::fetchMessage:: invalid parameter");
+			Constants.dWarn("MessageManager::fetchMessage:: invalid parameter");
 			return;
 		}
 		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("DMMessageManager::fetchMessage:: session does not exist, exit");
+			Constants.dWarn("MessageManager::fetchMessage:: session does not exist, exit");
 			return;
 		}
 
@@ -69,20 +69,20 @@
 			},
 
 			error: function(model, response){
-				Constants.dWarn("DMMessageManager::fetchMessage:: fetch failed with response:");
+				Constants.dWarn("MessageManager::fetchMessage:: fetch failed with response:");
 				Constants.dLog(response);
 			}
 		});
 	};
 
-	DMMessageManager.prototype.postMessage = function(newMessage, callback) {
+	MessageManager.prototype.postMessage = function(newMessage, callback) {
 		var self = this;
 		if (!newMessage || typeof newMessage !== 'object'){
-			Constants.dWarn("DMMessageManager::postMessage::invalid parameter, exit");
+			Constants.dWarn("MessageManager::postMessage::invalid parameter, exit");
 			return;
 		}
 		if (!sessionManager.hasSession()){
-			Constants.dWarn("DMMessageManager::postMessage::currentDMMessage does not have session, exit");
+			Constants.dWarn("MessageManager::postMessage::currentMessage does not have session, exit");
 			return;
 		}
 
@@ -105,20 +105,20 @@
 			},
 
 			error: function(model, response){
-				Constants.dWarn("DMMessageManager::postMessage:: post failed with response:");
+				Constants.dWarn("MessageManager::postMessage:: post failed with response:");
 				Constants.dLog(response);
 			}
 		});
 	};
 
 
-	DMMessageManager.prototype.updateMessage = function(updatedMessage, callback) {
+	MessageManager.prototype.updateMessage = function(updatedMessage, callback) {
 		if (!updatedMessage || typeof updatedMessage !== 'object'){
-			Constants.dWarn("DMMessageManager::updateMessage:: invalid parameter");
+			Constants.dWarn("MessageManager::updateMessage:: invalid parameter");
 			return;
 		}
 		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("DMMessageManager::updateMessage:: session does not exist, exit");
+			Constants.dWarn("MessageManager::updateMessage:: session does not exist, exit");
 			return;
 		}
 
@@ -141,7 +141,7 @@
             },
 
             error: function(model, response){
-                Constants.dWarn("DMMessageManager::updateMessage:: update failed with response:");
+                Constants.dWarn("MessageManager::updateMessage:: update failed with response:");
                 Constants.dLog(response);
 
             }
@@ -150,14 +150,14 @@
 	};
 
 
-	DMMessageManager.prototype.deleteMessage = function(messageId, callback) {
+	MessageManager.prototype.deleteMessage = function(messageId, callback) {
 		var self = this;
 		if (typeof messageId !== 'number'){
-			Constants.dWarn("DMMessageManager::deleteMessage:: invalid parameter");
+			Constants.dWarn("MessageManager::deleteMessage:: invalid parameter");
 			return;
 		}
 		if (!sessionManager.hasSession()){
-			Constants.dWarn("DMMessageManager::deleteMessage::current user does not have session, exit");
+			Constants.dWarn("MessageManager::deleteMessage::current user does not have session, exit");
 			return;
 		}
 
@@ -177,7 +177,7 @@
             },
 
             error: function(model, response){
-                Constants.dWarn("DMMessageManager::deleteMessage:: delete failed with response:");
+                Constants.dWarn("MessageManager::deleteMessage:: delete failed with response:");
                 Constants.dLog(response);
 
             }
@@ -186,14 +186,14 @@
 	};
 
 	//cannot use search because of naming collisions
-	DMMessageManager.prototype.searchMessage = function(location, date, searchState, callback) {
-		this.searchResults = testMockObj.sampleDMMessages;
+	MessageManager.prototype.searchMessage = function(location, date, searchState, callback) {
+		this.searchResults = testMockObj.sampleMessages;
 		callback();
 
 		// var self = this;
 
 		// if (typeof location !== 'object' || typeof date !== 'object' || typeof searchState !== 'number'){
-		// 	Constants.dWarn("DMMessageManager::fetchSearchResult:: invalid parameter, exit");
+		// 	Constants.dWarn("MessageManager::fetchSearchResult:: invalid parameter, exit");
 		// 	return;
 		// }
 
@@ -218,16 +218,16 @@
   //           },
 
   //           error: function(model, response){
-  //               Constants.dWarn("DMMessageManager::fetchSearchResult:: fetch failed with response:");
+  //               Constants.dWarn("MessageManager::fetchSearchResult:: fetch failed with response:");
   //               Constants.dLog(response);
 
   //           }
   //       });
 	};
 
-	DMMessageManager.prototype.fetchRecents = function(callback) {
+	MessageManager.prototype.fetchRecents = function(callback) {
 
-		this.recents = testMockObj.sampleDMMessages;
+		this.recents = testMockObj.sampleMessages;
 		callback();
 
 		//TODO: uncomment
@@ -248,7 +248,7 @@
   //           },
 
   //           error: function(model, response){
-  //               Constants.dWarn("DMMessageManager::fetchRecents:: fetch failed with response:");
+  //               Constants.dWarn("MessageManager::fetchRecents:: fetch failed with response:");
   //               Constants.dLog(response);
 
   //           }

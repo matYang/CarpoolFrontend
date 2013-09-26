@@ -26,7 +26,7 @@
 	};
 
 	SessionManager.prototype.hasSession = function(){
-		if (this.testMode) return true;
+		if (testMode) return true;
 		return this.isLoggedIn;
 	};
 
@@ -48,7 +48,7 @@
 		var self = this;
 		
 		this.sessionUser = new User(this.apis.users_findSession);
-		if (this.testMode) {
+		if (testMode) {
 			this.sessionUser.id = 1;
 			this.isLoggedIn = true;
 			if(callback){

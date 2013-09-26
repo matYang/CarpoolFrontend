@@ -75,7 +75,7 @@ var PersonalWatchView = Backbone.View.extend({
 		$("#messageWatchContent>.profilePage_eventBox").off();
 		$("#messageWatchContent>.profilePage_eventBox").on("click", function(e){
 			var id = Utilities.getId(e.delegateTarget.id);
-			app.navigate(that.user.get("userId") + "/DMMessage/" + id, true);
+			app.navigate(that.user.get("userId") + "/Message/" + id, true);
 		});
 	},
 

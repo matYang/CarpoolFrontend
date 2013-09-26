@@ -190,7 +190,7 @@ var MainPageView = Backbone.View.extend ({
 
 	},
 	filterMessage: function(dmMessages){
-		var filtered = new DMMessages();
+		var filtered = new Messages();
 		var l = dmMessages.length;
 
 		for (var i = 0; i < l; i++ ) {

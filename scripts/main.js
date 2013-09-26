@@ -20,11 +20,11 @@ var AppRouter = Backbone.Router.extend({
 
 		":id/transaction/:transactionId/*link" : "transactionDetail",
 
-		":id/DMMessage/:messageId" : "DMMessageDetail",
-		":id/DMMessage/:messageId/edit" : "DMMessageEdit",
+		":id/Message/:messageId" : "MessageDetail",
+		":id/Message/:messageId/edit" : "MessageEdit",
 
-		":id/DMpost" : "postDMMessage",
-		":id/DMpost/*postState" : "postDMMessageWithState",
+		":id/DMpost" : "postMessage",
+		":id/DMpost/*postState" : "postMessageWithState",
 
 
 		"register" : "register",
@@ -40,7 +40,7 @@ var AppRouter = Backbone.Router.extend({
 		//initializing all the data managers
 		this.sessionManager = new SessionManager();
 		this.userManager = new UserManager(this.sessionManager);
-		this.messageManager = new DMMessageManager(this.sessionManager,  this.userManager);
+		this.messageManager = new MessageManager(this.sessionManager,  this.userManager);
 		this.transactionManager = new TransactionManager(this.sessionManager, this.userManager);
 		this.notificationManager = new NotificationManager(this.sessionManager, this.userManager);
 		this.generalManager = new GeneralManager(this.sessionManager, this.userManager);
@@ -56,7 +56,7 @@ var AppRouter = Backbone.Router.extend({
 
 		this.userLocation = new UserLocation();
 		this.curDate = new Date();
-		this.searchResult = new DMMessages();
+		this.searchResult = new Messages();
 
 
 		// //test login API, must obtain login status before proceeding
@@ -180,7 +180,7 @@ var AppRouter = Backbone.Router.extend({
 		}
 	},
 
-	DMMessageDetail: function(id, messageId){
+	MessageDetail: function(id, messageId){
 		if (!this.sessionManager.hasSession()){
 			this.navigate("front", true);
 			return;
@@ -188,12 +188,12 @@ var AppRouter = Backbone.Router.extend({
 
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
-		this.dMMessageDetailView = new DMMessageDetailView();
+		this.dMMessageDetailView = new MessageDetailView();
 		this.advertisementView = new AdvertisementView();
 	},
 
 
-	DMMessageEdit: function(id, messageId){
+	MessageEdit: function(id, messageId){
 		if (!this.sessionManager.hasSession()){
 			this.navigate("front", true);
 			return;
@@ -201,15 +201,15 @@ var AppRouter = Backbone.Router.extend({
 
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
-		this.dMMessageEditView = new DMMessageEditView();
+		this.dMMessageEditView = new MessageEditView();
 		this.advertisementView = new AdvertisementView();
 	},
 
-	postDMMessage: function(id, postState){
+	postMessage: function(id, postState){
 		app.navigate(this.userManager.getTopBarUser().id + "/DMpost/" + Config.getDefaultDMPostState() , true);
 	},
 
-	postDMMessageWithState: function(id, postState){
+	postMessageWithState: function(id, postState){
 		if (!this.sessionManager.hasSession()){
 			this.navigate("front", true);
 			return;
@@ -223,7 +223,7 @@ var AppRouter = Backbone.Router.extend({
 		else{
 			//if the post session not valid, start new session, creat brand new view
 			if (!this.dMMessagePostView || this.dMMessagePostView.isClosed){
-				this.dMMessagePostView = new DMMessagePostView();
+				this.dMMessagePostView = new MessagePostView();
 			}
 			//if the post session did not end, keep using the same post session
 			else{
@@ -244,9 +244,9 @@ var AppRouter = Backbone.Router.extend({
 
 			this.personal(id, "history");
 		}
-		else if ( link.indexOf("DMMessage") > -1) {
+		else if ( link.indexOf("Message") > -1) {
 
-			this.DMMessageDetail(id, Utilities.getId(link,"/"));
+			this.MessageDetail(id, Utilities.getId(link,"/"));
 		}
 		this.transactionView = new TransactionDetailView({},{},link);
 	},
