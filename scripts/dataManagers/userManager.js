@@ -175,6 +175,10 @@
 		this.user.overrideUrl(this.apis.users_user);
 		this.user.set('userId', this.sessionManager.getUserId());
 		//this will force to add id into api path, correcting it
+		if (testMode) {
+			callback();
+			return;
+		}
 		this.user.fetch({
 
 			data: $.param({ 'intendedUserId': intendedUserId}),

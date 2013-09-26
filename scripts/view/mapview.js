@@ -4,38 +4,42 @@ var MapView = Backbone.View.extend({
 	initialize:function(config){
 		_.bindAll(this,'render','mapInitialize','drawCircle','getLatLng') ;
 		this.div = config.div;
-		this.location = config.location;
+		this.origin = config.originLocation;
+		this.dest = config.destLocation;
+		this.oLatLng = {};
+		this.dLatLng = {};
+		this.directionDisplay = new google.maps.DirectionsRenderer();
+		this.directionService = new google.maps.DirectionsService();
 		this.geocoder = new google.maps.Geocoder();
 		this.mapInitialize();
 	},
 
 	mapInitialize:function(){
+		this.getLatLng(this.origin, this.oLatLng);
+		var center = new google.maps.LatLng(this.oLatLng.lat, this.oLatLng.lng);
 		var myOptions = {
 				zoom: 4,
+				center: center,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		this.map = new google.maps.Map(document.getElementById(this.div), myOptions);
-		if (this.location.get("university")){
-			this.getLatLng(this.location);
+		this.directionDisplay.setMap(this.map);
+		var that = this;
+		if (this.origin.get("city") && this.dest.get("city")){
+			that.getDirection(that.origin, that.dest);
 		}
 	},
 	
-	getLatLng: function(location){
+	getLatLng: function(location, latlng){
 		var request =  {};
 		var me = this;
-		this.location = location;
-		request.address = this.location.get("university");
+		request.address = location.get("university");
 		var result = this.geocoder.geocode(request, function(geocodeResults, status){
 			if (status == google.maps.GeocoderStatus.OK) {
 				me.map.setCenter(geocodeResults[0].geometry.location);
 				me.map.setZoom(13);
-				me.lat = geocodeResults[0].geometry.location.lat();
-				me.lgt = geocodeResults[0].geometry.location.lng();
-				var marker = new google.maps.Marker({
-					map: me.map,
-					position: geocodeResults[0].geometry.location
-				});
-					me.drawCircle(me.lat, me.lgt);
+				latlng = geocodeResults[0].geometry.location.lat();
+				latlng = geocodeResults[0].geometry.location.lng();
 			}
 			else {
 				alert('Geocode was not successful for the following reason: ' + status);
@@ -45,6 +49,10 @@ var MapView = Backbone.View.extend({
 	drawCircle:function(lat, lgt){
 		var center = new google.maps.LatLng(lat, lgt);
 
+		// var marker = new google.maps.Marker({
+		// 	map: me.map,
+		// 	position: geocodeResults[0].geometry.location
+		// });
 		//drawing the circle
 		var circleOptions = {
 				strokeColor: '#2E8AE6',
@@ -63,6 +71,18 @@ var MapView = Backbone.View.extend({
 			position: center,
 			map: this.map,
 		});
+	},
+	getDirection:function(origin, dest){
+		var request = {}, that = this;
+		request.origin = origin.get("city") + origin.get("region");
+		request.destination = dest.get("city") + dest.get("region");
+		request.travelMode = google.maps.TravelMode.DRIVING;
+		request.unitSystem = google.maps.UnitSystem.METRIC;
+		this.directionService.route(request, function(response, status) {
+    		if (status == google.maps.DirectionsStatus.OK) {
+      			that.directionDisplay.setDirections(response);
+    		}
+  		});
 	}
 
 });

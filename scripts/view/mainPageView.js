@@ -189,12 +189,12 @@ var MainPageView = Backbone.View.extend ({
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 
 	},
-	filterMessage: function(dmMessages){
+	filterMessage: function(messages){
 		var filtered = new Messages();
-		var l = dmMessages.length;
+		var l = messages.length;
 
 		for (var i = 0; i < l; i++ ) {
-			var m = dmMessages.at(i);
+			var m = messages.at(i);
 			if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
 				if ( this.filter.time1 === "morning" && m.get("departure_Time").getHours()<12 && m.get("departure_Time").getHours() >= 6) {
 					filtered.add(m);

@@ -11,6 +11,9 @@ var MessageDetailView = Backbone.View.extend({
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
 			//To allow edit
+			this.message.get("arrival_Location").set("city","苏州");
+			this.message.get("arrival_Location").set("region","苏州市区");
+			this.message.get("arrival_Location").set("university","苏州大学");
 			this.transactions = testMockObj.sampleTransactions;
 		}
 		this.parsedMessage = this.parseMessage(this.message);
@@ -31,7 +34,8 @@ var MessageDetailView = Backbone.View.extend({
 		this.loadTransactions();
 		this.map = new MapView({
 			div:"view_map",
-			location:this.message.get("location")
+			originLocation:this.message.get("departure_Location"),
+			destLocation:this.message.get("arrival_Location"),
 		});
 	},
 	loadTransactions: function(){
@@ -101,11 +105,11 @@ var MessageDetailView = Backbone.View.extend({
 
 	parseMessage: function(message){
 		var parsedMessage = {};
-		var departure = message.get("departure_location");
+		var departure = message.get("departure_Location");
 		parsedMessage.school = departure.get("university");
 		parsedMessage.city = departure.get("city") + " " + departure.get("region");
 		parsedMessage.ownerUser = message.get("ownerName");
-		parsedMessage.startTime = message.get("simple_date")+message.get("simple_startTime");
+		parsedMessage.departureTime = message.get("departure_Time");
 		parsedMessage.type = message.get("Type");
 		parsedMessage.note = message.get("note");
 		parsedMessage.price = message.get("price");

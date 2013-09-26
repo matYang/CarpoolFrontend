@@ -241,8 +241,12 @@
   background-color: rgb(236,223,177);
 }
 #logout{
-  margin-left:5px;
   color:#3377ff;
+}
+#logout.dropdownContent{
+  text-align:center;
+  padding-left:0;
+  width:60px;
 }
 .whiteBackground{
   background-color: #ffffff;
