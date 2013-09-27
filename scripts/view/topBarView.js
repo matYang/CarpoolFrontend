@@ -116,9 +116,14 @@ var TopBarView = Backbone.View.extend({
 		});
 		$('#profileDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "profilePicture"){
-				that.hideLikes();
+				that.hideProfile();
 			}
 		});
+		// $('#logout').on('mouseleave', function(e)) {
+		// 	if (e.toElement.id !== "profilePicture"){
+		// 		that.hideLikes();
+		// 	}
+		// });
 		if (!app.sessionManager.hasSession()){
 			$('#signup_button').on('click', function(){
 				app.navigate("/register", true);

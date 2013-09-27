@@ -15,6 +15,7 @@ var MapView = Backbone.View.extend({
 	},
 
 	mapInitialize:function(){
+		debugger;
 		if (this.origin) {
 			this.getLatLng(this.origin, this.oLatLng);
 		}

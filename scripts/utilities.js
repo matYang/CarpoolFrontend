@@ -22,7 +22,6 @@ var Utilities = {
 	},
 
 	encodeSearchKey: function(searchKeys){
-		debugger;
 		if (searchKeys !== null && searchKeys.length < 4){
 			return null;
 		}
@@ -46,7 +45,7 @@ var Utilities = {
 				encodedArray[1] = toLocation;
 				encodedArray[3] = new Date(this.toInt(encodedArray[3]));
 				if (encodedArray.length === 5) {
-					encodedArray[4] =  new Date(this.toInt(encodedArray[3]));
+					encodedArray[4] =  new Date(this.toInt(encodedArray[4]));
 				}
 				return encodedArray;
 			}

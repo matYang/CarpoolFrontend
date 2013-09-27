@@ -8,7 +8,8 @@ var MessageEditView = Backbone.View.extend({
 		this.isClosed = false;
 		this.changed = false;
 		this.message = message;
-		this.location = new UserLocation();
+		this.origin = new UserLocation();
+		this.destination = new UserLocation();
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
 		}
@@ -39,7 +40,6 @@ var MessageEditView = Backbone.View.extend({
 		});
 		$('input[name=publish_continuous_1]').on("change", function(e) {
 			that.toggleDateVisibility(e);
-			debugger;
 			var maximumDate = $("input[name=publish_endDate_1]").datepicker("getDate");
 			if (e.target.checked){
 				$("input[name=publish_startDate_1]").datepicker("option", "maxDate", maximumDate);
