@@ -26,7 +26,7 @@ var Utilities = {
 		if (searchKeys !== null && searchKeys.length < 4){
 			return null;
 		}
-		if (searchKeys.length === 4) {
+		if (searchKeys.length === 4 || !searchKeys[4]) {
 			return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime();
 		}
 		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime() + "_" + searchKeys[4].getTime();

@@ -3,7 +3,7 @@
   width:950px;
 }
 .searchInputLabel{
-  width:65px;
+  width:60px;
   float:left;
 }
 
@@ -11,9 +11,10 @@
   margin-top:15px;
   margin-left:15px;
   width:225px;
-  height:30px;
+  height:35px;
   padding-left:10px;
   float:left;
+  font-size:16px;
 }
 #notifications {
 
@@ -26,8 +27,9 @@
 }
 #searchbox{
   background-color:#e5e5e5;
-  height:115px;
-  width:730px;
+  height:130px;
+  width:950px;
+  margin-top:30px;
   margin-bottom:10px;
   float:left;
 }
@@ -55,26 +57,26 @@
    border-color:#000000;
    border-style:solid;
    border-width:1px;
-   width:80px;
+   width:90px;
    height:25px;
    color:#ffffff;
    font-weight:bold;
-   font-size:13px;
+   font-size:20px;
    text-align: center;
-   padding:8px 0 1px 0;
+   padding:25px 0 25px 0;
    left:12px;
-   float:right;
-   margin-top:10px;
+   float:left;
+   margin-left:20px;
+   margin-top:20px;
 }
 
 #filterBox {
   position:relative;
   background-color:#e5e5e5;
   height:120px;
-  width:300px;
-  margin-left:-100px;
+  width:280px;
+  margin-left:10px;
   padding-top:15px;
-  left:120px;
   float:left;
 }
 #filterBox > div{
@@ -188,11 +190,12 @@
 
 /*Search Result Info containers*/
 .searchResultDisplay{
-    width:735px;
+    width:650px;
     height:600px;
     overflow:auto;
     padding:0 10px 0 0;
     overflow-y:auto;
+    float:left;
 }
 .searchResultBoxContainer {
   width:698px;
@@ -369,13 +372,14 @@
   float:left;
 }
 #pageNavigator {
-  width:722px;
+  width:660px;
   height:15px;
   position:relative;
   border-width: 0;
   border-top-width: 2px;
   border-color: #aaaaaa;
   border-style: solid;
+  float:left;
 }
 
 #pages{
@@ -419,12 +423,12 @@
 }
 #inputFields{
   float:left;
-  width:520px;
-  height:100px;
+  width:650px;
+  height:140px;
 }
 #searchTypeContainer{
   float:left;
-  width: 200px;
+  width: 120px;
   height:20px;
   margin-left:10px;
   margin-top:15px;
@@ -432,11 +436,11 @@
 #oneWay, #round{
   text-align:center;
   float:left;
-  width:80px;
+  width:120px;
 }
 #searchMain{
   float:left;
-  width:745px;
+  width:950px;
 }
 #goToSpecificPage{
   float:right;
@@ -444,4 +448,36 @@
 }
 #goToSpecificPage > input {
   width:50px;
+}
+
+#locationInputs{
+  height:140px;
+  width:480px;
+  float:left;
+}
+
+#dateInputs {
+  height:140px;
+  width:160px;
+  float:left;
+}
+
+#customizeLocationInput_from, #customizeLocationInput_to{
+  width:150px;
+  margin-left:-1px;
+}
+
+#searchDateInput_depart, #searchDateInput_return {
+  width:130px;
+}
+
+#locationInputs>.searchInputLabel{
+  margin-top:25px;
+  margin-left:10px;
+  width:50px;
+}
+#leftPanel{
+  width:660px;
+  height:650px;
+  float:left;
 }

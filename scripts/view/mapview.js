@@ -15,7 +15,9 @@ var MapView = Backbone.View.extend({
 	},
 
 	mapInitialize:function(){
-		this.getLatLng(this.origin, this.oLatLng);
+		if (this.origin) {
+			this.getLatLng(this.origin, this.oLatLng);
+		}
 		var center = new google.maps.LatLng(this.oLatLng.lat, this.oLatLng.lng);
 		var myOptions = {
 				zoom: 4,
@@ -25,7 +27,7 @@ var MapView = Backbone.View.extend({
 		this.map = new google.maps.Map(document.getElementById(this.div), myOptions);
 		this.directionDisplay.setMap(this.map);
 		var that = this;
-		if (this.origin.get("city") && this.dest.get("city")){
+		if (this.origin && this.dest && this.origin.get("city") && this.dest.get("city")){
 			that.getDirection(that.origin, that.dest);
 		}
 	},

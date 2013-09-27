@@ -2,32 +2,39 @@
   <div id = 'searchMain'>
   <div id = 'searchbox' class = 'searchContainer'>
     <div id="inputFields">
-    <input type="text" id = 'searchLocationInput_from' class = 'searchInput' />
-    <input type="text" id = 'searchLocationInput_to' class = 'searchInput' />
-    <input type="text" id = 'searchDateInput_depart' class = 'searchInput' />
-    <input type="text" id = 'searchDateInput_return' class = 'searchInput' />
+    <div id = "locationInputs">
+      <div class = "searchInputLabel">出发地</div>
+      <input type="text" id = 'searchLocationInput_from' class = 'searchInput' />
+      <input type="text" id = 'customizeLocationInput_from' class = 'searchInput' />
+      <div class = "searchInputLabel">目的地</div>
+      <input type="text" id = 'searchLocationInput_to' class = 'searchInput' />
+      <input type="text" id = 'customizeLocationInput_to' class = 'searchInput' />
+    </div>
+    <div id = "dateInputs">
+      <input type="text" id = 'searchDateInput_depart' class = 'searchInput' />
+      <input type="text" id = 'searchDateInput_return' class = 'searchInput' />
+    </div>
     </div>
     <div id = 'searchTypeContainer'>
       <div id="oneWay">单程</div>
       <div id="round">往返</div>
     </div>
-    <div id = 'searchResultDoneContainer'>
+
       <div id = 'searchResultButton' class = 'searchResultButton button'>查询</div>
-    </div>
       
     </div>
+    <div id = "leftPanel">
       <div id = 'searchResultDisplayPanel' class = 'searchResultDisplay'>
-    <!-- home to the searchResultView on mainPage-->
-  </div>
+      <!-- home to the searchResultView on mainPage-->
+      </div>
 
-  <div id = 'pageNavigator'>
-      <div id ='pages'></div>
-    <div id = 'goToSpecificPage'>
-      <input type='number' id='pageNumberInput' value = '1' min='1' /><button>GO</button>
+      <div id = 'pageNavigator'>
+        <div id ='pages'></div>
+        <div id = 'goToSpecificPage'>
+          <input type='number' id='pageNumberInput' value = '1' min='1' /><button>GO</button>
+        </div>
+      </div>
     </div>
-
-    </div>
-  </div>
     <div id = 'filterBox' class = 'searchContainer'>
           <div id = 'searchFilterTimeContainer1'>
             <div id = 'filterInputTimeLabel1' class = 'searchInputLabel'>出发时间</div>  
@@ -71,4 +78,5 @@
             <div id = 'refreshButton' class = 'searchResultButton button'>应用</div>
           </div>
     </div>
+  </div>
 </div>
