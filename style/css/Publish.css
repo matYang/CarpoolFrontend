@@ -398,3 +398,7 @@
 .publish_time_availableTimeSelection > .publish_label {
 	width:50px;
 }
+
+.seat_price, #seats {
+	margin-left:70px;
+}

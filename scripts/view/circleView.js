@@ -26,10 +26,10 @@ var CircleView = Backbone.View.extend({
 
 
 		var self = this;
-		app.userManager.fetchCircleLocation(function(){
-			self.render();
-			self.locationArray = [];
-		});
+		// app.userManager.fetchCircleLocation(function(){
+		// 	self.render();
+		// 	self.locationArray = [];
+		// });
 	},
 
 

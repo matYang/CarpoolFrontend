@@ -1,12 +1,24 @@
   <form id='publish_info'>
+
     <div class = 'publish_header'>其他信息</div>
     <div id = 'publish_description'>
     <textarea id='publish_description_input'></textarea>
     </div>
+
+    <div class = 'publish_header'>座位</div>
+    <input id = 'seats' value = '1' type = 'text' pattern="[0-9]*"/>
+
+    <div class = 'publish_header'>价格</div>
+    <div id = 'publish_priceList'>
+      <div>
+        <input id = 'seats_1' type = 'text' class='seat_price' pattern="[0-9]*" />/1人
+      </div>
+    </div>
+    <div id = 'priceList_add'>+</div>
    <div id = 'publish_back' class='button'>
       返回修改
     </div>
     <div id = 'publish_finish' class='button'>
-      就这样吧
+      发布
     </div>
   </form>

@@ -10,14 +10,15 @@ var MessagePostView = Backbone.View.extend({
 		"gender":"both",
 		"numberRequests":0,
 		"requests":[],
-		"description":""
+		"description":"",
+		"priceList":[0],
+		"seats":1,
 	},
 
 	/**
 	request 
 	{
 		type:ask | help,
-		price: int;
 		dateStart:"",
 		dateEnd:"",
 		time:"000"-"111",
@@ -98,11 +99,8 @@ var MessagePostView = Backbone.View.extend({
 		}
 	},
 	updateLocation: function(flag, id) {
-		if (id == "publish_originInput") {
-			$('#publish_originInput').val(this.toSubmit.origin.get("province")+" "+this.toSubmit.origin.get("city")+" "+this.toSubmit.origin.get("region"));
-		} else {
-			$('#publish_destInput').val(this.toSubmit.dest.get("province")+" "+this.toSubmit.dest.get("city")+" "+this.toSubmit.dest.get("region"));
-		}
+		$('#publish_originInput').val(this.toSubmit.origin.get("province")+" "+this.toSubmit.origin.get("city")+" "+this.toSubmit.origin.get("region"));
+		$('#publish_destInput').val(this.toSubmit.dest.get("province")+" "+this.toSubmit.dest.get("city")+" "+this.toSubmit.dest.get("region"));
 		if (this.map) {
 			this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
 		}
@@ -150,8 +148,7 @@ var MessagePostView = Backbone.View.extend({
 			this.toSubmit.requests[0]={};
 			this.toSubmit.requests[0].timeAvailable = "";
 			this.toSubmit.requests[0].departTime = "";
-			this.toSubmit.requests[0].duration = "";
-			this.toSubmit.requests[0].price = -1;
+			this.toSubmit.requests[0].returnTime = "";
 			this.toSubmit.requests[0].id = 1;
 			this.toSubmit.requests[0].type = this.toSubmit.type;
 			this.toSubmit.numberRequests = 1;
@@ -221,8 +218,6 @@ var MessagePostView = Backbone.View.extend({
 							$("input[name=publish_returnDate_"+ index +"]").datepicker("option", "minDate", d);
 						}
 					});
-
-					$("input[name=publish_rate_"+ index +"]").val(this.toSubmit.requests[request].price);
 				}
 			}
 			$('#publish_info').on('change', 'input[value=round]', function(e) {
@@ -248,18 +243,11 @@ var MessagePostView = Backbone.View.extend({
 		$("input").on('blur', function(e){
 			that.updateValue(e);
 		});
-		$("input[type=checkbox]").on('click', function(e){
-			that.updateValue(e);
-		});
 		$('#publish_back').on('click', function(){
 			app.navigate(that.user.id + "/DMpost/step1");
 			that.render(1);
 		});
-		$('#publish_finish').on('click', function(){
-			that.finish();
-		});
 		$('#publish_nextStep').on('click', function(){
-			debugger;
 			if (that.validate(2)) {
 				app.navigate(that.user.id + "/DMpost/step3");
 				that.render(3);
@@ -280,8 +268,29 @@ var MessagePostView = Backbone.View.extend({
 		this.editorContainer.append(this.step3Template);
 		$("#publish_progress").attr("class","publish_progress_step3");
 		this.restoreState(3);
+		$("#seats").on("keypress", function(e) {
+			if (e.keyCode<48 || e.keyCode>57) {
+				e.preventDefault();
+			}
+		});
+		$("#seats").on("blur", function(e){
+			that.toSubmit.seats = Utilities.toInt(e.target.value);
+		});
+		$("#seats_1").on("blur", function(e){
+			that.toSubmit.priceList[0] = Utilities.toInt(e.target.value);
+		});
 		$('#publish_description_input').on('blur', function(e){
 			that.toSubmit.description=e.target.value;
+		});
+		$("#priceList_add").on("click", function(e) {
+			if (that.toSubmit.priceList.length < that.toSubmit.seats) {
+				var seatId = that.toSubmit.priceList.length + 1;
+				$("#publish_priceList").append("<div><input id = 'seats_"+ seatId +"' type = 'text' class='seat_price' pattern='[0-9]*' />/"+ seatId +"人</div>")
+				that.toSubmit.priceList[seatId-1] = 0;
+				$("#seats_"+seatId).on("blur", function(e) {
+					that.toSubmit.priceList[seatId-1] = Utilities.toInt(e.target.value);
+				});
+			}
 		});
 		$('#publish_back').on('click', function(){
 			app.navigate(that.user.id + "/DMpost/step2");
@@ -292,7 +301,6 @@ var MessagePostView = Backbone.View.extend({
 		if (page === 1) {
 			$('.selectBox_selected').removeClass('selectBox_selected');
 			$('#publish_'+this.toSubmit.type).addClass('selectBox_selected');
-			$('input[value='+this.toSubmit.gender+']').attr("checked",true);
 			this.updateLocation(1);
 		} else if (page === 2) {
 			var r = this.toSubmit.requests;
@@ -317,10 +325,7 @@ var MessagePostView = Backbone.View.extend({
 						$('input[name=publish_departDate_'+id+']').val(r[request].returnDate);
 					}
 					$('select[name=depart_time_'+id+']').val(r[request].departTime);
-					$('select[name=return_time_'+id+']').val(r[request].duration);
-					if (r[request].price>0){
-						$('input[name=publish_rate_'+id+']').val(r[request].price);
-					}
+					$('select[name=return_time_'+id+']').val(r[request].returnTime);
 				}
 			}
 		} else if (page === 3) {
@@ -335,10 +340,8 @@ var MessagePostView = Backbone.View.extend({
 		}
 		else if (previousStepIndex === 2){
 			$('#publish_back').off();
-			$('#publish_finish').off();
 			$('#publish_nextStep').off();
 			$('#publish_time_add').off();
-			$('.input_checkbox').off();
 			$('input').off();
 			$('publish_delete').off();
 			$('select').off();
@@ -348,6 +351,7 @@ var MessagePostView = Backbone.View.extend({
 				$("select[name=return_time_"+id+"]").off();
 				$("input[name=publish_departDate_"+id+"]").off();
 				$("input[name=publish_returnDate_"+id+"]").off();
+				$("input[name=publish_round_"+id+"]").off();
 			}
 		}
 		else if (previousStepIndex === 3){
@@ -387,7 +391,7 @@ var MessagePostView = Backbone.View.extend({
 		$("select[name=depart_time_"+id+"]").on('click', function(e){
 			that.updateValue(e);
 		});
-		$("select[name=return_duration_"+id+"]").on('click', function(e){
+		$("select[name=return_time_"+id+"]").on('click', function(e){
 			that.updateValue(e);
 		});
 
@@ -452,9 +456,7 @@ var MessagePostView = Backbone.View.extend({
 		var id;
 		if (e.target && e.target.value !== "") {
 			id = this.getId(e.target.name);
-			if (e.target.name.indexOf("rate")>-1){
-				this.toSubmit.requests[Utilities.toInt(id)-1].price = Utilities.toInt(e.target.value);
-			} else if (e.target.name.indexOf("depart_time")>-1) {
+			if (e.target.name.indexOf("depart_time")>-1) {
 				this.toSubmit.requests[Utilities.toInt(id)-1].departTime = e.target.value;
 			} else if (e.target.name.indexOf("return_time")>-1) {
 				this.toSubmit.requests[Utilities.toInt(id)-1].returnTime = e.target.value;
@@ -465,9 +467,6 @@ var MessagePostView = Backbone.View.extend({
 				this.toSubmit.requests[Utilities.toInt(id)-1].departDate = e.value;
 				var round = $("input[name=publish_round_"+id+"]").attr("checked") === "checked";
 				this.toSubmit.requests[Utilities.toInt(id)-1].round = round;
-				if (!round) {
-					this.toSubmit.requests[Utilities.toInt(id)-1].returnDate = "";
-				}
 
 			} else if (e.name.indexOf("publish_returnDate_")===0){
 				this.toSubmit.requests[Utilities.toInt(id)-1].returnDate = e.value;
@@ -541,33 +540,28 @@ var MessagePostView = Backbone.View.extend({
 	},
 
 	toMessage: function () {
-		var dmm = new Message();
-		dmm.set("type", toSubmit.type === "ask" ? Constants.messageType.ask : Constants.messageType.help);
-		var gender;
-		if (toSubmit.gender === "male") {
-			gender = Constants.gender.male;
-		} else if (toSubmit.gender === "female") {
-			gender = Constants.gender.female;
-		} else {
-			gender = Constants.gender.both;
-		}
-		dmm.set("gender", gender);
-		dmm.set("ownerId", this.user.get("userId"));
-		dmm.set("departure_Location", toSubmit.origin);
-		dmm.set("arrival_Location", toSubmit.dest);
-		dmm.set("note", toSubmit.description);
-		var transactions = dmm.get("transactionList");
+		var messages = new Messages();;
 		for ( var r in toSubmit.requests) {
-			if (toSubmit.requests[r]){
+			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
-				t.set("departure_Time", toSubmit.requests[r].departTime);
-				t.set("arrival_Time", toSubmit.requests[r].returnTime);
-				t.set("departure_Location", toSubmit.origin);
-				t.set("arrival_Location", toSubmit.dest);
-				t.set("initUserId", this.user.get("userId"));
-				t.set("initUserImgPath", this.user.get("imgPath"));
-				t.set("initUserLevel", this.user.get("level"));
-				transactions.add(t);
+				var m = new Message();
+				m.set("type", this.toSubmit.type === "ask" ? Constants.messageType.ask : Constants.messageType.help);
+				m.set("ownerId", this.user.get("userId"));
+				m.set("departure_Location", this.toSubmit.origin);
+				m.set("arrival_Location", this.toSubmit.dest);
+				m.set("note", this.toSubmit.description);
+				m.set("departure_Time", this.toSubmit.requests[r].departTime);
+				m.set("departure_Location", this.toSubmit.origin);
+				m.set("departure_seatsNumber", this.toSubmit.seats);
+				m.set("departure_priceList", this.toSubmit.priceList);
+				if (this.toSubmit.requests[r].round) {
+					m.set("isRoundTrip", true);
+					m.set("arrival_Time", this.toSubmit.requests[r].returnTime);
+					m.set("arrival_Location", this.toSubmit.dest);
+					m.set("arrival_seatsNumber", this.toSubmit.seats);
+					m.set("arrival_priceList", this.toSubmit.priceList);
+				}
+				messages.add(m);
 			}
 		}
 		return dmm;
