@@ -1,29 +1,24 @@
 <div id = 'view_panel_left'>
   <div id = 'view_header'>
     <div id = 'view_header_info'>
-      <div id = 'view_school'><%= school %></div>
-      <div id = 'view_city'><%= city %></div>
       <div id = 'view_headerUser'><%= ownerUser %></div>
     </div>
     <div id = 'view_delete' class = 'button'>删除本条信息</div>
   </div>
   <div id = 'view_event_info_left'>
     <div id = 'view_event_info_tbar'>
-      <div class='view_infoContainer1'>
-	      <div id = 'view_eventTime'>
-          <%= departureTime %>
-        </div>
+      <div id = 'departureInfo'>
+        <div id = 'departureLocation'><%= origin %></div>
+        <div id = 'departureTime'><%= departureTime %></div>
+        <div id = 'departureSeats'><%= departureSeats %></div>
       </div>
-      <div class='view_infoContainer2'>
-        <div id = 'view_eventType'>
-          <%= type %>
-        </div>
+      <div id = 'directionArrow'></div>
+      <div id = 'returnInfo'>
+        <div id = 'returnLocation'><%= dest %></div>
+        <div id = 'returnTime'><%= returnTime %></div>
+        <div id = 'returnSeats'><%= returnSeats %></div>
       </div>
-      <div class='view_infoContainer3'>
-        <div id = 'view_eventDescription'>
-          <%= note %>
-        </div>
-      </div>
+      <div id = 'note'><%= note %></div>
     </div>
     <div id='view_map'></div>
     <div id='view_event_info_bbar'>
@@ -40,6 +35,13 @@
 <div id = 'view_panel_right'>
   <div id = 'view_event_info_right'>
     <div id = 'view_event_info_right_container'>
+      <div id = 'view_book_option'>
+        <div>座位<input type = 'number' id = 'chooseSeatNumber' min="1"/></div>
+        <div id = 'directionSelection'>
+          <div id = "go" class="button">去</div><div id = "back" class="button">回</div>
+        </div>
+        <div id = 'price_total'>元</div>
+      </div>
       <div id = 'view_book' class='button'>
         预 定
       </div>

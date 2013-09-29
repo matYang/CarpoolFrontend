@@ -71,7 +71,7 @@ var Utilities = {
 
 
 	//converts an date object to a human-friendly data string, eg: 明天，下周二，5月3号
-	getDateString: function(targetDate){
+	getDateString: function(targetDate, flag){
 		if (!targetDate){
 			Constants.dLog("Utilities::getDateString invalid parameter, null or undefined");
 			targetDate = new Date();
@@ -79,25 +79,29 @@ var Utilities = {
 		var tempDate = new Date(),
 			curDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()),
 			today = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate()),
-			dayDifference = Math.floor((curDate.getTime() - today.getTime())/Constants.miliSecInDay);
+			dayDifference = Math.floor((curDate.getTime() - today.getTime())/Constants.miliSecInDay),
+			time = "";
 
+		if (flag){
+			time = targetDate.getHours()+"点";
+		}
 
 		if (dayDifference === 0){
-			return "今天";
+			return "今天"+time;
 		}
 		else if (dayDifference === 1){
-			return "明天";
+			return "明天"+time;
 		}
 		else if (dayDifference === 2){
-			return "后天";
+			return "后天"+time;
 		}
 		else if (dayDifference === -1){
-			return "昨天";
+			return "昨天"+time;
 		}
 		else if (dayDifference === -2){
-			return "前天";
+			return "前天"+time;
 		} else if (dayDifference < -2 && dayDifference > -8) {
-			return dayDifference + "天前";
+			return dayDifference + "天前"+time;
 		}
 
 		var curDayOfWeek = curDate.getDay();

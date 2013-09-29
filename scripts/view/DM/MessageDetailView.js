@@ -14,7 +14,13 @@ var MessageDetailView = Backbone.View.extend({
 			this.message.get("arrival_Location").set("city","苏州");
 			this.message.get("arrival_Location").set("region","苏州市区");
 			this.message.get("arrival_Location").set("university","苏州大学");
+			this.message.set("roundTrip", true);
 			this.transactions = testMockObj.sampleTransactions;
+			this.message.set("note", "火车站出发，谢绝大行李");
+		}
+		this.bookInfo = {
+			"go":false,
+			"back":false
 		}
 		this.parsedMessage = this.parseMessage(this.message);
 		this.messageId = this.message.get("messageId");
@@ -75,26 +81,57 @@ var MessageDetailView = Backbone.View.extend({
 			}
 			that.showTransaction = !that.showTransaction;
 		});
+		var n = this.parsedMessage.departureSeats < this.parsedMessage.returnSeats
+			 ? this.parsedMessage.departureSeats 
+			 : this.parsedMessage.returnSeats;
+		if (n > 0) {
+			$("#go").on("click", function(e){
+				if (that.bookInfo.go) {
+					this.classList.remove("direction_selected");
+				} else {
+					this.classList.add("direction_selected");
+				}
+				that.bookInfo.go = !that.bookInfo.go;
+			});
+			if (this.message.get("roundTrip")){
+				debugger;
 
-		//TODO:: add a watch btn
-		$('#view_school').on('click', function(){
-			if (app.sessionManager.getUserId() === that.message.get('ownerId')) {
-				//do nothing for now
+				$("#chooseSeatNumber").attr("max", n);
+				$("#back").on("click", function(e){
+					if (that.bookInfo.back) {
+						this.classList.remove("direction_selected");
+					} else {
+						this.classList.add("direction_selected");
+					}
+					that.bookInfo.back = !that.bookInfo.back;
+				});
 			} else {
-				var message = app.userManager.getTopBarUser().get('watchList').get(that.messageId);
-
-				if (typeof message === 'object'){
-					app.userManager.deWatchMessage(that.messageId, function(){
-						alert("Message with id: " + that.messageId + " successfully been watched");
-					});
-				}
-				else{
-					app.userManager.watchMessage(that.messageId, function(){
-						alert("Message with id: " + that.messageId + " successfully been deWatched");
-					});
-				}
+				$("#back, #returnTime, #returnSeats").remove();
 			}
-		});
+		} else {
+			$("#view_book_option").remove();
+			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
+		}
+		// $('#view_school').on('click', function(){
+		// 	if (app.sessionManager.getUserId() === that.message.get('ownerId')) {
+		// 		//do nothing for now
+		// 	} else {
+		// 		var message = app.userManager.getTopBarUser().get('watchList').get(that.messageId);
+
+		// 		if (typeof message === 'object'){
+		// 			app.userManager.deWatchMessage(that.messageId, function(){
+		// 				alert("Message with id: " + that.messageId + " successfully been watched");
+		// 			});
+		// 		}
+		// 		else{
+		// 			app.userManager.watchMessage(that.messageId, function(){
+		// 				alert("Message with id: " + that.messageId + " successfully been deWatched");
+		// 			});
+		// 		}
+		// 	}
+		// });
+
+
 	},
 
 	openTransactionDetail: function(transaction){
@@ -105,11 +142,13 @@ var MessageDetailView = Backbone.View.extend({
 
 	parseMessage: function(message){
 		var parsedMessage = {};
-		var departure = message.get("departure_Location");
-		parsedMessage.school = departure.get("university");
-		parsedMessage.city = departure.get("city") + " " + departure.get("region");
+		parsedMessage.origin = message.get("departure_Location").toString();
+		parsedMessage.dest = message.get("arrival_Location").toString();
+		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_Time"), true);
+		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_Time"), true);
+		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
+		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("arrival_seatsBooked");
 		parsedMessage.ownerUser = message.get("ownerName");
-		parsedMessage.departureTime = message.get("departure_Time");
 		parsedMessage.type = message.get("Type");
 		parsedMessage.note = message.get("note");
 		parsedMessage.price = message.get("price");

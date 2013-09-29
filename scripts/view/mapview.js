@@ -15,7 +15,7 @@ var MapView = Backbone.View.extend({
 	},
 
 	mapInitialize:function(){
-		if (this.origin) {
+		if (this.origin && !this.dest) {
 			this.getLatLng(this.origin, this.oLatLng);
 		}
 		var center = new google.maps.LatLng(this.oLatLng.lat, this.oLatLng.lng);

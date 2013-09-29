@@ -4,7 +4,7 @@ var UserLocation = Backbone.Model.extend({
         "province" : "江苏",
         "city" : "南京市",
         "region":"江宁区",
-        "university" : "南京大学江宁校区"
+        "ignoreRegion":false
 	},
 
 	initialize:function(stringCastingFlag, data){
@@ -34,8 +34,7 @@ var UserLocation = Backbone.Model.extend({
 		var buffer = [
 			this.get("province"),
 			this.get("city"),
-			this.get("region"),
-			this.get("university")
+			this.get("region")
 			];
 		return buffer.join(" ");
 	},
@@ -49,11 +48,10 @@ var UserLocation = Backbone.Model.extend({
 
 			//type casting!
 			var locationArray = String(locationString).split(" ");
-			if (locationArray.length === 4){
+			if (locationArray.length === 3){
 				this.set("province",locationArray[0]);
 				this.set("city", locationArray[1]);
 				this.set("region", locationArray[2]);
-				this.set("university", locationArray[3]);
 			}
 			else{
 				Constants.dLog("location constructor error, current params: ");
@@ -71,7 +69,7 @@ var UserLocation = Backbone.Model.extend({
 			'province': this.get("province"),
 			'city': this.get("city"),
 			'region': this.get("region"),
-			'university': this.get("university")
+			'ignoreRegion': this.get("ignoreRegion")
 		};
 		return buffer;
 	}
