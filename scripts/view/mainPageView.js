@@ -292,8 +292,9 @@ var MainPageView = Backbone.View.extend ({
 			$("#genderSelections>.button").off();
 			$("#typeSelections>.button").off();
 			$(".pageNumber").off();
-			this.searchResultView.close();
-
+			if (this.searchResultView) {
+				this.searchResultView.close();
+			}
 			//get ride of the view
 			this.unbind();
 			$(this.el).empty();
