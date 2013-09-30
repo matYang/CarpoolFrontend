@@ -15,9 +15,11 @@ var MessageDetailView = Backbone.View.extend({
 			this.message.get("arrival_Location").set("region","苏州市区");
 			this.message.get("arrival_Location").set("university","苏州大学");
 			this.message.set("roundTrip", true);
+			this.message.set("arrival_seatsNumber", 1);
 			this.transactions = testMockObj.sampleTransactions;
 			this.message.set("note", "火车站出发，谢绝大行李");
 		}
+		this.pricelist = this.message.get("departure_priceList");
 		this.bookInfo = {
 			"go":false,
 			"back":false
@@ -84,17 +86,24 @@ var MessageDetailView = Backbone.View.extend({
 		var n = this.parsedMessage.departureSeats < this.parsedMessage.returnSeats
 			 ? this.parsedMessage.departureSeats 
 			 : this.parsedMessage.returnSeats;
-		if (n > 0) {
-			$("#go").on("click", function(e){
-				if (that.bookInfo.go) {
-					this.classList.remove("direction_selected");
-				} else {
-					this.classList.add("direction_selected");
-				}
-				that.bookInfo.go = !that.bookInfo.go;
-			});
-			if (this.message.get("roundTrip")){
-				debugger;
+
+		if (this.parsedMessage.departureSeats === 0 && this.parsedMessage.returnSeats === 0) {
+			$("#view_book_option").remove();
+			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
+		} else {
+			if ( this.parsedMessage.departureSeats > 0 ) {
+				$("#go").on("click", function(e){
+					if (that.bookInfo.go) {
+						this.classList.remove("direction_selected");
+					} else {
+						this.classList.add("direction_selected");
+					}
+					that.bookInfo.go = !that.bookInfo.go;
+				});
+			} else {
+				$("#go").remove();
+			}
+			if ( this.parsedMessage.returnSeats > 0 && this.message.get("roundTrip")) {
 
 				$("#chooseSeatNumber").attr("max", n);
 				$("#back").on("click", function(e){
@@ -108,9 +117,31 @@ var MessageDetailView = Backbone.View.extend({
 			} else {
 				$("#back, #returnTime, #returnSeats").remove();
 			}
-		} else {
-			$("#view_book_option").remove();
-			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
+			$("#view_book").on("click", function(e) {
+				//Book API call
+			});
+			$("#chooseSeatNumber").on("keypress", function(e) {
+				if (e.keyCode < 48 || e.keyCode >57){
+					e.preventDefault();
+				} 
+			});
+			$("#chooseSeatNumber").on("keyup", function(e) {
+				var value = this.value;
+				value = Utilities.toInt(value);
+				if (isNaN(value)) {
+					$("#chooseSeatNumber").css("background-color", "#cc1111");
+					return;
+				}
+				$("#chooseSeatNumber").css("background-color", "#ffffff");
+				if (value > that.parsedMessage.departureSeats && that.bookInfo.go ) {
+					$("#chooseSeatNumber").val(that.parsedMessage.departureSeats);
+					value = that.parsedMessage.departureSeats;
+				}
+				if (value > that.parsedMessage.returnSeats  && that.bookInfo.back) {
+					$("#chooseSeatNumber").val(that.parsedMessage.returnSeats);
+					value = that.parsedMessage.returnSeats;
+				}
+			});
 		}
 		// $('#view_school').on('click', function(){
 		// 	if (app.sessionManager.getUserId() === that.message.get('ownerId')) {
@@ -130,8 +161,6 @@ var MessageDetailView = Backbone.View.extend({
 		// 		}
 		// 	}
 		// });
-
-
 	},
 
 	openTransactionDetail: function(transaction){
@@ -168,11 +197,31 @@ var MessageDetailView = Backbone.View.extend({
 		parsedTransaction.date = Utilities.getDateString(transaction.get("creationTime"));
 		return parsedTransaction;
 	},
+	computePrice: function(seats, tripNumber){
+		if (this.pricelist[seats] > 0) return this.priceResult[seats]*tripNumber;
+		var i = 1;
+		while ( i <= seats ) {
+			if (!(this.pricelist[i] && this.pricelist[i] > 0)) {
+				var j;
+				for ( j = 1; j < i; j++ ){
 
+					if (this.priceResult[i] === 0 || this.priceResult[i] > this.priceResult[i-j] + this.priceResult[j]) {
+						this.priceResult[i] = this.priceResult[i-j] + this.priceResult[j];
+					}
+				}
+			}
+			i++;
+		}
+		return this.pricelist[seats] * tripNumber;
+	},
 	close: function(){
 		if (!this.isClosed){
 			$(".view_edit_inine").off();
 			$("#view_transactions_button").off();
+			$("#chooseSeatNumber").off();
+			$("#view_book").off();
+			$("#go").off();
+			$("#back").off();
 			this.domContainer.empty();
 			this.isClosed = true;
 		}
