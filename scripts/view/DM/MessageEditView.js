@@ -14,11 +14,11 @@ var MessageEditView = Backbone.View.extend({
 			this.message = testMockObj.sampleMessageA;
 		}
 		this.userid = id;
-		this.template = _.template(tpl.get('DMModule/DMEdit'));
+		this.template = _.template(tpl.get('Module/Edit'));
 
 		this.requestTemplate = ( this.message.get("type") === Constants.messageType.ask )
-			? _.template(tpl.get('DMModule/DMPublish_singleSlotAsk')) 
-			: _.template(tpl.get('DMModule/DMPublish_singleSlotHelp'));
+			? _.template(tpl.get('Module/Publish_singleSlotAsk')) 
+			: _.template(tpl.get('Module/Publish_singleSlotHelp'));
 		this.domContainer = $('#content');
 		this.render();
 		this.populate();

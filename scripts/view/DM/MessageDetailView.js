@@ -28,8 +28,8 @@ var MessageDetailView = Backbone.View.extend({
 		this.messageId = this.message.get("messageId");
 		this.ownerId = this.message.get("ownerId");
 
-		this.template = _.template(tpl.get('DMModule/DMDetailMessage'));
-		this.transactionTemplate = _.template(tpl.get('DMModule/DMTransaction'));
+		this.template = _.template(tpl.get('Module/DetailMessage'));
+		this.transactionTemplate = _.template(tpl.get('Module/Transaction'));
 		this.domContainer = $('#content');
 		// this.transactions = this.message.get("transactions");
 		this.render();

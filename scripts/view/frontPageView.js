@@ -10,7 +10,7 @@ var FrontPageView = Backbone.View.extend({
 		this.isClosed = false;
 
 		this.template = _.template(tpl.get('front'));
-		this.messageTemplate = _.template(tpl.get('DMModule/DMFront'));
+		this.messageTemplate = _.template(tpl.get('Module/Front'));
 
 		this.user = app.userManager.getTopBarUser();
 

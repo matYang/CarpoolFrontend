@@ -13,6 +13,8 @@ var MessagePostView = Backbone.View.extend({
 		"description":"",
 		"priceList":[0],
 		"seats":1,
+		"priceListEntries": 1,
+		"conditionalPrice":false
 	},
 
 	/**
@@ -30,12 +32,12 @@ var MessagePostView = Backbone.View.extend({
 			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'finish', 'close');
 		app.viewRegistration.register("MessagePost", this, true);
 		this.isClosed = false;
-		this.baseTemplate = _.template(tpl.get('DMModule/DMPublish_base'));
-		this.step1Template = _.template(tpl.get('DMModule/DMPublish_step1'));
-		this.step2Template = _.template(tpl.get('DMModule/DMPublish_step2'));
-		this.step3Template = _.template(tpl.get('DMModule/DMPublish_step3'));
-		this.askSlotTemplate = _.template(tpl.get('DMModule/DMPublish_singleSlotAsk'));
-		this.helpSlotTemplate = _.template(tpl.get('DMModule/DMPublish_singleSlotHelp'));
+		this.baseTemplate = _.template(tpl.get('Module/Publish_base'));
+		this.step1Template = _.template(tpl.get('Module/Publish_step1'));
+		this.step2Template = _.template(tpl.get('Module/Publish_step2'));
+		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
+		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
+		this.helpSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotHelp'));
 
 		this.user = user;
 		if (testMockObj.testMode){
@@ -266,6 +268,8 @@ var MessagePostView = Backbone.View.extend({
 	renderThirdPage: function(){
 		var that = this;
 		this.editorContainer.append(this.step3Template);
+		$("#publish_priceList").hide();
+		$("#priceList_minus").hide();
 		$("#publish_progress").attr("class","publish_progress_step3");
 		this.restoreState(3);
 		$("#seats").on("keypress", function(e) {
@@ -283,18 +287,52 @@ var MessagePostView = Backbone.View.extend({
 			that.toSubmit.description=e.target.value;
 		});
 		$("#priceList_add").on("click", function(e) {
-			if (that.toSubmit.priceList.length < that.toSubmit.seats) {
-				var seatId = that.toSubmit.priceList.length + 1;
-				$("#publish_priceList").append("<div><input id = 'seats_"+ seatId +"' type = 'text' class='seat_price' pattern='[0-9]*' />/"+ seatId +"人</div>")
+			if (that.toSubmit.priceListEntries < that.toSubmit.seats) {
+				var seatId = ++that.toSubmit.priceListEntries;
+				$("#priceList_add").before("<div class='publish_priceEntry'>" +
+					"人数 <input id = 'seatsNumber_"+ seatId +"' type = 'text' class='seat_price' pattern='[0-9]*' />" +
+					" 每人<input id = 'seats_"+ seatId +"' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
 				that.toSubmit.priceList[seatId-1] = 0;
+				$("#publish_priceList, #publish_pricelist_container").animate({
+			    	height: "+=30"
+				}, 200);
+
 				$("#seats_"+seatId).on("blur", function(e) {
 					that.toSubmit.priceList[seatId-1] = Utilities.toInt(e.target.value);
 				});
+				$("#priceList_minus").show();
 			}
 		});
+		$("#priceList_minus").on("click", function(e) {
+			$(".publish_priceEntry").last().remove();
+			var seatId = that.toSubmit.priceListEntries--;
+			if (seatId == 2) {
+				$("#priceList_minus").hide();
+			}
+			that.toSubmit.priceList[seatId-1] = null;
+			$("#publish_priceList, #publish_pricelist_container").animate({
+				height: "-=30"
+			}, 200);
+
+
+		})
 		$('#publish_back').on('click', function(){
 			app.navigate(that.user.id + "/DMpost/step2");
 			that.render(2);
+		});
+		$("#conditionalPriceSwitch").on("click", function(e) {
+			if ($("#conditionalPriceSwitch").hasClass("publish_selected")) {
+				$("#conditionalPriceSwitch").removeClass("publish_selected");
+				$("#publish_singlePrice").fadeIn();
+				$("#publish_priceList").hide();
+				that.toSubmit.conditionalPrice = false;
+			} else {
+				$("#conditionalPriceSwitch").addClass("publish_selected");
+				$("#publish_singlePrice").hide();
+				$("#publish_priceList").fadeIn();
+				that.toSubmit.conditionalPrice = false;
+			}
+			
 		});
 	},
 	restoreState:function(page){

@@ -20,11 +20,11 @@ var AppRouter = Backbone.Router.extend({
 
 		":id/transaction/:transactionId/*link" : "transactionDetail",
 
-		":id/Message/:messageId" : "MessageDetail",
-		":id/Message/:messageId/edit" : "MessageEdit",
+		":id/message/:messageId" : "MessageDetail",
+		":id/message/:messageId/edit" : "MessageEdit",
 
-		":id/DMpost" : "postMessage",
-		":id/DMpost/*postState" : "postMessageWithState",
+		":id/post" : "postMessage",
+		":id/post/*postState" : "postMessageWithState",
 
 
 		"register" : "register",
@@ -188,7 +188,7 @@ var AppRouter = Backbone.Router.extend({
 
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
-		this.dMMessageDetailView = new MessageDetailView();
+		this.MessageDetailView = new MessageDetailView();
 		this.advertisementView = new AdvertisementView();
 	},
 
@@ -201,12 +201,12 @@ var AppRouter = Backbone.Router.extend({
 
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
-		this.dMMessageEditView = new MessageEditView();
+		this.MessageEditView = new MessageEditView();
 		this.advertisementView = new AdvertisementView();
 	},
 
 	postMessage: function(id, postState){
-		app.navigate(this.userManager.getTopBarUser().id + "/DMpost/" + Config.getDefaultDMPostState() , true);
+		app.navigate(this.userManager.getTopBarUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 	},
 
 	postMessageWithState: function(id, postState){

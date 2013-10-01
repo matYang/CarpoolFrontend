@@ -19,17 +19,17 @@ var Constants = {
 
 	templateResources: [
 		/* ---------  DM Modules  ----------*/
-		"DMModule/DMDetailMessage",
-		"DMModule/DMPublish_singleSlotAsk",
-		"DMModule/DMPublish_singleSlotHelp",
-		"DMModule/DMPublish_base",
-		"DMModule/DMPublish_step1",
-		"DMModule/DMPublish_step2",
-		"DMModule/DMPublish_step3",
-		"DMModule/DMSimpleMessage",
-		"DMModule/DMEdit",
-		"DMModule/DMTransaction",
-		"DMModule/DMFront",
+		"Module/DetailMessage",
+		"Module/Publish_singleSlotAsk",
+		"Module/Publish_singleSlotHelp",
+		"Module/Publish_base",
+		"Module/Publish_step1",
+		"Module/Publish_step2",
+		"Module/Publish_step3",
+		"Module/SimpleMessage",
+		"Module/Edit",
+		"Module/Transaction",
+		"Module/Front",
 
 			/*-----------  modals  ---------*/
 		"modal/genderEditWindow",
