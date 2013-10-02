@@ -1,140 +1,48 @@
-var MessageEditView = Backbone.View.extend({
+var MessageEditView = MessagePostView.extend({
 
 	el: "",
-
 	initialize: function (id, message) {
-		_.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'populate', 'toggleDateVisibility', 'submit', 'close');
-		app.viewRegistration.register("MessageEdit", this, true);
-		this.isClosed = false;
-		this.changed = false;
-		this.message = message;
-		this.origin = new UserLocation();
-		this.destination = new UserLocation();
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
+			//To allow edit
+			this.message.get("arrival_Location").set("city","苏州");
+			this.message.get("arrival_Location").set("region","苏州市区");
+			this.message.get("arrival_Location").set("university","苏州大学");
+			this.message.set("isRoundTrip", true);
+			this.message.set("arrival_seatsNumber", 1);
+			this.transactions = testMockObj.sampleTransactions;
+			this.message.set("note", "火车站出发，谢绝大行李");
+			this.message.set("departure_priceList", [20,18,15]);
 		}
-		this.userid = id;
-		this.template = _.template(tpl.get('Module/Edit'));
+		this.reverseMessage(this.message);
+		MessagePostView.prototype.method = "message/"+ this.message.get("messageId") +"/edit";
+		MessagePostView.prototype.initialize();
 
-		this.requestTemplate = ( this.message.get("type") === Constants.messageType.ask )
-			? _.template(tpl.get('Module/Publish_singleSlotAsk')) 
-			: _.template(tpl.get('Module/Publish_singleSlotHelp'));
-		this.domContainer = $('#content');
-		this.render();
-		this.populate();
-		this.bindEvents();
 	},
-
-	render: function () {
-		this.domContainer.append(this.template);
-
-		$('#publish_time_container').append(this.requestTemplate(this.message.set('id',1).toJSON()));
-	},
-	bindEvents: function () {
-		var that = this;
-		$("#publish_back").on("click", function() {
-			app.navigate(that.userId + "/Message/"+that.messageId, true);
-		});
-		$("#publish_finish").on("click", function() {
-			that.submit()
-		});
-		$('input[name=publish_continuous_1]').on("change", function(e) {
-			that.toggleDateVisibility(e);
-			var maximumDate = $("input[name=publish_endDate_1]").datepicker("getDate");
-			if (e.target.checked){
-				$("input[name=publish_startDate_1]").datepicker("option", "maxDate", maximumDate);
-			} else {
-				$("input[name=publish_startDate_1]").datepicker("option", "maxDate", null);
-			}
-			
-		});
-
-		$('input[name=school],input[name=location]').on("click", function(e){
-			that.locationPickerView = new LocationPickerView(that.location, that);
-		});
-
-		$("input[name=publish_startDate_1]").datepicker({
-			buttonImageOnly: true,
-			buttonImage: "calendar.gif",
-			buttonText: "Calendar",
-			minDate: new Date(),
-			onSelect:function(text,inst){
-				var d = new Date();
-				d.setDate(inst.selectedDay);
-				d.setMonth(inst.selectedMonth);
-				d.setYear(inst.selectedYear);
-				$("input[name=publish_endDate_1]").datepicker("option", "minDate", d);
-			}
-		});
-		$("input[name=publish_endDate_1]").datepicker({
-			buttonImageOnly: true,
-			buttonImage: "calendar.gif",
-			buttonText: "Calendar",
-			minDate: new Date(),
-			onSelect:function(text,inst){
-				var d = new Date();
-				d.setDate(inst.selectedDay);
-				d.setMonth(inst.selectedMonth);
-				d.setYear(inst.selectedYear);
-				$("input[name=publish_startDate_1]").datepicker("option", "maxDate", d);
-			}
-		});
-	},
-	updateLocation: function(){
-		$('input[name=school]').val(this.location.get("university"));
-		$('input[name=location]').val(
-			this.location.get("province") + " " +
-			this.location.get("city") + " " +
-			this.location.get("region")
-			);
-		this.message.set("location", this.location)
-	},
-	populate: function (){
-		var gender = Constants.genderLookup[this.message.get("genderRequirement")];
-
-		$("#edit_myGender").val(gender);
-		$("input[value="+gender+"]").attr("checked", true);
-		$("input[name=location]").val(
-			this.message.get("location").get("province") + " " + 
-			this.message.get("location").get("city") + " " + 
-			this.message.get("location").get("region")
-		);
-		$("input[name=school]").val(this.message.get("location").get("university"));
-		$("textarea[name=detail]").val(this.message.get("note"));
-		var startDate = Utilities.getDateString(this.message.get("departureTime"));
-		var endDate = Utilities.getDateString(this.message.get("end"));
-		$("input[name=publish_startDate_"+this.message.get("id")+"]").val(startDate);
-		if (startDate !== endDate){
-			$("input[name=publish_endDate_"+this.message.get("id")+"]").val(endDate);
-		} else {
-			this.toggleDateVisibility();
-			$('input[name=publish_continuous_1]').attr("checked",false);
+	reverseMessage: function(message){
+		var toSubmit = MessagePostView.prototype.toSubmit;
+		toSubmit.origin = message.get("departure_Location");
+		toSubmit.dest = message.get("arrival_Location");
+		toSubmit.numberRequests = 1;
+		toSubmit.description = message.get("note");
+		toSubmit.priceList = message.get("departure_priceList");
+		toSubmit.departureSeats = message.get("departure_seatsNumber");
+		toSubmit.returnSeats = message.get("arrival_seatsNumber");
+		toSubmit.type = message.get("type");
+		toSubmit.requests[0] = {};
+		toSubmit.requests[0].departDate = message.get("departure_Time");
+		toSubmit.requests[0].returnDate = message.get("arrival_Time");
+		toSubmit.requests[0].round = message.get("isRoundTrip");
+		toSubmit.requests[0].type = message.get("type");
+	
+		var entryNum = 0;
+		var index = 0;
+		for ( var p in toSubmit.priceList) {
+			entryNum += (toSubmit.priceList[p] > 0) ? 1 : 0;
+			index = p;
 		}
-		var time = this.message.get("departure_Time");
-		$("select[name=class_time_"+this.message.get("id")+"]").val(time);
-		time = this.message.get("arrival_Time");
-		$("select[name=class_duration_"+this.message.get("id")+"]").val(time);
-		$("input[name=publish_rate_"+this.message.get("id")+"]").val(this.message.get("simple_hourlyRate"));
-	},
-	toggleDateVisibility: function (e) {
-		$('input[name=publish_endDate_1]').toggle();
-		$('span[name=to_1]').toggle();
-	},
-	submit: function () {
-		this.MessageManager.updateMessage(updatedMessage, function(){
-			alert("Message Update success");
-			app.navigate(app.sessionManager.getUserId() + "/Message/" + app.MessageManager.getMessage().id, true);
-		});
-	},
+		toSubmit.priceListEntries = entryNum;
+		toSubmit.conditionalPrice = entryNum > 1 || p > 0;
 
-	close: function () {
-		$("#publish_back").off();
-		$("#publish_finish").off();
-		if (!this.isClosed){
-			this.domContainer.empty();
-			this.isClosed = true;
-		}
 	}
-
-
 });

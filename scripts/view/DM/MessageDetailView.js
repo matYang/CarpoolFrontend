@@ -47,6 +47,11 @@ var MessageDetailView = Backbone.View.extend({
 			destLocation:this.message.get("arrival_Location"),
 		});
 		this.renderPriceList();
+		if (this.message.get("roundTrip")) {
+			$("#directionArrow").html("<->");
+		} else {
+			$("#directionArrow").html("->");
+		}
 	},
 	loadTransactions: function(){
 		var i,

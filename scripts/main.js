@@ -22,6 +22,7 @@ var AppRouter = Backbone.Router.extend({
 
 		":id/message/:messageId" : "MessageDetail",
 		":id/message/:messageId/edit" : "MessageEdit",
+		":id/message/:messageId/edit/*editState" : "MessageEdit",
 
 		":id/post" : "postMessage",
 		":id/post/*postState" : "postMessageWithState",
@@ -198,7 +199,7 @@ var AppRouter = Backbone.Router.extend({
 			this.navigate("front", true);
 			return;
 		}
-
+		this.navigate(id+"/message/"+messageId+"/edit");
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
 		this.MessageEditView = new MessageEditView();

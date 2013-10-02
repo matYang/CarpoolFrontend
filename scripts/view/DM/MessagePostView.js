@@ -7,16 +7,16 @@ var MessagePostView = Backbone.View.extend({
 		"origin":new UserLocation(),
 		"dest":new UserLocation(),
 		"type":"ask",
-		"gender":"both",
 		"numberRequests":0,
 		"requests":[],
 		"description":"",
 		"priceList":[0],
-		"seats":1,
+		"departureSeats":1,
+		"returnSeats":1,
 		"priceListEntries": 1,
 		"conditionalPrice":false
 	},
-
+	method:"post",
 	/**
 	request 
 	{
@@ -73,12 +73,10 @@ var MessagePostView = Backbone.View.extend({
 	renderFirstPage: function(){
 		this.editorContainer.append(this.step1Template);
 		$("#publish_progress").attr("class","publish_progress_step1");
-
 		var that = this;
 		$('#publish_nextStep').on('click', function(){
 			if (that.validate(1)){
-				that.toSubmit.gender = $('input[name=gender]:checked', '#publish_info').val();
-				app.navigate(that.user.id + "/post/step2");
+				app.navigate(that.user.id + "/"+that.method+"/step2");
 				that.render(2);
 			}
 		});
@@ -143,8 +141,8 @@ var MessagePostView = Backbone.View.extend({
 			this.toSubmit.requests = [];
 			this.toSubmit.requests[0]={};
 			this.toSubmit.requests[0].timeAvailable = "";
-			this.toSubmit.requests[0].departTime = "";
-			this.toSubmit.requests[0].returnTime = "";
+			this.toSubmit.requests[0].departTime = 0;
+			this.toSubmit.requests[0].returnTime = 0;
 			this.toSubmit.requests[0].id = 1;
 			this.toSubmit.requests[0].type = this.toSubmit.type;
 			this.toSubmit.numberRequests = 1;
@@ -161,7 +159,7 @@ var MessagePostView = Backbone.View.extend({
 					d.setDate(inst.selectedDay);
 					d.setMonth(inst.selectedMonth);
 					d.setYear(inst.selectedYear);
-					that.updateValue(this);
+					that.updateValue(this, d);
 					$("input[name=publish_returnDate_1]").datepicker("option", "minDate", d);
 				}
 			});
@@ -175,7 +173,7 @@ var MessagePostView = Backbone.View.extend({
 					d.setDate(inst.selectedDay);
 					d.setMonth(inst.selectedMonth);
 					d.setYear(inst.selectedYear);
-					that.updateValue(this);
+					that.updateValue(this, d);
 					$("input[name=publish_departDate_1]").datepicker("option", "maxDate", d);
 				}
 			});
@@ -194,7 +192,7 @@ var MessagePostView = Backbone.View.extend({
 							d.setDate(inst.selectedDay);
 							d.setMonth(inst.selectedMonth);
 							d.setYear(inst.selectedYear);
-							that.updateValue(this);
+							that.updateValue(this, d);
 							$("input[name=publish_departDate_"+ index +"]").datepicker("option", "maxDate", d);
 						}
 					});
@@ -210,7 +208,7 @@ var MessagePostView = Backbone.View.extend({
 							d.setDate(inst.selectedDay);
 							d.setMonth(inst.selectedMonth);
 							d.setYear(inst.selectedYear);
-							that.updateValue(this);
+							that.updateValue(this, d);
 							$("input[name=publish_returnDate_"+ index +"]").datepicker("option", "minDate", d);
 						}
 					});
@@ -230,8 +228,8 @@ var MessagePostView = Backbone.View.extend({
 					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", null);
 				}
 			});
+			this.restoreState(2);
 		}
-		this.restoreState(2);
 		this.adjustContainerHeight();
 		$(".input_date").on("keypress", function(e){
 			e.preventDefault();
@@ -240,12 +238,12 @@ var MessagePostView = Backbone.View.extend({
 			that.updateValue(e);
 		});
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/post/step1");
+			app.navigate(that.user.id + "/"+that.method+"/step1");
 			that.render(1);
 		});
 		$('#publish_nextStep').on('click', function(){
 			if (that.validate(2)) {
-				app.navigate(that.user.id + "/post/step3");
+				app.navigate(that.user.id + "/"+that.method+"/step3");
 				that.render(3);
 			}
 		});
@@ -272,7 +270,8 @@ var MessagePostView = Backbone.View.extend({
 			}
 		});
 		$("#seats").on("blur", function(e){
-			that.toSubmit.seats = Utilities.toInt(e.target.value);
+			that.toSubmit.departureSeats = Utilities.toInt(e.target.value);
+			that.toSubmit.returnSeats = Utilities.toInt(e.target.value);
 		});
 		$("#seats_1").on("blur", function(e){
 			that.toSubmit.priceList[0] = Utilities.toInt(e.target.value);
@@ -281,7 +280,7 @@ var MessagePostView = Backbone.View.extend({
 			that.toSubmit.description=e.target.value;
 		});
 		$("#priceList_add").on("click", function(e) {
-			if (that.toSubmit.priceListEntries < that.toSubmit.seats) {
+			if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
 				var seatId = ++that.toSubmit.priceListEntries;
 				$("#priceList_add").before("<div class='publish_priceEntry'>" +
 					"人数 <input id = 'seatsNumber_"+ seatId +"' type = 'text' class='seat_price' pattern='[0-9]*' />" +
@@ -311,7 +310,7 @@ var MessagePostView = Backbone.View.extend({
 
 		})
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/post/step2");
+			app.navigate(that.user.id + "/"+that.method+"/step2");
 			that.render(2);
 		});
 		$("#conditionalPriceSwitch").on("click", function(e) {
@@ -339,25 +338,14 @@ var MessagePostView = Backbone.View.extend({
 			for ( var request in r ) {
 				if (r[request]){
 					var id = Utilities.toInt(request)+1;
-					debugger;
 					$('input[name=publish_round_'+id+']').attr("checked",r[request].round);
-					$('input[name=publish_departDate_'+id+']').val(r[request].departDate);
+					$('input[name=publish_departDate_'+id+']').val(r[request].departDate.toLocaleDateString());
 					if (r[request].departDate) {
-						var departDate = new Date(),
-							returnDate  = new Date(),
-							sd = this.toSubmit.requests[request].departDate.split("/");
-							departDate.setMonth(sd[0]);
-							departDate.setDate(sd[1]);
-							departDate.setYear(sd[2]);
-							$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", departDate);
+						$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", this.toSubmit.requests[request].departDate);
 					}
 					if (r[request].round && r[request].returnDate) {
-						ed = this.toSubmit.requests[request].returnDate.split("/");
-						returnDate.setMonth(ed[0]);
-						returnDate.setDate(ed[1]);
-						returnDate.setYear(ed[2]);
-						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", returnDate);
-						$('input[name=publish_returnDate_'+id+']').val(r[request].returnDate);
+						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", this.toSubmit.requests[request].returnDate);
+						$('input[name=publish_returnDate_'+id+']').val(r[request].returnDate.toLocaleDateString());
 					}
 					$('select[name=depart_time_'+id+']').val(r[request].departTime);
 					$('select[name=return_time_'+id+']').val(r[request].returnTime);
@@ -365,6 +353,37 @@ var MessagePostView = Backbone.View.extend({
 			}
 		} else if (page === 3) {
 			$("#publish_description_input").val(this.toSubmit.description);
+			$("#seats").val(this.toSubmit.departureSeats);
+			$(".publish_priceEntry").remove();
+			if (this.toSubmit.conditionalPrice) {
+				$("#conditionalPriceSwitch").addClass("publish_selected");
+				$("#publish_singlePrice").hide();
+				$("#publish_priceList").show();
+				var entryNum = 0;
+				for ( var i in this.toSubmit.priceList) {
+
+					if (this.toSubmit.priceList[i] > 0) {
+						var id = Utilities.toInt(i)+1;
+						entryNum++;
+					$("#priceList_add").before("<div class='publish_priceEntry'>" +
+						"人数 <input id = 'seatsNumber_"+ id +"' type = 'text' class='seat_price' pattern='[0-9]*' />" +
+						" 每人<input id = 'seats_"+ id +"' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+						$("#seatsNumber_"+id).val(entryNum);
+						$("#seats_"+id).val(this.toSubmit.priceList[i]);
+					}
+				}
+				this.toSubmit.priceListEntries = entryNum;
+				var height = 70 + ( entryNum -  1 ) * 30;
+				$("#publish_priceList, #publish_pricelist_container").css("height", height);
+
+				if (entryNum > 1) {
+					$("#priceList_minus").show();
+				}
+			} else {
+				$("#conditionalPriceSwitch").removeClass("publish_selected");
+				$("#publish_singlePrice").show();
+				$("#publish_priceList").hide();
+			}
 		}
 	},
 
@@ -487,7 +506,7 @@ var MessagePostView = Backbone.View.extend({
 		$('input[name=publish_returnDate_'+id+']').prop('disabled', state);
 		$('select[name=return_time_'+id+']').prop('disabled', state);
 	},
-	updateValue:function(e){
+	updateValue:function(e, d){
 		var id;
 		if (e.target && e.target.value !== "") {
 			id = this.getId(e.target.name);
@@ -496,15 +515,15 @@ var MessagePostView = Backbone.View.extend({
 			} else if (e.target.name.indexOf("return_time")>-1) {
 				this.toSubmit.requests[Utilities.toInt(id)-1].returnTime = e.target.value;
 			}
-		} else if (e.name){
+		} else if (e.name && d){
 			id = this.getId(e.name);
 			if (e.name.indexOf("publish_departDate_")===0){
-				this.toSubmit.requests[Utilities.toInt(id)-1].departDate = e.value;
+				this.toSubmit.requests[Utilities.toInt(id)-1].departDate = d;
 				var round = $("input[name=publish_round_"+id+"]").attr("checked") === "checked";
 				this.toSubmit.requests[Utilities.toInt(id)-1].round = round;
 
 			} else if (e.name.indexOf("publish_returnDate_")===0){
-				this.toSubmit.requests[Utilities.toInt(id)-1].returnDate = e.value;
+				this.toSubmit.requests[Utilities.toInt(id)-1].returnDate = d;
 				this.toSubmit.requests[Utilities.toInt(id)-1].round = true;
 			}
 		}
@@ -577,7 +596,7 @@ var MessagePostView = Backbone.View.extend({
 	toMessage: function () {
 		//validate before finish
 		var messages = new Messages(), i;
-		for ( i = 1; i <= this.toSubmit.seats; i++) {
+		for ( i = 1; i <= this.toSubmit.departureSeats; i++) {
 			this.toSubmit.priceList[i] = 0;
 		}
 
@@ -599,15 +618,15 @@ var MessagePostView = Backbone.View.extend({
 				m.set("departure_Location", this.toSubmit.origin);
 				m.set("arrival_Location", this.toSubmit.dest);
 				m.set("note", this.toSubmit.description);
-				m.set("departure_Time", this.toSubmit.requests[r].departTime);
+				m.set("departure_Time", this.toSubmit.requests[r].departDate);
 				m.set("departure_Location", this.toSubmit.origin);
-				m.set("departure_seatsNumber", this.toSubmit.seats);
+				m.set("departure_seatsNumber", this.toSubmit.departureSeats);
 				m.set("departure_priceList", this.toSubmit.priceList);
 				if (this.toSubmit.requests[r].round) {
 					m.set("isRoundTrip", true);
-					m.set("arrival_Time", this.toSubmit.requests[r].returnTime);
+					m.set("arrival_Time", this.toSubmit.requests[r].returnDate);
 					m.set("arrival_Location", this.toSubmit.dest);
-					m.set("arrival_seatsNumber", this.toSubmit.seats);
+					m.set("arrival_seatsNumber", this.toSubmit.departureSeats);
 					m.set("arrival_priceList", this.toSubmit.priceList);
 				}
 				messages.add(m);
