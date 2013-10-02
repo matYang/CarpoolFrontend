@@ -6,9 +6,9 @@ var SearchResultView = Backbone.View.extend({
 		this.entries = 6 < messageList.length ? 6 : messageList.length;
 		this.isSearchResult = isSearchResult;
 		if (isSearchResult){
-			this.singleSearchResultTemplate = _.template(tpl.get('DMModule/DMSimpleMessage'));
+			this.singleSearchResultTemplate = _.template(tpl.get('Module/SimpleMessage'));
 		} else {
-			this.singleSearchResultTemplate = _.template(tpl.get('DMModule/DMFront'));
+			this.singleSearchResultTemplate = _.template(tpl.get('Module/Front'));
 		}
 		
 

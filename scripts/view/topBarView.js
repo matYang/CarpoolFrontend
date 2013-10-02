@@ -61,7 +61,7 @@ var TopBarView = Backbone.View.extend({
 			app.navigate(app.sessionManager.getUserId() + "/personal/" + that.topBarUser.id , true);
 		});
 		$('.navigate_feedBack').on('click', function(){
-			app.navigate(app.sessionManager.getUserId() + "/DMpost" , true);
+			app.navigate(app.sessionManager.getUserId() + "/post" , true);
 		});
 
 		$('#messages').on('mouseenter', function(){

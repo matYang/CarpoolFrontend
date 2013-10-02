@@ -3,7 +3,7 @@ var MessageDetailView = Backbone.View.extend({
 	el: "",
 
 	initialize: function(id, message){
-		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'close');
+		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'close');
 		app.viewRegistration.register("MessageDetail", this, true);
 		this.isClosed = false;
 		this.message = message;
@@ -18,6 +18,7 @@ var MessageDetailView = Backbone.View.extend({
 			this.message.set("arrival_seatsNumber", 1);
 			this.transactions = testMockObj.sampleTransactions;
 			this.message.set("note", "火车站出发，谢绝大行李");
+			this.message.set("departure_priceList", [20,18,15]);
 		}
 		this.pricelist = this.message.get("departure_priceList");
 		this.bookInfo = {
@@ -34,7 +35,7 @@ var MessageDetailView = Backbone.View.extend({
 		// this.transactions = this.message.get("transactions");
 		this.render();
 		this.bindEvents();
-		this.showTransaction = true;
+		this.showTransaction = false;
 	},
 
 	render: function(){
@@ -45,6 +46,7 @@ var MessageDetailView = Backbone.View.extend({
 			originLocation:this.message.get("departure_Location"),
 			destLocation:this.message.get("arrival_Location"),
 		});
+		this.renderPriceList();
 	},
 	loadTransactions: function(){
 		var i,
@@ -196,6 +198,17 @@ var MessageDetailView = Backbone.View.extend({
 		parsedTransaction.targetUserName = transaction.get("targetUserName");
 		parsedTransaction.date = Utilities.getDateString(transaction.get("creationTime"));
 		return parsedTransaction;
+	},
+	renderPriceList: function() {
+		var pricelist = this.message.get("departure_priceList");
+		var appender = [];
+		for ( var p in pricelist) {
+			if  ( pricelist[p] !== 0 ) {
+				var num = Utilities.toInt(p)+1;
+				appender.push("<div class = 'priceEntry'>"+num+"人：每人"+pricelist[p]+"元</div>");
+			}
+		}
+		$("#pricelist").append(appender.join(""));
 	},
 	computePrice: function(seats, tripNumber){
 		if (this.pricelist[seats] > 0) return this.priceResult[seats]*tripNumber;

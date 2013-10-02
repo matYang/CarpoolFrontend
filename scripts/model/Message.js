@@ -13,7 +13,7 @@ var Message = Backbone.Model.extend({
 		"departure_Time": new Date(),
 		"departure_seatsNumber":0,
 		"departure_seatsBooked":0,
-		"departure_priceList":[],
+		"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
 		"arrival_Location": new UserLocation(),
 		"arrival_Time": new Date(),
@@ -37,29 +37,19 @@ var Message = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/dianming/dianming",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl', 'simpleFill', 'parse');
+		_.bindAll(this, 'overrideUrl', 'parse');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
 		}
 
-		this.simpleFill();			//be careful to use it here
+		// this.simpleFill();			//be careful to use it here
 	},
 
 	overrideUrl:function(urlRootOverride){
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
 		}
-	},
-
-	//fills the required fields for simple messages with server-fetched fields
-	simpleFill: function(){
-		this.set("simple_date", Utilities.getDateString(this.startTime));
-
-		this.set("simple_timeRange", Utilities.getTimeRange(this.startTime, this.endTime));
-
-		this.set("duration", Utilities.getDuration(this.startTime, this.endTime));
-		this.set("simple_hourlyRate", Utilities.getHourlyRate(this.startTime, this.endTime, this.price));
 	},
 
 	isNew: function () {
@@ -81,9 +71,10 @@ var Message = Backbone.Model.extend({
 		modelHash.ownerQq = response.ownerQq;
 		modelHash.paymentMethod = Constants.paymentMethod[response.paymentMethod];
 
-		this.set("location", new UserLocation(false, response.location));
-		this.set("startTime", new Date(response.startTime));
-		this.set("endTime", new Date(response.endTime));
+		this.set("departure_location", new UserLocation(false, response.location));
+		this.set("arrival_location", new UserLocation(false, response.location));
+		this.set("departure_Time", new Date(response.startTime));
+		this.set("arrival_Time", new Date(response.endTime));
 
 		this.get('transactionList').reset( response.transactionList);		//watchout, found on stackoveflow
 
@@ -93,7 +84,7 @@ var Message = Backbone.Model.extend({
 		modelHash.genderRequirement = Constants.gender(response.genderRequirement);
 		modelHash.state = Constants.messageState[response.state];
 
-		modelHash.price = response.price;
+		modelHash.priceList = response.priceList;
 		modelHash.active = response.active;
 		modelHash.historyDeleted = response.historyDeleted;
 		this.set("creationTime", new Date(response.creationTime));

@@ -37,7 +37,6 @@ var MessagePostView = Backbone.View.extend({
 		this.step2Template = _.template(tpl.get('Module/Publish_step2'));
 		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
 		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
-		this.helpSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotHelp'));
 
 		this.user = user;
 		if (testMockObj.testMode){
@@ -79,7 +78,7 @@ var MessagePostView = Backbone.View.extend({
 		$('#publish_nextStep').on('click', function(){
 			if (that.validate(1)){
 				that.toSubmit.gender = $('input[name=gender]:checked', '#publish_info').val();
-				app.navigate(that.user.id + "/DMpost/step2");
+				app.navigate(that.user.id + "/post/step2");
 				that.render(2);
 			}
 		});
@@ -127,12 +126,7 @@ var MessagePostView = Backbone.View.extend({
 		this.editorContainer.append(this.step2Template);
 		$("#publish_progress").attr("class","publish_progress_step2");
 		var that = this;
-		if (this.toSubmit.type === 'ask'){
-			this.currentTemplate = this.askSlotTemplate;
-		}
-		if (this.toSubmit.type === 'help'){
-			this.currentTemplate = this.helpSlotTemplate;
-		}
+		this.currentTemplate = this.askSlotTemplate;
 		this.refactorRequests();
 		if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
 			$('#publish_info').on('change', 'input[value=round]', function(e) {
@@ -246,12 +240,12 @@ var MessagePostView = Backbone.View.extend({
 			that.updateValue(e);
 		});
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/DMpost/step1");
+			app.navigate(that.user.id + "/post/step1");
 			that.render(1);
 		});
 		$('#publish_nextStep').on('click', function(){
 			if (that.validate(2)) {
-				app.navigate(that.user.id + "/DMpost/step3");
+				app.navigate(that.user.id + "/post/step3");
 				that.render(3);
 			}
 		});
@@ -317,7 +311,7 @@ var MessagePostView = Backbone.View.extend({
 
 		})
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/DMpost/step2");
+			app.navigate(that.user.id + "/post/step2");
 			that.render(2);
 		});
 		$("#conditionalPriceSwitch").on("click", function(e) {
@@ -345,22 +339,25 @@ var MessagePostView = Backbone.View.extend({
 			for ( var request in r ) {
 				if (r[request]){
 					var id = Utilities.toInt(request)+1;
+					debugger;
 					$('input[name=publish_round_'+id+']').attr("checked",r[request].round);
 					$('input[name=publish_departDate_'+id+']').val(r[request].departDate);
-					if (r[request].round){
+					if (r[request].departDate) {
 						var departDate = new Date(),
 							returnDate  = new Date(),
-							sd = this.toSubmit.requests[request].departDate.split("/"),
-							ed = this.toSubmit.requests[request].returnDate.split("/");
-						departDate.setMonth(sd[0]);
-						departDate.setDate(sd[1]);
-						departDate.setYear(sd[2]);
+							sd = this.toSubmit.requests[request].departDate.split("/");
+							departDate.setMonth(sd[0]);
+							departDate.setDate(sd[1]);
+							departDate.setYear(sd[2]);
+							$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", departDate);
+					}
+					if (r[request].round && r[request].returnDate) {
+						ed = this.toSubmit.requests[request].returnDate.split("/");
 						returnDate.setMonth(ed[0]);
 						returnDate.setDate(ed[1]);
 						returnDate.setYear(ed[2]);
-						$('input[name=publish_departDate_'+id+']').datepicker( "option", "minDate", departDate);
-						$('input[name=publish_returnDate_'+id+']').datepicker( "option", "maxDate", returnDate);
-						$('input[name=publish_departDate_'+id+']').val(r[request].returnDate);
+						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", returnDate);
+						$('input[name=publish_returnDate_'+id+']').val(r[request].returnDate);
 					}
 					$('select[name=depart_time_'+id+']').val(r[request].departTime);
 					$('select[name=return_time_'+id+']').val(r[request].returnTime);
@@ -578,7 +575,21 @@ var MessagePostView = Backbone.View.extend({
 	},
 
 	toMessage: function () {
-		var messages = new Messages();;
+		//validate before finish
+		var messages = new Messages(), i;
+		for ( i = 1; i <= this.toSubmit.seats; i++) {
+			this.toSubmit.priceList[i] = 0;
+		}
+
+		if (!this.toSubmit.conditionalPrice) {
+			this.toSubmit.priceList[0] = Utilities.toInt($("seats_single").val());
+		} else {
+			for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
+				var seatNumber = $("#seatsNumber_"+i).val();
+				seatNumber = Utilites.toInt(seatNumber);
+				this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
+			}
+		}
 		for ( var r in toSubmit.requests) {
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
