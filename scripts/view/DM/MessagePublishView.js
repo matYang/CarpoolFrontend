@@ -2,10 +2,20 @@
 /*dedicated view for Message post, deep linking will not be used for Message post states, this view holds the session data*/
 var MessagePublishView = MessagePostView.extend({
 	initialize: function (id, message) {
-		_.bindAll(this, 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'close');
+		_.bindAll(this, 'render','renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'close');
 		app.viewRegistration.register("MessagePost", this, true);
 		MessagePostView.prototype.initialize({"method":"post"});
 		this.renderFirstPage();
+	},
+	render:function(step){
+		if (step === 1) {
+			this.renderFirstStep();
+		} else if (step === 2) {
+			this.renderSecondStep();
+		} else if (step === 3) {
+			this.renderThirdStep();
+		}
+
 	},
 	renderFirstPage: function(){
 		var that = this;

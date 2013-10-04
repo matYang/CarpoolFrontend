@@ -2,7 +2,7 @@ var MessageEditView = MessagePostView.extend({
 
 	el: "",
 	initialize: function (id, message) {
-		_.bindAll(this, 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
+		_.bindAll(this, 'render', z'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
 		app.viewRegistration.register("MessageEdit", this, true);
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
@@ -20,6 +20,16 @@ var MessageEditView = MessagePostView.extend({
 		MessagePostView.prototype.initialize({"method":"message/"+ this.message.get("messageId") +"/edit"});
 		this.renderFirstPage();
 	},
+	render:function(step){
+		if (step === 1) {
+			this.renderFirstStep();
+		} else if (step === 2) {
+			this.renderSecondStep();
+		} else if (step === 3) {
+			this.renderThirdStep();
+		}
+
+	},
 	renderFirstPage: function(){
 		var that = this;
 		MessagePostView.prototype.render(1);
@@ -36,7 +46,6 @@ var MessageEditView = MessagePostView.extend({
 		MessagePostView.prototype.render(2);
 		$('#publish_nextStep').off();
 		$('#publish_nextStep').on('click', function(){
-			debugger;
 			if (MessagePostView.prototype.validate(2)) {
 				app.navigate(that.user.id + "/post/step3");
 				that.renderThirdPage(3);
