@@ -7,7 +7,8 @@ var MessageDetailView = Backbone.View.extend({
 		app.viewRegistration.register("MessageDetail", this, true);
 		this.isClosed = false;
 		this.message = message;
-		this.userId = id;
+		this.user = app.userManager.getTopBarUser();
+		this.userId = user.get("userId");
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
 			//To allow edit
@@ -150,24 +151,7 @@ var MessageDetailView = Backbone.View.extend({
 				}
 			});
 		}
-		// $('#view_school').on('click', function(){
-		// 	if (app.sessionManager.getUserId() === that.message.get('ownerId')) {
-		// 		//do nothing for now
-		// 	} else {
-		// 		var message = app.userManager.getTopBarUser().get('watchList').get(that.messageId);
 
-		// 		if (typeof message === 'object'){
-		// 			app.userManager.deWatchMessage(that.messageId, function(){
-		// 				alert("Message with id: " + that.messageId + " successfully been watched");
-		// 			});
-		// 		}
-		// 		else{
-		// 			app.userManager.watchMessage(that.messageId, function(){
-		// 				alert("Message with id: " + that.messageId + " successfully been deWatched");
-		// 			});
-		// 		}
-		// 	}
-		// });
 	},
 
 	openTransactionDetail: function(transaction){

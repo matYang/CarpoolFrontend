@@ -2,18 +2,20 @@
 /*dedicated view for Message post, deep linking will not be used for Message post states, this view holds the session data*/
 var MessagePublishView = MessagePostView.extend({
 	initialize: function (id, message) {
+
 		_.bindAll(this, 'render','renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'close');
 		app.viewRegistration.register("MessagePost", this, true);
 		MessagePostView.prototype.initialize({"method":"post"});
 		this.renderFirstPage();
+
 	},
 	render:function(step){
 		if (step === 1) {
-			this.renderFirstStep();
+			this.renderFirstPage();
 		} else if (step === 2) {
-			this.renderSecondStep();
+			this.renderSecondPage();
 		} else if (step === 3) {
-			this.renderThirdStep();
+			this.renderThirdPage();
 		}
 
 	},
@@ -33,7 +35,6 @@ var MessagePublishView = MessagePostView.extend({
 		MessagePostView.prototype.render(2);
 		$('#publish_nextStep').off();
 		$('#publish_nextStep').on('click', function(){
-			debugger;
 			if (MessagePostView.prototype.validate(2)) {
 				app.navigate(that.user.id + "/post/step3");
 				that.renderThirdPage(3);
@@ -50,7 +51,7 @@ var MessagePublishView = MessagePostView.extend({
 		$('#publish_nextStep').off();
 		$('#publish_back').off();
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/post/step1");
+			app.navigate(that.user.id + "/post/step2");
 			that.renderSecondPage();
 		});
 	},

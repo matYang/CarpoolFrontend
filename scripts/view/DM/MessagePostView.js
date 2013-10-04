@@ -35,9 +35,10 @@ var MessagePostView = Backbone.View.extend({
 		this.step2Template = _.template(tpl.get('Module/Publish_step2'));
 		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
 		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
-		if (testMockObj.testMode){
-			this.user = testMockObj.sampleUser;
-		}
+		
+		this.user = app.userManager.getTopBarUser();
+		this.userId = this.user.get("userId");
+		
 
 		this.domContainer = $('#content');
 		this.domContainer.append(this.baseTemplate);
@@ -116,9 +117,6 @@ var MessagePostView = Backbone.View.extend({
 		var that = this;
 		this.currentTemplate = this.askSlotTemplate;
 		this.refactorRequests();
-		if (this.method!=="post") {
-			$("#publish_time_add").hide();
-		}
 		if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
 			$('#publish_info').on('change', 'input[value=round]', function(e) {
 				var id = Utilities.toInt(Utilities.getId(e.target.name));
@@ -459,7 +457,7 @@ var MessagePostView = Backbone.View.extend({
 				d.setDate(inst.selectedDay);
 				d.setMonth(inst.selectedMonth);
 				d.setYear(inst.selectedYear);
-				that.updateValue(this);
+				that.updateValue(this, d);
 				$("input[name=publish_returnDate_"+ id +"]").datepicker("option", "minDate", d);
 			}
 		});
@@ -473,7 +471,7 @@ var MessagePostView = Backbone.View.extend({
 				d.setDate(inst.selectedDay);
 				d.setMonth(inst.selectedMonth);
 				d.setYear(inst.selectedYear);
-				that.updateValue(this);
+				that.updateValue(this, d);
 				$("input[name=publish_departDate_"+ id +"]").datepicker("option", "maxDate", d);
 			}
 		});

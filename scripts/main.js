@@ -221,7 +221,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
-		debugger;
 		if (!postState || !Config.validateDMPostState(postState)){
 			app.navigate(this.userManager.getTopBarUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 		}

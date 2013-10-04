@@ -60,19 +60,7 @@ var MainPageView = Backbone.View.extend ({
 		var me = this;
 		//injecting the template
 		$(this.el).append(this.template);
-		$("#filterPriceInputTagContainer").slider({
-			min:PRICE_MIN,
-			max:PRICE_MAX,
-			step:5,
-			range:true,
-			values:[PRICE_MIN,PRICE_MAX],
-			slide: function(event, ui){
-				me.filter.priceMin = ui.values[0];
-				me.filter.priceMax = ui.values[1];
-				$("#priceRangeDisplay").html(me.filter.priceMin + "-" + me.filter.priceMax);
-			}
-		});
-
+		
 		$("#searchDateInput_depart").datepicker({
 			buttonImageOnly: true,
 			buttonImage: "calendar.gif",

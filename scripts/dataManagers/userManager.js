@@ -34,6 +34,9 @@
 	};
 
 	UserManager.prototype.getUser = function() {
+		if (testMockObj.testMode){
+			return testMockObj.sampleUser;
+		}
 		return this.user;
 	};
 

@@ -2,7 +2,7 @@ var MessageEditView = MessagePostView.extend({
 
 	el: "",
 	initialize: function (id, message) {
-		_.bindAll(this, 'render', z'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
+		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
 		app.viewRegistration.register("MessageEdit", this, true);
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
@@ -22,11 +22,11 @@ var MessageEditView = MessagePostView.extend({
 	},
 	render:function(step){
 		if (step === 1) {
-			this.renderFirstStep();
+			this.renderFirstPage();
 		} else if (step === 2) {
-			this.renderSecondStep();
+			this.renderSecondPage();
 		} else if (step === 3) {
-			this.renderThirdStep();
+			this.renderThirdPage();
 		}
 
 	},
@@ -55,6 +55,8 @@ var MessageEditView = MessagePostView.extend({
 			app.navigate(that.user.id + "/post/step1");
 			that.renderFirstPage(1);
 		});
+		$("#publish_time_add").hide();
+		$('#publish_delete').remove();
 	},
 	renderThirdPage: function(){
 		var that = this;
