@@ -1,27 +1,23 @@
 <div id = 'searchResultBox_<%= messageId %>' class = 'searchResultBoxContainer'>
   <div id = 'profilePicture_<%= messageId %>' class = 'searchResultProfilePicture'></div>
   <div id = 'searchResultContainerInfo_<%= messageId %>' class = 'searchResultContainerInfo'>
-      <div class = 'searchResultSchoolName'><%= location.university %></div>	
-      <div class = 'searchResultDate'><%= simple_date %></div>
-      <div class = 'searchResultTime'><%= simple_timeRange %></div>
-      <div class = 'searchResultPublishTime'><%= creationTime %></div>
-    <div class = 'searchResultGender'><%= genderRequirement %></div>
-    <div class = 'searchResultUserName'><%= ownerName %></div>
-    <div class = 'searchResultUserLevel'><%= ownerLevel %></div>
-    <div class = 'searchResultFollowNote'>关注</div>
-    <div class = 'searchResultFollowUserName'><%= ownerName %></div>
-  </div>
-  <div id = 'searchResultContainerFollow_<%= messageId %>' class = 'searchResultContainerFollow'>
-    <div class = 'searchResultFollow'>关注</div>	
-    <div class = 'searchResultFollowLogo'>+1</div>
+    <div class = 'searchResultOriginProvince'><%= departure_location.province %></div>  
+    <div class = 'searchResultOriginCity'><%= departure_location.city %></div>
+    <div class = 'searchResultDepartDate'><%= departure_time %></div>
+    <div class = 'searchResultDepartTime'><%= departure_timeSlot %></div>
+
+    <div class = 'searchResultDestProvince'><%= arrival_location.province %></div>  
+    <div class = 'searchResultDestCity'><%= arrival_location.city %></div>
+    <div class = 'searchResultReturnDate'><%= arrival_time %></div>
+    <div class = 'searchResultReturnTime'><%= departure_timeSlot %></div>
+
+    <div class = 'searchResultPublishTime'><%= creationTime %></div>
+
+    <div class = 'searchResultUserName'><%= owner %></div>
   </div>
   <div id = 'searchResultContainerPrice_<%= messageId %>' class='searchResultContainerPrice'>
     <div class = 'searchResultPriceLogo'>￥</div>
-           <div class = 'searchResultPrice'><%= price %></div>
-           <div class = 'searchResultDuration'><%= simple_duration %></div>
-    <!--TODO: rename this-->
-    <div class = 'searchResultPaymentPerHour1'>每小时</div>
-            <div class = 'searchResultPaymentPerHour2'><%= simple_hourlyRate %></div>
-    <div class = 'searchResultPaymentPerHour3'>元</div>
+    
   </div>
 </div>
+

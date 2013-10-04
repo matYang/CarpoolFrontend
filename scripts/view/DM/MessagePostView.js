@@ -16,7 +16,6 @@ var MessagePostView = Backbone.View.extend({
 		"priceListEntries": 1,
 		"conditionalPrice":false
 	},
-	method:"post",
 	/**
 	request 
 	{
@@ -27,32 +26,27 @@ var MessagePostView = Backbone.View.extend({
 		round:true|false	//if round is false, ignore dateEnd
 	}
 	*/
-	initialize: function(user){
+	initialize: function(){
 		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents',
 			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'finish', 'close');
-		app.viewRegistration.register("MessagePost", this, true);
 		this.isClosed = false;
 		this.baseTemplate = _.template(tpl.get('Module/Publish_base'));
 		this.step1Template = _.template(tpl.get('Module/Publish_step1'));
 		this.step2Template = _.template(tpl.get('Module/Publish_step2'));
 		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
 		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
-
-		this.user = user;
 		if (testMockObj.testMode){
 			this.user = testMockObj.sampleUser;
 		}
 
 		this.domContainer = $('#content');
 		this.domContainer.append(this.baseTemplate);
-		this.editorContainer = $('#publish_requirement');
-		this.render(1);
 	},
 
 	render: function(stepIndex){
 		// --- events binding ---
 		this.unbindStepEvents(stepIndex);
-		this.editorContainer.empty();
+		$('#publish_requirement').empty();
 
 		//validity of stepIndex is guranteed on the URL level, since deep linking is applied
 		//reduncy of safety check is not necessary here because in development, we need to know where things go wrong
@@ -71,15 +65,9 @@ var MessagePostView = Backbone.View.extend({
 	},
 
 	renderFirstPage: function(){
-		this.editorContainer.append(this.step1Template);
+		$('#publish_requirement').append(this.step1Template());
 		$("#publish_progress").attr("class","publish_progress_step1");
 		var that = this;
-		$('#publish_nextStep').on('click', function(){
-			if (that.validate(1)){
-				app.navigate(that.user.id + "/"+that.method+"/step2");
-				that.render(2);
-			}
-		});
 		$('#publish_type>div').on('click', function(e){
 			that.onTypeSelect(e.target.id);
 		});
@@ -93,13 +81,15 @@ var MessagePostView = Backbone.View.extend({
 		if (!this.map) {
 			var mapConfig = {};
 			mapConfig.div = "publish_map";
-			mapConfig.origin = this.user.get("location");
+			mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
+			mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
+
 			this.map = new MapView(mapConfig);
 		}
 	},
 	updateLocation: function(flag, id) {
-		$('#publish_originInput').val(this.toSubmit.origin.get("province")+" "+this.toSubmit.origin.get("city")+" "+this.toSubmit.origin.get("region"));
-		$('#publish_destInput').val(this.toSubmit.dest.get("province")+" "+this.toSubmit.dest.get("city")+" "+this.toSubmit.dest.get("region"));
+		$('#publish_originInput').val(this.toSubmit.origin.get("province")+" "+this.toSubmit.origin.get("city"));
+		$('#publish_destInput').val(this.toSubmit.dest.get("province")+" "+this.toSubmit.dest.get("city"));
 		if (this.map) {
 			this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
 		}
@@ -121,11 +111,14 @@ var MessagePostView = Backbone.View.extend({
 		this.toSubmit.numberRequests = counter;
 	},
 	renderSecondPage: function(){
-		this.editorContainer.append(this.step2Template);
+		$('#publish_requirement').append(this.step2Template());
 		$("#publish_progress").attr("class","publish_progress_step2");
 		var that = this;
 		this.currentTemplate = this.askSlotTemplate;
 		this.refactorRequests();
+		if (this.method!=="post") {
+			$("#publish_time_add").hide();
+		}
 		if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
 			$('#publish_info').on('change', 'input[value=round]', function(e) {
 				var id = Utilities.toInt(Utilities.getId(e.target.name));
@@ -135,7 +128,11 @@ var MessagePostView = Backbone.View.extend({
 					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", maximumDate);
 				} else {
 					that.toggleDateVisibility(e, true);
+					var date = $("input[name=publish_departDate_"+id+"]").datepicker("getDate");
 					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", null);
+					if (date) {
+						$("input[name=publish_departDate_"+id+"]").val((date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear());
+					}
 				}
 			});
 			this.toSubmit.requests = [];
@@ -237,16 +234,6 @@ var MessagePostView = Backbone.View.extend({
 		$("input").on('blur', function(e){
 			that.updateValue(e);
 		});
-		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/"+that.method+"/step1");
-			that.render(1);
-		});
-		$('#publish_nextStep').on('click', function(){
-			if (that.validate(2)) {
-				app.navigate(that.user.id + "/"+that.method+"/step3");
-				that.render(3);
-			}
-		});
 		$('#publish_time_add').on('click', function(){
 			that.onAddClick();
 		});
@@ -259,7 +246,7 @@ var MessagePostView = Backbone.View.extend({
 	},
 	renderThirdPage: function(){
 		var that = this;
-		this.editorContainer.append(this.step3Template);
+		$('#publish_requirement').append(this.step3Template);
 		$("#publish_priceList").hide();
 		$("#priceList_minus").hide();
 		$("#publish_progress").attr("class","publish_progress_step3");
@@ -309,10 +296,6 @@ var MessagePostView = Backbone.View.extend({
 
 
 		})
-		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/"+that.method+"/step2");
-			that.render(2);
-		});
 		$("#conditionalPriceSwitch").on("click", function(e) {
 			if ($("#conditionalPriceSwitch").hasClass("publish_selected")) {
 				$("#conditionalPriceSwitch").removeClass("publish_selected");
@@ -339,13 +322,15 @@ var MessagePostView = Backbone.View.extend({
 				if (r[request]){
 					var id = Utilities.toInt(request)+1;
 					$('input[name=publish_round_'+id+']').attr("checked",r[request].round);
-					$('input[name=publish_departDate_'+id+']').val(r[request].departDate.toLocaleDateString());
 					if (r[request].departDate) {
-						$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", this.toSubmit.requests[request].departDate);
+						var date = r[request].departDate;
+						$('input[name=publish_departDate_'+id+']').val((1+date.getMonth())+"/"+date.getDate()+"/"+date.getFullYear());
+						$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", date);
 					}
 					if (r[request].round && r[request].returnDate) {
+						var date = r[request].departDate;
 						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", this.toSubmit.requests[request].returnDate);
-						$('input[name=publish_returnDate_'+id+']').val(r[request].returnDate.toLocaleDateString());
+						$('input[name=publish_returnDate_'+id+']').val((1+date.getMonth())+"/"+date.getDate()+"/"+date.getFullYear());
 					}
 					$('select[name=depart_time_'+id+']').val(r[request].departTime);
 					$('select[name=return_time_'+id+']').val(r[request].returnTime);
@@ -355,6 +340,9 @@ var MessagePostView = Backbone.View.extend({
 			$("#publish_description_input").val(this.toSubmit.description);
 			$("#seats").val(this.toSubmit.departureSeats);
 			$(".publish_priceEntry").remove();
+			if (this.toSubmit.type === "ask") {
+				$("#publish_pricelist_container").remove();
+			}
 			if (this.toSubmit.conditionalPrice) {
 				$("#conditionalPriceSwitch").addClass("publish_selected");
 				$("#publish_singlePrice").hide();
@@ -380,6 +368,11 @@ var MessagePostView = Backbone.View.extend({
 					$("#priceList_minus").show();
 				}
 			} else {
+				$("#priceList_add").before("<div class='publish_priceEntry'>" +
+						"人数 <input id = 'seatsNumber_1' type = 'text' class='seat_price' pattern='[0-9]*' />" +
+						" 每人<input id = 'seats_1' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+						$("#seatsNumber_1").val(1);
+						$("#seats_1").val(this.toSubmit.priceList[0]);
 				$("#conditionalPriceSwitch").removeClass("publish_selected");
 				$("#publish_singlePrice").show();
 				$("#publish_priceList").hide();
@@ -389,12 +382,9 @@ var MessagePostView = Backbone.View.extend({
 
 	unbindStepEvents: function(previousStepIndex){
 		if (previousStepIndex === 1){
-			$('#publish_nextStep').off();
 			$('#publish_type>div').off();
 		}
 		else if (previousStepIndex === 2){
-			$('#publish_back').off();
-			$('#publish_nextStep').off();
 			$('#publish_time_add').off();
 			$('input').off();
 			$('publish_delete').off();
@@ -409,7 +399,6 @@ var MessagePostView = Backbone.View.extend({
 			}
 		}
 		else if (previousStepIndex === 3){
-			$('#publish_back').off();
 			$('#publish_finish').off();
 			$('#publish_description_input').off();
 		}
@@ -418,11 +407,11 @@ var MessagePostView = Backbone.View.extend({
 	onTypeSelect: function(id) {
 		if (id.indexOf('publish_ask')>-1) {
 			$('.selectBox_selected').removeClass('selectBox_selected');
-			$('#publish_ask').addClass('selectBox_selected');
+			$('#publish_ask').addClass('selectBox_selected'); //passenger
 			this.toSubmit.type = "ask";
 		} else if (id.indexOf('publish_help')>-1){
 			$('.selectBox_selected').removeClass('selectBox_selected');
-			$('#publish_help').addClass('selectBox_selected');
+			$('#publish_help').addClass('selectBox_selected'); //driver
 			this.toSubmit.type = "help";
 		}
 	},
@@ -615,17 +604,17 @@ var MessagePostView = Backbone.View.extend({
 				var m = new Message();
 				m.set("type", this.toSubmit.type === "ask" ? Constants.messageType.ask : Constants.messageType.help);
 				m.set("ownerId", this.user.get("userId"));
-				m.set("departure_Location", this.toSubmit.origin);
-				m.set("arrival_Location", this.toSubmit.dest);
+				m.set("departure_location", this.toSubmit.origin);
+				m.set("arrival_location", this.toSubmit.dest);
 				m.set("note", this.toSubmit.description);
-				m.set("departure_Time", this.toSubmit.requests[r].departDate);
-				m.set("departure_Location", this.toSubmit.origin);
+				m.set("departure_time", this.toSubmit.requests[r].departDate);
+				m.set("departure_location", this.toSubmit.origin);
 				m.set("departure_seatsNumber", this.toSubmit.departureSeats);
 				m.set("departure_priceList", this.toSubmit.priceList);
 				if (this.toSubmit.requests[r].round) {
 					m.set("isRoundTrip", true);
-					m.set("arrival_Time", this.toSubmit.requests[r].returnDate);
-					m.set("arrival_Location", this.toSubmit.dest);
+					m.set("arrival_time", this.toSubmit.requests[r].returnDate);
+					m.set("arrival_location", this.toSubmit.dest);
 					m.set("arrival_seatsNumber", this.toSubmit.departureSeats);
 					m.set("arrival_priceList", this.toSubmit.priceList);
 				}
@@ -636,7 +625,7 @@ var MessagePostView = Backbone.View.extend({
 	},
 	close: function(){
 		if (!this.isClosed){
-
+			delete this.map;
 			this.unbindStepEvents(this.stepIndex);
 			this.domContainer.empty();
 			this.isClosed = true;

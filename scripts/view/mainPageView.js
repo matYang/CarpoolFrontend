@@ -196,11 +196,11 @@ var MainPageView = Backbone.View.extend ({
 		for (var i = 0; i < l; i++ ) {
 			var m = messages.at(i);
 			if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
-				if ( this.filter.time1 === "morning" && m.get("departure_Time").getHours()<12 && m.get("departure_Time").getHours() >= 6) {
+				if ( this.filter.time1 === "morning" && m.get("departure_time").getHours()<12 && m.get("departure_time").getHours() >= 6) {
 					filtered.add(m);
-				} else if ( this.filter.time === "afternoon" && m.get("departure_Time").getHours()<19 && m.get("departure_Time").getHours() >=12) {
+				} else if ( this.filter.time === "afternoon" && m.get("departure_time").getHours()<19 && m.get("departure_time").getHours() >=12) {
 					filtered.add(m);
-				} else if ( this.filter.time === "night" && (m.get("departure_Time").getHours()>=19 || m.get("departure_Time").getHours() < 6)) {
+				} else if ( this.filter.time === "night" && (m.get("departure_time").getHours()>=19 || m.get("departure_time").getHours() < 6)) {
 					filtered.add(m);
 				}
 			}

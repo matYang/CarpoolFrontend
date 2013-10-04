@@ -9,14 +9,16 @@ var Message = Backbone.Model.extend({
 
 		"isRoundTrip":false,
 
-		"departure_Location": new UserLocation(),
-		"departure_Time": new Date(),
+		"departure_location": new UserLocation(),
+		"departure_time": new Date(),
+		"departure_timeSlot": 0,
 		"departure_seatsNumber":0,
 		"departure_seatsBooked":0,
 		"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
-		"arrival_Location": new UserLocation(),
-		"arrival_Time": new Date(),
+		"arrival_location": new UserLocation(),
+		"arrival_time": new Date(),
+		"arrival_timeSlot": 0,
 		"arrival_seatsNumber":0,
 		"arrival_seatsBooked":0,
 		"arrival_priceList":[],
@@ -73,8 +75,8 @@ var Message = Backbone.Model.extend({
 
 		this.set("departure_location", new UserLocation(false, response.location));
 		this.set("arrival_location", new UserLocation(false, response.location));
-		this.set("departure_Time", new Date(response.startTime));
-		this.set("arrival_Time", new Date(response.endTime));
+		this.set("departure_time", new Date(response.startTime));
+		this.set("arrival_time", new Date(response.endTime));
 
 		this.get('transactionList').reset( response.transactionList);		//watchout, found on stackoveflow
 

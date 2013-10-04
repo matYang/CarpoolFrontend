@@ -40,6 +40,7 @@ var FrontPageView = Backbone.View.extend({
 			this.displayMessages.add(recentMessages.at(i));
 		}
 		this.searchResultView = new SearchResultView(this.displayMessages, false);
+		
 		this.bindRecentsEvents();
 	},
 

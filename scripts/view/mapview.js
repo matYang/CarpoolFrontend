@@ -20,14 +20,13 @@ var MapView = Backbone.View.extend({
 		}
 		var center = new google.maps.LatLng(this.oLatLng.lat, this.oLatLng.lng);
 		var myOptions = {
-				zoom: 4,
 				center: center,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		this.map = new google.maps.Map(document.getElementById(this.div), myOptions);
 		this.directionDisplay.setMap(this.map);
 		var that = this;
-		if (this.origin && this.dest && this.origin.get("city") && this.dest.get("city")){
+		if (this.origin && this.dest && this.origin.get("city") && this.dest.get("city") && this.origin.equals(this.dest)){
 			that.getDirection(that.origin, that.dest);
 		}
 	},

@@ -11,9 +11,9 @@ var MessageDetailView = Backbone.View.extend({
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
 			//To allow edit
-			this.message.get("arrival_Location").set("city","苏州");
-			this.message.get("arrival_Location").set("region","苏州市区");
-			this.message.get("arrival_Location").set("university","苏州大学");
+			this.message.get("arrival_location").set("city","苏州");
+			this.message.get("arrival_location").set("region","苏州市区");
+			this.message.get("arrival_location").set("university","苏州大学");
 			this.message.set("roundTrip", true);
 			this.message.set("arrival_seatsNumber", 1);
 			this.transactions = testMockObj.sampleTransactions;
@@ -43,8 +43,8 @@ var MessageDetailView = Backbone.View.extend({
 		this.loadTransactions();
 		this.map = new MapView({
 			div:"view_map",
-			originLocation:this.message.get("departure_Location"),
-			destLocation:this.message.get("arrival_Location"),
+			originLocation:this.message.get("departure_location"),
+			destLocation:this.message.get("arrival_location"),
 		});
 		this.renderPriceList();
 		if (this.message.get("roundTrip")) {
@@ -75,7 +75,7 @@ var MessageDetailView = Backbone.View.extend({
 		var that = this;
 		if ( this.ownerId === this.userId){
 			$(".view_edit_inline").on("click", function(){
-				app.navigate(that.userId + "/Message/"+that.messageId+"/edit", true);
+				app.navigate(that.userId + "/message/"+that.messageId+"/edit", true);
 			});
 		} else {
 			$(".view_edit_inline").hide();
@@ -84,9 +84,9 @@ var MessageDetailView = Backbone.View.extend({
 		$("#view_transactions_button").on("click", function(){
 			var content = $("#view_transactions_content");
 			if (that.showTransaction) {
-				content.slideUp();
+				content.slideUp(100);
 			} else {
-				content.slideDown();
+				content.slideDown(100);
 			}
 			that.showTransaction = !that.showTransaction;
 		});
@@ -171,17 +171,17 @@ var MessageDetailView = Backbone.View.extend({
 	},
 
 	openTransactionDetail: function(transaction){
-		var link = [this.userId,"/transaction/",transaction.get("transactionId"),"/Message/",this.messageId];
+		var link = [this.userId,"/transaction/",transaction.get("transactionId"),"/message/",this.messageId];
 		app.navigate(link.join(""));
-		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "Message/"+this.messageId);
+		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "message/"+this.messageId);
 	},
 
 	parseMessage: function(message){
 		var parsedMessage = {};
-		parsedMessage.origin = message.get("departure_Location").toString();
-		parsedMessage.dest = message.get("arrival_Location").toString();
-		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_Time"), true);
-		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_Time"), true);
+		parsedMessage.origin = message.get("departure_location").toString();
+		parsedMessage.dest = message.get("arrival_location").toString();
+		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_time"), true);
+		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
 		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
 		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("arrival_seatsBooked");
 		parsedMessage.ownerUser = message.get("ownerName");

@@ -3,22 +3,17 @@ var UserLocation = Backbone.Model.extend({
 	defaults:{
         "province" : "江苏",
         "city" : "南京市",
-        "region":"江宁区",
-        "ignoreRegion":false
+        "customized":""
 	},
 
 	initialize:function(stringCastingFlag, data){
 		_.bindAll(this, 'toString', 'castFromString');
-
-
 		if (stringCastingFlag && data !== null){
 			this.castFromString(data);
 		}
 		else if (stringCastingFlag === false){
 			this.set("province",data.province);
 			this.set("city", data.city);
-			this.set("region", data.region);
-			this.set("university",data.university);
 		}
 		else if (stringCastingFlag === undefined){
 			//Constants.dWarn("location constructor:: string casting flag not set");
@@ -31,12 +26,7 @@ var UserLocation = Backbone.Model.extend({
 	},
 
 	toString: function() {
-		var buffer = [
-			this.get("province"),
-			this.get("city"),
-			this.get("region")
-			];
-		return buffer.join(" ");
+		return this.get("province")+" "+this.get("city");
 	},
 	castToString:function(){
 		//@deprecated
@@ -48,10 +38,13 @@ var UserLocation = Backbone.Model.extend({
 
 			//type casting!
 			var locationArray = String(locationString).split(" ");
-			if (locationArray.length === 3){
+			if (locationArray.length === 2){
 				this.set("province",locationArray[0]);
 				this.set("city", locationArray[1]);
-				this.set("region", locationArray[2]);
+			} else if (locationArray.length === 3){
+				this.set("province",locationArray[0]);
+				this.set("city", locationArray[1]);
+				this.set("customized", locationArray[2]);
 			}
 			else{
 				Constants.dLog("location constructor error, current params: ");
@@ -68,10 +61,14 @@ var UserLocation = Backbone.Model.extend({
 		var buffer = {
 			'province': this.get("province"),
 			'city': this.get("city"),
-			'region': this.get("region"),
-			'ignoreRegion': this.get("ignoreRegion")
+			'customized': this.get('customized')
 		};
 		return buffer;
+	},
+
+	equals: function (val) {
+		if (!val) return false;
+		return (this.get("province") == val.get("province")) && (this.get("city") == val.get("city")) && (this.get("customized") == val.get("customized"));
 	}
 
 

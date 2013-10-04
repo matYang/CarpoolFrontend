@@ -157,14 +157,15 @@
 
 .view_edit_inline{
 	color:#ffffff;
-	background-color: rgb(219,188,222);
+	background-color: rgb(74, 172, 120);
 	width:40px;
-	height:16px;
-	font-size: 11px;
+	height:20px;
+	font-size: 14px;
 	border:1px solid #999999;
 	text-align: center;
 	letter-spacing: 1px;
 	display:inline-block;
+	float:right;
 }
 
 .view_edit_inline:hover{
@@ -552,7 +553,7 @@ div.editContent.genderEditWindow{
 	float:left;
 	width:100%;
 	margin-top:10px;
-	height:170px;
+	height:140px;
 
 }
 

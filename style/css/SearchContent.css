@@ -189,16 +189,16 @@
 }
 
 /*Search Result Info containers*/
-.searchResultDisplay{
+#searchResultDisplayPanel{
     width:650px;
-    height:600px;
+    height:650px;
     overflow:auto;
     padding:0 10px 0 0;
     overflow-y:auto;
     float:left;
 }
 .searchResultBoxContainer {
-  width:698px;
+  width:620px;
 	height:90px;
 	padding:8px 10px 8px 10px;
 	margin:0;
@@ -223,7 +223,7 @@
 	color:#444444;
 	float:left;
 }
-.searchResultSchoolName{
+.searchResultCity{
 	font-size:18px;
 	font-weight:bold;
 	float:left;
@@ -372,7 +372,7 @@
   float:left;
 }
 #pageNavigator {
-  width:660px;
+  width:644px;
   height:15px;
   position:relative;
   border-width: 0;

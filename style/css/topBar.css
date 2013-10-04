@@ -180,7 +180,7 @@
   height:40px;
   position:relative;
   float:left;
-  margin-left:300px;
+  margin-left:330px;
 }
 
 #profilePicture{
@@ -197,7 +197,7 @@
 #dropdowns{
   position:relative;
   float:right;
-  width:325px;
+  width:295px;
 }
 
 #messageDropdown{

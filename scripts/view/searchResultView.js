@@ -3,18 +3,16 @@ var SearchResultView = Backbone.View.extend({
 
 	initialize: function(messageList, isSearchResult){
 		_.bindAll(this, 'render', 'transferURL', 'bindPageNumber', 'close');
-		this.entries = 6 < messageList.length ? 6 : messageList.length;
-		this.isSearchResult = isSearchResult;
-		if (isSearchResult){
-			this.singleSearchResultTemplate = _.template(tpl.get('Module/SimpleMessage'));
-		} else {
-			this.singleSearchResultTemplate = _.template(tpl.get('Module/Front'));
+		this.messageList = messageList;
+		if (testMockObj.testMode){
+			this.messageList = testMockObj.sampleMessages;
 		}
-		
+		this.entries = 6 < this.messageList.length ? 6 : this.messageList.length;
+		this.isSearchResult = isSearchResult;
+		this.singleSearchResultTemplate = _.template(tpl.get('Module/SimpleMessage'));
+
 
 		this.user = app.userManager.getTopBarUser();
-		this.messageList = messageList;
-
 		if (isSearchResult){
 			this.domContainer = $(".searchResultDisplay");
 		} else {
@@ -22,6 +20,9 @@ var SearchResultView = Backbone.View.extend({
 		}
 		this.render(0);
 		this.bindPageNumber();
+		if (!isSearchResult){
+			$(".searchResultBoxContainer").removeClass("searchResultBoxContainer").addClass("frontBoxContainer");
+		}
 	},
 
 	render: function(start){
@@ -38,13 +39,13 @@ var SearchResultView = Backbone.View.extend({
 			$('#searchResultBox_' + this.messageList.at(i).id).on('click', that.transferURL(this.messageList.at(i).id));
 		}
 
+
 	},
 	bindPageNumber: function() {
 		var that = this;
 		$(".pageNumber").off();
 		$(".pageNumber").on("click",function(e){
 			if (!e.target.id) return;
-			debugger;
 			that.render((Utilities.toInt(Utilities.getId(e.target.id)) -1 )*this.entries);
 		});
 	},
@@ -52,7 +53,7 @@ var SearchResultView = Backbone.View.extend({
 		var that = this;
 		return function(){
 			if (app.sessionManager.hasSession()){
-				app.navigate(that.user.id + "/Message/" + messageId, true);
+				app.navigate(that.user.id + "/message/" + messageId, true);
 			} else {
 				alert("请先登陆");
 			}

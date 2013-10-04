@@ -202,6 +202,10 @@ var AppRouter = Backbone.Router.extend({
 		this.navigate(id+"/message/"+messageId+"/edit");
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
+		if (this.MessagePostView) {
+			delete this.MessagePostView;
+			this.MessagePostView = null;
+		}
 		this.MessageEditView = new MessageEditView();
 		this.advertisementView = new AdvertisementView();
 	},
@@ -215,20 +219,25 @@ var AppRouter = Backbone.Router.extend({
 			this.navigate("front", true);
 			return;
 		}
-
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
+		debugger;
 		if (!postState || !Config.validateDMPostState(postState)){
-			app.navigate(this.userManager.getTopBarUser().id + "/DMpost/" + Config.getDefaultDMPostState() , true);
+			app.navigate(this.userManager.getTopBarUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 		}
 		else{
 			//if the post session not valid, start new session, creat brand new view
-			if (!this.dMMessagePostView || this.dMMessagePostView.isClosed){
-				this.dMMessagePostView = new MessagePostView();
+			if (!this.MessagePostView || this.MessagePostView.isClosed){
+				if (this.MessageEditView) {
+					this.MessageEditView.close();
+					delete this.MessageEditView;
+					this.MessageEditView = null;
+				}
+				this.MessagePostView = new MessagePublishView({"method":"post"});
 			}
 			//if the post session did not end, keep using the same post session
 			else{
-				this.dMMessagePostView.render(Config.getPostStateStepIndex(postState));
+				this.MessagePostView.render(Config.getPostStateStepIndex(postState));
 			}
 		}
 	},

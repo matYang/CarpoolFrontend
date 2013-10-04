@@ -3,12 +3,14 @@
     <div id = 'view_event_info_tbar'>
       <div id = 'departureInfo'>
         <div id = 'departureLocation'><%= origin %></div>
+        <div id = 'departureLocation2'></div>
         <div id = 'departureTime'>出发时间： <%= departureTime %></div>
         <div id = 'departureSeats'>剩余座位： <%= departureSeats %></div>
       </div>
       <div id = 'directionArrow'></div>
       <div id = 'returnInfo'>
         <div id = 'returnLocation'><%= dest %></div>
+        <div id = 'returnLocation2'></div>
         <div id = 'returnTime'>返回时间： <%= returnTime %></div>
         <div id = 'returnSeats'>剩余座位： <%= returnSeats %></div>
       </div>
@@ -42,6 +44,7 @@
       <div id = 'pricelist' >
         
       </div>
+      <div class = 'view_edit_inline'>修改</div>
     </div>
   </div>
   <div id = 'view_userInfo'>
@@ -70,7 +73,7 @@
   <div id = 'view_transactions'>
     <div id = 'view_transactions_header'>
       <div id = 'view_transactions_button'></div>
-      <div id = 'view_transactions_title'>这条信息已经被预定了<span id = 'reservation_count'> <%= transactionCount %> </span>次</div>
+      <div id = 'view_transactions_title'>这条信息已经被<span id = 'reservation_count'> <%= transactionCount %> </span>人预定了</div>
     </div>
     <div id = 'view_transactions_content' style="display: none;">
     </div>
