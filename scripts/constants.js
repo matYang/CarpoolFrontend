@@ -74,7 +74,7 @@ var Constants = {
 	messageType: {
 		"ask": 0,
 		"help": 1,
-		"invalid": -1
+		"both": 2
 	},
 
 	gender: {
@@ -174,6 +174,14 @@ var Constants = {
 		"afternoon": 1,
 		"night": 2,
 		"unspecified": 3
+	},
+
+	DayTimeSlot:{
+		'all': 0,
+		'morning': 1,
+		'afternoon': 2,
+		'night': 3,
+		'specific': 4
 	},
 
 	weekDayArray: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],

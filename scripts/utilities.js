@@ -243,5 +243,25 @@ var Utilities = {
 			
 		}
 		el.append(buffer.join(""));
+	},
+
+
+	castFromAPIFormat: function(dateString){
+		var match = dateString.match(/^(\d+)-(\d+)-(\d+) (\d+)\:(\d+)\:(\d+)$/);
+		var date = new Date(match[1], match[2] - 1, match[3], match[4], match[5], match[6]);
+		return date;
+	},
+
+	castToAPIFormat: function(date){
+		var d = date,
+			str = [ d.getFullYear(),
+					(d.getMonth()+1).padLeft(),
+					d.getDate().padLeft()].join('-')+
+                   ' ' +
+                  [ d.getHours().padLeft(),
+                    d.getMinutes().padLeft(),
+                    d.getSeconds().padLeft()].join(':');
+        return str;
 	}
+
 };

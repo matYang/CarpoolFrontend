@@ -18,10 +18,10 @@ var User = Backbone.Model.extend({
 
         "historyList": null,
         "watchList": null,
-        "socialList": [],                       //ArrayList<User>(),
-        "transactionList": new Transactions(),  //ArrayList<Transaction>(),
-        "notificationList": new Notifications(),        //ArrayList<Notification>(),
-        "universityGroup": [],                  //array of university names
+        "socialList": [],
+        "transactionList": [],
+        "notificationList": [],
+        "universityGroup": [],
         
         "emailActivated": false,
         "phoneActivated": false,

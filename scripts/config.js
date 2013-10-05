@@ -1,6 +1,13 @@
 
 var Config = {
 
+	urlSeperator: '+',
+
+	locationSeperator: '_',
+
+	defaultCustomDepthIndex: 3,
+
+
 	//-------------- PersonalView state transfer -------------
 	getDefaultPersonalViewState: function(){
 		return "watch";

@@ -2,17 +2,18 @@ var LocationPickerView = Backbone.View.extend({
 
 	tagName: 'div',
 
-	initialize:function(locationObj, initiator, id){
-		_.bindAll(this, 'render','getProvinces','getCities', 'getUniversities','provinceDOMGenerator', 'cityDOMGenerator', 'universityDOMGenerator', 'complete','close', 'highLight');
+	initialize:function(locationRep, initiator, id){
+		_.bindAll(this, 'render','getProvinces','getCities', 'getCustomNameList', 'provinceDOMGenerator', 'cityDOMGenerator', 'complete','close', 'highLight');
 		app.viewRegistration.register("locationPicker", this, true);
 		this.isClosed = false;
 		this.id = id;
 		this.apis = new ApiResource();
-		this.location = locationObj || new UserLocation();
-		this.provinceName = this.location.get("province");
-		this.cityName = this.location.get("city");
-		this.region = this.location.get("region");
-		this.universityName = this.location.get("university");
+		this.location = locationRep || new UserLocation();
+
+		this.countryName = this.location.get('country');
+		this.provinceName = this.location.get('province');
+		this.cityName = this.location.get('city');
+
 
 		if (initiator){
 			this.initiator = initiator;
@@ -24,16 +25,13 @@ var LocationPickerView = Backbone.View.extend({
 
 		this.getProvinces();
 		this.getCities();
-		this.getUniversities();
 	},
 
 	render:function(){
-		$('#popup').append("<div class='popupPanel' id='locationSearchPanel'><div id='popupBoxLocation'><div class='popUpCloseButton' id='location-modal-closeButton'></div><div id='location-modal-titleContainer'><p>请选择大学</p><div></div></div><div id='location-modal-provinceContainer'></div><div id='location-modal-cityContainer'></div><div id='location-modal-universityContainer'></div></div></div>");
+		$('#popup').append("<div class='popupPanel' id='locationSearchPanel'><div id='popupBoxLocation'><div class='popUpCloseButton' id='location-modal-closeButton'></div><div id='location-modal-titleContainer'><p>请选择城市</p><div></div></div><div id='location-modal-provinceContainer'></div><div id='location-modal-cityContainer'></div></div></div>");
 
 		$('#location-modal-closeButton').bind('click', this.close);
-		// this.getProvinces();
-		// this.getCities();
-		// this.getUniversities();
+
 		$('#popup').show();
 		$("#locationSearchPanel").show();
 	},
@@ -44,33 +42,34 @@ var LocationPickerView = Backbone.View.extend({
 		$.ajax({
 			type: "GET",
 			async: true,
+			data: {'depth': 1, 'name': self.countryName},
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
-				var totalDomString = "";
-				for(var eachIndex in data){
-					totalDomString += self.provinceDOMGenerator(data[eachIndex]);
+				var totalDomString = "",
+					index = 0;
+				for (index = 0; index < data.length; index++){
+					totalDomString += self.provinceDOMGenerator(data[index]);
 				}
 				provinceContainer.append(totalDomString);
+				self.highLight($(".location-modal-province:contains(" + self.provinceName +  ")").first(),"province");
+				self.highLightedProvince = $(".location-modal-province:contains(" + self.provinceName +  ")").first();
+
 				$('.location-modal-province').bind('click', function(){
 					self.firstLoad = false;
 					var selectedProvince = $(this).html();
 					if (selectedProvince != self.provinceName){
 						self.provinceName = selectedProvince;
-						self.getCities(self.provinceName);
+						self.getCities();
 
 						self.highLight($(this),"province");
 						self.highLightedProvince = $(this);
 					}
 				});
-
-				//self.provinceName = $('.location-modal-province').first().html();
-				//self.getCities();
-				self.highLight($(".location-modal-province:contains(" + self.provinceName +  ")").first(),"province");
-				self.highLightedProvince = $(".location-modal-province:contains(" + self.provinceName +  ")").first();
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
+				console.log(textStatus);
 			}
 		});
 	},
@@ -78,15 +77,16 @@ var LocationPickerView = Backbone.View.extend({
 
 
 	getCities:function(){
-		$('.location-modal-city').unbind();
-		var cityContainer = $('#location-modal-cityContainer');
+		var cityContainer = $('#location-modal-cityContainer'),
+			self = this;
+
+		cityContainer.unbind();
 		cityContainer.empty();
-		var self = this;
 
 		$.ajax({
 			type: "GET",
 			async: true,
-			data: {province : self.provinceName},
+			data: {'depth': 2, 'name': self.provinceName},
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
@@ -95,67 +95,26 @@ var LocationPickerView = Backbone.View.extend({
 					totalDomString += self.cityDOMGenerator(data[each]);
 				}
 				cityContainer.append(totalDomString);
+				self.highLight($(".location-modal-city:contains(" + self.cityName +  ")").first(),"city");
+				self.highLightedCity = $(".location-modal-city:contains(" + self.cityName +  ")").first();
+
 				$('.location-modal-city').bind('click', function(){
 					self.firstLoad = false;
 					var selectedCity = $(this).html();
 					if (selectedCity != self.cityName){
 						self.cityName = selectedCity;
-						self.getUniversities(self.cityName);
 
 						self.highLight($(this),"city");
 						self.highLightedCity = $(this);
+
+						self.getCustomNameList();
 					}
 			
 				});
-
-				if (!self.firstLoad){
-					self.cityName = $('.location-modal-city').first().html();
-					self.getUniversities();
-				}
-				self.highLight($(".location-modal-city:contains(" + self.cityName +  ")").first(),"city");
-				self.highLightedCity = $(".location-modal-city:contains(" + self.cityName +  ")").first();
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
 			}
-		});
-	},
-
-	getUniversities:function(){
-		$('.location-modal-university').unbind();
-		var universityContainer = $('#location-modal-universityContainer');
-		universityContainer.empty();
-		var self = this;
-
-		$.ajax({
-				type: "GET",
-				async: true,
-				data: { province: self.provinceName, city: self.cityName},
-				url: self.apis.location_location,
-				dataType: 'json',
-				success: function(data){
-					var totalDomString = "";
-					for(var each in data){
-						var jsonGroup = data[each];
-						for (var region in jsonGroup){
-							totalDomString += self.universityDOMGenerator(region, jsonGroup[region]);
-						}
-					}
-					universityContainer.append(totalDomString);
-
-					$('.location-modal-university').bind('click', function(){
-						self.firstLoad = false;
-						self.universityName = $(this).children('span').html();
-						self.complete();
-						self.highLight($(this));
-					});
-
-					self.universityName = $('.location-modal-university').first().html();
-
-				},
-				error: function (data, textStatus, jqXHR){
-					alert("请稍后再试");
-				}
 		});
 	},
 
@@ -167,28 +126,28 @@ var LocationPickerView = Backbone.View.extend({
 		return "<div class = 'location-modal-city location-modal-entry'>" + city + "</div>";
 	},
 
-	universityDOMGenerator:function(region, universityList){
-		var tempDOMString = "";
-		tempDOMString += "<div>" + region + "</div>";
-		for (var uni in universityList){
-			tempDOMString += "<div class = 'location-modal-university location-modal-entry'><span>" + universityList[uni] + "</span></div>";
-		}
-		return tempDOMString;
+
+	getCustomNameList: function(){
+		var self = this;
+
+		$.ajax({
+			type: "GET",
+			async: true,
+			data: {'depth': 3, 'name': self.cityName},
+			url: self.apis.location_location,
+			dataType: 'json',
+			success: function(data){
+				self.customNameList = data;
+			},
+			error: function (data, textStatus, jqXHR){
+				alert("请稍后再试");
+			}
+		});
 	},
+
 	
 	complete:function(){
-		this.location.set("province", this.provinceName);
-		this.location.set("city", this.cityName);
-		this.location.set("region", this.pronvinceName);
-		this.location.set("university", this.universityName);
-
-		if (this.supportStorage){
-			var locationString = this.location.get("province")
-						 + " " + this.location.get("city") 
-						 + " " + this.location.get("university");
-			localStorage.locationString = locationString;
-		}
-
+		this.location = new UserLocation({'hierarchyNameList': [this.countryName, this.provinceName, this.cityName, 'undetermined'], 'customNameList': this.customNameList}, {'parse': true});
 		this.initiator.updateLocation(this.id);
 		this.close();
 	},
@@ -225,7 +184,6 @@ var LocationPickerView = Backbone.View.extend({
 			$('#location-modal-closeButton').unbind();
 			$('.location-modal-province').unbind();
 			$('.location-modal-city').unbind();
-			$('.location-modal-university').unbind();
 			$('#locationSearchPanel').empty();
 			$('#locationSearchPanel').remove();
 			$('#popup').hide();
