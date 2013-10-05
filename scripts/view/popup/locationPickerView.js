@@ -2,13 +2,14 @@ var LocationPickerView = Backbone.View.extend({
 
 	tagName: 'div',
 
-	initialize:function(locationRep, initiator, id){
+	initialize:function(locationRep, initiator, id, callback){
 		_.bindAll(this, 'render','getProvinces','getCities', 'getCustomNameList', 'provinceDOMGenerator', 'cityDOMGenerator', 'complete','close', 'highLight');
 		app.viewRegistration.register("locationPicker", this, true);
 		this.isClosed = false;
 		this.id = id;
 		this.apis = new ApiResource();
 		this.location = locationRep || new UserLocation();
+		this.callback = callback;
 
 		this.countryName = this.location.get('country');
 		this.provinceName = this.location.get('province');
@@ -42,7 +43,7 @@ var LocationPickerView = Backbone.View.extend({
 		$.ajax({
 			type: "GET",
 			async: true,
-			data: {'depth': 1, 'name': self.countryName},
+			data: {'depth': 0, 'name': self.countryName},
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
@@ -69,7 +70,7 @@ var LocationPickerView = Backbone.View.extend({
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
-				console.log(textStatus);
+				console.log(data);
 			}
 		});
 	},
@@ -86,13 +87,14 @@ var LocationPickerView = Backbone.View.extend({
 		$.ajax({
 			type: "GET",
 			async: true,
-			data: {'depth': 2, 'name': self.provinceName},
+			data: {'depth': 1, 'name': self.provinceName},
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
-				var totalDomString = "";
-				for(var each in data){
-					totalDomString += self.cityDOMGenerator(data[each]);
+				var totalDomString = "",
+					index = 0;
+				for (index = 0; index < data.length; index++){
+					totalDomString += self.cityDOMGenerator(data[index]);
 				}
 				cityContainer.append(totalDomString);
 				self.highLight($(".location-modal-city:contains(" + self.cityName +  ")").first(),"city");
@@ -114,6 +116,7 @@ var LocationPickerView = Backbone.View.extend({
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
+				console.log(data);
 			}
 		});
 	},
@@ -133,14 +136,16 @@ var LocationPickerView = Backbone.View.extend({
 		$.ajax({
 			type: "GET",
 			async: true,
-			data: {'depth': 3, 'name': self.cityName},
+			data: {'depth': 2, 'name': self.cityName},
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
 				self.customNameList = data;
+				self.complete();
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
+				console.log(data);
 			}
 		});
 	},
@@ -148,7 +153,14 @@ var LocationPickerView = Backbone.View.extend({
 	
 	complete:function(){
 		this.location = new UserLocation({'hierarchyNameList': [this.countryName, this.provinceName, this.cityName, 'undetermined'], 'customNameList': this.customNameList}, {'parse': true});
-		this.initiator.updateLocation(this.id);
+		console.log(this.location.toString());
+		alert(this.location.toString());
+		if (typeof this.callback === 'function'){
+			this.callback();
+		}
+		else{
+			this.initiator.updateLocation(this.id);
+		}
 		this.close();
 	},
 

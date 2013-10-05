@@ -1,6 +1,6 @@
 #popupBoxLocation {
 	margin-top: 150px;
-	height: 450px;
+	height: 250px;
 	width: 800px;
 	margin-left: auto;
 	margin-right: auto;
@@ -35,7 +35,7 @@
 	width: 50px;
 	opacity: 0.7;
 	margin-left: 230px;
-	margin-top: 5px;
+	margin-top: -10px;
 }
 
 #location-modal-titleContainer p {
@@ -50,11 +50,12 @@
 #location-modal-provinceContainer {
 	background-color: #FFFFFF;
 	margin-left: 5%;
-	height: 19%;
+	height: 23%;
 	width: 90%;
 	overflow-y: auto;
 	border-style: solid;
 	border-width:1px;
+	margin-top: 3%;
 }
 
 #location-modal-provinceContainer div {
@@ -78,8 +79,8 @@
 #location-modal-cityContainer {
 	background-color: #FFFFFF;
 	margin-left: 5%;
-	margin-top: 1%;
-	height: 13%;
+	margin-top: 2%;
+	height: 25%;
 	width: 90%;
 	overflow-y: auto;
 	border-style:solid;
