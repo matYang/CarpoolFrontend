@@ -8,7 +8,7 @@ var MessageDetailView = Backbone.View.extend({
 		this.isClosed = false;
 		this.message = message;
 		this.user = app.userManager.getTopBarUser();
-		this.userId = user.get("userId");
+		this.userId = this.user.get("userId");
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
 			//To allow edit
