@@ -4,9 +4,7 @@ var SearchResultView = Backbone.View.extend({
 	initialize: function(messageList, isSearchResult){
 		_.bindAll(this, 'render', 'transferURL', 'bindPageNumber', 'close');
 		this.messageList = messageList;
-		if (testMockObj.testMode){
-			this.messageList = testMockObj.sampleMessages;
-		}
+
 		this.entries = 6 < this.messageList.length ? 6 : this.messageList.length;
 		this.isSearchResult = isSearchResult;
 		this.singleSearchResultTemplate = _.template(tpl.get('Module/SimpleMessage'));
@@ -31,14 +29,36 @@ var SearchResultView = Backbone.View.extend({
 			toBeAppended = [];
 		$(".searchResultBoxContainer").fadeOut();
 		$(".searchResultBoxContainer").remove();
-		for (i = start; i < this.entries; i++){
+		this.entries = (this.messageList.length - start) > this.entries ? this.entries : (this.messageList.length - start);
+		for (i = start; i < start+this.entries ; i++){
+			var message = this.messageList.at(i);
+			message.set("simple_departure_time", Utilities.getDateString(message.get("departure_time"))).set("simple_arrival_time", Utilities.getDateString(message.get("arrival_time")))	;
+			message.set("simple_creationTime", Utilities.getDateString(message.get("creationTime")));
+			var priceList = message.get("departure_priceList");
+			var currentPrice = 0;
+			var bookeSeats = message.get("departure_seatsBooked")
+			if (priceList.length === 1) {
+				currentPrice = priceList[0];
+			} else {
+				for ( var p in priceList){
+					if (priceList[p] == 0) {
+						priceList[p] == priceList[p-1];
+					}
+				}
+				if (priceList.length <= bookeSeats) {
+					currentPrice = priceList[priceList.length-1];
+				} else {
+					currentPrice = priceList[bookeSeats];
+				}
+			}
+			message.set("currentPrice",currentPrice);
 			toBeAppended[i] = this.singleSearchResultTemplate(this.messageList.at(i).toJSON());
 		}
 		this.domContainer.append(toBeAppended.join(""));
-		for (i = start; i < this.entries; i++){
-			$('#searchResultBox_' + this.messageList.at(i).id).on('click', that.transferURL(this.messageList.at(i).id));
+		for (i = start; i < start+this.entries; i++){
+			$('#searchResultBox_' + this.messageList.at(i).id).on('click',that.transferURL(this.messageList.at(i).id));
 		}
-
+		$("#searchResultDisplayPanel").css("height", 108*this.entries+"px")
 
 	},
 	bindPageNumber: function() {
@@ -60,6 +80,7 @@ var SearchResultView = Backbone.View.extend({
 		};
 	},
 	toPage: function(page){
+
 		this.render((page-1)*6);
 	},
 
