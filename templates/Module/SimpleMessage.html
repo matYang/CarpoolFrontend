@@ -21,6 +21,7 @@
       <% if (isRoundTrip === true)  { %>
         <div class = 'searchResultReturnDate'><%= simple_arrival_time %></div>
         <div class = 'searchResultReturnTime'><%= departure_timeSlot %></div>
+        <div class = 'searchResultReturnSeat'>剩余 <%= arrival_seatsNumber - arrival_seatsBooked %> 座</div>
       <% } %>
     </div>
 

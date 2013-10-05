@@ -3,19 +3,62 @@ var testMockObj = {
 	"testMode": true,
 	"sampleMessages": new Messages(),
 
-	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("dparture_time", new Date()).set("arrival_time", new Date())
-															.set("dparture_timeSlot", 15).set("arrival_timeSlot", 15)
+	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
 															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
 															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
-															.set("dparture_seatsNumber", 3).set("dparture_seatsNumber", 3)
-															.set("dparture_seatsBooked", 1).set("dparture_seatsBooked", 3)
+															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",10000),
-	"sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000),
-	"sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",20001),
-	"sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",20001),
-	"sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",20001),
-
+	"sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 1)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageG": (new Message()).set("messageId", 1007).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+	"sampleMessageH": (new Message()).set("messageId", 1008).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+															.set("departure_location", new UserLocation().set("province", "江苏").set("city","苏州"))
+															.set("arrival_location", new UserLocation().set("province", "江苏").set("city","南京"))
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleUser": (new User()).set("userId", 1560198).set("userName", "卢卡子").set("imgPath","http://tp3.sinaimg.cn/2018108150/180/40023913088/1"),
 	"sampleUsers": new Users(),
 	"sampleUserA": (new User()).set("userId", 1),
@@ -47,6 +90,6 @@ var testMockObj = {
 };
 
 testMockObj.sampleTransactions.add([testMockObj.sampleTransactionA, testMockObj.sampleTransactionB, testMockObj.sampleTransactionC, testMockObj.sampleTransactionD, testMockObj.sampleTransactionE, testMockObj.sampleTransactionF]);
-testMockObj.sampleMessages.add([testMockObj.sampleMessageA, testMockObj.sampleMessageB, testMockObj.sampleMessageC, testMockObj.sampleMessageD, testMockObj.sampleMessageE, testMockObj.sampleMessageF]);
+testMockObj.sampleMessages.add([testMockObj.sampleMessageA, testMockObj.sampleMessageB, testMockObj.sampleMessageC, testMockObj.sampleMessageD, testMockObj.sampleMessageE, testMockObj.sampleMessageF, testMockObj.sampleMessageG, testMockObj.sampleMessageH]);
 testMockObj.sampleNotifications.add([testMockObj.sampleNotificationA, testMockObj.sampleNotificationB, testMockObj.sampleNotificationC, testMockObj.sampleNotificationD, testMockObj.sampleNotificationE, testMockObj.sampleNotificationF]);
 testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, testMockObj.sampleUserC, testMockObj.sampleUserD, testMockObj.sampleUserE, testMockObj.sampleUserF]);

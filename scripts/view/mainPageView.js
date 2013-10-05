@@ -5,9 +5,8 @@ var MainPageView = Backbone.View.extend ({
 	el: $('#content'),
 
 	filter: {
-		"gender": Constants.gender.both,
-		"time1": "morning",
-		"time2": "morning",
+		"time1": "all",
+		"time2": "all",
 		"type": "all",
 		"priceMin": PRICE_MIN,
 		"priceMax": PRICE_MAX
@@ -20,7 +19,6 @@ var MainPageView = Backbone.View.extend ({
 		this.user = app.userManager.getTopBarUser();
 		//define the template
 		this.template = _.template(tpl.get('main'));
-		this.filter.gender = Constants.gender.both;
 		var result;
 		this.currentPage = 0;
 		if (params) {
@@ -140,6 +138,9 @@ var MainPageView = Backbone.View.extend ({
 			this.searchResultView.close();
 		}
 		this.allMessages = app.messageManager.getSearchResults();
+		if (testMockObj.testMode){
+			this.allMessages = testMockObj.sampleMessages;
+		}
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 		this.toPage(1);
@@ -183,15 +184,19 @@ var MainPageView = Backbone.View.extend ({
 
 		for (var i = 0; i < l; i++ ) {
 			var m = messages.at(i);
-			if ( this.filter.priceMin <= m.get("price") && this.filter.priceMax >= m.get("price")){
-				if ( this.filter.time1 === "morning" && m.get("departure_time").getHours()<12 && m.get("departure_time").getHours() >= 6) {
-					filtered.add(m);
-				} else if ( this.filter.time === "afternoon" && m.get("departure_time").getHours()<19 && m.get("departure_time").getHours() >=12) {
-					filtered.add(m);
-				} else if ( this.filter.time === "night" && (m.get("departure_time").getHours()>=19 || m.get("departure_time").getHours() < 6)) {
-					filtered.add(m);
-				}
+			var dt = m.get("departure_timeSlot");
+			var rt = m.get("arrival_timeSlot");
+			if (dt == 0) filtered.add(m);
+			else if ( this.filter.time1 === "morning" && ((dt<=12 && dt >= 0) || dt === 24 || dt === 25 || dt === 28)) {
+				filtered.add(m);
+			} else if ( this.filter.time1 === "afternoon" && (dt === 26 || (dt<=17 && dt >12))) {
+				filtered.add(m);
+			} else if ( this.filter.time1 === "night" && ((dt>17 && dt <=23) || dt === 27)) {
+				filtered.add(m);
+			} else if ( this.filter.time1 === "all") {
+				filtered.add(m);
 			}
+			
 		}
 		return filtered;
 	},
@@ -238,33 +243,20 @@ var MainPageView = Backbone.View.extend ({
 	},
 	setPageNavigator: function(){
 		$(".pageNumber").off();
-		var length = this.messageList ? this.messageList.length : 0;
-		var pages = length / 6 + 1;
+		
+		var length = this.filteredMessages ? this.filteredMessages.length : 0;
+		var pages =  Math.floor(length / 6) + 1;
 		this.pages = pages;
 		var buf = [];
-		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'>"+ 1 +"</span>";
-
-		if (this.currentPage>=5) {
-			buf[1] =  "<span class = 'pageNumber' >...</span>";
-		}
-
-		for (var i = 0; i < 3; i++) {
-			var pageNumber = this.currentPage - 1 + i;
-			if (pageNumber < pages && pageNumber > 0){ff
-				buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+ pageNumber + ">"+ pageNumber +"</span>";
-			}
-		}
-		if (this.currentPage + 1 < pages) {
-			buf[buf.length] =  "<span class = 'pageNumber' >...</span>";
-			buf[buf.length] = "<span class = 'pageNumber' id='pageNumber_'"+pages+">"+ pages +"</span>";
-
+		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'> "+ 1 +"</span>";
+		for (var i = 2; i<=pages; i++) {
+			buf[i-1] = "<span class = 'pageNumber' id='pageNumber_"+i+"'> "+ i +"</span>";
 		}
 		var html = buf.join("");
 		$("#pages").empty();
 		$("#pages").append(html);
 		var that = this;
 		$(".pageNumber").on("click", function(e){
-			if (!e.target.id) return;
 			var id = Utilities.toInt(Utilities.getId(e.target.id));
 			that.toPage(id); 
 		});
