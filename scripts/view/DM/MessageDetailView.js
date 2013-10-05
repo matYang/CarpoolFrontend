@@ -67,11 +67,11 @@ var MessageDetailView = Backbone.View.extend({
 			buffer[i] = this.transactionTemplate(this.parseTransaction(this.transactions.at(i), i));
 		}
 		$("#view_transactions_content").append(buffer.join(""));
-		$("#view_transactions_content>.transaction_content").on("click", function(e){
-			var id = Utilities.getId(e.delegateTarget.id);
-			var transaction = that.transactions.at(Utilities.toInt(id));
-			that.openTransactionDetail(transaction);
-		});
+		// $("#view_transactions_content>.transaction_content").on("click", function(e){
+		// 	var id = Utilities.getId(e.delegateTarget.id);
+		// 	var transaction = that.transactions.at(Utilities.toInt(id));
+		// 	that.openTransactionDetail(transaction);
+		// });
 	},
 
 

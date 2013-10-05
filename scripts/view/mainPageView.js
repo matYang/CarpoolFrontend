@@ -121,6 +121,7 @@ var MainPageView = Backbone.View.extend ({
 			var page = $("#pageNumberInput").val();
 			if(!page) page = 1;
 			else if (page>me.pages) page = me.pages;
+			debugger;
 			me.toPage(page);
 		})
 		$('#pageNumberInput').on('keypress', function(e){
@@ -148,6 +149,7 @@ var MainPageView = Backbone.View.extend ({
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 		this.toPage(1);
+		this.setPageNavigator();
 	},
 	onClickTime: function (e, parentId) {
 		var me = $('#'+e.target.getAttribute('id'));
@@ -173,7 +175,6 @@ var MainPageView = Backbone.View.extend ({
 		}
 		//TODO: change to accept return date
 		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
-
 	},
 	refresh: function () {
 		debugger;
@@ -265,7 +266,7 @@ var MainPageView = Backbone.View.extend ({
 	toPage: function(page){
 		this.searchResultView.toPage(page);
 		this.currentPage = page;
-		this.setPageNavigator();
+		
 	},
 	setPageNavigator: function(){
 		$(".pageNumber").off();
@@ -274,9 +275,8 @@ var MainPageView = Backbone.View.extend ({
 		var pages =  Math.floor(length / 6) + 1;
 		this.pages = pages;
 		var buf = [];
-		buf[0] = "<span class = 'pageNumber' id='pageNumber_1'> "+ 1 +"</span>";
-		for (var i = 2; i<=pages; i++) {
-			buf[i-1] = "<span class = 'pageNumber' id='pageNumber_"+i+"'> "+ i +"</span>";
+		for (var i = 1; i<=pages; i++) {
+			buf[i-1] = "<a href='javascript:void(0)' class = 'pageNumber' id='pageNumber_"+i+"'> "+ i +"</span>";
 		}
 		var html = buf.join("");
 		$("#pages").empty();

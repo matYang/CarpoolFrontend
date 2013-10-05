@@ -29,6 +29,7 @@ var SearchResultView = Backbone.View.extend({
 			toBeAppended = [];
 		$(".searchResultBoxContainer").fadeOut();
 		$(".searchResultBoxContainer").remove();
+		this.entries = 6;
 		this.entries = (this.messageList.length - start) > this.entries ? this.entries : (this.messageList.length - start);
 		for (i = start; i < start+this.entries ; i++){
 			var message = this.messageList.at(i);
