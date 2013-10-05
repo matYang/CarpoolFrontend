@@ -69,7 +69,7 @@ var UserLocation = Backbone.Model.extend({
 		json.country = json.hierarchyNameList[0];
 		json.province = json.hierarchyNameList[1];
 		json.city = json.hierarchyNameList[2];
-		json.point = json.hierarchyNameListp[3];
+		json.point = json.hierarchyNameList[3];
 
 		return json;
 	}
