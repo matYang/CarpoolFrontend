@@ -26,9 +26,9 @@ var Utilities = {
 			return null;
 		}
 		if (searchKeys.length === 4 || !searchKeys[4]) {
-			return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime();
+			return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + this.castToAPIFormat(searchKeys[3]);
 		}
-		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" + searchKeys[3].getTime() + "_" + searchKeys[4].getTime();
+		return searchKeys[0].toString() + "_" +  searchKeys[1].toString() + "_" + searchKeys[2] + "_" +  this.castToAPIFormat(searchKeys[3]) + "_" + this.castToAPIFormat(searchKeys[4]);
 
 	},
 
@@ -43,10 +43,10 @@ var Utilities = {
 				fromLocation.castFromString(encodedArray[1]);
 				encodedArray[0] = fromLocation;
 				encodedArray[1] = toLocation;
-				encodedArray[3] = new Date(this.toInt(encodedArray[3]));
+				encodedArray[3] = this.castFromAPIFormat(encodedArray[3]);
 				if (encodedArray.length === 5) {
-					encodedArray[4] =  new Date(this.toInt(encodedArray[4]));
-				}
+					encodedArray[4] = this.castFromAPIFormat(encodedArray[4]);
+				}	
 				return encodedArray;
 			}
 			else{

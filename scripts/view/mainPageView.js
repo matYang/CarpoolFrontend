@@ -5,6 +5,7 @@ var MainPageView = Backbone.View.extend ({
 	el: $('#content'),
 
 	filter: {
+		"isRoundTrip": false,
 		"time1": "all",
 		"time2": "all",
 		"type": "all",
@@ -48,7 +49,6 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	messageSearch: function(){
-
 		//Todo: Change to accept return date;
 		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
 
@@ -77,16 +77,18 @@ var MainPageView = Backbone.View.extend ({
 				var d = new Date();
 			}
 		});
-		$("#searchLocationInput_from").val(this.fromLocation.get("university"));
-		$("#searchLocationInput_to").val(this.toLocation.get("university"));
+		$("#searchLocationInput_from").val(this.fromLocation.get("city"));
+		$("#searchLocationInput_to").val(this.toLocation.get("city"));
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDepartDate));
 		$("#searchDateInput_return").val(Utilities.getDateString(this.targetReturnDate));
 		if (this.searchState%2 === 0 ) {
+			me.filter.isRoundTrip = false;
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
 			$("#searchFilterTimeContainer2").hide();
 			$("#searchDateInput_return").hide();
 		} else {
+			me.filter.isRoundTrip = true;
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
 			$("#searchFilterTimeContainer2").show();
@@ -94,6 +96,7 @@ var MainPageView = Backbone.View.extend ({
 			$("#filterBox").css("height","145px");
 		}
 		$("#oneWay").on("click", function(){
+			me.filter.isRoundTrip = false;
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
 			$("#searchDateInput_return").hide();
@@ -104,6 +107,7 @@ var MainPageView = Backbone.View.extend ({
 			me.searchState = Constants.userSearchState.universityAsk;
 		});
 		$("#round").on("click", function(){
+			me.filter.isRoundTrip = true;
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
 			$("#searchDateInput_return").show();
@@ -161,6 +165,7 @@ var MainPageView = Backbone.View.extend ({
 	},
 	submitSearch: function () {
 		var encodedSearchKey = Utilities.encodeSearchKey([this.fromLocation, this.toLocation, this.searchState, this.targetDepartDate, this.targetReturnDate]);
+		debugger;
 		if (app.sessionManager.hasSession()) {
 			app.navigate(this.user.get("userId") + "/main/" + encodedSearchKey);
 		} else {
@@ -171,6 +176,7 @@ var MainPageView = Backbone.View.extend ({
 
 	},
 	refresh: function () {
+		debugger;
 		if (this.searchResultView){
 			this.searchResultView.close();
 		}
@@ -186,22 +192,42 @@ var MainPageView = Backbone.View.extend ({
 			var m = messages.at(i);
 			var dt = m.get("departure_timeSlot");
 			var rt = m.get("arrival_timeSlot");
-			if (dt == 0) filtered.add(m);
-			else if ( this.filter.time1 === "morning" && ((dt<=12 && dt >= 0) || dt === 24 || dt === 25 || dt === 28)) {
-				filtered.add(m);
-			} else if ( this.filter.time1 === "afternoon" && (dt === 26 || (dt<=17 && dt >12))) {
-				filtered.add(m);
-			} else if ( this.filter.time1 === "night" && ((dt>17 && dt <=23) || dt === 27)) {
-				filtered.add(m);
-			} else if ( this.filter.time1 === "all") {
-				filtered.add(m);
+			if (this.fromLocation.isEquivalentTo(m.get("departure_location"))){
+				if (this.filterTime(this.filter.time1, dt)) {
+					filtered.add(m);
+				} 
+				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time2, at)) {
+					filtered.add(m);
+				}
+			} else if ( m.get("isRoundTrip") && this.fromLocation.isEquivalentTo(m.get("arrival_location")) ){
+				if (this.filterTime(this.filter.time2, dt)) {
+					filtered.add(m);
+				}
+				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time1, at)) {
+					filtered.add(m);
+				}
+
 			}
-			
 		}
 		return filtered;
 	},
+	filterTime: function(time, timeslot){
+		if (timeslot == 0) {
+			return true;
+		} else if ( time === "morning" && ((timeslot<=12 && timeslot >= 0) || timeslot === 24 || timeslot === 25 || timeslot === 28)) {
+			return true;
+		} else if ( time === "afternoon" && (timeslot === 26 || (timeslot<=17 && timeslot >12))) {
+			return true;
+		} else if ( time === "night" && ((timeslot>17 && timeslot <=23) || timeslot === 27)) {
+			return true;
+		} else if ( time === "all") {
+			return true;
+		} else {
+			return false;
+		}
+	},
 	updateLocation: function (id) {
-		$("#"+id).val(this.fromLocation.get("university"));
+		$("#"+id).val(this.fromLocation.get("city"));
 	},
 
 	bindEvents: function(){
