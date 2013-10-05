@@ -101,7 +101,7 @@ var MessageEditView = MessagePostView.extend({
 		toSubmit.requests[0].returnTime = message.get("arrival_timeSlot");
 		var entryNum = 0;
 		var index = 0;
-		for ( var p in toSubmit.priceList) {
+		for ( var p = 0; p < toSubmit.priceList.length; p++ ) {
 			entryNum += (toSubmit.priceList[p] > 0) ? 1 : 0;
 			index = p;
 		}

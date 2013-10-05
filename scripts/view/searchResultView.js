@@ -41,7 +41,8 @@ var SearchResultView = Backbone.View.extend({
 			if (priceList.length === 1) {
 				currentPrice = priceList[0];
 			} else {
-				for ( var p in priceList){
+				for ( var p = 0; p < priceList.length; p++){
+					debugger;
 					if (priceList[p] == 0) {
 						priceList[p] == priceList[p-1];
 					}

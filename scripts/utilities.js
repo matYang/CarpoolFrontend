@@ -230,22 +230,6 @@ var Utilities = {
 	isEmpty: function(str) {
 		return (str === null || str === undefined || str === "");
 	},
-
-	appendList: function(el, list, template){
-		var buffer = [];
-		if (list.length === 0) return;
-		for ( var l in list) {
-			if (list[l] instanceof Backbone.Model) {
-				buffer[buffer.length] = template(list[l].toJSON());
-			} else {
-				buffer[buffer.length] = template(list[l]);
-			}
-			
-		}
-		el.append(buffer.join(""));
-	},
-
-
 	castFromAPIFormat: function(dateString){
 		var match = dateString.match(/^(\d+)-(\d+)-(\d+) (\d+)\:(\d+)\:(\d+)$/);
 		var date = new Date(match[1], match[2] - 1, match[3], match[4], match[5], match[6]);

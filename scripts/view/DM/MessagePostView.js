@@ -316,7 +316,7 @@ var MessagePostView = Backbone.View.extend({
 			this.updateLocation(1);
 		} else if (page === 2) {
 			var r = this.toSubmit.requests;
-			for ( var request in r ) {
+			for ( var request = 0; request < r.length; request++ ) {
 				if (r[request]){
 					var id = Utilities.toInt(request)+1;
 					$('input[name=publish_round_'+id+']').attr("checked",r[request].round);
@@ -346,7 +346,7 @@ var MessagePostView = Backbone.View.extend({
 				$("#publish_singlePrice").hide();
 				$("#publish_priceList").show();
 				var entryNum = 0;
-				for ( var i in this.toSubmit.priceList) {
+				for ( var i = 0; i < this.toSubmit.priceList.length; i++) {
 
 					if (this.toSubmit.priceList[i] > 0) {
 						var id = Utilities.toInt(i)+1;
@@ -585,7 +585,7 @@ var MessagePostView = Backbone.View.extend({
 				this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
 			}
 		}
-		for ( var r in this.toSubmit.requests) {
+		for ( var r = 0; i < this.toSubmit.requests; i++) {
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
 				var m = new Message();
