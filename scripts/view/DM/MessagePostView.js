@@ -627,6 +627,19 @@ var MessagePostView = Backbone.View.extend({
 			this.unbindStepEvents(this.stepIndex);
 			this.domContainer.empty();
 			this.isClosed = true;
+			this.toSubmit = {
+				"origin":new UserLocation(),
+				"dest":new UserLocation(),
+				"type":"ask",
+				"numberRequests":0,
+				"requests":[],
+				"description":"",
+				"priceList":[0],
+				"departureSeats":1,
+				"returnSeats":1,
+				"priceListEntries": 1,
+				"conditionalPrice":false
+			};
 		}
 	}
 });

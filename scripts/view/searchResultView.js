@@ -31,7 +31,29 @@ var SearchResultView = Backbone.View.extend({
 			toBeAppended = [];
 		$(".searchResultBoxContainer").fadeOut();
 		$(".searchResultBoxContainer").remove();
+		debugger;
 		for (i = start; i < this.entries; i++){
+			var message = this.messageList.at(i);
+			message.set("simple_departure_time", Utilities.getDateString(message.get("departure_time"))).set("simple_arrival_time", Utilities.getDateString(message.get("arrival_time")))	;
+			message.set("simple_creationTime", Utilities.getDateString(message.get("creationTime")));
+			var priceList = message.get("departure_priceList");
+			var currentPrice = 0;
+			var bookeSeats = message.get("departure_seatsBooked")
+			if (priceList.length === 1) {
+				currentPrice = priceList[0];
+			} else {
+				for ( var p in priceList){
+					if (priceList[p] == 0) {
+						priceList[p] == priceList[p-1];
+					}
+				}
+				if (priceList.length <= bookeSeats) {
+					currentPrice = priceList[priceList.length-1];
+				} else {
+					currentPrice = priceList[bookeSeats];
+				}
+			}
+			message.set("currentPrice",currentPrice);
 			toBeAppended[i] = this.singleSearchResultTemplate(this.messageList.at(i).toJSON());
 		}
 		this.domContainer.append(toBeAppended.join(""));
