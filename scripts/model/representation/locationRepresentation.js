@@ -23,6 +23,14 @@ var UserLocation = Backbone.Model.extend({
 	toString: function(){
 		var str = '',
 			index = 0;
+		if (this.get('hierarchyNameList').length === 0) {
+			var buffer = [];
+			if (this.get("contry")) buffer.push(this.get("contry"));
+			if (this.get("province")) buffer.push(this.get("province"));
+			if (this.get("city")) buffer.push(this.get("city"));
+			if (this.get("point")) buffer.push(this.get("point"));
+			return buffer.join(Config.locationSeperator);
+		}
 		for (index = 0; index < this.get('hierarchyNameList').length; index++){
 			str += this.get('hierarchyNameList')[index] + Config.locationSeperator;
 		}
@@ -49,8 +57,14 @@ var UserLocation = Backbone.Model.extend({
 	//toJSON: same as above
 
 	equals: function (val) {
-		if (model instanceof Backbone.Model) {
+		if (val instanceof Backbone.Model) {
 			return this.get('hierarchyNameList').compare(val.get('hierarchyNameList')) && this.get('customDepthIndex') === val.get('customDepthIndex');
+		}
+		return false;
+	},
+	isEquivalentTo: function (val) {
+		if (val instanceof Backbone.Model) {
+			return this.get('hierarchyNameList').compare(val.get('hierarchyNameList'));
 		}
 		return false;
 	},

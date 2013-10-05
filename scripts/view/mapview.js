@@ -15,6 +15,7 @@ var MapView = Backbone.View.extend({
 	},
 
 	mapInitialize:function(){
+		debugger;
 		if (this.origin && !this.dest) {
 			this.getLatLng(this.origin, this.oLatLng);
 		}
@@ -75,8 +76,8 @@ var MapView = Backbone.View.extend({
 	},
 	getDirection:function(origin, dest){
 		var request = {}, that = this;
-		request.origin = origin.get("city") + origin.get("region");
-		request.destination = dest.get("city") + dest.get("region");
+		request.origin = origin.get("city") +" " + origin.get("province");
+		request.destination = dest.get("city") + " " + dest.get("province");
 		request.travelMode = google.maps.TravelMode.DRIVING;
 		request.unitSystem = google.maps.UnitSystem.METRIC;
 		this.directionService.route(request, function(response, status) {

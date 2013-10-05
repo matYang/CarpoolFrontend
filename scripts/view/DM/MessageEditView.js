@@ -67,6 +67,20 @@ var MessageEditView = MessagePostView.extend({
 			app.navigate(that.user.id + "/post/step1");
 			that.renderSecondPage();
 		});
+		$("#publish_finish").on("click", function(e) {
+			that.finish();
+		});
+	},
+
+	finish: function() {
+		var messages = this.toMessage();
+		var length = messages.length;
+		for (var r = 0; r < length; r++){
+			app.messageManager.updateMessage(messages.at(r), function(){
+				alert("Message Post successful");
+				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
+			});
+		}
 	},
 	reverseMessage: function(message){
 		var toSubmit = MessagePostView.prototype.toSubmit;

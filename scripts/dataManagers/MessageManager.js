@@ -81,7 +81,7 @@
 			Constants.dWarn("MessageManager::postMessage::invalid parameter, exit");
 			return;
 		}
-		if (!sessionManager.hasSession()){
+		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("MessageManager::postMessage::currentMessage does not have session, exit");
 			return;
 		}
@@ -156,7 +156,7 @@
 			Constants.dWarn("MessageManager::deleteMessage:: invalid parameter");
 			return;
 		}
-		if (!sessionManager.hasSession()){
+		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("MessageManager::deleteMessage::current user does not have session, exit");
 			return;
 		}

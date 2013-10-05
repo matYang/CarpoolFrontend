@@ -3,7 +3,7 @@
 var MessagePublishView = MessagePostView.extend({
 	initialize: function (id, message) {
 
-		_.bindAll(this, 'render','renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'close');
+		_.bindAll(this, 'render','renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'finish', 'close');
 		app.viewRegistration.register("MessagePost", this, true);
 		MessagePostView.prototype.initialize({"method":"post"});
 		this.renderFirstPage();
@@ -21,6 +21,7 @@ var MessagePublishView = MessagePostView.extend({
 	},
 	renderFirstPage: function(){
 		var that = this;
+		$("#publish_finish").off();
 		MessagePostView.prototype.render(1);
 		$('#publish_nextStep').off();
 		$('#publish_nextStep').on('click', function(){
@@ -31,9 +32,11 @@ var MessagePublishView = MessagePostView.extend({
 		});
 	},
 	renderSecondPage: function(){
+		debugger;
 		var that = this;
 		MessagePostView.prototype.render(2);
 		$('#publish_nextStep').off();
+		$("#publish_finish").off();
 		$('#publish_nextStep').on('click', function(){
 			if (MessagePostView.prototype.validate(2)) {
 				app.navigate(that.user.id + "/post/step3");
@@ -54,10 +57,26 @@ var MessagePublishView = MessagePostView.extend({
 			app.navigate(that.user.id + "/post/step2");
 			that.renderSecondPage();
 		});
+		$("#publish_finish").on("click", function(e) {
+			that.finish();
+		});
 	},
+	finish: function() {
+		var messages = this.toMessage();
+		var length = messages.length;
+		for (var r = 0; r < length; r++){
+			app.messageManager.postMessage(messages.at(r), function(){
+				alert("Message Post successful");
+				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
+			});
+		}
+	},
+
 	close: function (){
 		$('#publish_nextStep').off();
 		$('#publish_back').off();
+		$("#publish_finish").off();
+		debugger;
 		MessagePostView.prototype.close();
 	}
 });

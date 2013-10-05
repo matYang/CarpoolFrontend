@@ -28,7 +28,7 @@ var MessagePostView = Backbone.View.extend({
 	*/
 	initialize: function(){
 		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents',
-			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'finish', 'close');
+			'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'close');
 		this.isClosed = false;
 		this.baseTemplate = _.template(tpl.get('Module/Publish_base'));
 		this.step1Template = _.template(tpl.get('Module/Publish_step1'));
@@ -99,9 +99,10 @@ var MessagePostView = Backbone.View.extend({
 		var newRequests = [],
 			counter = 0;
 
-		var request, requests;
+		var requests;
 		requests = this.toSubmit.requests;
-		for ( request in requests) {
+		
+		for (var request = 0; request < requests.length; request++) {
 			if (requests[request]) {
 				newRequests[counter] = requests[request];
 				newRequests[counter].id = counter+1;
@@ -173,8 +174,7 @@ var MessagePostView = Backbone.View.extend({
 				}
 			});
 		} else {
-			var request = null;
-			for ( request in this.toSubmit.requests) {
+			for ( var request = 0; request < this.toSubmit.requests.length; request++) {
 				if (this.toSubmit.requests[request]){
 					var index = Utilities.toInt(request)+1;
 					$('#publish_time_slots').append(this.currentTemplate({id:index}));
@@ -547,14 +547,13 @@ var MessagePostView = Backbone.View.extend({
 				return true;
 			}
 		} else if (page === 2) {
-			var requests = this.toSubmit.requests,
-				request;
+			var requests = this.toSubmit.requests;
 			counter = 0;
 			if (this.toSubmit.numberRequests === 0) {
 				return false;
 			}
-
-			for (request in requests) {
+			
+			for (var request = 0; request<requests.length; request++) {
 				if (!requests[request]) continue;
 				counter++;
 				if (requests[request].round){
@@ -568,16 +567,6 @@ var MessagePostView = Backbone.View.extend({
 		}
 		if (counter > 0)
 			return true;
-	},
-	
-	finish: function() {
-		//TODO
-		//for (var r in toSubmit.requests){
-			app.MessageManager.postMessage(this.toMessage(), function(){
-				alert("Message Post successful");
-				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.MessageManager.getMessage().id, true);
-			});
-		//}
 	},
 
 	toMessage: function () {
@@ -596,7 +585,7 @@ var MessagePostView = Backbone.View.extend({
 				this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
 			}
 		}
-		for ( var r in toSubmit.requests) {
+		for ( var r in this.toSubmit.requests) {
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
 				var m = new Message();
@@ -619,7 +608,7 @@ var MessagePostView = Backbone.View.extend({
 				messages.add(m);
 			}
 		}
-		return dmm;
+		return messages;
 	},
 	close: function(){
 		if (!this.isClosed){

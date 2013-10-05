@@ -16,7 +16,10 @@ var MessageDetailView = Backbone.View.extend({
 			this.message.get("arrival_location").set("region","苏州市区");
 			this.message.get("arrival_location").set("university","苏州大学");
 			this.message.set("roundTrip", true);
-			this.message.set("arrival_seatsNumber", 1);
+			this.message.set("departure_seatsNumber", 5);
+			this.message.set("departure_seatsBooked", 1);
+			this.message.set("arrival_seatsNumber", 5);
+			this.message.set("arrival_seatsBooked", 3);
 			this.transactions = testMockObj.sampleTransactions;
 			this.message.set("note", "火车站出发，谢绝大行李");
 			this.message.set("departure_priceList", [20,18,15]);
@@ -191,7 +194,7 @@ var MessageDetailView = Backbone.View.extend({
 	renderPriceList: function() {
 		var pricelist = this.message.get("departure_priceList");
 		var appender = [];
-		for ( var p in pricelist) {
+		for ( var p = 0; p < pricelist.length; p++) {
 			if  ( pricelist[p] !== 0 ) {
 				var num = Utilities.toInt(p)+1;
 				appender.push("<div class = 'priceEntry'>"+num+"人：每人"+pricelist[p]+"元</div>");
