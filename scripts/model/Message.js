@@ -58,6 +58,9 @@ var Message = Backbone.Model.extend({
 
 	parse: function(data){
 
+		data.messageId = parseInt(data.messageId, 10);
+		data.ownerId = parseInt(data.ownerId, 10);
+
 		data.owner = new User(data.owner, {'parse': true});
 		data.isRoundTrip = data.isRoundTrip === 'true';
 		
@@ -84,7 +87,7 @@ var Message = Backbone.Model.extend({
 
 		data.historyDeleted = data.historyDeleted === 'true';
 
-        return modelHash;
+        return data;
 	},
 
 	toJSON: function(){
@@ -97,7 +100,8 @@ var Message = Backbone.Model.extend({
 		json.arrival_location = json.arrival_location.toJSON();
 		json.arrival_time = Utilities.castToAPIFormat(json.arrival_time);
 
-		//ignore creationTime and editTime cuz they are determined by server
+		json.creationTime = Utilities.castToAPIFormat(json.creationTime);
+		json.editTime = Utilities.castToAPIFormat(json.editTime);
 
 		return json;
 	}

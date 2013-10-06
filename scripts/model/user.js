@@ -16,8 +16,8 @@ var User = Backbone.Model.extend({
         "lastLogin": new Date(),
         "creationTime": new Date(),
 
-        "historyList": null,
-        "watchList": null,
+        "historyList": [],
+        "watchList": [],
         "socialList": [],
         "transactionList": [],
         "notificationList": [],
@@ -34,6 +34,7 @@ var User = Backbone.Model.extend({
         "averageScore": 0,
         "totalTranscations": 0,
 
+        "verifications": [],
         "googleToken":"",
         "facebookToken":"",
         "twitterToken":"",
@@ -57,7 +58,7 @@ var User = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/users/user",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl');
+		_.bindAll(this, 'overrideUrl', 'isNew', 'parse');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
@@ -74,56 +75,48 @@ var User = Backbone.Model.extend({
                 return this.id === -1;
         },
 
-        parse: function(response){
+        parse: function(data){
 
-                var modelHash  = {},
-                        eachIndex;
+                data.userId = parseInt(data.userId, 10);
 
-                modelHash.userId = response.userId;
-                modelHash.password = "default";
-                modelHash.sessionCode = response.sessionCode;
+                data.age = parseInt(data.age, 10);
+                data.gender = parseInt(data.gender, 10);
+                data.birthday = Utilities.castFromAPIFormat(data.birthday);
 
-                modelHash.name = response.name;
-                modelHash.level = response.level;
-                modelHash.averageScore = response.averageScore;
-                modelHash.totalTranscations = response.totalTranscations;
+                data.location = new UserLocation(data.location, {'parse': true});
 
-                this.get('historyList').reset( response.historyList);
-                this.get('watchList').reset( response.watchList);
+                data.lastLogin = Utilities.castFromAPIFormat(data.lastLogin);
+                data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
-                modelHash.socialList = response.socialList;      //watch out for initialization here; try reset
+                data.emailActivated = data.emailActivated === 'true';
+                data.phoneActivated = data.phoneActivated === 'true';
+                data.emailNotice = data.emailNotice === 'true';
+                data.phoneNotice = data.phoneNotice === 'true';
+                data.state = parseInt(data.state, 10);
+                data.searchState = parseInt(data.searchState, 10);
 
-                this.get('transactionList').reset( response.transactionList);
-                this.get('notificationList').reset( response.notificationList);
+                data.level = parseInt(data.level, 10);
+                data.averageScore = parseInt(data.averageScore, 10);
+                data.totalTranscations = parseInt(data.totalTranscations, 10);
 
-                modelHash.universityGroup = [];
-                for(eachIndex in response.univerityGroup){
-                        modelHash.universityGroup.push(response.univerityGroup[eachIndex].val);
-                }
 
-                modelHash.age = response.age;
-                modelHash.gender = Constants.gender[response.gender];
-                modelHash.phone = response.phont;
-                modelHash.email = response.email;
-                modelHash.qq = response.qq;
-                modelHash.imgPath = response.imgPath;
+                //this is just used for presentation, no direct API call to update it
+                data.accountValue = parseFloat(data.accountValue);
 
-                this.set("location", new UserLocation(false, response.location));                 //new Location();
+                return data;
+        },
 
-                modelHash.emailActivated = response.emailActivated;
-                modelHash.phoneActivated = response.phoneActivated;
-                modelHash.emailNotice = response.emailNotice;
-                modelHash.phoneNotice = response.phoneNotice;
+        toJSON: function(){
+                var json = _.clone(this.attributes);
 
-                modelHash.state = Constants.userState[response.state];
-                modelHash.searchState = Constants.userSearchState[response.searchState];
+                json.birthday = Utilities.castToAPIFormat(json.birthday);
 
-                this.set("lastLogin", new Date(response.lastLogin));
-                this.set("creationTime", new Date(response.creationTime));
+                json.location = json.location.toJSON();
 
-                modelHash.paypal = response.paypal;
+                json.lastLogin = Utilities.castToAPIFormat(json.lastLogin);
+                json.creationTime = Utilities.castToAPIFormat(json.creationTime);
 
-                return modelHash;
+                return json;
         }
 
 });
