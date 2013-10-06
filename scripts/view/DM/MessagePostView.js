@@ -89,8 +89,8 @@ var MessagePostView = Backbone.View.extend({
 		}
 	},
 	updateLocation: function(flag, id) {
-		$('#publish_originInput').val(this.toSubmit.origin.get("province")+" "+this.toSubmit.origin.get("city"));
-		$('#publish_destInput').val(this.toSubmit.dest.get("province")+" "+this.toSubmit.dest.get("city"));
+		$('#publish_originInput').val(this.toSubmit.origin.toUiString());
+		$('#publish_destInput').val(this.toSubmit.dest.toUiString());
 		if (this.map) {
 			this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
 		}

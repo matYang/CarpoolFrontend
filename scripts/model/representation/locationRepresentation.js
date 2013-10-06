@@ -44,10 +44,14 @@ var UserLocation = Backbone.Model.extend({
 	},
 
 	castFromString:function(str){
-		var strArray = str.split(Config.locationSeperator),
-			index = 0;
+		debugger;
+
+		var strArray = [], index = 0;
+		if (str) {
+			strArray = str.split(Config.locationSeperator);
+		}
 		for (index = 0; index < strArray.length - 1; index++){
-			this.set('hierarchyNameList', this.get('hierarchyNameList').push(strArray[index]));
+			this.get('hierarchyNameList').push(strArray[index]);
 		}
 		this.set('customDepthIndex', parseInt(strArray[index], 10));
 		this.autoFill();
@@ -55,7 +59,9 @@ var UserLocation = Backbone.Model.extend({
 
 	//parse: no nested data structure, default parse is good enough
 	//toJSON: same as above
-
+	toUiString: function() {
+		return this.get('city')+", "+this.get("province");
+	},
 	equals: function (val) {
 		if (val instanceof Backbone.Model) {
 			return this.get('hierarchyNameList').compare(val.get('hierarchyNameList')) && this.get('customDepthIndex') === val.get('customDepthIndex');

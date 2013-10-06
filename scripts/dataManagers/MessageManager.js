@@ -186,43 +186,43 @@
 	};
 
 	//cannot use search because of naming collisions
-	MessageManager.prototype.searchMessage = function(location, date, searchState, callback) {
-		this.searchResults = testMockObj.sampleMessages;
-		callback();
+	MessageManager.prototype.searchMessage = function(searchRepresentationObj, callback) {
+		// this.searchResults = testMockObj.sampleMessages;
+		// callback();
 
-		// var self = this;
+		var self = this;
 
-		// if (typeof location !== 'object' || typeof date !== 'object' || typeof searchState !== 'number'){
-		// 	Constants.dWarn("MessageManager::fetchSearchResult:: invalid parameter, exit");
-		// 	return;
-		// }
+		if (typeof searchRepresentationObj !== 'object'){
+			Constants.dWarn("MessageManager::fetchSearchResult:: invalid parameter, exit");
+			return;
+		}
 
-		// var userId = this.sessionManager.hasSession() ? this.sessionManager.getUserId() : -1;
-		// this.searchResults.overrideUrl(this.apis.DM_search);
+		var userId = this.sessionManager.hasSession() ? this.sessionManager.getUserId() : -1;
+		this.searchResults.overrideUrl(this.apis.DM_search);
 
-		// this.searchResults.fetch({
+		this.searchResults.fetch({
 
-		// 	data: $.param({ 'userId': userId, 'location': location.toString(), 'date': date.toString(), 'searchState': searchState}),
+			data: $.param({'searchRepresentation': searchRepresentationObj.toJSON(), 'userId' : userId}),
 
-  //           dataType:'json',
+            dataType:'json',
 
-  //           success:function(model, response){
+            success:function(model, response){
 
-		// 		self.searchResults_timeStamp = new Date();
-		// 		//sync the search state
-		// 		self.userManager.getTopBarUser().set('searchState', searchState);
+				// self.searchResults_timeStamp = new Date();
+				// //sync the search state
+				// self.userManager.getTopBarUser().set('searchState', searchState);
 
-		// 		if(callback){
-		// 			callback();
-		// 		}
-  //           },
+				if(callback){
+					callback();
+				}
+            },
 
-  //           error: function(model, response){
-  //               Constants.dWarn("MessageManager::fetchSearchResult:: fetch failed with response:");
-  //               Constants.dLog(response);
+            error: function(model, response){
+                Constants.dWarn("MessageManager::fetchSearchResult:: fetch failed with response:");
+                Constants.dLog(response);
 
-  //           }
-  //       });
+            }
+        });
 	};
 
 	MessageManager.prototype.fetchRecents = function(callback) {

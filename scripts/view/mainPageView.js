@@ -20,28 +20,16 @@ var MainPageView = Backbone.View.extend ({
 		this.user = app.userManager.getTopBarUser();
 		//define the template
 		this.template = _.template(tpl.get('main'));
-		var result;
+		this.searchRepresentation = new SearchRepresentation();
+		this.searchRepresentation.set("departureLocation", new UserLocation());
+		this.searchRepresentation.set("arrivalLocation", new UserLocation());
 		this.currentPage = 0;
 		if (params) {
-			result = Utilities.decodeSearchKey(params.searchKey);
+			this.searchRepresentation.castFromString(params.searchKey);
 		}
-		if (result) {
-			this.fromLocation = result[0];
-			this.toLocation = result[1];
-			this.searchState = result[2];
-			this.targetDepartDate = result[3];
-			this.targetReturnDate = result[4];
-		} else {
-			//assign parameters to current object, use defaults of not specified
-			this.fromLocation = this.user.get("location");
-			this.toLocation = this.user.get("location");
-			this.searchState = this.user.get("searchState");
-			this.targetDepartDate = new Date();
-			this.targetReturnDate = new Date();
-		}
+
 		//after data intialiazation, start render curreny view
 		this.render();
-
 		//lauch the async search call, pass results-rendering method as callback
 		this.messageSearch();
 
@@ -50,7 +38,7 @@ var MainPageView = Backbone.View.extend ({
 
 	messageSearch: function(){
 		//Todo: Change to accept return date;
-		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
 
 	},
 
@@ -77,11 +65,11 @@ var MainPageView = Backbone.View.extend ({
 				var d = new Date();
 			}
 		});
-		$("#searchLocationInput_from").val(this.fromLocation.get("city"));
-		$("#searchLocationInput_to").val(this.toLocation.get("city"));
-		$("#searchDateInput_depart").val(Utilities.getDateString(this.targetDepartDate));
-		$("#searchDateInput_return").val(Utilities.getDateString(this.targetReturnDate));
-		if (this.searchState%2 === 0 ) {
+		$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").toUiString());
+		$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").toUiString());
+		$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
+		$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
+		if (me.searchRepresentation.get("targetType")%2 === 0 ) {
 			me.filter.isRoundTrip = false;
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
@@ -104,7 +92,7 @@ var MainPageView = Backbone.View.extend ({
 			$("#filterBox").animate({
 			    height: "120px"
 			}, 200);
-			me.searchState = Constants.userSearchState.universityAsk;
+			me.searchRepresentation.set("targetType", Constants.userSearchState.universityAsk);
 		});
 		$("#round").on("click", function(){
 			me.filter.isRoundTrip = true;
@@ -115,7 +103,7 @@ var MainPageView = Backbone.View.extend ({
 			$("#filterBox").animate({
 			    height: '146px'
 			}, 200);
-			me.searchState = Constants.userSearchState.universityHelp;
+			me.searchRepresentation.set("targetType", Constants.userSearchState.universityHelp);
 		});
 		$("#goToSpecificPage>button").on("click", function(){
 			var page = $("#pageNumberInput").val();
@@ -166,15 +154,14 @@ var MainPageView = Backbone.View.extend ({
 		this.filter.type = type;
 	},
 	submitSearch: function () {
-		var encodedSearchKey = Utilities.encodeSearchKey([this.fromLocation, this.toLocation, this.searchState, this.targetDepartDate, this.targetReturnDate]);
-		debugger;
+		
 		if (app.sessionManager.hasSession()) {
 			app.navigate(this.user.get("userId") + "/main/" + encodedSearchKey);
 		} else {
 			app.navigate("main/" + encodedSearchKey);
 		}
 		//TODO: change to accept return date
-		app.messageManager.searchMessage(this.fromLocation, this.targetDepartDate, this.searchState, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
 	},
 	refresh: function () {
 		debugger;
@@ -193,14 +180,14 @@ var MainPageView = Backbone.View.extend ({
 			var m = messages.at(i);
 			var dt = m.get("departure_timeSlot");
 			var rt = m.get("arrival_timeSlot");
-			if (this.fromLocation.isEquivalentTo(m.get("departure_location"))){
+			if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))){
 				if (this.filterTime(this.filter.time1, dt)) {
 					filtered.add(m);
 				} 
 				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time2, at)) {
 					filtered.add(m);
 				}
-			} else if ( m.get("isRoundTrip") && this.fromLocation.isEquivalentTo(m.get("arrival_location")) ){
+			} else if ( m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location")) ){
 				if (this.filterTime(this.filter.time2, dt)) {
 					filtered.add(m);
 				}
@@ -228,18 +215,18 @@ var MainPageView = Backbone.View.extend ({
 		}
 	},
 	updateLocation: function (id) {
-		$("#"+id).val(this.fromLocation.get("city"));
+		$("#"+id).val(this.searchRepresentation.get("departureLocation").get("city"));
 	},
 
 	bindEvents: function(){
 		var that = this;
 
 		$("#searchLocationInput_from").on('click', function(e){
-			this.locationPickerView = new LocationPickerView(this.fromLocation, this, "searchLocationInput_from");
+			this.locationPickerView = new LocationPickerView(this.searchRepresentation.get("departureLocation"), this, "searchLocationInput_from");
 		});
 
 		$("#searchLocationInput_to").on('click', function(e){
-			this.locationPickerView = new LocationPickerView(this.toLocation, this, "searchLocationInput_from");
+			this.locationPickerView = new LocationPickerView(this.searchRepresentation.get("arrivalLocation") , this, "searchLocationInput_from");
 		});
 
 		$("#timeSelections1>.button").on('click', function(e){
