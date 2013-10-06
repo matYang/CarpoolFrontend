@@ -3,20 +3,20 @@ var Message = Backbone.Model.extend({
 	defaults:{
         "messageId": -1,
 		"ownerId": -1,
-		"owner": null,
+		"owner": {},
 
-		"transactionList": new Transactions(),	//new ArrayList<Transaction>(),
+		"transactionList": [],	//new ArrayList<Transaction>(),
 
 		"isRoundTrip":false,
 
-		"departure_location": new UserLocation(),
+		"departure_location": {},
 		"departure_time": new Date(),
 		"departure_timeSlot": 0,
 		"departure_seatsNumber":0,
 		"departure_seatsBooked":0,
 		"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
-		"arrival_location": new UserLocation(),
+		"arrival_location": {},
 		"arrival_time": new Date(),
 		"arrival_timeSlot": 0,
 		"arrival_seatsNumber":0,
@@ -39,13 +39,11 @@ var Message = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/dianming/dianming",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl', 'parse');
+		_.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
 		}
-
-		// this.simpleFill();			//be careful to use it here
 	},
 
 	overrideUrl:function(urlRootOverride){
@@ -58,40 +56,54 @@ var Message = Backbone.Model.extend({
         return this.id === -1;
     },
 
-	parse: function(response){
+	parse: function(data){
 
-		var modelHash = {};
+		data.messageId = parseInt(data.messageId, 10);
+		data.ownerId = parseInt(data.ownerId, 10);
 
-		modelHash.messageId = reponse.messageId;
-		modelHash.ownerId = response.ownerId;
-		modelHash.ownerImgPath = response.ownerImgPath;
-		modelHash.ownerName = response.ownerName;
-		modelHash.ownerLevel = response.ownerLevel;
-		modelHash.ownerAverageScore = response.ownerAverageScore;
-		modelHash.ownerPhone = response.ownerPhone;
-		modelHash.ownerEmail = response.ownerEmail;
-		modelHash.ownerQq = response.ownerQq;
-		modelHash.paymentMethod = Constants.paymentMethod[response.paymentMethod];
+		data.owner = new User(data.owner, {'parse': true});
+		data.isRoundTrip = data.isRoundTrip === 'true';
+		
+		data.departure_location = new UserLocation(data.departure_location, {'parse': true});
+		data.departure_time = Utilities.castFromAPIFormat(data.departure_time);
+		data.departure_timeSlot = parseInt(data.departure_timeSlot, 10);
+		data.departure_seatsNumber = parseInt(data.departure_seatsNumber, 10);
+		data.departure_seatsBooked = parseInt(data.departure_seatsBooked, 10);
 
-		this.set("departure_location", new UserLocation(false, response.location));
-		this.set("arrival_location", new UserLocation(false, response.location));
-		this.set("departure_time", new Date(response.startTime));
-		this.set("arrival_time", new Date(response.endTime));
+		data.arrival_location = new UserLocation(data.arrival_location, {'parse': true});
+		data.arrival_time = Utilities.castFromAPIFormat(data.arrival_time);
+		data.arrival_timeSlot = parseInt(data.arrival_timeSlot, 10);
+		data.arrival_seatsNumber = parseInt(data.arrival_seatsNumber, 10);
+		data.arrival_seatsBooked = parseInt(data.arrival_seatsBooked, 10);
 
-		this.get('transactionList').reset( response.transactionList);		//watchout, found on stackoveflow
+		data.paymentMethod = parseInt(data.paymentMethod, 10);
 
-		modelHash.note = response.note;
+		data.type = parseInt(data.type, 10);
+		data.genderRequirement = parseInt(data.genderRequirement, 10);
+		data.state = parseInt(data.state, 10);
 
-		modelHash.type = Constants.messageType[response.type];
-		modelHash.genderRequirement = Constants.gender(response.genderRequirement);
-		modelHash.state = Constants.messageState[response.state];
+		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
+		data.editTime = Utilities.castFromAPIFormat(data.editTime);
 
-		modelHash.priceList = response.priceList;
-		modelHash.active = response.active;
-		modelHash.historyDeleted = response.historyDeleted;
-		this.set("creationTime", new Date(response.creationTime));
+		data.historyDeleted = data.historyDeleted === 'true';
 
-        return modelHash;
+        return data;
+	},
+
+	toJSON: function(){
+		var json = _.clone(this.attributes);
+		
+		//ignore user here, meaningless to do anything to user persistence from inside message
+		json.departure_location = json.departure_location.toJSON();
+		json.departure_time = Utilities.castToAPIFormat(json.departure_time);
+
+		json.arrival_location = json.arrival_location.toJSON();
+		json.arrival_time = Utilities.castToAPIFormat(json.arrival_time);
+
+		json.creationTime = Utilities.castToAPIFormat(json.creationTime);
+		json.editTime = Utilities.castToAPIFormat(json.editTime);
+
+		return json;
 	}
 
 });
