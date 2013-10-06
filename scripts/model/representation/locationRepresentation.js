@@ -80,6 +80,8 @@ var UserLocation = Backbone.Model.extend({
 
 	//@Depracated, providing parsing support for legacy
 	parse: function(json){
+		json.customDepthIndex = parseInt(json.customDepthIndex, 10);
+
 		json.country = json.hierarchyNameList[0];
 		json.province = json.hierarchyNameList[1];
 		json.city = json.hierarchyNameList[2];

@@ -152,7 +152,7 @@ var LocationPickerView = Backbone.View.extend({
 
 	
 	complete:function(){
-		this.location = new UserLocation({'hierarchyNameList': [this.countryName, this.provinceName, this.cityName, 'undetermined'], 'customNameList': this.customNameList}, {'parse': true});
+		this.location = new UserLocation({'hierarchyNameList': [this.countryName, this.provinceName, this.cityName, 'undetermined'], 'customDepthIndex': Config.defaultCustomDepthIndex, 'customNameList': this.customNameList}, {'parse': true});
 		console.log(new UserLocation(this.location.toJSON(), {'parse': true}).toString());
 		if (typeof this.callback === 'function'){
 			this.callback();
