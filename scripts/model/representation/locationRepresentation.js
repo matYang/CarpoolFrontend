@@ -1,18 +1,19 @@
 var UserLocation = Backbone.Model.extend({
 
-	defaults:{
-        
-        'hierarchyNameList': [],
-        'customDepthIndex': Config.defaultCustomDepthIndex,
+	defaults: function(){
+		return {
+			'hierarchyNameList': [],
+			'customDepthIndex': Config.defaultCustomDepthIndex,
 
-        //@Deprecated. left here to provide compability
-        'country': 'Canada',
-        'province' : 'Ontario',
-        'city' : 'Waterloo',
-        'point': "Matthew's Sweet Little Home",
+			//@Deprecated. left here to provide compability
+			'country': 'Canada',
+			'province' : 'Ontario',
+			'city' : 'Waterloo',
+			'point': "Matthew's Sweet Little Home",
 
-        //optional, returned by licationPicker to track default custom locations
-        'customNameList': []
+			//optional, returned by licationPicker to track default custom locations
+			'customNameList': []
+		};
 	},
 
 	initialize:function(){
@@ -44,14 +45,13 @@ var UserLocation = Backbone.Model.extend({
 	},
 
 	castFromString:function(str){
-		debugger;
 
 		var strArray = [], index = 0;
 		if (str) {
 			strArray = str.split(Config.locationSeperator);
 		}
 		for (index = 0; index < strArray.length - 1; index++){
-			this.get('hierarchyNameList').push(strArray[index]);
+			this.get('hierarchyNameList')[index] = (strArray[index]);
 		}
 		this.set('customDepthIndex', parseInt(strArray[index], 10));
 		this.autoFill();

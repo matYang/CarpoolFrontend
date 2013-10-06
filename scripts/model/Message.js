@@ -1,37 +1,39 @@
 var Message = Backbone.Model.extend({
 	//TODO fill in Constants with enum int mapping
-	defaults:{
-        "messageId": -1,
-		"ownerId": -1,
-		"owner": {},
+	defaults: function(){
+		return {
+			"messageId": -1,
+			"ownerId": -1,
+			"owner": {},
 
-		"transactionList": [],	//new ArrayList<Transaction>(),
+			"transactionList": [],	//new ArrayList<Transaction>(),
 
-		"isRoundTrip":false,
+			"isRoundTrip":false,
 
-		"departure_location": {},
-		"departure_time": new Date(),
-		"departure_timeSlot": 0,
-		"departure_seatsNumber":0,
-		"departure_seatsBooked":0,
-		"departure_priceList":[],				//If only single price is set, then priceList has length 1
+			"departure_location": {},
+			"departure_time": new Date(),
+			"departure_timeSlot": 0,
+			"departure_seatsNumber":0,
+			"departure_seatsBooked":0,
+			"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
-		"arrival_location": {},
-		"arrival_time": new Date(),
-		"arrival_timeSlot": 0,
-		"arrival_seatsNumber":0,
-		"arrival_seatsBooked":0,
-		"arrival_priceList":[],
+			"arrival_location": {},
+			"arrival_time": new Date(),
+			"arrival_timeSlot": 0,
+			"arrival_seatsNumber":0,
+			"arrival_seatsBooked":0,
+			"arrival_priceList":[],
 
-		"paymentMethod": Constants.paymentMethod.offline,
-		"note": "deault",
-		"type": Constants.messageType.ask,
-		"genderRequirement": Constants.gender.both,
-		"state": Constants.messageState.normal,
+			"paymentMethod": Constants.paymentMethod.offline,
+			"note": "deault",
+			"type": Constants.messageType.ask,
+			"genderRequirement": Constants.gender.both,
+			"state": Constants.messageState.normal,
 
-		"creationTime": new Date(),
-		"editTime": new Date(),
-		"historyDeleted": false
+			"creationTime": new Date(),
+			"editTime": new Date(),
+			"historyDeleted": false
+		};
 	},
 
 	idAttribute: "messageId",
@@ -94,14 +96,15 @@ var Message = Backbone.Model.extend({
 		var json = _.clone(this.attributes);
 		
 		//ignore user here, meaningless to do anything to user persistence from inside message
-		json.departure_location = json.departure_location.toJSON();
-		json.departure_time = Utilities.castToAPIFormat(json.departure_time);
+		json.departure_location = this.get('departure_location').toJSON();
+		json.departure_time = Utilities.castToAPIFormat(this.get('departure_time'));
 
-		json.arrival_location = json.arrival_location.toJSON();
-		json.arrival_time = Utilities.castToAPIFormat(json.arrival_time);
+		json.arrival_location = this.get('arrival_location').toJSON();
+		json.arrival_time = Utilities.castToAPIFormat(this.get('arrival_time'));
 
-		json.creationTime = Utilities.castToAPIFormat(json.creationTime);
-		json.editTime = Utilities.castToAPIFormat(json.editTime);
+		//these 2 are actually ignored by server side, placing here for uniformity
+		json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
+		json.editTime = Utilities.castToAPIFormat(this.get('editTime'));
 
 		return json;
 	}

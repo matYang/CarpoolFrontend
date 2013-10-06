@@ -1,56 +1,57 @@
 var User = Backbone.Model.extend({
 	//TODO fill in Constants with enum int mapping
-	defaults:{
-        "userId": -1,
-        "password": "default",
-        "name": "default",
-        "email": "default",
-        "phone": "default",
-        "qq": "default",
-        "age": 0,
-        "gender": Constants.gender.male,
-        "birthday": new Date(),
-        "imgPath": "default",
-        "location": new UserLocation(),                 //new Location(),
-        
-        "lastLogin": new Date(),
-        "creationTime": new Date(),
+	defaults: function(){
+                return {
+                        "userId": -1,
+                        "password": "default",
+                        "name": "default",
+                        "email": "default",
+                        "phone": "default",
+                        "qq": "default",
+                        "age": 0,
+                        "gender": Constants.gender.male,
+                        "birthday": new Date(),
+                        "imgPath": "default",
+                        "location": new UserLocation(),                 //new Location(),
+                        
+                        "lastLogin": new Date(),
+                        "creationTime": new Date(),
 
-        "historyList": [],
-        "watchList": [],
-        "socialList": [],
-        "transactionList": [],
-        "notificationList": [],
-        "universityGroup": [],
-        
-        "emailActivated": false,
-        "phoneActivated": false,
-        "emailNotice": false,
-        "phoneNotice": false,
-        "state": Constants.userState.normal,
-        "searchState": Constants.userSearchState.universityAsk,
+                        "historyList": [],
+                        "watchList": [],
+                        "socialList": [],
+                        "transactionList": [],
+                        "notificationList": [],
+                        "universityGroup": [],
+                        
+                        "emailActivated": false,
+                        "phoneActivated": false,
+                        "emailNotice": false,
+                        "phoneNotice": false,
+                        "state": Constants.userState.normal,
+                        "searchState": Constants.userSearchState.universityAsk,
 
-        "level": 0,
-        "averageScore": 0,
-        "totalTranscations": 0,
+                        "level": 0,
+                        "averageScore": 0,
+                        "totalTranscations": 0,
 
-        "verifications": [],
-        "googleToken":"",
-        "facebookToken":"",
-        "twitterToken":"",
-        "paypalToken":"",
-        "id_docType":"",
-        "id_docNum":"",
-        "id_path":"",
-        "id_vehicleImgPath":"",
+                        "verifications": [],
+                        "googleToken":"",
+                        "facebookToken":"",
+                        "twitterToken":"",
+                        "paypalToken":"",
+                        "id_docType":"",
+                        "id_docNum":"",
+                        "id_path":"",
+                        "id_vehicleImgPath":"",
 
-        "accountId":"",
-        "accountPass":"",
-        "accountToken":"",
-        "accountValue":0,
+                        "accountId":"",
+                        "accountPass":"",
+                        "accountToken":"",
+                        "accountValue":0,
 
-        "sessionCode": "default",
-
+                        "sessionCode": "default",
+                };
 	},
 
         idAttribute: "userId",
@@ -109,12 +110,13 @@ var User = Backbone.Model.extend({
         toJSON: function(){
                 var json = _.clone(this.attributes);
 
-                json.birthday = Utilities.castToAPIFormat(json.birthday);
+                json.birthday = Utilities.castToAPIFormat(this.get('birthday'));
 
-                json.location = json.location.toJSON();
+                json.location = this.get('location').toJSON();
 
-                json.lastLogin = Utilities.castToAPIFormat(json.lastLogin);
-                json.creationTime = Utilities.castToAPIFormat(json.creationTime);
+                //these 2 are actually ignored by server side, placing here for uniformity
+                json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));
+                json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
 
                 return json;
         }

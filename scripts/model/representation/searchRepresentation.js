@@ -1,15 +1,17 @@
 
 var SearchRepresentation = Backbone.Model.extend({
 
-	defaults:{
-		'isRoundTrip': false,
-		'departureLocation': {},
-		'arrivalLocation': {},
-		'departureDate': new Date(),
-		'arrivalDate': new Date(),
-		'targetType': -1,
-		'departureTimeSlot': -1,
-		'arrivalTimeSlot': -1
+	defaults: function(){
+		return {
+			'isRoundTrip': false,
+			'departureLocation': {},
+			'arrivalLocation': {},
+			'departureDate': new Date(),
+			'arrivalDate': new Date(),
+			'targetType': -1,
+			'departureTimeSlot': -1,
+			'arrivalTimeSlot': -1
+		};
 	},
 
 	initialize: function(){
@@ -52,10 +54,10 @@ var SearchRepresentation = Backbone.Model.extend({
 
 	toJSON: function(){
 		var json = _.clone(this.attributes);
-		json.departureLocation = json.departureLocation.toJSON();
-		json.arrivalLocation = json.arrivalLocation.toJSON();
-		json.departureDate = Utilities.castToAPIFormat(json.departureDate);
-		json.arrivalDate = Utilities.castToAPIFormat(json.arrivalDate);
+		json.departureLocation = this.get('departureLocation').toJSON();
+		json.arrivalLocation = this.get('arrivalLocation').toJSON();
+		json.departureDate = Utilities.castToAPIFormat(this.get('departureDate'));
+		json.arrivalDate = Utilities.castToAPIFormat(this.get('arrivalDate'));
 		return json;
 	}
 
