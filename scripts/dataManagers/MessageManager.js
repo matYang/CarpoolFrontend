@@ -54,21 +54,21 @@
 		this.message.set('messageId', messageId);
 
 		this.message.fetch({
-
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
 				self.timeStamp = new Date();
-
 				if(callback){
-					callback();
+					callback.success();
 				}
 			},
-
 			error: function(model, response){
 				Constants.dWarn("MessageManager::fetchMessage:: fetch failed with response:");
 				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
 			}
 		});
 	};
@@ -86,8 +86,6 @@
 
 		newMessage.overrideUrl(this.apis.DM_dianming);
 		newMessage.set('messageId', -1);
-		//this will make sure no id is auto appended
-
 		newMessage.save({},{
 
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
@@ -98,13 +96,15 @@
 				self.timeStamp = new Date();
 
 				if(callback){
-					callback();
+					callbac.success();
 				}
 			},
-
 			error: function(model, response){
 				Constants.dWarn("MessageManager::postMessage:: post failed with response:");
 				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
 			}
 		});
 	};
@@ -123,8 +123,6 @@
 		var self = this;
 
 		updatedMessage.overrideUrl(this.apis.DM_dianming);
-		//updatedMessage.set('messageId', updatedMessage.id);
-		//this will force to add id into api path, correcting it, does not need it right here
 		updatedMessage.save({},{
 
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
@@ -132,16 +130,16 @@
 
             success:function(model, response){
 				self.message = updatedMessage;
-
 				if(callback){
-					callback();
+					callback.success();
 				}
             },
-
             error: function(model, response){
                 Constants.dWarn("MessageManager::updateMessage:: update failed with response:");
                 Constants.dLog(response);
-
+                if(callback){
+					callback.error();
+				}
             }
         });
 
@@ -170,14 +168,15 @@
             success:function(model, response){
 
 				if(callback){
-					callback();
+					callback.success();
 				}
             },
-
             error: function(model, response){
                 Constants.dWarn("MessageManager::deleteMessage:: delete failed with response:");
                 Constants.dLog(response);
-
+                if(callback){
+					callback.error();
+				}
             }
         });
 
@@ -185,9 +184,6 @@
 
 	//cannot use search because of naming collisions
 	MessageManager.prototype.searchMessage = function(searchRepresentationObj, callback) {
-		// this.searchResults = testMockObj.sampleMessages;
-		// callback();
-
 		var self = this;
 
 		if (typeof searchRepresentationObj !== 'object'){
@@ -199,9 +195,7 @@
 		this.searchResults.overrideUrl(this.apis.DM_search);
 
 		this.searchResults.fetch({
-
 			data: $.param({'searchRepresentation': searchRepresentationObj.toJSON(), 'userId' : userId}),
-
             dataType:'json',
 
             success:function(model, response){
@@ -211,14 +205,15 @@
 				// self.userManager.getTopBarUser().set('searchState', searchState);
 
 				if(callback){
-					callback();
+					callback.success();
 				}
             },
-
             error: function(model, response){
                 Constants.dWarn("MessageManager::fetchSearchResult:: fetch failed with response:");
                 Constants.dLog(response);
-
+                if(callback){
+					callback.error();
+				}
             }
         });
 	};
@@ -228,29 +223,26 @@
 		this.recents = testMockObj.sampleMessages;
 		callback();
 
-		//TODO: uncomment
-		// var self = this;
-		// //confront to API requirements
-		// this.recents.overrideUrl(this.apis.DM_recent);
+		var self = this;
+		//confront to API requirements
+		this.recents.overrideUrl(this.apis.DM_recent);
+		this.recents.fetch({
+            dataType:'json',
 
-		// this.recents.fetch({
-
-  //           dataType:'json',
-
-  //           success:function(model, response){
-
-		// 		self.recents_timeStamp = new Date();
-		// 		if(callback){
-		// 			callback();
-		// 		}
-  //           },
-
-  //           error: function(model, response){
-  //               Constants.dWarn("MessageManager::fetchRecents:: fetch failed with response:");
-  //               Constants.dLog(response);
-
-  //           }
-  //       });
+            success:function(model, response){
+				self.recents_timeStamp = new Date();
+				if(callback){
+					callback.success();
+				}
+            },
+            error: function(model, response){
+                Constants.dWarn("MessageManager::fetchRecents:: fetch failed with response:");
+                Constants.dLog(response);
+                if(callback){
+					callback.error();
+				}
+            }
+        });
 
 
 	};
