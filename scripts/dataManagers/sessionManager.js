@@ -1,9 +1,10 @@
 (function () {
 	'use strict';
-	var testMode = true;
+	var testMode = false;
 	this.SessionManager = function(){
 
 		this.apis = new ApiResource();
+		this.sessionUser = new User();
 
 		this.isLoggedIn = false;
 		this.sessionUser = new User(this.apis.users_findSession);
@@ -20,7 +21,7 @@
 	};
 
 	SessionManager.prototype.releaseManager = function() {
-		for (var managerIndex in this.sessionRegistraTable){
+		for (var managerIndex = 0; managerIndex < this.sessionRegistraTable.length; managerIndex++){
 			this.sessionRegistraTable[managerIndex].release();
 		}
 	};
@@ -64,7 +65,7 @@
             dataType:'json',
 
             success:function(model, response){
-				self.isLoggedIn = self.sessionUser.id > 0 ? true : false;
+				self.isLoggedIn = self.sessionUser.id >= 0 ? true : false;
 				self.releaseManager();
 
 				if(callback){

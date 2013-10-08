@@ -18,7 +18,7 @@ var TopBarView = Backbone.View.extend({
 
 		var self = this;
 		if (!app.sessionManager.hasSession()){
-			self.topBarUser = app.userManager.getTopBarUser();
+			self.topBarUser = app.sessionManager.getSessionUser();
 
 			self.render();
 			self.bindEvents();
@@ -26,7 +26,7 @@ var TopBarView = Backbone.View.extend({
 		//if has session, fetch before continue
 		else{
 			app.userManager.fetchTopBarUser(function(){
-				self.topBarUser = app.userManager.getTopBarUser();
+				self.topBarUser = app.sessionManager.getSessionUser();
 
 				self.render();
 				self.bindEvents();
@@ -220,8 +220,9 @@ var TopBarView = Backbone.View.extend({
 	},
 	hideProfile: function(){
 		$("li").removeClass("whiteBackground");
-		$("#profileDropdown").hide();	
+		$("#profileDropdown").hide();
 	},
+
 	close:function(){
 		if (!this.isClosed){
 			$('#logo').off();

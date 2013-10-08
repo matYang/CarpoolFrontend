@@ -15,10 +15,6 @@
 				request: ['topBar'],
 				antiRequest: ['topBar']
 			},
-			'circle': {
-				request: ['circles'],
-				antiRequest: ['circles']
-			},
 			'advertisement': {
 				request: ['advertisement'],
 				antiRequest: ['advertisement']

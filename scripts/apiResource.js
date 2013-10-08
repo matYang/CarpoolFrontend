@@ -35,12 +35,6 @@ we do not give up, not this time
 			moduleSufixResource: {
 				'DM': {
 					dianming: '/dianming',
-					gender: '/gender',
-					location: '/location',
-					note: '/note',
-					paymentMethod: '/paymentMethod',
-					price: '/price',
-					timing: '/timing',
 					recent: '/recent',
 					search: '/search'
 				},
@@ -58,12 +52,9 @@ we do not give up, not this time
 					circleLocation: '/circleLocation',
 					emailActivation: '/emailActivation',
 					resendActivationEmail: '/resendActivationEmail',
-					topBar: '/topBar',
 					forgetPassword: '/forgetPassword',
-					toggleEmailNotice: '/toggleEmailNotice',
-					togglePhoneNotice: '/togglePhoneNotice',
+					toggleNotices: '/toggleNotices',
 					watchUser: '/watchUser',
-					watchMessage: '/watchMessage',
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
 					notification: '/notification'
@@ -97,12 +88,6 @@ we do not give up, not this time
 			return {
 
 				DM_dianming : api_maker('DM', 'dianming'),
-				DM_gender : api_maker('DM', 'gender'),
-				DM_location : api_maker('DM', 'location'),
-				DM_note : api_maker('DM', 'note'),
-				DM_paymentMethod : api_maker('DM', 'paymentMethod'),
-				DM_price : api_maker('DM', 'price'),
-				DM_timing : api_maker('DM', 'timing'),
 				DM_recent : api_maker('DM', 'recent'),
 				DM_search : api_maker('DM', 'search'),
 
@@ -116,15 +101,11 @@ we do not give up, not this time
 				users_changePassword : api_maker('users', 'changePassword'),
 				users_contactInfo : api_maker('users', 'contactInfo'),
 				users_singleLocation : api_maker('users', 'singleLocation'),
-				users_circleLocation : api_maker('users', 'circleLocation'),
 				users_emailActivation : api_maker('users', 'emailActivation'),
 				users_resendActivationEmail : api_maker('users', 'resendActivationEmail'),
-				users_topBar : api_maker('users', 'topBar'),				//added to user manager
 				users_forgetPassword : api_maker('users', 'forgetPassword'),
-				users_toggleEmailNotice : api_maker('users', 'toggleEmailNotice'),
-				users_togglePhoneNotice : api_maker('users', 'togglePhoneNotice'),
+				users_toggleNotices : api_maker('users', 'toggleNotices'),
 				users_watchUser : api_maker('users', 'watchUser'),
-				users_watchMessage : api_maker('users', 'watchMessage'),
 				users_messageHistory : api_maker('users', 'messageHistory'),
 				users_transaction : api_maker('users', 'transaction'),
 				users_notification : api_maker('users', 'notification'),

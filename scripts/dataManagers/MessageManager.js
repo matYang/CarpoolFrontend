@@ -11,10 +11,8 @@
 
 		this.message = new Message();
 		this.timeStamp = new Date();
-
 		this.searchResults = new Messages();
 		this.searchResults_timeStamp = new Date();
-
 		this.recents = new Messages();
 		this.recents_timeStamp = new Date();
 
