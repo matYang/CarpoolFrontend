@@ -17,7 +17,7 @@ var MainPageView = Backbone.View.extend ({
 		_.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickTime', 'onClickType', 'submitSearch', 'refresh', 'bindEvents', 'close');
 		app.viewRegistration.register("mainPage", this, true);
 		this.isClosed = false;
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		//define the template
 		this.template = _.template(tpl.get('main'));
 		this.searchRepresentation = new SearchRepresentation();

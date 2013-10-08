@@ -11,7 +11,7 @@ var UserLocation = Backbone.Model.extend({
 			'city' : 'Waterloo',
 			'point': "Matthew's Sweet Little Home",
 
-			//optional, returned by licationPicker to track default custom locations
+			//optional, returned by locationPicker to track default custom locations
 			'customNameList': []
 		};
 	},

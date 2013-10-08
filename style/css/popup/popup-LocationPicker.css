@@ -1,6 +1,6 @@
 #popupBoxLocation {
 	margin-top: 150px;
-	height: 250px;
+	height: 450px;
 	width: 800px;
 	margin-left: auto;
 	margin-right: auto;
@@ -50,12 +50,11 @@
 #location-modal-provinceContainer {
 	background-color: #FFFFFF;
 	margin-left: 5%;
-	height: 23%;
+	height: 20%;
 	width: 90%;
 	overflow-y: auto;
 	border-style: solid;
 	border-width:1px;
-	margin-top: 3%;
 }
 
 #location-modal-provinceContainer div {
@@ -105,11 +104,11 @@
 	width: 17%;
 }
 
-#location-modal-universityContainer {
+#location-modal-customizeContainer {
 	background-color: #FFFFFF;
 	margin-left: 5%;
 	margin-top: 1%;
-	height: 37%;
+	height: 30%;
 	width: 90%;
 	overflow-x: hidden; 
 	overflow-y: auto;
@@ -117,21 +116,21 @@
 	border-width:1px;
 }
 
-#location-modal-universityContainer div {
+#location-modal-customizeContainer div {
     display: inline-block;
     margin-left: 5px;
    	margin-top: 3px;
 	width: 24%;
 }
 
-#location-modal-universityContainer div:hover {
+#location-modal-customizeContainer div:hover {
 	background-color: #B0B0B0;
 	cursor: pointer;
 	color: white;
 	-webkit-transition: ease .1s;
 }
 
-.location-modal-university {
+.location-modal-customize {
 	font-size: 80%;
 	text-align: center;
 }

@@ -72,7 +72,9 @@ var RegistrationView = Backbone.View.extend({
 		});
 	},
 	updateLocation: function (){
-		$("#registerLocationInput").val(this.registerInfo.location.get("university"));
+		debugger;
+		$("#registerLocationInput").val(this.registerInfo.location.toUiString());
+		$("#registerCustomizeInput").val(this.registerInfo.location.get("point"));
 	},
 	renderSecondPage: function(){
 		var that = this;

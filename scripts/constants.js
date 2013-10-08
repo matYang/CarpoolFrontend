@@ -37,6 +37,7 @@ var Constants = {
 		"modal/locationEditWindow",
 		"modal/timeDateEditWindow",
 		"modal/transactionDetail",
+		"modal/locationPicker",
 
 
 		/*-----------  person pages  -----------*/

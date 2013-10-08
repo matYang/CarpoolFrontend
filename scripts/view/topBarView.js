@@ -25,12 +25,10 @@ var TopBarView = Backbone.View.extend({
 		}
 		//if has session, fetch before continue
 		else{
-			app.userManager.fetchTopBarUser(function(){
-				self.topBarUser = app.sessionManager.getSessionUser();
+			self.topBarUser = app.sessionManager.getSessionUser();
 
-				self.render();
-				self.bindEvents();
-			});
+			self.render();
+			self.bindEvents();
 		}
 
 	},

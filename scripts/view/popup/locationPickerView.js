@@ -14,7 +14,7 @@ var LocationPickerView = Backbone.View.extend({
 		this.countryName = this.location.get('country');
 		this.provinceName = this.location.get('province');
 		this.cityName = this.location.get('city');
-
+		this.customizedName = this.location.get('hierarchyNameList')[this.location.get("customDepthIndex")];
 
 		if (initiator){
 			this.initiator = initiator;
@@ -23,13 +23,13 @@ var LocationPickerView = Backbone.View.extend({
 		doubleModalOpen = true;
 		this.firstLoad = true;
 		this.render();
-
 		this.getProvinces();
 		this.getCities();
 	},
 
 	render:function(){
-		$('#popup').append("<div class='popupPanel' id='locationSearchPanel'><div id='popupBoxLocation'><div class='popUpCloseButton' id='location-modal-closeButton'></div><div id='location-modal-titleContainer'><p>请选择城市</p><div></div></div><div id='location-modal-provinceContainer'></div><div id='location-modal-cityContainer'></div></div></div>");
+
+		$('#popup').append(_.template(tpl.get('modal/locationPicker')));
 
 		$('#location-modal-closeButton').bind('click', this.close);
 
@@ -93,9 +93,11 @@ var LocationPickerView = Backbone.View.extend({
 			success: function(data){
 				var totalDomString = "",
 					index = 0;
+
 				for (index = 0; index < data.length; index++){
 					totalDomString += self.cityDOMGenerator(data[index]);
 				}
+				cityContainer.empty();
 				cityContainer.append(totalDomString);
 				self.highLight($(".location-modal-city:contains(" + self.cityName +  ")").first(),"city");
 				self.highLightedCity = $(".location-modal-city:contains(" + self.cityName +  ")").first();
@@ -129,10 +131,13 @@ var LocationPickerView = Backbone.View.extend({
 		return "<div class = 'location-modal-city location-modal-entry'>" + city + "</div>";
 	},
 
+	customizeDOMGenerator:function(customize){
+		return "<div class = 'location-modal-customize location-modal-entry'>" + customize + "</div>";
+	},
 
 	getCustomNameList: function(){
 		var self = this;
-
+		var cityContainer = $('#location-modal-customizeContainer');
 		$.ajax({
 			type: "GET",
 			async: true,
@@ -140,8 +145,21 @@ var LocationPickerView = Backbone.View.extend({
 			url: self.apis.location_location,
 			dataType: 'json',
 			success: function(data){
-				self.customNameList = data;
-				self.complete();
+				var totalDomString = "",
+					index = 0;
+				cityContainer.empty();
+				for (index = 0; index < data.length; index++){
+					totalDomString += self.customizeDOMGenerator(data[index]);
+				}
+				cityContainer.append(totalDomString);
+				self.highLight($(".location-modal-customize:contains(" + self.customizedName +  ")").first(),"customized");
+				self.highLightedCustomized = $(".location-modal-customize:contains(" + self.customizedName +  ")").first();
+
+				$('.location-modal-customize').on('click', function(){
+					self.firstLoad = false;
+					self.customizedName = $(this).html();
+					self.complete();
+				});
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
@@ -152,7 +170,9 @@ var LocationPickerView = Backbone.View.extend({
 
 	
 	complete:function(){
-		this.location = new UserLocation({'hierarchyNameList': [this.countryName, this.provinceName, this.cityName, 'undetermined'], 'customDepthIndex': Config.defaultCustomDepthIndex, 'customNameList': this.customNameList}, {'parse': true});
+		this.location.set('hierarchyNameList',[this.countryName, this.provinceName, this.cityName, this.customizedName])
+					 .set('customDepthIndex', Config.defaultCustomDepthIndex);
+		this.location.autoFill();
 		console.log(new UserLocation(this.location.toJSON(), {'parse': true}).toString());
 		if (typeof this.callback === 'function'){
 			this.callback();
@@ -179,6 +199,13 @@ var LocationPickerView = Backbone.View.extend({
 			if (this.highLightedCity){
 				this.highLightedCity.css({'border-color': 'white'});
 				this.highLightedCity.css({'background-color': ''});
+			}
+		}else if (type == "customized"){
+			targetDOM.css({'border-color': 'black'});
+			targetDOM.css({'background-color': '#E4EBF5'});
+			if (this.highLightedCustomized){
+				this.highLightedCustomized.css({'border-color': 'white'});
+				this.highLightedCustomized.css({'background-color': ''});
 			}
 		}
 
