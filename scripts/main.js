@@ -261,6 +261,7 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	register: function(registrationState){
+		this.topBarView = new TopBarView();
 		if (this.sessionManager.hasSession()){
 			this.navigate(this.sessionManager.getUserId() + "/main", true);
 			return;
