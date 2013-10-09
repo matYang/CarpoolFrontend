@@ -170,7 +170,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	savePersonalInfo: function() {
 		
-		app.userManager.changeContactInfo($('#utility_name>input').val(), app.userManager.getTopBarUser().get("age"), app.userManager.getTopBarUser().get("gender"), $('#utility_phone>input').val(), $('#utility_QQ>input').val(), function(){
+		app.userManager.changeContactInfo($('#utility_name>input').val(), app.sessionManager.getSessionUser().get("age"), app.sessionManager.getSessionUser().get("gender"), $('#utility_phone>input').val(), $('#utility_QQ>input').val(), function(){
 			alert("user contactInfo update successful");
 			this.editingPersonalInfo = false;
 			$('#edit_personalInfo').show();

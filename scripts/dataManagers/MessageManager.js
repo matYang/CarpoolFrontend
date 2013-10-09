@@ -202,7 +202,7 @@
 
 				// self.searchResults_timeStamp = new Date();
 				// //sync the search state
-				// self.userManager.getTopBarUser().set('searchState', searchState);
+				// self.sessionManager.getSessionUser().set('searchState', searchState);
 
 				if(callback){
 					callback.success();

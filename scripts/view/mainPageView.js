@@ -38,7 +38,7 @@ var MainPageView = Backbone.View.extend ({
 
 	messageSearch: function(){
 		//Todo: Change to accept return date;
-		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
 
 	},
 
@@ -139,6 +139,10 @@ var MainPageView = Backbone.View.extend ({
 		this.toPage(1);
 		this.setPageNavigator();
 	},
+	renderError: function(){
+		$("#searchResultDisplayPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+		
+	},
 	onClickTime: function (e, parentId) {
 		var me = $('#'+e.target.getAttribute('id'));
 		$("#"+parentId+">.selected").removeClass('selected').addClass('notSelected');
@@ -161,7 +165,7 @@ var MainPageView = Backbone.View.extend ({
 			app.navigate("main/" + encodedSearchKey);
 		}
 		//TODO: change to accept return date
-		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
 	},
 	refresh: function () {
 		debugger;

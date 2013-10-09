@@ -11,7 +11,7 @@ var PersonalWatchView = Backbone.View.extend({
 		this.userTemplate = _.template(tpl.get('personalPage/personalSimpleUser'));
 
 		this.curUserId = params.intendedUserId;
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		this.currentMessageEntries = 0;
 		this.addMessageEntries = 10;
 		this.currentUserEntries = 0;

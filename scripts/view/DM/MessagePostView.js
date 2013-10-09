@@ -36,7 +36,7 @@ var MessagePostView = Backbone.View.extend({
 		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
 		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
 		
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		this.userId = this.user.get("userId");
 		
 

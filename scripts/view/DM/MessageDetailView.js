@@ -7,7 +7,7 @@ var MessageDetailView = Backbone.View.extend({
 		app.viewRegistration.register("MessageDetail", this, true);
 		this.isClosed = false;
 		this.message = message;
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		this.userId = this.user.get("userId");
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;

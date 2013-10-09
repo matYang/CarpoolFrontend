@@ -211,7 +211,7 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	postMessage: function(id, postState){
-		app.navigate(this.userManager.getTopBarUser().id + "/post/" + Config.getDefaultDMPostState() , true);
+		app.navigate(this.sessionManager.getSessionUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 	},
 
 	postMessageWithState: function(id, postState){
@@ -222,7 +222,7 @@ var AppRouter = Backbone.Router.extend({
 		this.topBarView = new TopBarView();
 		this.circleView = new CircleView();
 		if (!postState || !Config.validateDMPostState(postState)){
-			app.navigate(this.userManager.getTopBarUser().id + "/post/" + Config.getDefaultDMPostState() , true);
+			app.navigate(this.sessionManager.getSessionUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 		}
 		else{
 			//if the post session not valid, start new session, creat brand new view
