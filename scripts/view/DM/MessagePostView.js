@@ -397,7 +397,12 @@ var MessagePostView = Backbone.View.extend({
 			}
 		}
 		else if (previousStepIndex === 3){
+			$("#seats").off();
+			$("#seats_1").off();
 			$('#publish_finish').off();
+			$("#priceList_add").off();
+			$("#priceList_minus").off();
+			$("#conditionalPriceSwitch").off();
 			$('#publish_description_input').off();
 		}
 	},

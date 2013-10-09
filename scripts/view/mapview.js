@@ -3,6 +3,7 @@ var MapView = Backbone.View.extend({
 	
 	initialize:function(config){
 		_.bindAll(this,'render','mapInitialize','drawCircle','getLatLng') ;
+		this.isClosed = false;
 		this.div = config.div;
 		this.origin = config.originLocation;
 		this.dest = config.destLocation;
@@ -84,6 +85,12 @@ var MapView = Backbone.View.extend({
       			that.directionDisplay.setDirections(response);
     		}
   		});
+	}, 
+	close:function(){
+		if (!this.isClosed){
+			$("#"+this.div).empty();
+			this.isClosed = true;
+		}
 	}
 
 });

@@ -119,7 +119,7 @@ var FrontPageView = Backbone.View.extend({
 				"departureTimeSlot": 0,
 				"arrivalTimeSlot": 0
 			});
-			var key = 	searchString.toString();
+			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
 				app.navigate(that.user.get("userId")+"/main/"+key, true);
@@ -161,7 +161,8 @@ var FrontPageView = Backbone.View.extend({
 	},
 	close:function(){
 		if (!this.isClosed){
-
+			$("#quickStartButton1").off();
+			$("#quickStartButton2").off();
 			for ( var i = 0; i < this.displayMessages.length; i++ ) {
 				var messageId = this.displayMessages.at(i).get("messageId");
 				$("#frontBox_"+messageId).off();
@@ -169,6 +170,8 @@ var FrontPageView = Backbone.View.extend({
 
 			this.unbind();
 			$("#quickStart_from>.quickStart_value").off();
+			$("#quickStart_to>.quickStart_value").off();
+			$("#quickStart_date>.quickStart_value").off();
 
 			$(this.el).empty();
 			this.isClosed = true;

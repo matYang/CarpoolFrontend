@@ -84,6 +84,13 @@ var UserLocation = Backbone.Model.extend({
 		}
 	},
 
+	reverseFill: function(){
+		this.get('hierarchyNameList')[0] = this.get('country');
+		this.get('hierarchyNameList')[1] = this.get('province');
+		this.get('hierarchyNameList')[2] = this.get('city');
+		this.get('hierarchyNameList')[3] = this.get('point');
+	},
+
 	//@Depracated, providing parsing support for legacy
 	parse: function(json){
 		json.customDepthIndex = parseInt(json.customDepthIndex, 10);
