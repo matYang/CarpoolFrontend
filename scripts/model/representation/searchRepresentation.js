@@ -54,10 +54,18 @@ var SearchRepresentation = Backbone.Model.extend({
 
 	toJSON: function(){
 		var json = _.clone(this.attributes);
-		json.departureLocation = this.get('departureLocation').toJSON();
-		json.arrivalLocation = this.get('arrivalLocation').toJSON();
-		json.departureDate = Utilities.castToAPIFormat(this.get('departureDate'));
-		json.arrivalDate = Utilities.castToAPIFormat(this.get('arrivalDate'));
+		if (this.get('departureLocation') instanceof Backbone.Model) {
+			json.departureLocation = this.get('departureLocation').toJSON();
+		}
+		if (this.get('arrivalLocation') instanceof Backbone.Model) {
+			json.arrivalLocation = this.get('arrivalLocation').toJSON();
+		}
+		if (this.get('departureDate')) {
+			json.departureDate = Utilities.castToAPIFormat(this.get('departureDate'));
+		}
+		if (this.get('arrivalDate')) {
+			json.arrivalDate = Utilities.castToAPIFormat(this.get('arrivalDate'));
+		}
 		return json;
 	}
 
