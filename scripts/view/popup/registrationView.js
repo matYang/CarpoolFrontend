@@ -111,7 +111,7 @@ var RegistrationView = Backbone.View.extend({
 		this.registerContainer.attr("class", "registerContainer_step3");
 		var that = this;
 		$(".registerNextStep").on("click", function(){
-
+			debugger;
 			that.registerInfo.email = $('#registerEmailInput').val();
 			that.registerInfo.password = $('#registerPasswordInput').val();
 

@@ -52,7 +52,7 @@ var AppRouter = Backbone.Router.extend({
 				Info.log("session fetch success");
 			},
 			error: function(){
-				info.log("session fetch failed, user not logged in");
+				Info.log("session fetch failed, user not logged in");
 			}
 		});
 

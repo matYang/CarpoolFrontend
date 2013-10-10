@@ -102,7 +102,7 @@ var UserLocation = Backbone.Model.extend({
 
 		return json;
 	}
-
+	
 });
 
 var UserLocations = Backbone.Collection.extend({
