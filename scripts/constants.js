@@ -193,7 +193,10 @@ var Constants = {
 		'persoanlMessage': 'personalPage/personalMessage',
 		'personalWatch': 'personalPage/personalWatch',
 		'personalUtility': 'personalPage/personalUtility'
-	}
+	},
 
+	getDefaultUserLocation: function(){
+		return new UserLocation({'hierarchyNameList': ['Canada', 'Ontario', 'Waterloo', 'undetermined'], 'customDepthIndex': 3});
+	}
 
 };

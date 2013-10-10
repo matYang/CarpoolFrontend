@@ -4,8 +4,8 @@ var SearchRepresentation = Backbone.Model.extend({
 	defaults: function(){
 		return {
 			'isRoundTrip': false,
-			'departureLocation': {},
-			'arrivalLocation': {},
+			'departureLocation': Constants.getDefaultUserLocation(),
+			'arrivalLocation': Constants.getDefaultUserLocation(),
 			'departureDate': new Date(),
 			'arrivalDate': new Date(),
 			'targetType': -1,

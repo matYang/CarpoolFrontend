@@ -52,7 +52,7 @@ var AppRouter = Backbone.Router.extend({
 				Info.log("session fetch success");
 			},
 			error: function(){
-				info.log("session fetch failed, user not logged in");
+				Info.log("session fetch failed, user not logged in");
 			}
 		});
 
@@ -98,9 +98,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 
 		this.topBarView = new TopBarView();
-		if (this.circleView){
-			this.circleView.close();
-		}
 		this.frontPageVew = new FrontPageView();
 	},
 
@@ -111,7 +108,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		this.frontPageVew = new FrontPageView();
 	},
 
@@ -141,7 +137,6 @@ var AppRouter = Backbone.Router.extend({
 			return;
 		}
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		this.mainPageVew = new MainPageView();
 		this.advertisementView = new AdvertisementView();
 	},
@@ -153,7 +148,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		this.mainPageVew = new MainPageView({"searchKey":encodedSearchKey});
 		this.advertisementView = new AdvertisementView();
 
@@ -176,8 +170,6 @@ var AppRouter = Backbone.Router.extend({
 			this.navigate(this.sessionManager.getUserId() + "/personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState() , true);
 		}
 		else{
-			this.circleView = new CircleView();
-
 			if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== intendedUserId){
 				this.personalView = new PersonalView({'intendedUserId': intendedUserId, 'viewState': personalViewState});
 			}
@@ -195,7 +187,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		this.MessageDetailView = new MessageDetailView();
 		this.advertisementView = new AdvertisementView();
 	},
@@ -208,7 +199,6 @@ var AppRouter = Backbone.Router.extend({
 		}
 		this.navigate(id+"/message/"+messageId+"/edit");
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		if (this.MessagePostView) {
 			delete this.MessagePostView;
 			this.MessagePostView = null;
@@ -227,7 +217,6 @@ var AppRouter = Backbone.Router.extend({
 			return;
 		}
 		this.topBarView = new TopBarView();
-		this.circleView = new CircleView();
 		if (!postState || !Config.validateDMPostState(postState)){
 			app.navigate(this.sessionManager.getSessionUser().id + "/post/" + Config.getDefaultDMPostState() , true);
 		}
