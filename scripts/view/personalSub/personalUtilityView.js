@@ -1,7 +1,10 @@
 var PersonalUtilityView = Backbone.View.extend({
 
 	initialize: function (user) {
-		_.bindAll(this, 'render', 'close', 'toggleBox', 'editPersonalInfo', 'savePersonalInfo', 'cancelPersonalInfo', 'editLocation', 'saveFile', 'savePassword', 'toggleNotificationMethods', 'testInput', 'bindEvents');
+		_.bindAll(this, 'render', 'close', 'toggleBox', 'editPersonalInfo', 
+			'savePersonalInfo', 'cancelPersonalInfo', 'editLocation', 'saveFile', 
+			'savePassword', 'toggleNotificationMethods', 'testInput', 'bindEvents',
+			'saveSuccess', 'saveError');
 		this.isClosed = false;
 		this.domContainer=$("#profilePage_content");
 		this.template = _.template(tpl.get('personalPage/personalUtility'));
@@ -37,11 +40,7 @@ var PersonalUtilityView = Backbone.View.extend({
 			}
 		});
 		$('#upload_picture').on('click',function(){
-			if(that.validateFile($('#file_picture').val())){
-				alert("uploaded");
-			} else {
-				alert("Invalid file path");
-			}
+			//TODO:
 		});
 		$("#submit_password").on('click', function() {
 			var valid = that.savePassword($("input[name=oldPassword]").val(),$("input[name=newPassword]").val(),$("input[name=confirmNewPassword]").val());
@@ -168,22 +167,36 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	},
 	savePersonalInfo: function() {
-		
-		app.userManager.changeContactInfo($('#utility_name>input').val(), app.sessionManager.getSessionUser().get("age"), app.sessionManager.getSessionUser().get("gender"), $('#utility_phone>input').val(), $('#utility_QQ>input').val(), function(){
-			alert("user contactInfo update successful");
-			this.editingPersonalInfo = false;
-			$('#edit_personalInfo').show();
-			$('#cancel_personalInfo').hide();
-			$('#save_personalInfo').hide();
-			$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
-			$('#utility_personalInfo>.utilityBoxContent>div>.value').show();
+		var that = this;	
+		app.userManager.changeContactInfo(
+			$('#utility_name>input').val(), 
+			app.sessionManager.getSessionUser().get("age"), 
+			app.sessionManager.getSessionUser().get("gender"), 
+			$('#utility_phone>input').val(), 
+			$('#utility_QQ>input').val(), 
+			{
+			"success": that.saveSuccess,
+			"error": that.saveError
 		});
 
-		//TODO:
-		app.userManager.changeLocation(location, function(){
-			alert("user location update successful");
+		app.userManager.changeLocation(location, {
+			"success": that.saveSuccess,
+			"error": that.saveError
 		});
 
+	},
+
+	saveSuccess: function(){
+		alert("user contactInfo update successful");
+		this.editingPersonalInfo = false;
+		$('#edit_personalInfo').show();
+		$('#cancel_personalInfo').hide();
+		$('#save_personalInfo').hide();
+		$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
+		$('#utility_personalInfo>.utilityBoxContent>div>.value').show();
+	},
+	saveError:function(){
+		Info.warn("Personal info update failed");
 	},
 	editLocation: function() {
 		this.locationPickerView = new LocationPickerView();
@@ -212,15 +225,18 @@ var PersonalUtilityView = Backbone.View.extend({
 		}
 
 		if (valid){
-			app.userManager.changePassword(oldPassword, newPassword, confirmNewPassword, function(){
-				alert("password successfully changed");
-			});
+			app.userManager.changePassword(oldPassword, newPassword, confirmNewPassword, {"success":this.passwordSuccess,"error":this.passwordError});
 		} else {
 			alert("new password does not match");
 		}
 
 	},
-
+	passwordSuccess: function(){
+		alert("Password changed");
+	},
+	passwordError: function(){
+		Info.warn("password change failed");
+	},
 	toggleNotificationMethods: function(value){
 		var shouldEmail = true;
 		var shouldPhone = true;
@@ -239,16 +255,18 @@ var PersonalUtilityView = Backbone.View.extend({
 			default:
 				return;
 		}
-
-		app.userManager.toggleEmailNotice(shouldEmail, function(){
-			alert('EmailNotice toggled');
-		});
-		app.userManager.togglePhoneNotice(shouldPhone, function(){
-			alert('PhoneNotice toggled');
-		});
+		
+		app.userManager.toggleNotices(shouldEmail, shouldPhone, 
+			{"success": this.noticeSuccess,
+			"error":this.noticeError});
 
 	},
+	noticeSuccess:function(){
 
+	},
+	noticeError:function(){
+		Info.warn("notice setting change failed");
+	},
 	close: function () {
 		if (!this.isClosed){
 			$('.expandableHeader').off();

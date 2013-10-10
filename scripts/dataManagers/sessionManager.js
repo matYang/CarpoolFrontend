@@ -1,6 +1,6 @@
 (function () {
 	'use strict';
-	var testMode = false;
+	var testMode = true;
 	this.SessionManager = function(){
 
 		this.apis = new ApiResource();
@@ -53,7 +53,7 @@
 			this.sessionUser.id = 1;
 			this.isLoggedIn = true;
 			if(callback){
-				callback();
+				callback.success();
 			}
 			return;
 		}

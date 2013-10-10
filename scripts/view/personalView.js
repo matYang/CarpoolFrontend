@@ -10,8 +10,7 @@ var PersonalView = Backbone.View.extend({
 		this.activeViewState = params.viewState;
 		this.childrenViews = {};
 		this.domContainer = $('#content');
-
-		app.userManager.fetchUser(this.curUserId, this.preRender);
+		app.userManager.fetchUser(this.curUserId, {"success":this.preRender, "error":this.renderError});
 
 	},
 
@@ -28,7 +27,9 @@ var PersonalView = Backbone.View.extend({
 	render: function () {
 		this.domContainer.append(this.template(this.user.toJSON()));
 	},
-
+	renderError: function(){
+		Info.warn("Unable to fetch User data");
+	},
 	switchChildView: function(viewState){
 
 		//validity of viewState is guranteed on the URL level, since deep linking is applied
@@ -92,6 +93,7 @@ var PersonalView = Backbone.View.extend({
 				app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/utility");
 				that.switchChildView("utility");
 			} else {
+				debugger;
 				var user = app.sessionManager.getSessionUser().get('socialList').get(that.curUserId);
 				//if user has watched this user
 				if (typeof user === 'object'){
