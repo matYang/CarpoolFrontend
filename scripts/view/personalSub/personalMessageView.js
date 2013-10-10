@@ -11,25 +11,23 @@ var PersonalMessageView = Backbone.View.extend({
 		this.curUserId = params.intendedUserId;
 		this.user = app.sessionManager.getSessionUser();
 		this.domContainer.append(this.wrapperTemplate);
-		app.userManager.fetchMessageHistory(this.curUserId , this.render);
+		app.userManager.fetchMessageHistory(this.curUserId , {"success":this.render, "error":this.error});
 	},
 
-	render: function(){
+	render: function(messages){
 		this.myActiveContainer = $("#profilePage_activeMessagePublished");
 		this.myFinishedContainer = $("#profilePage_finishedMessagePublished");
 		this.participatedActiveContainer = $("#profilePage_activeMessageParticipated");
 		this.participatedFinishedContainer = $("#profilePage_finishedMessageParticipated");
-
-		this.messages = app.userManager.getUser().get('historyList');
-		this.loadMessage();
+		this.loadMessage(messages);
 		this.bindEventsForParticipated();
 	},
 
-	loadMessage: function() {
+	loadMessage: function(messages) {
 		var message;
 		this.counter=[0,0,0,0];
-		for (var i = 0; i < this.messages.length; i++) {
-			message = this.messages.at(i);
+		for (var i = 0; i < messages.length; i++) {
+			message = messages.at(i);
 			if (message.get("state") === Constants.messageState.normal){
 				if (message.get("ownerId") === this.curUserId && this.counter[0]+this.counter[1]<=6) {
 					this.myActiveContainer.append(this.messageTemplate(message.toJSON()));
@@ -68,7 +66,9 @@ var PersonalMessageView = Backbone.View.extend({
 			app.navigate(that.user.get("userId")+/Message/+Utilities.getId(e.delegateTarget.id),true);
 		});
 	},
+	error: function(){
 
+	},
 	close: function(){
 		if (!this.isClosed){
 			//TODO: unbind all the events

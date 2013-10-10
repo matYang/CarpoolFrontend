@@ -1,4 +1,3 @@
-
 var PersonalHistoryView = Backbone.View.extend({
 
 	initialize: function(params){
@@ -12,29 +11,28 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.notificationTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
 
 		this.curUserId = params.intendedUserId;
-
+		this.user = app.sessionManager.getSessionUser();
 		this.transactionLookup = {};
 		this.domContainer.append(this.wrapperTemplate);
 
-		app.userManager.fetchTransactionList(this.curUserId, this.renderTransactions);
-		app.userManager.fetchNotificationList(this.curUserId, this.renderNotifications);
+		app.userManager.fetchTransactionList(this.curUserId, {"success":this.renderTransactions, "error":this.renderTransactionError});
+		if (this.user.id === this.curUserId) {
+			app.userManager.fetchNotificationList(this.curUserId, {"success":this.renderNotifications, "error":this.renderNotificationError});
+		}
 	},
 
-	renderTransactions: function(){
+	renderTransactions: function(transactionList){
 		this.transactionContainer = $("#transactionHistoryContent");
-		this.transactions = this.messages = app.userManager.getUser().get('transactionList');
-		this.user = this.messages = app.userManager.getUser();
-
 		var that = this;
 			toBeAppended = [],
 			html = "",
 			i = 0;
 
 		for (i = 0; i < this.transactions.length; i++){
-			this.transactions.at(i).set("stateText", Constants.stateText[this.transactions.at(i).get("state") ]);
-			this.transactions.at(i).set("startDateText", Utilities.getDateString(this.transactions.at(i).get("startTime")));
-			toBeAppended[i] = this.transactionTemplate(this.transactions.at(i).toJSON());
-			this.transactionLookup[this.transactions.at(i).get("transactionId")] = i;
+			transactionList.at(i).set("stateText", Constants.stateText[transactionList.at(i).get("state") ]);
+			transactionList.at(i).set("startDateText", Utilities.getDateString(transactionList.at(i).get("startTime")));
+			toBeAppended[i] = this.transactionTemplate(transactionList.at(i).toJSON());
+			this.transactionLookup[transactionList.at(i).get("transactionId")] = i;
 		}
 		html = toBeAppended.join("");
 		this.transactionContainer.append(html);
@@ -44,9 +42,7 @@ var PersonalHistoryView = Backbone.View.extend({
 
 	renderNotifications: function(){
 		this.notificationContainer = $("#notificationHistoryContent");
-		this.notifications = this.messages = app.userManager.getUser().get('notificationList');
-		this.user = this.messages = app.userManager.getUser();
-
+		this.notifications = this.messages = app.u+serManager.getUser().get('notificationList');
 		var that = this;
 			toBeAppended = [],
 			html = "",
@@ -74,7 +70,12 @@ var PersonalHistoryView = Backbone.View.extend({
 	bindNotificationEvents: function(){
 		//TODO: bind notification events
 	},
+	renderTransactionError: function(){
 
+	},
+	renderNotificationError:function(){
+
+	},
 	openTransactionDetail: function(transaction, user){
 		app.navigate(user.get("userId")+"/transaction/"+transaction.get("transactionId")+"/personal/history");
 		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "personal/history");
