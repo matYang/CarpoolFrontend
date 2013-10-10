@@ -77,34 +77,34 @@ var User = Backbone.Model.extend({
         },
 
         parse: function(data){
+                if (typeof data !== 'undefined' && typeof data.userId !== 'undefined'){
+                    data.userId = parseInt(data.userId, 10);
 
-                data.userId = parseInt(data.userId, 10);
+                        data.age = parseInt(data.age, 10);
+                        data.gender = parseInt(data.gender, 10);
+                        data.birthday = Utilities.castFromAPIFormat(data.birthday);
 
-                data.age = parseInt(data.age, 10);
-                data.gender = parseInt(data.gender, 10);
-                data.birthday = Utilities.castFromAPIFormat(data.birthday);
+                        data.location = new UserLocation(data.location, {'parse': true});
+                        data.searchRepresentation = new SearchRepresentation(data.searchRepresentation, {'parse': true});
 
-                data.location = new UserLocation(data.location, {'parse': true});
-                data.searchRepresentation = new SearchRepresentation(data.searchRepresentation, {'parse': true});
+                        data.lastLogin = Utilities.castFromAPIFormat(data.lastLogin);
+                        data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
-                data.lastLogin = Utilities.castFromAPIFormat(data.lastLogin);
-                data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
+                        data.emailActivated = data.emailActivated === 'true';
+                        data.phoneActivated = data.phoneActivated === 'true';
+                        data.emailNotice = data.emailNotice === 'true';
+                        data.phoneNotice = data.phoneNotice === 'true';
+                        data.state = parseInt(data.state, 10);
+                        data.searchState = parseInt(data.searchState, 10);
 
-                data.emailActivated = data.emailActivated === 'true';
-                data.phoneActivated = data.phoneActivated === 'true';
-                data.emailNotice = data.emailNotice === 'true';
-                data.phoneNotice = data.phoneNotice === 'true';
-                data.state = parseInt(data.state, 10);
-                data.searchState = parseInt(data.searchState, 10);
-
-                data.level = parseInt(data.level, 10);
-                data.averageScore = parseInt(data.averageScore, 10);
-                data.totalTranscations = parseInt(data.totalTranscations, 10);
+                        data.level = parseInt(data.level, 10);
+                        data.averageScore = parseInt(data.averageScore, 10);
+                        data.totalTranscations = parseInt(data.totalTranscations, 10);
 
 
-                //this is just used for presentation, no direct API call to update it
-                data.accountValue = parseFloat(data.accountValue);
-
+                        //this is just used for presentation, no direct API call to update it
+                        data.accountValue = parseFloat(data.accountValue);
+                }
                 return data;
         },
 

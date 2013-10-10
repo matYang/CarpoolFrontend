@@ -220,9 +220,6 @@
 
 	MessageManager.prototype.fetchRecents = function(callback) {
 
-		this.recents = testMockObj.sampleMessages;
-		callback();
-
 		var self = this;
 		//confront to API requirements
 		this.recents.overrideUrl(this.apis.DM_recent);

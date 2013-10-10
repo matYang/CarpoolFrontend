@@ -125,9 +125,15 @@ var TopBarView = Backbone.View.extend({
 							Constants.dLog(response);
 
 							//fetching session, with async flag to true
-							app.sessionManager.fetchSession(true, function(){
-								app.userManager.sessionUser = app.sessionManager.getSessionUser();
-								app.navigate(app.sessionManager.getUserId() + "/main", true);
+							app.sessionManager.fetchSession(true, {
+								success: function(){
+									app.userManager.sessionUser = app.sessionManager.getSessionUser();
+									app.navigate(app.sessionManager.getUserId() + "/main", true);
+								},
+								error: function(){
+									Info.alert("登录失败");
+								}
+								
 							});
 						},
 
@@ -160,9 +166,14 @@ var TopBarView = Backbone.View.extend({
 				Constants.dLog("server logout response: ");
 				Constants.dLog(response);
 
-				app.sessionManager.fetchSession(true, function(){
-					app.userManager.sessionUser = app.sessionManager.getSessionUser();
-					app.navigate("front", true);
+				app.sessionManager.fetchSession(true, {
+					success: function(){
+						app.userManager.sessionUser = app.sessionManager.getSessionUser();
+						app.navigate("front", true);
+					},
+					error: function(){
+						Info.alert("登出失败，请稍后再试");
+					}
 				});
 			},
 
