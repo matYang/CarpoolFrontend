@@ -48,7 +48,12 @@ var AppRouter = Backbone.Router.extend({
 
 		//determine if the user has logged in or not
 		this.sessionManager.fetchSession(false, {
-			
+			success: function(){
+				Info.log("session fetch success");
+			},
+			error: function(){
+				info.log("session fetch failed, user not logged in");
+			}
 		});
 
 		//intializing search query states & filter states, look into localStorage to find previous history

@@ -56,7 +56,7 @@ var Config = {
 				return i+1;
 			}
 		}
-		console.warn("Config::getPostStepIndex:: invalid postState, using the default step 1");
+		Info.warn("Config::getPostStepIndex:: invalid postState, using the default step 1");
 		return 1;
 	},
 
@@ -89,7 +89,7 @@ var Config = {
 				return i+1;
 			}
 		}
-		console.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
+		Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
 		return 1;
 	}
 

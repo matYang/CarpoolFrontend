@@ -67,7 +67,7 @@ var PersonalView = Backbone.View.extend({
 					this.activeChildView = new PersonalUtilityView({'intendedUserId': this.curUserId});
 					break;
 			default:
-				console.warn("PersonalView:: createChildView:: this.viewState matchin failed in switch, using Watch as default");
+				Info.warn("PersonalView:: createChildView:: this.viewState matchin failed in switch, using Watch as default");
 				this.activeChildView = new PersonalWatchView({'intendedUserid': this.curUserId});
 				break;
 		}

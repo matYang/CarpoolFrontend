@@ -70,7 +70,7 @@ var LocationPickerView = Backbone.View.extend({
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
-				console.log(data);
+				Info.log(data);
 			}
 		});
 	},
@@ -118,7 +118,7 @@ var LocationPickerView = Backbone.View.extend({
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
-				console.log(data);
+				Info.log(data);
 			}
 		});
 	},
@@ -163,7 +163,7 @@ var LocationPickerView = Backbone.View.extend({
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
-				console.log(data);
+				Info.log(data);
 			}
 		});
 	},
@@ -173,7 +173,7 @@ var LocationPickerView = Backbone.View.extend({
 		this.location.set('hierarchyNameList',[this.countryName, this.provinceName, this.cityName, this.customizedName])
 					 .set('customDepthIndex', Config.defaultCustomDepthIndex);
 		this.location.autoFill();
-		console.log(new UserLocation(this.location.toJSON(), {'parse': true}).toString());
+		Info.log(new UserLocation(this.location.toJSON(), {'parse': true}).toString());
 		if (typeof this.callback === 'function'){
 			this.callback();
 		}

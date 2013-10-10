@@ -102,7 +102,7 @@ var FrontPageView = Backbone.View.extend({
 				"departureTimeSlot": 0,
 				"arrivalTimeSlot": 0
 			});
-			var key = 	searchString.toString();
+			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
 				app.navigate(that.user.get("userId")+"/main/"+key, true);
@@ -157,8 +157,9 @@ var FrontPageView = Backbone.View.extend({
 	},
 
 	loginAlert: function() {
-			alert("请先登录。若是已经登陆，请刷新页面。");
+			Info.alert("请先登录。若是已经登陆，请刷新页面。");
 	},
+	
 	close:function(){
 		if (!this.isClosed){
 			$("#quickStartButton1").off();
