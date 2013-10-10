@@ -43,9 +43,9 @@
 	var spD = new SearchRepresentation(spC.toJSON(), {'parse': true});
 	var spE = new SearchRepresentation();
 	spE.castFromString(spD.toString());
-	console.log("RepresentationTest: SearchRepresentation: " + spE.toString());
+	Info.log("RepresentationTest: SearchRepresentation: " + spE.toString());
 	assert(spA.toString() === spE.toString());
-	console.log(spE);
+	Info.log(spE);
 
 
 

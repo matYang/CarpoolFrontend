@@ -6,11 +6,11 @@ var Constants = {
 
 	//all console logs/warns should use these methods to help IE compatability
 	dLog: function(message){
-		console.log(message);
+		Info.log(message);
 	},
 
 	dWarn: function(err){
-		console.warn(err);
+		Info.warn(err);
 	},
 
 	origin: 'http://localhost:8015',
