@@ -1,22 +1,10 @@
 var PersonalView = Backbone.View.extend({
-	/*
-	//could use:
-	el: $('#content'),
-
-	events: {
-		"click #profilePage_historyTab": "onSelectTab",
-		"click #profilePage_eventTab": "onSelectTab",
-		"click #profilePage_watchTab": "onSelectTab",
-		"click #profilePage_utilityTab": "onSelectTab"
-	},
-	*/
 	initialize: function (params) {
 		_.bindAll(this, 'preRender','render', 'switchChildView', 'createChildView', 'getCurrentUserId', 'bindEvents', 'close');
 		app.viewRegistration.register("personal", this, true);
 		this.isClosed = false;
 
 		this.template = _.template(tpl.get('personalPage/personal'));
-
 		//this curUserId is used to record the id of the user the personalPage is currently displaying
 		this.curUserId = Utilities.toInt(params.intendedUserId);
 		this.activeViewState = params.viewState;
@@ -89,12 +77,6 @@ var PersonalView = Backbone.View.extend({
 
 	bindEvents: function(){
 		var that = this;
-		// $('#profilePage_watchTab').on('click', function(){
-		// 	//I have grouped the four states into one session entity in router, thus doing a navigation will not alter the state of the rouer, which means the url function will not fire, a manuel switch is mandatory
-		// 	app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/watch");
-		// 	that.switchChildView("watch");
-		// });
-
 		$('#profilePage_messageTab').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/message");
 			that.switchChildView("message");

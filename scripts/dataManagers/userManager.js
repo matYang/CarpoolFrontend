@@ -632,11 +632,9 @@
 
             success:function(model, response){
 				//TODO
-				self.user.set('historyList', messageHistory);
-
 				self.historyList_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(messageHistory);
 				}
             },
 
@@ -649,7 +647,6 @@
             }
         });
 	};
-
 
 	UserManager.prototype.fetchTransactionList = function(intendedUserId, callback) {
 
@@ -672,10 +669,10 @@
             dataType:'json',
 
             success:function(model, response){
-				self.user.set('transactionList', transactionList);
+            	//caching?
 				self.transactionList_timeStamp = new Date();
 				if(callback){
-					callback.succerss();
+					callback.success(transactionList);
 				}
             },
 
@@ -713,7 +710,7 @@
 				self.user.set('notificationList', notificationList);
 				self.notificationList_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success()
 				}
             },
             error: function(model, response){

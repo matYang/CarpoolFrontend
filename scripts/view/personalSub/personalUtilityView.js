@@ -1,4 +1,3 @@
-
 var PersonalUtilityView = Backbone.View.extend({
 
 	initialize: function (user) {
