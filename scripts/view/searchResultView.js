@@ -10,13 +10,17 @@ var SearchResultView = Backbone.View.extend({
 		this.singleSearchResultTemplate = _.template(tpl.get('Module/SimpleMessage'));
 
 
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		if (isSearchResult){
 			this.domContainer = $(".searchResultDisplay");
 		} else {
 			this.domContainer = $("#quickStart_resultPanel");
 		}
-		this.render(0);
+		if (this.messageList.length > 0) {
+			this.render(0);
+		} else {
+			$("#searchResultDisplayPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+		}
 		this.bindPageNumber();
 		if (!isSearchResult){
 			$(".searchResultBoxContainer").removeClass("searchResultBoxContainer").addClass("frontBoxContainer");

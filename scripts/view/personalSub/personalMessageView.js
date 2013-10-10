@@ -9,7 +9,7 @@ var PersonalMessageView = Backbone.View.extend({
 		this.messageTemplate = _.template(tpl.get('personalPage/personalDetailMessage'));
 
 		this.curUserId = params.intendedUserId;
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		this.domContainer.append(this.wrapperTemplate);
 		app.userManager.fetchMessageHistory(this.curUserId , this.render);
 	},

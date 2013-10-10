@@ -65,13 +65,16 @@ var MessagePublishView = MessagePostView.extend({
 		var messages = this.toMessage();
 		var length = messages.length;
 		for (var r = 0; r < length; r++){
-			app.messageManager.postMessage(messages.at(r), function(){
-				alert("Message Post successful");
-				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
-			});
+			app.messageManager.postMessage(messages.at(r), {"success":this.success, "error":this.error});
 		}
 	},
-
+	success: function(){
+		alert("Message Post successful");
+		app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
+	},
+	error:function(){
+		
+	},
 	close: function (){
 		$('#publish_nextStep').off();
 		$('#publish_back').off();

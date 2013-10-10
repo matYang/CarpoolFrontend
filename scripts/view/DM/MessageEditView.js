@@ -76,11 +76,15 @@ var MessageEditView = MessagePostView.extend({
 		var messages = this.toMessage();
 		var length = messages.length;
 		for (var r = 0; r < length; r++){
-			app.messageManager.updateMessage(messages.at(r), function(){
-				alert("Message Post successful");
-				app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
-			});
+			app.messageManager.updateMessage(messages.at(r), {"success":this.success, "error":this.error});
 		}
+	},
+	success: function(){
+		alert("Message Post successful");
+		app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
+	},
+	error: function(){
+		
 	},
 	reverseMessage: function(message){
 		var toSubmit = MessagePostView.prototype.toSubmit;

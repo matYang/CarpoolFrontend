@@ -10,11 +10,11 @@ var Config = {
 
 	//-------------- PersonalView state transfer -------------
 	getDefaultPersonalViewState: function(){
-		return "watch";
+		return "history";
 	},
 
 	getPossiblePersonalViewStates: function(){
-		return ['watch', 'message', 'history', 'utility'];
+		return [ 'message', 'history', 'utility'];
 	},
 
 	validatePersonalViewState: function(personalViewState){

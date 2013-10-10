@@ -38,7 +38,7 @@ var MainPageView = Backbone.View.extend ({
 
 	messageSearch: function(){
 		//Todo: Change to accept return date;
-		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
 
 	},
 
@@ -109,7 +109,6 @@ var MainPageView = Backbone.View.extend ({
 			var page = $("#pageNumberInput").val();
 			if(!page) page = 1;
 			else if (page>me.pages) page = me.pages;
-			debugger;
 			me.toPage(page);
 		})
 		$('#pageNumberInput').on('keypress', function(e){
@@ -139,6 +138,10 @@ var MainPageView = Backbone.View.extend ({
 		this.toPage(1);
 		this.setPageNavigator();
 	},
+	renderError: function(){
+		$("#searchResultDisplayPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+
+	},
 	onClickTime: function (e, parentId) {
 		var me = $('#'+e.target.getAttribute('id'));
 		$("#"+parentId+">.selected").removeClass('selected').addClass('notSelected');
@@ -161,10 +164,9 @@ var MainPageView = Backbone.View.extend ({
 			app.navigate("main/" + encodedSearchKey);
 		}
 		//TODO: change to accept return date
-		app.messageManager.searchMessage(this.searchRepresentation, this.renderSearchResults);
+		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
 	},
 	refresh: function () {
-		debugger;
 		if (this.searchResultView){
 			this.searchResultView.close();
 		}
@@ -174,7 +176,7 @@ var MainPageView = Backbone.View.extend ({
 	},
 	filterMessage: function(messages){
 		var filtered = new Messages();
-		var l = messages.length;
+		var l = this.messages ? this.messages.length : 0;
 
 		for (var i = 0; i < l; i++ ) {
 			var m = messages.at(i);
@@ -215,18 +217,24 @@ var MainPageView = Backbone.View.extend ({
 		}
 	},
 	updateLocation: function (id) {
-		$("#"+id).val(this.searchRepresentation.get("departureLocation").get("city"));
+		if ( id === "searchLocationInput_from") {
+			$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
+			$("#customizeLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("point"));
+		} else {
+			$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
+			$("#customizeLocationInput_from").val(this.searchRepresentation.get("arrivalLocation").get("point"));
+		}
 	},
 
 	bindEvents: function(){
 		var that = this;
 
 		$("#searchLocationInput_from").on('click', function(e){
-			this.locationPickerView = new LocationPickerView(this.searchRepresentation.get("departureLocation"), this, "searchLocationInput_from");
+			that.locationPickerView = new LocationPickerView(that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
 		});
 
 		$("#searchLocationInput_to").on('click', function(e){
-			this.locationPickerView = new LocationPickerView(this.searchRepresentation.get("arrivalLocation") , this, "searchLocationInput_from");
+			that.locationPickerView = new LocationPickerView(that.searchRepresentation.get("arrivalLocation") , that, "searchLocationInput_from");
 		});
 
 		$("#timeSelections1>.button").on('click', function(e){
@@ -247,6 +255,15 @@ var MainPageView = Backbone.View.extend ({
 
 		$("#refreshButton").on('click', function(e){
 			that.refresh(e);
+		});
+
+		$("#customizeLocationInput_from").on("blur", function(e) {
+			that.searchRepresentation.get("departureLocation").set("point", this.value);
+			that.searchRepresentation.get("departureLocation").reverseFill();
+		});
+		$("#customizeLocationInput_to").on("blur", function(e) {
+			that.searchRepresentation.get("arrivalLocation").set("point", this.value);
+			that.searchRepresentation.get("arrivalLocation").reverseFill();
 		});
 
 	},
@@ -282,12 +299,20 @@ var MainPageView = Backbone.View.extend ({
 			$("#timeSelections2>.button").off();
 			$("#searchResultButton").off();
 			$("#refreshButton").off();
-			$("#genderSelections>.button").off();
+			$("#searchFilterTimeContainer1>.button").off();
+			$("#searchFilterTimeContainer2>.button").off();
 			$("#typeSelections>.button").off();
+			$("#customizeLocationInput_from").off();
+			$("#customizeLocationInput_to").off();
 			$(".pageNumber").off();
+			$("#oneWay").off();
+			$("#round").off();
+			$("#goToSpecificPage>button").off();
+			$('#pageNumberInput').off();
 			if (this.searchResultView) {
 				this.searchResultView.close();
 			}
+
 			//get ride of the view
 			this.unbind();
 			$(this.el).empty();

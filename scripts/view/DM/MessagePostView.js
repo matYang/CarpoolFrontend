@@ -36,7 +36,7 @@ var MessagePostView = Backbone.View.extend({
 		this.step3Template = _.template(tpl.get('Module/Publish_step3'));
 		this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
 		
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 		this.userId = this.user.get("userId");
 		
 
@@ -397,7 +397,12 @@ var MessagePostView = Backbone.View.extend({
 			}
 		}
 		else if (previousStepIndex === 3){
+			$("#seats").off();
+			$("#seats_1").off();
 			$('#publish_finish').off();
+			$("#priceList_add").off();
+			$("#priceList_minus").off();
+			$("#conditionalPriceSwitch").off();
 			$('#publish_description_input').off();
 		}
 	},
