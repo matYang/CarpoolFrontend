@@ -15,21 +15,9 @@ var TopBarView = Backbone.View.extend({
 		this.loggedInTemplate = _.template(tpl.get('topBar/topBar-loggedIn'));
 		this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
 
-
-		var self = this;
-		if (!app.sessionManager.hasSession()){
-			self.topBarUser = app.sessionManager.getSessionUser();
-
-			self.render();
-			self.bindEvents();
-		}
-		//if has session, fetch before continue
-		else{
-			self.topBarUser = app.sessionManager.getSessionUser();
-
-			self.render();
-			self.bindEvents();
-		}
+		this.sessionUser = app.sessionManager.getSessionUser();
+		this.render();
+		this.bindEvents();
 
 	},
 
@@ -46,82 +34,83 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	bindEvents: function(){
-		var that = this;
+		var self = this,
+			idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
 
 
 		$('#logo').on('click', function(){
-			app.navigate(app.sessionManager.getUserId() + "/front" , true);
+			app.navigate(idString  + "/front" , true);
 		});
 		$('.navigate_main').on('click', function(){
-			app.navigate(app.sessionManager.getUserId() + "/main" , true);
+			app.navigate(app.sessionManager.getUserId() + "/main/" + self.sessionUser.get('searchRepresentation') , true);
 		});
 		$('.navigate_personal').on('click', function(){
-			app.navigate(app.sessionManager.getUserId() + "/personal/" + that.topBarUser.id , true);
+			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() , true);
 		});
 		$('.navigate_feedBack').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/post" , true);
 		});
 
 		$('#messages').on('mouseenter', function(){
-			that.showMessage();
+			self.showMessage();
 			$("#messages").addClass("whiteBackground");
 		});
 		$('#likes').on('mouseenter', function(){
-			that.showLikes();
+			self.showLikes();
 			$("#likes").addClass("whiteBackground");
 		});
 		$('#favorites').on('mouseenter', function(){
-			that.showFavorite();
+			self.showFavorite();
 			$("#favorites").addClass("whiteBackground");
 		});
 		$('#profilePicture').on('mouseenter', function(){
-			that.showProfile();
+			self.showProfile();
 		});
 		$('#messages').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "messageDropdown" && e.toElement.parentElement.id !== "messageDropdown"){
-				that.hideMessage();
+				self.hideMessage();
 			}
 		});
 		$('#likes').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "likeDropdown" && e.toElement.parentElement.id !== "likeDropdown"){
-				that.hideLikes();
+				self.hideLikes();
 			}
 		});
 		$('#favorites').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown"){
-				that.hideFavorite();
+				self.hideFavorite();
 			}
 		});
 		$('#profilePicture').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown"){
-				that.hideProfile();
+				self.hideProfile();
 			}
 		});
 		$('#favoriteDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "favorites"){
-				that.hideFavorite();
+				self.hideFavorite();
 			}
 		});
 		$('#messageDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "messages"){
-				that.hideMessage();
+				self.hideMessage();
 			}
 		});
 		$('#likeDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "likes"){
-				that.hideLikes();
+				self.hideLikes();
 			}
 		});
 		$('#profileDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "profilePicture"){
-				that.hideProfile();
+				self.hideProfile();
 			}
 		});
-		// $('#logout').on('mouseleave', function(e)) {
-		// 	if (e.toElement.id !== "profilePicture"){
-		// 		that.hideLikes();
-		// 	}
-		// });
+		//	$('#logout').on('mouseleave', function(e)) {
+		//		if (e.toElement.id !== "profilePicture"){
+		//			self.hideLikes();
+		//		}
+		//	});
 		if (!app.sessionManager.hasSession()){
 			$('#signup_button').on('click', function(){
 				app.navigate("/register", true);
@@ -137,7 +126,7 @@ var TopBarView = Backbone.View.extend({
 
 							//fetching session, with async flag to true
 							app.sessionManager.fetchSession(true, function(){
-								app.userManager.topBarUser = app.sessionManager.getSessionUser();
+								app.userManager.sessionUser = app.sessionManager.getSessionUser();
 								app.navigate(app.sessionManager.getUserId() + "/main", true);
 							});
 						},
@@ -159,7 +148,7 @@ var TopBarView = Backbone.View.extend({
 		else{
 			//TODO add a logout btn
 			$('#logout').on('click', function(){
-				that.logout();
+				self.logout();
 			});
 		}
 
@@ -172,7 +161,7 @@ var TopBarView = Backbone.View.extend({
 				Constants.dLog(response);
 
 				app.sessionManager.fetchSession(true, function(){
-					app.userManager.topBarUser = app.sessionManager.getSessionUser();
+					app.userManager.sessionUser = app.sessionManager.getSessionUser();
 					app.navigate("front", true);
 				});
 			},

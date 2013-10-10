@@ -46,7 +46,7 @@ var Utilities = {
 				encodedArray[3] = this.castFromAPIFormat(encodedArray[3]);
 				if (encodedArray.length === 5) {
 					encodedArray[4] = this.castFromAPIFormat(encodedArray[4]);
-				}	
+				}
 				return encodedArray;
 			}
 			else{

@@ -69,7 +69,7 @@
 				self.releaseManager();
 
 				if(callback){
-					callback();
+					callback.success();
 				}
             },
 
@@ -78,6 +78,9 @@
                 Constants.dLog(response);
 
                 self.isLoggedIn = false;
+                if(callback){
+					callback.error();
+				}
             }
         });
 

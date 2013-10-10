@@ -12,7 +12,7 @@ var FrontPageView = Backbone.View.extend({
 		this.template = _.template(tpl.get('front'));
 		this.messageTemplate = _.template(tpl.get('Module/Front'));
 
-		this.user = app.userManager.getTopBarUser();
+		this.user = app.sessionManager.getSessionUser();
 
 		this.searchRepresentation = new SearchRepresentation({
 			'isRoundTrip':false,
@@ -36,9 +36,7 @@ var FrontPageView = Backbone.View.extend({
 
 	getRecents: function(){
 		//passing renderRecents as the callback to be executed upon successful fetch
-		// app.messageManager.fetchRecents(this.renderRecents);
 		$("#quickStart_resultPanel").empty();
-		debugger;
 		app.messageManager.searchMessage(this.searchRepresentation, this.renderRecents);
 
 	},
@@ -58,7 +56,6 @@ var FrontPageView = Backbone.View.extend({
 		$(this.el).append(this.template);
 		$("#quickStart_day>.quickStart_value").html(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
 		$("#quickStart_selectedDate").html(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
-		debugger;
 		$("#quickStart_from>.quickStart_value").html(this.searchRepresentation.get("departureLocation").get("city"));
 		$("#quickStart_to>.quickStart_value").html(this.searchRepresentation.get("arrivalLocation").get("city"));
 		$("#quickStart_cityInDescription").html(this.searchRepresentation.get("departureLocation").get("city"));
@@ -66,12 +63,12 @@ var FrontPageView = Backbone.View.extend({
 	},
 
 	bindEvents: function () {
-		var that = this;
+		var self = this;
 		$("#quickStart_from>.quickStart_value").on("mouseup", function(e){
-			this.locationPicker = new LocationPickerView(that.searchRepresentation.get("departureLocation"), that);
+			this.locationPicker = new LocationPickerView(self.searchRepresentation.get("departureLocation"), self);
 		});
 		$("#quickStart_to>.quickStart_value").on("mouseup", function(e){
-			this.locationPicker = new LocationPickerView(that.searchRepresentation.get("arrivalLocation"), that);
+			this.locationPicker = new LocationPickerView(self.searchRepresentation.get("arrivalLocation"), self);
 		});
 		$("#quickStart_day>.quickStart_value").on("mouseup", function (e){
 			$("#quickStart_dateinput").trigger("focus");
@@ -87,7 +84,8 @@ var FrontPageView = Backbone.View.extend({
 				d.setDate(inst.selectedDay);
 				d.setMonth(inst.selectedMonth);
 				d.setYear(inst.selectedYear);
-				this.searchRepresentation.get("departureDate") = d;
+				self.searchRepresentation.set("departureDate", d);
+
 				$("#quickStart_day>.quickStart_value").html(Utilities.getDateString(d));
 				$("#quickStart_selectedDate").html(Utilities.getDateString(d));
 			}
@@ -95,33 +93,35 @@ var FrontPageView = Backbone.View.extend({
 		$("#quickStartButton1").on("click", function(){
 			var searchString = new SearchRepresentation({
 				"isRoundTrip": false,
-				"departureLocation":that.fromLocation,
-				"arrivalLocation":that.toLocation,
-				"departureDate":that.date,
+				"departureLocation":self.fromLocation,
+				"arrivalLocation":self.toLocation,
+				"departureDate":self.date,
 				"departureTimeSlot": 0,
 				"arrivalTimeSlot": 0
 			});
-			var key = 	searchString.toString();
+
+			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
-				app.navigate(that.user.get("userId")+"/main/"+key, true);
+				app.navigate(app.sessionManager.getUserId() + "/main/" + key, true);
 			} else {
 				app.navigate("main/"+key, true);
 			}
 		});
+
 		$("#quickStartButton2").on("click", function(){
 			var searchString = new SearchRepresentation({
 				"isRoundTrip": false,
-				"departureLocation":that.fromLocation,
-				"arrivalLocation":that.toLocation,
-				"departureDate":that.date,
+				"departureLocation":self.fromLocation,
+				"arrivalLocation":self.toLocation,
+				"departureDate":self.date,
 				"departureTimeSlot": 0,
 				"arrivalTimeSlot": 0
 			});
-			var key = 	searchString.toString();
+			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
-				app.navigate(that.user.get("userId")+"/main/"+key, true);
+				app.navigate(app.sessionManager.getUserId() + "/main/" + key, true);
 			} else {
 				app.navigate("main/"+key, true);
 			}
@@ -129,14 +129,14 @@ var FrontPageView = Backbone.View.extend({
 	},
 
 	bindRecentsEvents: function(){
-		var that = this;
+		var self = this;
 
 		//define scope functions separately, do not make functions inside loops, use scope functions or function maker patterns
 		var callback_link = function(e){
 			if (app.sessionManager.hasSession()) {
-				app.navigate(that.user.get("userId")+"/Message/" + Utilities.getId(e.delegateTarget.id), true);
+				app.navigate(self.user.get("userId")+"/Message/" + Utilities.getId(e.delegateTarget.id), true);
 			} else {
-				that.loginAlert();
+				self.loginAlert();
 			}
 		};
 

@@ -29,7 +29,7 @@ var User = Backbone.Model.extend({
                         "emailNotice": false,
                         "phoneNotice": false,
                         "state": Constants.userState.normal,
-                        "searchState": Constants.userSearchState.universityAsk,
+                        "searchRepresentation": new SearchRepresentation(),
 
                         "level": 0,
                         "averageScore": 0,
@@ -85,6 +85,7 @@ var User = Backbone.Model.extend({
                 data.birthday = Utilities.castFromAPIFormat(data.birthday);
 
                 data.location = new UserLocation(data.location, {'parse': true});
+                data.searchRepresentation = new SearchRepresentation(data.searchRepresentation, {'parse': true});
 
                 data.lastLogin = Utilities.castFromAPIFormat(data.lastLogin);
                 data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
@@ -113,6 +114,7 @@ var User = Backbone.Model.extend({
                 json.birthday = Utilities.castToAPIFormat(this.get('birthday'));
 
                 json.location = this.get('location').toJSON();
+                json.searchRepresentation = this.get('searchRepresentation').toJSON();
 
                 //these 2 are actually ignored by server side, placing here for uniformity
                 json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));

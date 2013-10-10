@@ -47,7 +47,9 @@ var AppRouter = Backbone.Router.extend({
 		this.generalManager = new GeneralManager(this.sessionManager, this.userManager);
 
 		//determine if the user has logged in or not
-		this.sessionManager.fetchSession(false);
+		this.sessionManager.fetchSession(false, {
+			
+		});
 
 		//intializing search query states & filter states, look into localStorage to find previous history
 		this.searchQueryState = this.storage.getSearchQueryState();
