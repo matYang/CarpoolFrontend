@@ -15,17 +15,18 @@ var PersonalView = Backbone.View.extend({
 	},
 
 	preRender: function(){
-		this.user = app.userManager.getUser();
+		debugger;
+		this.sessionUser = app.sessionManager.getSessionUser();
 		this.render();
 		this.switchChildView(this.activeViewState);
-		if (this.user.get("userId") !== this.curUserId){
+		if (this.sessionUser.get("userId") !== this.curUserId){
 			$("#profilePage_utilityTab").html(" + 关注");
 		}
 		this.bindEvents();
 	},
 
 	render: function () {
-		this.domContainer.append(this.template(this.user.toJSON()));
+		this.domContainer.append(this.template(this.sessionUser.toJSON()));
 	},
 	renderError: function(){
 		Info.warn("Unable to fetch User data");
@@ -48,12 +49,12 @@ var PersonalView = Backbone.View.extend({
 			this.activeChildView.close();
 		}
 		var create = true;
+			debugger;
 		$('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
 		switch (this.activeViewState) {
-
-			case "watch":
-				$('#profilePage_watchTab').addClass('selectedTabButton');
-				this.activeChildView = new PersonalWatchView({'intendedUserId': this.curUserId});
+			case "social":
+				$('#profilePage_socialTab').addClass('selectedTabButton');
+				this.activeChildView = new PersonalSocialView({'intendedUserId': this.curUserId});
 				break;
 			case "message":
 				$('#profilePage_messageTab').addClass('selectedTabButton');
@@ -64,12 +65,14 @@ var PersonalView = Backbone.View.extend({
 				this.activeChildView = new PersonalHistoryView({'intendedUserId': this.curUserId});
 				break;
 			case "utility":
+				if (this.user.get("userId") === this.curUserId) {
 					$('#profilePage_utilityTab').addClass('selectedTabButton');
 					this.activeChildView = new PersonalUtilityView({'intendedUserId': this.curUserId});
-					break;
+				}
+				break;
 			default:
 				Info.warn("PersonalView:: createChildView:: this.viewState matchin failed in switch, using Watch as default");
-				this.activeChildView = new PersonalWatchView({'intendedUserid': this.curUserId});
+				this.activeChildView = new PersonalHistoryView({'intendedUserid': this.curUserId});
 				break;
 		}
 
@@ -78,6 +81,11 @@ var PersonalView = Backbone.View.extend({
 
 	bindEvents: function(){
 		var that = this;
+		$('#profilePage_socialTab').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/social");
+			that.switchChildView("social");
+		});
+
 		$('#profilePage_messageTab').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/message");
 			that.switchChildView("message");
@@ -89,11 +97,11 @@ var PersonalView = Backbone.View.extend({
 		});
 
 		$('#profilePage_utilityTab').on('click', function(){
+				debugger;
 			if (app.sessionManager.getUserId() === that.curUserId) {
 				app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/utility");
 				that.switchChildView("utility");
 			} else {
-				debugger;
 				var user = app.sessionManager.getSessionUser().get('socialList').get(that.curUserId);
 				//if user has watched this user
 				if (typeof user === 'object'){
@@ -109,7 +117,38 @@ var PersonalView = Backbone.View.extend({
 			}
 		});
 	},
+	bindWatchEvent: function(){
+		if (this.user.get("userId") !== this.curUserId) {
+			$('#profilePage_utilityTab').on("click", function(){
+				app.userManager.watchUser(this.curUserId, {
+					"success":that.watchSuccess,
+					"error":that.watchError
+				});	
+			});			
+		}
+	},
 
+	watchSuccess: function(){
+		var that = this;
+		$("#profilePage_utilityTab").html("已关注");
+		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>")
+		$('#profilePage_utilityTab').off();
+		$("#deWatch").on("click", function(){
+			app.userManager.deWatchUser(this.curUserId, {
+					"success":that.deWatchSuccess,
+					"error":that.deWatchError
+				});	
+		});
+	},
+	watchError: function(){},
+	deWatchSuccess:function(){
+		$("#deWatch").off();
+		$("#deWatch").remove();
+		this.bindWatchEvent();
+	},
+	deWatchError:function(){
+
+	},
 	close: function () {
 		if (!this.isClosed){
 			if (this.activeChildView){

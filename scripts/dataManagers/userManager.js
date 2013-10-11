@@ -476,10 +476,6 @@
 		});
 	};
 
-
-
-
-
 	/********************* User Relations ***************************/
 
 	UserManager.prototype.watchUser = function(targetUserId, callback) {
@@ -566,8 +562,6 @@
 	};
 
 
-
-
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
 
 		var self = this;
@@ -590,11 +584,9 @@
             dataType:'json',
 
             success:function(model, response){
-				self.user.set('socialList', watchedUsers);
-
 				self.socialList_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(watchedUsers);
 				}
             },
             error: function(model, response){
