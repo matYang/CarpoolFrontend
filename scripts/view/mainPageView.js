@@ -21,25 +21,27 @@ var MainPageView = Backbone.View.extend ({
 		//define the template
 		this.template = _.template(tpl.get('main'));
 		this.searchRepresentation = new SearchRepresentation();
-		this.searchRepresentation.set("departureLocation", new UserLocation());
-		this.searchRepresentation.set("arrivalLocation", new UserLocation());
+		// this.searchRepresentation.set("departureLocation", new UserLocation());
+		// this.searchRepresentation.set("arrivalLocation", new UserLocation());
 		this.currentPage = 0;
 		if (params) {
 			this.searchRepresentation.castFromString(params.searchKey);
 		}
+		else if (app.sessionManager.hasSession()){
+			this.searchRepresentation = this.user.get('searchRepresentation');
+		}
+		else{
+			this.searchRepresentation = app.storage.getSearchRepresentationCache();
+		}
 
 		//after data intialiazation, start render curreny view
 		this.render();
-		//lauch the async search call, pass results-rendering method as callback
 		this.messageSearch();
-
 		this.bindEvents();
 	},
 
 	messageSearch: function(){
-		//Todo: Change to accept return date;
 		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
-
 	},
 
 	render: function () {
@@ -54,6 +56,11 @@ var MainPageView = Backbone.View.extend ({
 			minDate: new Date(),
 			onSelect:function(text,inst){
 				var d = new Date();
+				d.setDate(inst.selectedDay);
+				d.setMonth(inst.selectedMonth);
+				d.setYear(inst.selectedYear);
+				self.searchRepresentation.set("departureDate", d);
+				$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
 			}
 		});
 		$("#searchDateInput_return").datepicker({
@@ -63,10 +70,16 @@ var MainPageView = Backbone.View.extend ({
 			minDate: new Date(),
 			onSelect:function(text,inst){
 				var d = new Date();
+				d.setDate(inst.selectedDay);
+				d.setMonth(inst.selectedMonth);
+				d.setYear(inst.selectedYear);
+				self.searchRepresentation.set("arrivalDate", d);
+				$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
 			}
 		});
-		$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").toUiString());
-		$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").toUiString());
+		this.updateLocation('searchLocationInput_from');
+		this.updateLocation('searchLocationInput_to');
+
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
 		$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
 		if (me.searchRepresentation.get("targetType")%2 === 0 ) {
@@ -90,9 +103,9 @@ var MainPageView = Backbone.View.extend ({
 			$("#searchDateInput_return").hide();
 			$("#searchFilterTimeContainer2").slideUp(200);
 			$("#filterBox").animate({
-			    height: "120px"
+				height: "120px"
 			}, 200);
-			me.searchRepresentation.set("targetType", Constants.userSearchState.universityAsk);
+			me.searchRepresentation.set("isRoundTrip", false);
 		});
 		$("#round").on("click", function(){
 			me.filter.isRoundTrip = true;
@@ -101,16 +114,16 @@ var MainPageView = Backbone.View.extend ({
 			$("#searchDateInput_return").show();
 			$("#searchFilterTimeContainer2").slideDown(200);
 			$("#filterBox").animate({
-			    height: '146px'
+				height: '146px'
 			}, 200);
-			me.searchRepresentation.set("targetType", Constants.userSearchState.universityHelp);
+			me.searchRepresentation.set("isRoundTrip", true);
 		});
 		$("#goToSpecificPage>button").on("click", function(){
 			var page = $("#pageNumberInput").val();
 			if(!page) page = 1;
 			else if (page>me.pages) page = me.pages;
 			me.toPage(page);
-		})
+		});
 		$('#pageNumberInput').on('keypress', function(e){
 			var code = (e.keyCode ? e.keyCode : e.which);
 			if (code === 13){
@@ -138,10 +151,11 @@ var MainPageView = Backbone.View.extend ({
 		this.toPage(1);
 		this.setPageNavigator();
 	},
+
 	renderError: function(){
 		$("#searchResultDisplayPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
-
 	},
+
 	onClickTime: function (e, parentId) {
 		var me = $('#'+e.target.getAttribute('id'));
 		$("#"+parentId+">.selected").removeClass('selected').addClass('notSelected');
@@ -149,6 +163,7 @@ var MainPageView = Backbone.View.extend ({
 		var time = e.target.getAttribute("data-id");
 		this.filter.time1 = time;
 	},
+
 	onClickType: function (e) {
 		var me = $('#'+e.target.getAttribute('id'));
 		$("#typeSelections>.selected").removeClass('selected').addClass('notSelected');
@@ -156,16 +171,17 @@ var MainPageView = Backbone.View.extend ({
 		var type = e.target.getAttribute("data-id");
 		this.filter.type = type;
 	},
+
 	submitSearch: function () {
-		
 		if (app.sessionManager.hasSession()) {
-			app.navigate(this.user.get("userId") + "/main/" + encodedSearchKey);
+			app.navigate(app.sessionManager.getUserId() + "/main/" + this.searchRepresentation.toString());
 		} else {
-			app.navigate("main/" + encodedSearchKey);
+			app.navigate("main/" + this.searchRepresentation.toString());
 		}
-		//TODO: change to accept return date
-		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults,"error":this.renderError});
+		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults, "error":this.renderError});
+		app.storage.setSearchRepresentationCache(this.searchRepresentation);
 	},
+
 	refresh: function () {
 		if (this.searchResultView){
 			this.searchResultView.close();
@@ -174,6 +190,7 @@ var MainPageView = Backbone.View.extend ({
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
 
 	},
+
 	filterMessage: function(messages){
 		var filtered = new Messages();
 		var l = this.messages ? this.messages.length : 0;
@@ -185,7 +202,7 @@ var MainPageView = Backbone.View.extend ({
 			if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))){
 				if (this.filterTime(this.filter.time1, dt)) {
 					filtered.add(m);
-				} 
+				}
 				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time2, at)) {
 					filtered.add(m);
 				}
@@ -201,28 +218,28 @@ var MainPageView = Backbone.View.extend ({
 		}
 		return filtered;
 	},
+
 	filterTime: function(time, timeslot){
-		if (timeslot == 0) {
+		if (time === 'all' || timeslot === Constants.DayTimeSlot.all) {
 			return true;
-		} else if ( time === "morning" && ((timeslot<=12 && timeslot >= 0) || timeslot === 24 || timeslot === 25 || timeslot === 28)) {
+		} else if ( time === "morning" && timeslot === Constants.DayTimeSlot.morning) {
 			return true;
-		} else if ( time === "afternoon" && (timeslot === 26 || (timeslot<=17 && timeslot >12))) {
+		} else if ( time === "afternoon" && timeslot === Constants.DayTimeSlot.afternoon) {
 			return true;
-		} else if ( time === "night" && ((timeslot>17 && timeslot <=23) || timeslot === 27)) {
-			return true;
-		} else if ( time === "all") {
+		} else if ( time === "night" && timeslot === Constants.DayTimeSlot.night) {
 			return true;
 		} else {
 			return false;
 		}
 	},
+
 	updateLocation: function (id) {
 		if ( id === "searchLocationInput_from") {
 			$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
 			$("#customizeLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("point"));
 		} else {
 			$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
-			$("#customizeLocationInput_from").val(this.searchRepresentation.get("arrivalLocation").get("point"));
+			$("#customizeLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("point"));
 		}
 	},
 
@@ -234,7 +251,7 @@ var MainPageView = Backbone.View.extend ({
 		});
 
 		$("#searchLocationInput_to").on('click', function(e){
-			that.locationPickerView = new LocationPickerView(that.searchRepresentation.get("arrivalLocation") , that, "searchLocationInput_from");
+			that.locationPickerView = new LocationPickerView(that.searchRepresentation.get("arrivalLocation") , that, "searchLocationInput_to");
 		});
 
 		$("#timeSelections1>.button").on('click', function(e){
@@ -267,11 +284,12 @@ var MainPageView = Backbone.View.extend ({
 		});
 
 	},
+
 	toPage: function(page){
 		this.searchResultView.toPage(page);
 		this.currentPage = page;
-		
 	},
+
 	setPageNavigator: function(){
 		$(".pageNumber").off();
 		
@@ -288,9 +306,10 @@ var MainPageView = Backbone.View.extend ({
 		var that = this;
 		$(".pageNumber").on("click", function(e){
 			var id = Utilities.toInt(Utilities.getId(e.target.id));
-			that.toPage(id); 
+
 		});
 	},
+
 	close: function () {
 		if (!this.isClosed){
 			//removing all event handlers

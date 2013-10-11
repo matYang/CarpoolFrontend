@@ -8,9 +8,9 @@ var SearchRepresentation = Backbone.Model.extend({
 			'arrivalLocation': Constants.getDefaultUserLocation(),
 			'departureDate': new Date(),
 			'arrivalDate': new Date(),
-			'targetType': -1,
-			'departureTimeSlot': -1,
-			'arrivalTimeSlot': -1
+			'targetType': 0,
+			'departureTimeSlot': 0,
+			'arrivalTimeSlot': 0
 		};
 	},
 
