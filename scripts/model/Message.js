@@ -93,11 +93,10 @@ var Message = Backbone.Model.extend({
 	},
     _toJSON: function() {
         var json = this.toJSON();
-        
-		json.departure_location = this.get('departure_location').toUiString();
+		// json.departure_location = this.get('departure_location').toUiString();
 		json.departure_time = Utilities.getDateString(this.get('departure_time'));
 
-		json.arrival_location = this.get('arrival_location').toUiString();
+		// json.arrival_location = this.get('arrival_location').toUiString();
 		json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
 
 		//these 2 are actually ignored by server side, placing here for uniformity
@@ -115,13 +114,13 @@ var Message = Backbone.Model.extend({
                     priceList[p] == priceList[p-1];
                 }
             }
-            if (priceList.length <= bookeSeats) {
+            if (priceList.length <= bookedSeats) {
                 currentPrice = priceList[priceList.length-1];
             } else {
                 currentPrice = priceList[bookedSeats];
             }
         }
-        json.set("currentPrice", currentPrice);
+        json.currentPrice = currentPrice;
         return json;
     },
 	toJSON: function(){
