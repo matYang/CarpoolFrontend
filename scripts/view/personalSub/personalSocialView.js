@@ -1,14 +1,13 @@
 var PersonalSocialView = Backbone.View.extend({
 	initialize: function(params) {
 		this.isClosed = false;
-		_.bindAll(this, 'render', 'loadUsers', 'error', 'close');
+		_.bindAll(this, 'render', 'bindEvents', 'loadUsers', 'error', 'close');
 		this.domContainer = $("#profilePage_content");
 		this.wrapperTemplate = _.template(tpl.get('personalPage/personalSocial'));
-		debugger;
 		this.messageTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
 
 		this.curUserId = params.intendedUserId;
-		this.user = app.sessionManager.getSessionUser();
+		this.sessionUser = app.sessionManager.getSessionUser();
 		this.domContainer.append(this.wrapperTemplate);
 		this.listContainer = $("#socialListContent");
 		var that = this;
@@ -29,8 +28,15 @@ var PersonalSocialView = Backbone.View.extend({
 		this.listContainer.append(buf.join(""));
 		$(".social_gender_0").html("♂");
 		$(".social_gender_1").html("♀");
+		this.bindEvents();
 	},
-
+	bindEvents: function(){
+		var self = this;
+		$('#socialListContent>.social_card').on("click", function(e){
+			debugger;
+			app.navigate(self.sessionUser.id+"/personal/"+Utilities.getId(e.delegateTarget.id), true);
+		});
+	},
 	error: function() {
 
 	},

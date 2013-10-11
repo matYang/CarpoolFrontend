@@ -666,6 +666,12 @@
 
 }
 
+.social_card:hover{
+	border-width: 2px;
+	border-color:#00aaff;
+	margin:4px;
+}
+
 .social_picture{
 	height:60px;
 	width:60px;

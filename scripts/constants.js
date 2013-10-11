@@ -21,7 +21,6 @@ var Constants = {
 		/* ---------  DM Modules  ----------*/
 		"Module/DetailMessage",
 		"Module/Publish_singleSlotAsk",
-		"Module/Publish_singleSlotHelp",
 		"Module/Publish_base",
 		"Module/Publish_step1",
 		"Module/Publish_step2",
@@ -193,7 +192,7 @@ var Constants = {
 	personalTemplateMapping: {
 		'personalHistory': 'personalPage/personalHistory',
 		'persoanlMessage': 'personalPage/personalMessage',
-		'personalWatch': 'personalPage/personalWatch',
+		'personalSocial': 'personalPage/personalSocial',
 		'personalUtility': 'personalPage/personalUtility'
 	},
 
