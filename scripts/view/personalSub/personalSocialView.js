@@ -20,12 +20,16 @@ var PersonalSocialView = Backbone.View.extend({
 	loadUsers: function(socialList) {
 
 	},
-	
+
 	error: function() {
 
 	},
 	close: function() {
+		if (!this.isClosed){
 
+			this.domContainer.empty();
+			this.isClosed = true;
+		}
 	}
 
 });

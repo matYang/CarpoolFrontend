@@ -10,17 +10,33 @@ var PersonalView = Backbone.View.extend({
 		this.activeViewState = params.viewState;
 		this.childrenViews = {};
 		this.domContainer = $('#content');
+		this.watched = false;
 		app.userManager.fetchUser(this.curUserId, {"success":this.preRender, "error":this.renderError});
 
 	},
 
 	preRender: function(){
-		debugger;
+		var that = this;
 		this.sessionUser = app.sessionManager.getSessionUser();
 		this.render();
 		this.switchChildView(this.activeViewState);
 		if (this.sessionUser.get("userId") !== this.curUserId){
-			$("#profilePage_utilityTab").html(" + 关注");
+				for (var user = 0; user < this.sessionUser.get('socialList').length; user++) {
+					if (this.sessionUser.get('socialList')[user].get("userId") === this.curUserId) {
+						this.watched = true;
+						break;
+					}
+				}
+				//if user has watched this user
+				if (this.watched){
+					$("#profilePage_utilityTab").html(" + 已关注");
+					$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
+					this.bindDeWatchEvent();
+				} else {
+					$("#profilePage_utilityTab").html(" + 关注");
+					this.bindWatchEvent();
+				}
+
 		}
 		this.bindEvents();
 	},
@@ -49,7 +65,6 @@ var PersonalView = Backbone.View.extend({
 			this.activeChildView.close();
 		}
 		var create = true;
-			debugger;
 		$('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
 		switch (this.activeViewState) {
 			case "social":
@@ -65,7 +80,7 @@ var PersonalView = Backbone.View.extend({
 				this.activeChildView = new PersonalHistoryView({'intendedUserId': this.curUserId});
 				break;
 			case "utility":
-				if (this.user.get("userId") === this.curUserId) {
+				if (this.sessionUser.get("userId") === this.curUserId) {
 					$('#profilePage_utilityTab').addClass('selectedTabButton');
 					this.activeChildView = new PersonalUtilityView({'intendedUserId': this.curUserId});
 				}
@@ -97,28 +112,17 @@ var PersonalView = Backbone.View.extend({
 		});
 
 		$('#profilePage_utilityTab').on('click', function(){
-				debugger;
 			if (app.sessionManager.getUserId() === that.curUserId) {
 				app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/utility");
 				that.switchChildView("utility");
 			} else {
-				var user = app.sessionManager.getSessionUser().get('socialList').get(that.curUserId);
-				//if user has watched this user
-				if (typeof user === 'object'){
-					app.userManager.deWatchUser(that.curUserId, function(){
-						alert("User with id: " + that.curUserId + " successfully been watched");
-					});
-				}
-				else{
-					app.userManager.watchUser(that.curUserId, function(){
-						alert("User with id: " + that.curUserId + " successfully been deWatched");
-					});
-				}
+
 			}
 		});
 	},
 	bindWatchEvent: function(){
-		if (this.user.get("userId") !== this.curUserId) {
+		var that = this;
+		if (this.sessionUser.get("userId") !== this.curUserId) {
 			$('#profilePage_utilityTab').on("click", function(){
 				app.userManager.watchUser(this.curUserId, {
 					"success":that.watchSuccess,
@@ -127,18 +131,21 @@ var PersonalView = Backbone.View.extend({
 			});			
 		}
 	},
-
-	watchSuccess: function(){
+	bindDeWatchEvent: function(){
 		var that = this;
-		$("#profilePage_utilityTab").html("已关注");
-		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>")
-		$('#profilePage_utilityTab').off();
 		$("#deWatch").on("click", function(){
 			app.userManager.deWatchUser(this.curUserId, {
 					"success":that.deWatchSuccess,
 					"error":that.deWatchError
-				});	
+			});	
 		});
+	},
+
+	watchSuccess: function(){
+		$("#profilePage_utilityTab").html("已关注");
+		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>")
+		$('#profilePage_utilityTab').off();
+		this.bindDeWatchEvent();
 	},
 	watchError: function(){},
 	deWatchSuccess:function(){
