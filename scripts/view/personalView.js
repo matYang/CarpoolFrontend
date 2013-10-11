@@ -10,25 +10,43 @@ var PersonalView = Backbone.View.extend({
 		this.activeViewState = params.viewState;
 		this.childrenViews = {};
 		this.domContainer = $('#content');
-
-		app.userManager.fetchUser(this.curUserId, this.preRender);
+		this.watched = false;
+		app.userManager.fetchUser(this.curUserId, {"success":this.preRender, "error":this.renderError});
 
 	},
 
 	preRender: function(){
-		this.user = app.userManager.getUser();
+		var that = this;
+		this.sessionUser = app.sessionManager.getSessionUser();
 		this.render();
 		this.switchChildView(this.activeViewState);
-		if (this.user.get("userId") !== this.curUserId){
-			$("#profilePage_utilityTab").html(" + 关注");
+		if (this.sessionUser.get("userId") !== this.curUserId){
+				for (var user = 0; user < this.sessionUser.get('socialList').length; user++) {
+					if (this.sessionUser.get('socialList')[user].get("userId") === this.curUserId) {
+						this.watched = true;
+						break;
+					}
+				}
+				//if user has watched this user
+				if (this.watched){
+					$("#profilePage_utilityTab").html(" + 已关注");
+					$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
+					this.bindDeWatchEvent();
+				} else {
+					$("#profilePage_utilityTab").html(" + 关注");
+					this.bindWatchEvent();
+				}
+
 		}
 		this.bindEvents();
 	},
 
 	render: function () {
-		this.domContainer.append(this.template(this.user.toJSON()));
+		this.domContainer.append(this.template(this.sessionUser.toJSON()));
 	},
-
+	renderError: function(){
+		Info.warn("Unable to fetch User data");
+	},
 	switchChildView: function(viewState){
 
 		//validity of viewState is guranteed on the URL level, since deep linking is applied
@@ -49,10 +67,9 @@ var PersonalView = Backbone.View.extend({
 		var create = true;
 		$('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
 		switch (this.activeViewState) {
-
-			case "watch":
-				$('#profilePage_watchTab').addClass('selectedTabButton');
-				this.activeChildView = new PersonalWatchView({'intendedUserId': this.curUserId});
+			case "social":
+				$('#profilePage_socialTab').addClass('selectedTabButton');
+				this.activeChildView = new PersonalSocialView({'intendedUserId': this.curUserId});
 				break;
 			case "message":
 				$('#profilePage_messageTab').addClass('selectedTabButton');
@@ -63,12 +80,14 @@ var PersonalView = Backbone.View.extend({
 				this.activeChildView = new PersonalHistoryView({'intendedUserId': this.curUserId});
 				break;
 			case "utility":
+				if (this.sessionUser.get("userId") === this.curUserId) {
 					$('#profilePage_utilityTab').addClass('selectedTabButton');
 					this.activeChildView = new PersonalUtilityView({'intendedUserId': this.curUserId});
-					break;
+				}
+				break;
 			default:
 				Info.warn("PersonalView:: createChildView:: this.viewState matchin failed in switch, using Watch as default");
-				this.activeChildView = new PersonalWatchView({'intendedUserid': this.curUserId});
+				this.activeChildView = new PersonalHistoryView({'intendedUserid': this.curUserId});
 				break;
 		}
 
@@ -77,6 +96,11 @@ var PersonalView = Backbone.View.extend({
 
 	bindEvents: function(){
 		var that = this;
+		$('#profilePage_socialTab').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/social");
+			that.switchChildView("social");
+		});
+
 		$('#profilePage_messageTab').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/message");
 			that.switchChildView("message");
@@ -92,22 +116,46 @@ var PersonalView = Backbone.View.extend({
 				app.navigate(app.sessionManager.getUserId() + "/personal/"+ that.curUserId +"/utility");
 				that.switchChildView("utility");
 			} else {
-				var user = app.sessionManager.getSessionUser().get('socialList').get(that.curUserId);
-				//if user has watched this user
-				if (typeof user === 'object'){
-					app.userManager.deWatchUser(that.curUserId, function(){
-						alert("User with id: " + that.curUserId + " successfully been watched");
-					});
-				}
-				else{
-					app.userManager.watchUser(that.curUserId, function(){
-						alert("User with id: " + that.curUserId + " successfully been deWatched");
-					});
-				}
+
 			}
 		});
 	},
+	bindWatchEvent: function(){
+		var that = this;
+		if (this.sessionUser.get("userId") !== this.curUserId) {
+			$('#profilePage_utilityTab').on("click", function(){
+				app.userManager.watchUser(this.curUserId, {
+					"success":that.watchSuccess,
+					"error":that.watchError
+				});	
+			});			
+		}
+	},
+	bindDeWatchEvent: function(){
+		var that = this;
+		$("#deWatch").on("click", function(){
+			app.userManager.deWatchUser(this.curUserId, {
+					"success":that.deWatchSuccess,
+					"error":that.deWatchError
+			});	
+		});
+	},
 
+	watchSuccess: function(){
+		$("#profilePage_utilityTab").html("已关注");
+		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>")
+		$('#profilePage_utilityTab').off();
+		this.bindDeWatchEvent();
+	},
+	watchError: function(){},
+	deWatchSuccess:function(){
+		$("#deWatch").off();
+		$("#deWatch").remove();
+		this.bindWatchEvent();
+	},
+	deWatchError:function(){
+
+	},
 	close: function () {
 		if (!this.isClosed){
 			if (this.activeChildView){

@@ -171,10 +171,11 @@ var AppRouter = Backbone.Router.extend({
 		}
 		else{
 			if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== intendedUserId){
+				if (personalViewState === "utility") personalViewState = "history";
 				this.personalView = new PersonalView({'intendedUserId': intendedUserId, 'viewState': personalViewState});
 			}
 			else{
-				this.personalView.switchChildView(personalViewState);
+				this.personalView.switchChildView({'intendedUserId': intendedUserId, 'viewState':personalViewState});
 			}
 			this.advertisementView = new AdvertisementView();
 		}

@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	var testMode = false;
+	var testMode = true;
 	this.UserManager = function(sessionManager){
 
 		this.apis = new ApiResource();
@@ -18,7 +18,7 @@
 
 
 		this.sessionManager = sessionManager;
-
+		this.sessionUser = this.sessionManager.getSessionUser();
 		//used for personalPage and testing purpose mainly
 		this.user = new User();
 
@@ -112,7 +112,7 @@
 		this.user.set('userId', this.sessionManager.getUserId());
 		//this will force to add id into api path, correcting it
 		if (testMode) {
-			callback();
+			callback.success();
 			return;
 		}
 		this.user.fetch({
@@ -280,7 +280,7 @@
             success:function(model, response){
 				self.timeStamp = new Date();
 				self.user.set('emailNotice', self.sessionUser.get('emailNotice'));
-				self.user.set('phoneNotice', self.sessionuser.get('phoneNotice'));
+				self.user.set('phoneNotice', self.sessionUser.get('phoneNotice'));
 				if(callback){
 					callback.success();
 				}
@@ -476,10 +476,6 @@
 		});
 	};
 
-
-
-
-
 	/********************* User Relations ***************************/
 
 	UserManager.prototype.watchUser = function(targetUserId, callback) {
@@ -566,8 +562,6 @@
 	};
 
 
-
-
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
 
 		var self = this;
@@ -590,11 +584,9 @@
             dataType:'json',
 
             success:function(model, response){
-				self.user.set('socialList', watchedUsers);
-
 				self.socialList_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(watchedUsers);
 				}
             },
             error: function(model, response){

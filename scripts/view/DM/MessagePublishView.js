@@ -32,7 +32,7 @@ var MessagePublishView = MessagePostView.extend({
 		});
 	},
 	renderSecondPage: function(){
-		debugger;
+		
 		var that = this;
 		MessagePostView.prototype.render(2);
 		$('#publish_nextStep').off();
@@ -79,7 +79,7 @@ var MessagePublishView = MessagePostView.extend({
 		$('#publish_nextStep').off();
 		$('#publish_back').off();
 		$("#publish_finish").off();
-		debugger;
+		
 		MessagePostView.prototype.close();
 	}
 });
