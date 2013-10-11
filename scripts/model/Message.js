@@ -91,7 +91,39 @@ var Message = Backbone.Model.extend({
 
         return data;
 	},
+    _toJSON: function() {
+        var json = this.toJSON();
+        
+		json.departure_location = this.get('departure_location').toUiString();
+		json.departure_time = Utilities.getDateString(this.get('departure_time'));
 
+		json.arrival_location = this.get('arrival_location').toUiString();
+		json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
+
+		//these 2 are actually ignored by server side, placing here for uniformity
+		json.creationTime = Utilities.getDateString(this.get('creationTime'));
+		json.editTime = Utilities.getDateString(this.get('editTime'));
+		var priceList = this.get("departure_priceList");
+        var currentPrice = 0;
+        var bookedSeats = this.get("departure_seatsBooked")
+        if (priceList.length === 1) {
+            currentPrice = priceList[0];
+        } else {
+            for ( var p = 0; p < priceList.length; p++){
+                
+                if (priceList[p] == 0) {
+                    priceList[p] == priceList[p-1];
+                }
+            }
+            if (priceList.length <= bookeSeats) {
+                currentPrice = priceList[priceList.length-1];
+            } else {
+                currentPrice = priceList[bookedSeats];
+            }
+        }
+        json.set("currentPrice", currentPrice);
+        return json;
+    },
 	toJSON: function(){
 		var json = _.clone(this.attributes);
 		
