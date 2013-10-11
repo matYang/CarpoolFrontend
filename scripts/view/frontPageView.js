@@ -14,16 +14,7 @@ var FrontPageView = Backbone.View.extend({
 
 		this.user = app.sessionManager.getSessionUser();
 
-		this.searchRepresentation = new SearchRepresentation({
-			'isRoundTrip':false,
-			'departureLocation': new UserLocation(),
-			'arrivalLocation': new UserLocation(),
-			'departureDate': new Date(),
-			'arrivalDate': new Date(),
-			'targetType': -1,
-			'departureTimeSlot': -1,
-			'arrivalTimeSlot': -1
-		});
+		this.searchRepresentation = new SearchRepresentation();
 
 		this.displayMessages = new Messages();
 		this.render();
@@ -92,38 +83,22 @@ var FrontPageView = Backbone.View.extend({
 			}
 		});
 		$("#quickStartButton1").on("click", function(){
-			var searchString = new SearchRepresentation({
-				"isRoundTrip": false,
-				"departureLocation":self.fromLocation,
-				"arrivalLocation":self.toLocation,
-				"departureDate":self.date,
-				"departureTimeSlot": 0,
-				"arrivalTimeSlot": 0
-			});
-			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
-				app.navigate(self.user.get("userId")+"/main/"+key, true);
+				app.navigate(app.sessionManager.getUserId() + "/main/" + self.searchRepresentation.toString(), true);
 			} else {
-				app.navigate("main/"+key, true);
+				app.navigate("main/"+  self.searchRepresentation.toString(), true);
 			}
+			app.storage.setSearchRepresentationCache(this.searchRepresentation);
 		});
 		$("#quickStartButton2").on("click", function(){
-			var searchString = new SearchRepresentation({
-				"isRoundTrip": false,
-				"departureLocation":self.fromLocation,
-				"arrivalLocation":self.toLocation,
-				"departureDate":self.date,
-				"departureTimeSlot": 0,
-				"arrivalTimeSlot": 0
-			});
-			var key = searchString.toString();
 			if (app.sessionManager.hasSession()) {
 				var id = app;
-				app.navigate(self.user.get("userId")+"/main/"+key, true);
+				app.navigate(app.sessionManager.getUserId() + "/main/" + self.searchRepresentation.toString(), true);
 			} else {
-				app.navigate("main/"+key, true);
+				app.navigate("main/"+  self.searchRepresentation.toString(), true);
 			}
+			app.storage.setSearchRepresentationCache(this.searchRepresentation);
 		});
 	},
 
@@ -145,13 +120,14 @@ var FrontPageView = Backbone.View.extend({
 	},
 
 
-	updateLocation: function (){
+	updateLocation: function (id){
 		$("#quickStart_from>.quickStart_value").html(this.searchRepresentation.get("departureLocation").get("city"));
 		$("#quickStart_to>.quickStart_value").html(this.searchRepresentation.get("arrivalLocation").get("city"));
 		$("#quickStart_cityInDescription").html(this.searchRepresentation.get("departureLocation").get("city"));
 		$("#quickStart_schoolInDescription").html(this.searchRepresentation.get("arrivalLocation").get("city"));
 		this.getRecents();
 	},
+
 
 	loginAlert: function() {
 			Info.alert("请先登录。若是已经登陆，请刷新页面。");

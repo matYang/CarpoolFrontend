@@ -30,6 +30,9 @@ var MainPageView = Backbone.View.extend ({
 		else if (app.sessionManager.hasSession()){
 			this.searchRepresentation = this.user.get('searchRepresentation');
 		}
+		else{
+			this.searchRepresentation = app.storage.getSearchRepresentationCache();
+		}
 
 		//after data intialiazation, start render curreny view
 		this.render();
@@ -74,8 +77,9 @@ var MainPageView = Backbone.View.extend ({
 				$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
 			}
 		});
-		$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").toUiString());
-		$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").toUiString());
+		this.updateLocation('searchLocationInput_from');
+		this.updateLocation('searchLocationInput_to');
+
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
 		$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
 		if (me.searchRepresentation.get("targetType")%2 === 0 ) {
@@ -175,6 +179,7 @@ var MainPageView = Backbone.View.extend ({
 			app.navigate("main/" + this.searchRepresentation.toString());
 		}
 		app.messageManager.searchMessage(this.searchRepresentation, {"success":this.renderSearchResults, "error":this.renderError});
+		app.storage.setSearchRepresentationCache(this.searchRepresentation);
 	},
 
 	refresh: function () {
@@ -234,7 +239,7 @@ var MainPageView = Backbone.View.extend ({
 			$("#customizeLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("point"));
 		} else {
 			$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
-			$("#customizeLocationInput_from").val(this.searchRepresentation.get("arrivalLocation").get("point"));
+			$("#customizeLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("point"));
 		}
 	},
 

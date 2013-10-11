@@ -94,6 +94,15 @@
 		return this.searchFilterState;
 	};
 
+	StorageService.prototype.getSearchRepresentationCache = function() {
+		return typeof this.sr !== 'undefined' ? this.sr : new SearchRepresentation();
+	};
+
+	StorageService.prototype.setSearchRepresentationCache = function(sr){
+		if (sr instanceof Backbone.Model) {
+			this.sr = sr;
+        }
+	};
 
 
 }).call(this);
