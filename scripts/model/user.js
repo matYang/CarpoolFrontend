@@ -107,16 +107,22 @@ var User = Backbone.Model.extend({
                 }
                 return data;
         },
-
+        _toJSON: function() {
+            var json = this.toJSON();
+            if (this.get('location') instanceof Backbone.Model) {
+                json.location = this.get('location').toUiString();
+            }
+            return json;
+        },
         toJSON: function(){
                 var json = _.clone(this.attributes);
                 
                 json.birthday = Utilities.castToAPIFormat(this.get('birthday'));
                 if (this.get('location') instanceof Backbone.Model) {
-                        json.location = this.get('location').toJSON();
+                    json.location = this.get('location').toJSON();
                 }
                 if (this.get('searchRepresentation') instanceof Backbone.Model) {
-                        json.searchRepresentation = this.get('searchRepresentation').toJSON();
+                    json.searchRepresentation = this.get('searchRepresentation').toJSON();
                 }
                 //these 2 are actually ignored by server side, placing here for uniformity
                 json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));

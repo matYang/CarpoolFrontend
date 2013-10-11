@@ -6,6 +6,7 @@ html, body{
   padding:0;
   /*base font-size*/
   font-size: 14px;
+  font: Arial,Helvetica,sans-serif;
 }
 
 @font-face {

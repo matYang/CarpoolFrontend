@@ -47,6 +47,7 @@ var Constants = {
 		"personalPage/personalHistory",
 		"personalPage/personalUtility",
 		"personalPage/personalSocial",
+		"personalPage/personalSocialCard",
 		"personalPage/personalSimpleMessage",
 		"personalPage/personalDetailMessage",
 		"personalPage/personalSimpleUser",

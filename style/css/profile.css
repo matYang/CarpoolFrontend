@@ -427,10 +427,9 @@
 	overflow-y:auto;
 }
 #socialListContent{
-	width: 692px;
+	width: 700px;
 	height: 460px;
-	border: 2px solid #999999;
-	margin-left: 20px;
+	margin-left: 10px;
 	margin-top: 10px;
 	overflow-y: auto;
 }
@@ -652,4 +651,40 @@
 	width:310px;
 	text-align: center;
 	padding-top:2px;
+}
+
+.social_card {
+	width:200px;
+	margin:5px;
+	height:90px;
+	border-color:#e6e6e6;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 2px;
+	float:left;
+	padding:10px;
+
+}
+
+.social_picture{
+	height:60px;
+	width:60px;
+	margin:5px;
+	float:left;
+}
+
+.social_name{
+	float:left;
+	width:110px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.social_gender_0, .social_gender_1, .social_level{
+	width:50px;
+	float:left;
+}
+.social_location{
+	width:130px;
+	float:left;
 }
