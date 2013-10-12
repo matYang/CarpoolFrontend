@@ -24,7 +24,7 @@ var PersonalHistoryView = Backbone.View.extend({
 	renderTransactions: function(transactionList){
 		this.transactions = transactionList;
 		this.transactionContainer = $("#transactionHistoryContent");
-		var that = this;
+		var that = this,
 			toBeAppended = [],
 			html = "",
 			i = 0;
