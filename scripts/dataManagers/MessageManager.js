@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	var postCount = 0;
+	var firstSuccessMessage = null;
 
 	this.MessageManager = function(sessionManager,  userManager){
 
@@ -76,16 +78,9 @@
 		});
 	};
 
-	MessageManager.prototype.postMessage = function(newMessage, callback) {
+
+	MessageManager.prototype._postSingleMessage = function(newMessage, promiseback, callback){
 		var self = this;
-		if (!newMessage || typeof newMessage !== 'object'){
-			Constants.dWarn("MessageManager::postMessage::invalid parameter, exit");
-			return;
-		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("MessageManager::postMessage::currentMessage does not have session, exit");
-			return;
-		}
 
 		newMessage.overrideUrl(this.apis.DM_dianming);
 		newMessage.set('messageId', -1);
@@ -97,18 +92,60 @@
 				self.message = newMessage;
 				self.timeStamp = new Date();
 
-				if(callback){
-					callbac.success();
+				if(promiseback){
+					promiseback(newMessage, callback, self);
 				}
 			},
 			error: function(model, response){
 				Constants.dWarn("MessageManager::postMessage:: post failed with response:");
 				Constants.dLog(response);
-				if(callback){
-					callback.error();
+				if(promiseback){
+					promiseback(null, callback, self);
 				}
 			}
 		});
+	};
+
+	MessageManager.prototype._executePromise = function(message, callback, immediateCaller) {
+		//always point to the last successful one
+		if (firstSuccessMessage === null){
+			firstSuccessMessage = message;
+		}
+		postCount -= 1;
+		if (postCount === 0){
+			immediateCaller.message = firstSuccessMessage;
+
+			if (firstSuccessMessage !== null){
+				callback.success(firstSuccessMessage.id);
+				firstSuccessMessage = null;
+			}
+			else{
+				callback.error();
+			}
+		}
+	};
+
+	MessageManager.prototype.postMessage = function(newMessages, callback) {
+		var self = this,
+			i = 0;
+		if (!newMessages || !(newMessages instanceof Backbone.Collection)){
+			Constants.dWarn("MessageManager::postMessage::invalid parameter, exit");
+			return;
+		}
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("MessageManager::postMessage::currentMessage does not have session, exit");
+			return;
+		}
+		if (postCount > 0){
+			Constants.dWarn("MessagePost Queue not cleared yet");
+			return;
+		}
+
+		postCount = newMessages.length;
+		firstSuccessMessage = null;
+		for (i = 0; i < postCount; i++){
+			this._postSingleMessage(newMessages.at(i), this._executePromise, callback);
+		}
 	};
 
 
@@ -238,7 +275,7 @@
             success:function(model, response){
 				self.recents_timeStamp = new Date();
 				if(callback){
-					callback.success(this.recents);
+					callback.success(self.recents);
 				}
             },
             error: function(model, response){

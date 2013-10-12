@@ -1,24 +1,34 @@
 var MessageEditView = MessagePostView.extend({
 
 	el: "",
-	initialize: function (id, message) {
+	initialize: function (messageIdObj) {
 		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
 		app.viewRegistration.register("MessageEdit", this, true);
-		if (testMockObj.testMode){
-			this.message = testMockObj.sampleMessageA;
-			//To allow edit
-			this.message.get("arrival_location").set("city","苏州");
-			this.message.get("arrival_location").set("region","苏州市区");
-			this.message.get("arrival_location").set("university","苏州大学");
-			this.message.set("isRoundTrip", true);
-			this.message.set("arrival_seatsNumber", 1);
-			this.transactions = testMockObj.sampleTransactions;
-			this.message.set("note", "火车站出发，谢绝大行李");
-			this.message.set("departure_priceList", [20,18,15]);
-		}
-		this.reverseMessage(this.message);
-		MessagePostView.prototype.initialize({"method":"message/"+ this.message.get("messageId") +"/edit"});
-		this.renderFirstPage();
+		//if (testMockObj.testMode){
+		//this.message = testMockObj.sampleMessageA;
+		////To allow edit
+		//this.message.get("arrival_location").set("city","苏州");
+		//this.message.get("arrival_location").set("region","苏州市区");
+		//this.message.get("arrival_location").set("university","苏州大学");
+		//this.message.set("isRoundTrip", true);
+		//this.message.set("arrival_seatsNumber", 1);
+		//this.transactions = testMockObj.sampleTransactions;
+		//this.message.set("note", "火车站出发，谢绝大行李");
+		//this.message.set("departure_priceList", [20,18,15]);
+		//}
+		var self = this;
+		app.messageManager.fetchMessage(messageIdObj.messageId, {
+			success: function(){
+				self.message = app.messageManager.getMessage();
+				self.reverseMessage(self.message);
+				MessagePostView.prototype.initialize({"method":"message/"+ self.message.get("messageId") +"/edit"});
+				self.renderFirstPage();
+			},
+			error: function(){
+				Info.alert("消息读取失败");
+			}
+		});
+		
 	},
 	render:function(step){
 		if (step === 1) {
@@ -79,12 +89,12 @@ var MessageEditView = MessagePostView.extend({
 			app.messageManager.updateMessage(messages.at(r), {"success":this.success, "error":this.error});
 		}
 	},
-	success: function(){
-		alert("Message Post successful");
-		app.navigate(app.sessionManager.getUserId() + "/Message/" + app.messageManager.getMessage().id, true);
+	success: function(successId){
+		Info.alert("Message Post successful");
+		app.navigate(app.sessionManager.getUserId() + "/message/" + successId, true);
 	},
 	error: function(){
-		
+		Info.alert("Message Post failed");
 	},
 	reverseMessage: function(message){
 		var toSubmit = MessagePostView.prototype.toSubmit;
