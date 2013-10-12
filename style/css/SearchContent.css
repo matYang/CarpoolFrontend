@@ -195,6 +195,7 @@
     overflow:auto;
     padding:0 10px 0 0;
     overflow-y:auto;
+    border:1px solid #999999;
     float:left;
 }
 .searchResultBoxContainer {
@@ -323,10 +324,7 @@
   width:644px;
   height:26px;
   position:relative;
-  border-width: 0;
-  border-top-width: 2px;
-  border-color: #aaaaaa;
-  border-style: solid;
+
   float:left;
   padding-top:3px;
   text-align: right;

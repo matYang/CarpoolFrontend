@@ -160,3 +160,8 @@
 .searchResultContainerInfo.front {
 	width:350px;
 }
+
+#quickStart_left{
+	float:left;
+	width:680px;
+}
