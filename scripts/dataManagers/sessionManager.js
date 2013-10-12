@@ -1,6 +1,5 @@
 (function () {
 	'use strict';
-	var testMode = false;
 	this.SessionManager = function(){
 
 		this.apis = new ApiResource();
@@ -27,7 +26,7 @@
 	};
 
 	SessionManager.prototype.hasSession = function(){
-		if (testMode) return true;
+		if (testMockObj.testMode) return true;
 		return this.isLoggedIn;
 	};
 
@@ -49,7 +48,7 @@
 		var self = this;
 		
 		this.sessionUser = new User(this.apis.users_findSession);
-		if (testMode) {
+		if (testMockObj.testMode) {
 			this.sessionUser.set("userId", 1);
 			this.isLoggedIn = true;
 			if(callback){

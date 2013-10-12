@@ -41,6 +41,11 @@
 
 
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
+		if (testMockObj.testMode){
+			this.recents = testMockObj.sampleMessages;
+			callback.success(this.recents);
+			return;
+		}
 		if (typeof messageId === 'undefined' ){
 			Constants.dWarn("MessageManager::fetchMessage:: invalid parameter");
 			return;
