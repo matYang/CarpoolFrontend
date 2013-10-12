@@ -34,7 +34,7 @@
 	assert(locRepC.isEquivalentTo(locRepD));
 	assert(!locRepD.equals(new UserLocation({'hierarchyNameList': ['Canada', 'Ontario', 'Waterloo', 'MC'], 'customDepthIndex': 3})));
 
-
+	
 	var spA = new SearchRepresentation({'isRoundTrip': false, 'departureLocation': locRepA.toJSON(), 'arrivalLocation': locRepB.toJSON(), 'departureDate': Utilities.castToAPIFormat(new Date()),
 			'arrivalDate': Utilities.castToAPIFormat(new Date()), 'targetType': 0, 'departureTimeSlot': 0, 'arrivalTimeSlot': 0}, {'parse': true});
 	var spB = new SearchRepresentation(spA.toJSON(), {'parse': true});

@@ -177,7 +177,6 @@ var AppRouter = Backbone.Router.extend({
 			else{
 				this.personalView.switchChildView({'intendedUserId': intendedUserId, 'viewState':personalViewState});
 			}
-			this.advertisementView = new AdvertisementView();
 		}
 	},
 
@@ -188,8 +187,7 @@ var AppRouter = Backbone.Router.extend({
 		}
 
 		this.topBarView = new TopBarView();
-		this.MessageDetailView = new MessageDetailView();
-		this.advertisementView = new AdvertisementView();
+		this.MessageDetailView = new MessageDetailView({'messageId': messageId});
 	},
 
 
@@ -204,8 +202,7 @@ var AppRouter = Backbone.Router.extend({
 			delete this.MessagePostView;
 			this.MessagePostView = null;
 		}
-		this.MessageEditView = new MessageEditView();
-		this.advertisementView = new AdvertisementView();
+		this.MessageEditView = new MessageEditView(messageId);
 	},
 
 	postMessage: function(id, postState){
