@@ -4,10 +4,6 @@ var SearchResultView = MultiPageView.extend({
 	initialize: function(messageList, isSearchResult){
 		_.bindAll(this, 'render', 'transferURL', 'close');
 		MultiPageView.prototype.messages = messageList;
-
-		if (testMockObj.testMode ) {
-			MultiPageView.prototype.messages = testMockObj.sampleMessages;
-		}
 		MultiPageView.prototype.isSearchResult = isSearchResult;
 		MultiPageView.prototype.entryTemplate = _.template(tpl.get('Module/SimpleMessage'));
 		MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
@@ -85,7 +81,6 @@ var SearchResultView = MultiPageView.extend({
 	},
 
 	close: function(){
-
 		this.domContainer.empty();
 	}
 

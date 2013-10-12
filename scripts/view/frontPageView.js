@@ -27,18 +27,16 @@ var FrontPageView = Backbone.View.extend({
 
 	getRecents: function(){
 		//passing renderRecents as the callback to be executed upon successful fetch
-		app.messageManager.fetchRecents({"success":this.renderRecents, "error": this.renderError});
 		$("#quickStart_resultPanel").empty();
+		app.messageManager.fetchRecents({"success":this.renderRecents, "error": this.renderError});
 	},
 
-	renderRecents: function(){
-		recentMessages = app.messageManager.getSearchResults();
-		for ( var i = 0; i < 3 && i < recentMessages.length; i++ ) {
-			this.displayMessages.add(recentMessages.at(i));
-		}
-		this.searchResultView = new SearchResultView(this.displayMessages, false);
-		
-		this.bindRecentsEvents();
+	renderRecents: function(recentMessages){
+		// recentMessages = app.messageManager.getSearchResults();
+		// for ( var i = 0; i < 3 && i < recentMessages.length; i++ ) {
+		// 	this.displayMessages.add(recentMessages.at(i));
+		// }
+		this.searchResultView = new SearchResultView(recentMessages, false);
 	},
 
 

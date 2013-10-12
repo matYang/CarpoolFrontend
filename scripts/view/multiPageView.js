@@ -14,6 +14,7 @@ var MultiPageView = Backbone.View.extend({
 	entryRowNum:1,
 	initialize: function () {
 		_.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
+		this.isClosed = false;
 	},
 
 	render: function(){
@@ -47,7 +48,6 @@ var MultiPageView = Backbone.View.extend({
 	bindEntryEvent: function(){
 		var self = this;
 		$("#"+this.entryContainer+">."+this.entryClass).on("click", function(e){
-			debugger;
 			var id = Utilities.getId(e.delegateTarget.id);
 			self.entryEvent(id);				
 		});
@@ -76,11 +76,11 @@ var MultiPageView = Backbone.View.extend({
 		});
 	},
 	close: function(){
-		if (!this.closed){
+		if (!this.isClosed){
 			$("#"+this.entryContainer+">."+this.entryClass).off();
 			$("."+this.pageNumberClass).off();
 			$("#"+this.entryContainer).empty();
-			this.closed = true;
+			this.isClosed = true;
 		}
 	}
 });
