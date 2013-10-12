@@ -304,7 +304,7 @@ var MessagePostView = Backbone.View.extend({
 				$("#conditionalPriceSwitch").addClass("publish_selected");
 				$("#publish_singlePrice").hide();
 				$("#publish_priceList").fadeIn();
-				that.toSubmit.conditionalPrice = false;
+				that.toSubmit.conditionalPrice = true;
 			}
 			
 		});
