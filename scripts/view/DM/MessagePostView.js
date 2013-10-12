@@ -576,13 +576,12 @@ var MessagePostView = Backbone.View.extend({
 
 	toMessage: function () {
 		//validate before finish
-		debugger;
 		var messages = new Messages(), i;
 		if (this.toSubmit.type === "ask"){
 			this.toSubmit.priceList = [];
 		} else {
 			if (!this.toSubmit.conditionalPrice) {
-				this.toSubmit.priceList[0] = Utilities.toInt($("seats_single").val());
+				this.toSubmit.priceList[0] = Utilities.toInt($("#seats_single").val());
 			} else {
 				for ( i = 1; i <= this.toSubmit.departureSeats; i++) {
 					this.toSubmit.priceList[i] = 0;
@@ -590,7 +589,7 @@ var MessagePostView = Backbone.View.extend({
 				for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
 					var seatNumber = $("#seatsNumber_"+i).val();
 					seatNumber = Utilites.toInt(seatNumber);
-					this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
+					this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("#seats_"+i).val()) || 0;
 				}
 			}
 		}
