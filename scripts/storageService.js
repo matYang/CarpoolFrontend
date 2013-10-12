@@ -46,6 +46,8 @@
 				}
 			};
 		}
+
+		this.sr = new SearchRepresentation();
 	};
 
 

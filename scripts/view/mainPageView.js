@@ -26,6 +26,7 @@ var MainPageView = Backbone.View.extend ({
 		this.currentPage = 0;
 		if (params) {
 			this.searchRepresentation.castFromString(params.searchKey);
+			app.storage.setSearchRepresentationCache(this.searchRepresentation);
 		}
 		else if (app.sessionManager.hasSession()){
 			this.searchRepresentation = this.user.get('searchRepresentation');
@@ -59,8 +60,8 @@ var MainPageView = Backbone.View.extend ({
 				d.setDate(inst.selectedDay);
 				d.setMonth(inst.selectedMonth);
 				d.setYear(inst.selectedYear);
-				self.searchRepresentation.set("departureDate", d);
-				$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
+				me.searchRepresentation.set("departureDate", d);
+				$("#searchDateInput_depart").val(Utilities.getDateString(me.searchRepresentation.get("departureDate")));
 			}
 		});
 		$("#searchDateInput_return").datepicker({
@@ -73,8 +74,8 @@ var MainPageView = Backbone.View.extend ({
 				d.setDate(inst.selectedDay);
 				d.setMonth(inst.selectedMonth);
 				d.setYear(inst.selectedYear);
-				self.searchRepresentation.set("arrivalDate", d);
-				$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
+				me.searchRepresentation.set("arrivalDate", d);
+				$("#searchDateInput_return").val(Utilities.getDateString(me.searchRepresentation.get("arrivalDate")));
 			}
 		});
 		this.updateLocation('searchLocationInput_from');
@@ -82,14 +83,13 @@ var MainPageView = Backbone.View.extend ({
 
 		$("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
 		$("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
-		if (me.searchRepresentation.get("targetType")%2 === 0 ) {
-			me.filter.isRoundTrip = false;
+		me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
+		if (!me.filter.isRoundTrip) {
 			$("#oneWay").attr("class","selected button");
 			$("#round").attr("class","notSelected button");
 			$("#searchFilterTimeContainer2").hide();
 			$("#searchDateInput_return").hide();
 		} else {
-			me.filter.isRoundTrip = true;
 			$("#oneWay").attr("class","notSelected button");
 			$("#round").attr("class","selected button");
 			$("#searchFilterTimeContainer2").show();

@@ -14,7 +14,7 @@ var FrontPageView = Backbone.View.extend({
 
 		this.user = app.sessionManager.getSessionUser();
 
-		this.searchRepresentation = new SearchRepresentation();
+		this.searchRepresentation = app.storage.getSearchRepresentationCache();
 
 		this.displayMessages = new Messages();
 		this.render();
