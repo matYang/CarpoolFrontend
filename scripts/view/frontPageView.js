@@ -27,9 +27,10 @@ var FrontPageView = Backbone.View.extend({
 
 	getRecents: function(){
 		//passing renderRecents as the callback to be executed upon successful fetch
-		app.messageManager.fetchRecents({"success":this.renderRecents, "error": this.renderError});
 		$("#quickStart_resultPanel").empty();
+		app.messageManager.fetchRecents({"success":this.renderRecents, "error": this.renderError});
 	},
+
 
 	renderRecents: function(){
 		recentMessages = app.messageManager.getRecents();

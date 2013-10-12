@@ -55,7 +55,7 @@ var MessageDetailView = Backbone.View.extend({
 
 	render: function(){
 		this.domContainer.append(this.template(this.parsedMessage));
-		this.loadTransactions();
+		
 		this.map = new MapView({
 			div:"view_map",
 			originLocation:this.message.get("departure_location"),
@@ -68,11 +68,11 @@ var MessageDetailView = Backbone.View.extend({
 			$("#directionArrow").html("->");
 		}
 	},
-	loadTransactions: function(){
+	loadTransactions: function(transactions){
 		var i,
 			buffer = [],
 			that = this;
-
+			this.transactions = transactions;
 		for ( i = 0; i < this.transactions.length; i++){
 			if ( Utilities.isEmpty(this.transactions.at(i).targetUserName === null)) continue;
 			buffer[i] = this.transactionTemplate(this.parseTransaction(this.transactions.at(i), i));
@@ -84,7 +84,9 @@ var MessageDetailView = Backbone.View.extend({
 		//that.openTransactionDetail(transaction);
 		//});
 	},
+	loadError: function(){
 
+	},
 
 	bindEvents: function () {
 		var that = this;
@@ -99,6 +101,10 @@ var MessageDetailView = Backbone.View.extend({
 		$("#view_transactions_button").on("click", function(){
 			var content = $("#view_transactions_content");
 			if (that.showTransaction) {
+				app.userManager.fetchTransactionList(this.ownerId,{
+					"success":that.loadTransactions,
+					"error":that.error
+				});
 				content.slideUp(100);
 			} else {
 				content.slideDown(100);

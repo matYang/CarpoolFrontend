@@ -186,7 +186,11 @@
 	//cannot use search because of naming collisions
 	MessageManager.prototype.searchMessage = function(searchRepresentationObj, callback) {
 		var self = this;
-
+		if(testMockObj.testMode){
+			this.searchResults = testMockObj.sampleMessages;
+			callback.success();
+			return;
+		}
 		if (typeof searchRepresentationObj !== 'object'){
 			Constants.dWarn("MessageManager::fetchSearchResult:: invalid parameter, exit");
 			return;
@@ -220,7 +224,11 @@
 	};
 
 	MessageManager.prototype.fetchRecents = function(callback) {
-
+		if (testMockObj.testMode){
+			this.recents = testMockObj.sampleMessages;
+			callback.success(this.recents);
+			return;
+		}
 		var self = this;
 		//confront to API requirements
 		this.recents.overrideUrl(this.apis.DM_recent);
@@ -230,7 +238,7 @@
             success:function(model, response){
 				self.recents_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(this.recents);
 				}
             },
             error: function(model, response){

@@ -22,6 +22,7 @@ var PersonalHistoryView = Backbone.View.extend({
 	},
 
 	renderTransactions: function(transactionList){
+		this.transactions = transactionList;
 		this.transactionContainer = $("#transactionHistoryContent");
 		var that = this;
 			toBeAppended = [],
@@ -40,9 +41,10 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.bindTransactionEvents();
 	},
 
-	renderNotifications: function(){
+	renderNotifications: function(notificationList){
+		this.notifications = notificationList;
 		this.notificationContainer = $("#notificationHistoryContent");
-		this.notifications = this.messages = app.u+serManager.getUser().get('notificationList');
+		
 		var that = this;
 			toBeAppended = [],
 			html = "",

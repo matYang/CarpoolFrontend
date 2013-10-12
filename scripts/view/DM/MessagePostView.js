@@ -304,7 +304,7 @@ var MessagePostView = Backbone.View.extend({
 				$("#conditionalPriceSwitch").addClass("publish_selected");
 				$("#publish_singlePrice").hide();
 				$("#publish_priceList").fadeIn();
-				that.toSubmit.conditionalPrice = false;
+				that.toSubmit.conditionalPrice = true;
 			}
 			
 		});
@@ -577,19 +577,24 @@ var MessagePostView = Backbone.View.extend({
 	toMessage: function () {
 		//validate before finish
 		var messages = new Messages(), i;
-		for ( i = 1; i <= this.toSubmit.departureSeats; i++) {
-			this.toSubmit.priceList[i] = 0;
-		}
-
-		if (!this.toSubmit.conditionalPrice) {
-			this.toSubmit.priceList[0] = Utilities.toInt($("seats_single").val());
+		if (this.toSubmit.type === "ask"){
+			this.toSubmit.priceList = [];
 		} else {
-			for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
-				var seatNumber = $("#seatsNumber_"+i).val();
-				seatNumber = Utilites.toInt(seatNumber);
-				this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
+			if (!this.toSubmit.conditionalPrice) {
+				this.toSubmit.priceList[0] = Utilities.toInt($("#seats_single").val());
+			} else {
+				for ( i = 1; i <= this.toSubmit.departureSeats; i++) {
+					this.toSubmit.priceList[i] = 0;
+				}
+				for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
+					var seatNumber = $("#seatsNumber_"+i).val();
+					seatNumber = Utilites.toInt(seatNumber);
+					this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("#seats_"+i).val()) || 0;
+				}
 			}
 		}
+		this.toSubmit.origin.reverseFill();
+		this.toSubmit.dest.reverseFill();
 		for ( var r = 0; r < this.toSubmit.requests.length; r++) {
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();

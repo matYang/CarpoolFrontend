@@ -100,7 +100,10 @@
 
 	//will be used to display personal informatiom page only
 	UserManager.prototype.fetchUser = function(intendedUserId, callback){
-
+		if (testMode) {
+			callback.success();
+			return;
+		}
 		var self = this;
 
 		if (!this.sessionManager.hasSession()){
@@ -562,11 +565,11 @@
 
 
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
-		// if(callback){
-		// 	watchedUsers = testMockObj.sampleUsers;
-		// 	callback.success(watchedUsers, 0);
-		// 	return;
-		// }
+		if(testMode){
+			watchedUsers = testMockObj.sampleUsers;
+			callback.success(watchedUsers, 0);
+			return;
+		}
 		var self = this;
 
 		if (typeof intendedUserId !== 'number'){
@@ -644,7 +647,10 @@
 	};
 
 	UserManager.prototype.fetchTransactionList = function(intendedUserId, callback) {
-
+		if(testMode){
+			callback.success(testMockObj.sampleTransactions);
+			return;
+		}
 		var self = this;
 
 		if (typeof intendedUserId !== 'number'){
@@ -683,7 +689,10 @@
 
 
 	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback) {
-
+		if(testMode){
+			callback.success(testMockObj.sampleNotifications);
+			return;
+		}
 		var self = this;
 
 		if (typeof intendedUserId !== 'number'){

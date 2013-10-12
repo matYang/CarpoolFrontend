@@ -50,7 +50,7 @@
 		
 		this.sessionUser = new User(this.apis.users_findSession);
 		if (testMode) {
-			this.sessionUser.id = 1;
+			this.sessionUser.set("userId", 1);
 			this.isLoggedIn = true;
 			if(callback){
 				callback.success();
