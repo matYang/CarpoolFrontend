@@ -39,9 +39,12 @@
 
 
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
-		if (typeof messageId !== 'number' ){
+		if (typeof messageId === 'undefined' ){
 			Constants.dWarn("MessageManager::fetchMessage:: invalid parameter");
 			return;
+		}
+		if (typeof messageId !== 'number'){
+			messageId = parseInt(messageId, 10);
 		}
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("MessageManager::fetchMessage:: session does not exist, exit");
@@ -195,7 +198,7 @@
 		this.searchResults.overrideUrl(this.apis.DM_search);
 
 		this.searchResults.fetch({
-			data: $.param({'searchRepresentation': searchRepresentationObj.toJSON(), 'userId' : userId}),
+			data: $.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId}),
             dataType:'json',
 
             success:function(model, response){
