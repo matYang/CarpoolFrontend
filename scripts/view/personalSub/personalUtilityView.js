@@ -1,6 +1,6 @@
 var PersonalUtilityView = Backbone.View.extend({
 
-	initialize: function (user) {
+	initialize: function (params) {
 		_.bindAll(this, 'render', 'close', 'toggleBox', 'editPersonalInfo', 
 			'savePersonalInfo', 'cancelPersonalInfo', 'editLocation', 'saveFile', 
 			'savePassword', 'toggleNotificationMethods', 'testInput', 'bindEvents',
@@ -8,9 +8,13 @@ var PersonalUtilityView = Backbone.View.extend({
 		this.isClosed = false;
 		this.domContainer=$("#profilePage_content");
 		this.template = _.template(tpl.get('personalPage/personalUtility'));
-		this.user = user;
+		this.sessionUser = app.sessionManager.getSessionUser();
+		this.curUserId = params.intendedUserId;
+		if (this.curUserId !== this.sessionUser.get("userId")) {
+			throw "unexpected userId";
+		}
 		if (testMockObj.testMode === true) {
-			this.user = testMockObj.sampleUser;
+			this.sessionUser = testMockObj.sampleUser;
 		}
 		this.editingPersonalInfo = false;
 		this.render();
@@ -125,10 +129,10 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('#cancel_personalInfo').hide();
 		$('#save_personalInfo').hide();
 		$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
-		$('input[name=name]').val(this.user.get("name"));
-		$('input[name=phone]').val(this.user.get("phone"));
-		$('input[name=qq]').val(this.user.get("qq"));
-		$('input[name=location]').val(this.user.get("location"));
+		$('input[name=name]').val(this.sessionUser.get("name"));
+		$('input[name=phone]').val(this.sessionUser.get("phone"));
+		$('input[name=qq]').val(this.sessionUser.get("qq"));
+		$('input[name=location]').val(this.sessionUser.get("location"));
 
 		$(".validator").hide();
 
@@ -170,8 +174,8 @@ var PersonalUtilityView = Backbone.View.extend({
 		var that = this;	
 		app.userManager.changeContactInfo(
 			$('#utility_name>input').val(), 
-			app.sessionManager.getSessionUser().get("age"), 
-			app.sessionManager.getSessionUser().get("gender"), 
+			that.sessionUser.get("age"), 
+			that.sessionUser.get("gender"), 
 			$('#utility_phone>input').val(), 
 			$('#utility_QQ>input').val(), 
 			{
