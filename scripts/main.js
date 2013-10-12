@@ -202,7 +202,7 @@ var AppRouter = Backbone.Router.extend({
 			delete this.MessagePostView;
 			this.MessagePostView = null;
 		}
-		this.MessageEditView = new MessageEditView(messageId);
+		this.MessageEditView = new MessageEditView({'messageId': messageId});
 	},
 
 	postMessage: function(id, postState){

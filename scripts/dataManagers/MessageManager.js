@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	var postCount = 0;
+	var firstSuccessMessage = null;
 
 	this.MessageManager = function(sessionManager,  userManager){
 
@@ -57,7 +59,7 @@
 		this.message.set('messageId', messageId);
 
 		this.message.fetch({
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
@@ -76,9 +78,57 @@
 		});
 	};
 
-	MessageManager.prototype.postMessage = function(newMessage, callback) {
+
+	MessageManager.prototype._postSingleMessage = function(newMessage, promiseback, callback){
 		var self = this;
-		if (!newMessage || typeof newMessage !== 'object'){
+
+		newMessage.overrideUrl(this.apis.DM_dianming);
+		newMessage.set('messageId', -1);
+		newMessage.set('ownerId', this.sessionManager.getUserId());
+		newMessage.save({},{
+			dataType:'json',
+
+			success:function(model, response){
+				self.message = newMessage;
+				self.timeStamp = new Date();
+
+				if(promiseback){
+					promiseback(newMessage, callback, self);
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("MessageManager::postMessage:: post failed with response:");
+				Constants.dLog(response);
+				if(promiseback){
+					promiseback(null, callback, self);
+				}
+			}
+		});
+	};
+
+	MessageManager.prototype._executePromise = function(message, callback, immediateCaller) {
+		//always point to the last successful one
+		if (firstSuccessMessage === null){
+			firstSuccessMessage = message;
+		}
+		postCount -= 1;
+		if (postCount === 0){
+			immediateCaller.message = firstSuccessMessage;
+
+			if (firstSuccessMessage !== null){
+				callback.success(firstSuccessMessage.id);
+				firstSuccessMessage = null;
+			}
+			else{
+				callback.error();
+			}
+		}
+	};
+
+	MessageManager.prototype.postMessage = function(newMessages, callback) {
+		var self = this,
+			i = 0;
+		if (!newMessages || !(newMessages instanceof Backbone.Collection)){
 			Constants.dWarn("MessageManager::postMessage::invalid parameter, exit");
 			return;
 		}
@@ -86,30 +136,16 @@
 			Constants.dWarn("MessageManager::postMessage::currentMessage does not have session, exit");
 			return;
 		}
+		if (postCount > 0){
+			Constants.dWarn("MessagePost Queue not cleared yet");
+			return;
+		}
 
-		newMessage.overrideUrl(this.apis.DM_dianming);
-		newMessage.set('messageId', -1);
-		newMessage.save({},{
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
-			dataType:'json',
-
-			success:function(model, response){
-				self.message = newMessage;
-				self.timeStamp = new Date();
-
-				if(callback){
-					callbac.success();
-				}
-			},
-			error: function(model, response){
-				Constants.dWarn("MessageManager::postMessage:: post failed with response:");
-				Constants.dLog(response);
-				if(callback){
-					callback.error();
-				}
-			}
-		});
+		postCount = newMessages.length;
+		firstSuccessMessage = null;
+		for (i = 0; i < postCount; i++){
+			this._postSingleMessage(newMessages.at(i), this._executePromise, callback);
+		}
 	};
 
 
@@ -126,9 +162,8 @@
 		var self = this;
 
 		updatedMessage.overrideUrl(this.apis.DM_dianming);
+		updatedMessage.set('ownerId', this.sessionManager.getUserId());
 		updatedMessage.save({},{
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
             dataType:'json',
 
             success:function(model, response){
@@ -165,7 +200,7 @@
 		//this will force to add id into api path, correcting it
 		this.message.destroy({
 
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: $.param({ 'userId': self.sessionManager.getUserId()}),
             dataType:'json',
 
             success:function(model, response){
@@ -240,7 +275,7 @@
             success:function(model, response){
 				self.recents_timeStamp = new Date();
 				if(callback){
-					callback.success(this.recents);
+					callback.success(self.recents);
 				}
             },
             error: function(model, response){

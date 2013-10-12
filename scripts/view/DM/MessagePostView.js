@@ -588,7 +588,7 @@ var MessagePostView = Backbone.View.extend({
 				}
 				for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
 					var seatNumber = $("#seatsNumber_"+i).val();
-					seatNumber = Utilites.toInt(seatNumber);
+					seatNumber = Utilities.toInt(seatNumber);
 					this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("#seats_"+i).val()) || 0;
 				}
 			}

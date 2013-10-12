@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	var testMode = true;
+	var testMode = false;
 	this.UserManager = function(sessionManager){
 
 		this.apis = new ApiResource();

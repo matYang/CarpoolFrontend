@@ -31,12 +31,15 @@ var FrontPageView = Backbone.View.extend({
 		app.messageManager.fetchRecents({"success":this.renderRecents, "error": this.renderError});
 	},
 
-	renderRecents: function(recentMessages){
-		// recentMessages = app.messageManager.getSearchResults();
-		// for ( var i = 0; i < 3 && i < recentMessages.length; i++ ) {
-		// 	this.displayMessages.add(recentMessages.at(i));
-		// }
-		this.searchResultView = new SearchResultView(recentMessages, false);
+
+	renderRecents: function(){
+		recentMessages = app.messageManager.getRecents();
+		for ( var i = 0; i < 3 && i < recentMessages.length; i++ ) {
+			this.displayMessages.add(recentMessages.at(i));
+		}
+		this.searchResultView = new SearchResultView(this.displayMessages, false);
+		
+		this.bindRecentsEvents();
 	},
 
 
