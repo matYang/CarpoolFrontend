@@ -1,7 +1,6 @@
 (function () {
 	'use strict';
 
-	var testMode = false;
 	this.UserManager = function(sessionManager){
 
 		this.apis = new ApiResource();
@@ -100,8 +99,9 @@
 
 	//will be used to display personal informatiom page only
 	UserManager.prototype.fetchUser = function(intendedUserId, callback){
-		if (testMode) {
-			callback.success();
+		if (testMockObj.testMode) {
+			debugger;
+			callback.success(testMockObj.sampleUser);
 			return;
 		}
 		var self = this;
@@ -114,7 +114,7 @@
 		this.user.overrideUrl(this.apis.users_user);
 		this.user.set('userId', this.sessionManager.getUserId());
 		//this will force to add id into api path, correcting it
-		if (testMode) {
+		if (testMockObj.testMode) {
 			callback.success();
 			return;
 		}
@@ -124,7 +124,7 @@
 
             success:function(model, response){
 				if(callback){
-					callback.success();
+					callback.success(this.user);
 				}
             },
             error: function(model, response){
@@ -565,7 +565,7 @@
 
 
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
-		if(testMode){
+		if(testMockObj.testMode){
 			watchedUsers = testMockObj.sampleUsers;
 			callback.success(watchedUsers, 0);
 			return;
@@ -647,7 +647,7 @@
 	};
 
 	UserManager.prototype.fetchTransactionList = function(intendedUserId, callback) {
-		if(testMode){
+		if(testMockObj.testMode){
 			callback.success(testMockObj.sampleTransactions);
 			return;
 		}
@@ -689,7 +689,7 @@
 
 
 	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback) {
-		if(testMode){
+		if(testMockObj.testMode){
 			callback.success(testMockObj.sampleNotifications);
 			return;
 		}

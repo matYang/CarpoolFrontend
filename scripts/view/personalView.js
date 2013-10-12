@@ -11,13 +11,14 @@ var PersonalView = Backbone.View.extend({
 		this.childrenViews = {};
 		this.domContainer = $('#content');
 		this.watched = false;
+		this.sessionUser = app.sessionManager.getSessionUser();
 		app.userManager.fetchUser(this.curUserId, {"success":this.preRender, "error":this.renderError});
 
 	},
 
-	preRender: function(){
+	preRender: function(user){
 		var that = this;
-		this.sessionUser = app.sessionManager.getSessionUser();
+		this.user = user;
 		this.render();
 		this.switchChildView(this.activeViewState);
 		if (this.sessionUser.get("userId") !== this.curUserId){
@@ -42,7 +43,7 @@ var PersonalView = Backbone.View.extend({
 	},
 
 	render: function () {
-		this.domContainer.append(this.template(this.sessionUser.toJSON()));
+		this.domContainer.append(this.template(this.user.toJSON()));
 	},
 	renderError: function(){
 		Info.alert("Unable to fetch User data");
