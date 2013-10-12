@@ -100,7 +100,6 @@
 	//will be used to display personal informatiom page only
 	UserManager.prototype.fetchUser = function(intendedUserId, callback){
 		if (testMockObj.testMode) {
-			debugger;
 			callback.success(testMockObj.sampleUser);
 			return;
 		}
@@ -607,7 +606,10 @@
 
 
 	UserManager.prototype.fetchMessageHistory = function(intendedUserId, callback) {
-
+		if (testMockObj.testMode) {
+			callback.success(testMockObj.sampleMessages);
+			return;
+		}
 
 		var self = this;
 

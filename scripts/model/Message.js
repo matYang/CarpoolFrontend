@@ -110,8 +110,8 @@ var Message = Backbone.Model.extend({
         } else {
             for ( var p = 0; p < priceList.length; p++){
                 
-                if (priceList[p] == 0) {
-                    priceList[p] == priceList[p-1];
+                if (priceList[p] === 0) {
+                    priceList[p] = priceList[p-1];
                 }
             }
             if (priceList.length <= bookedSeats) {
@@ -121,6 +121,8 @@ var Message = Backbone.Model.extend({
             }
         }
         json.currentPrice = currentPrice;
+        json.departure_location = this.get('departure_location').toUiString();
+        json.arrival_location = this.get('arrival_location').toUiString();
         return json;
     },
 	toJSON: function(){

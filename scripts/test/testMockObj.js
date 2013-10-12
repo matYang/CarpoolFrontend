@@ -1,6 +1,6 @@
 
 var testMockObj = {
-	"testMode": true,
+	"testMode": false,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())

@@ -36,7 +36,6 @@ var PersonalSocialView = Backbone.View.extend({
 	bindEvents: function(){
 		var self = this;
 		$('#socialListContent>.social_card').on("click", function(e){
-			debugger;
 			app.navigate(self.sessionUser.id+"/personal/"+Utilities.getId(e.delegateTarget.id), true);
 		});
 	},
