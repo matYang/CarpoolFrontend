@@ -590,7 +590,7 @@ var MessagePostView = Backbone.View.extend({
 				this.toSubmit.priceList[seatNumber-1] = Utilities.toInt($("seats_"+i).val()) || 0;
 			}
 		}
-		for ( var r = 0; i < this.toSubmit.requests; i++) {
+		for ( var r = 0; r < this.toSubmit.requests.length; r++) {
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
 				var m = new Message();
