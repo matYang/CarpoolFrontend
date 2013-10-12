@@ -118,23 +118,6 @@ var MainPageView = Backbone.View.extend ({
 			}, 200);
 			me.searchRepresentation.set("isRoundTrip", true);
 		});
-		$("#goToSpecificPage>button").on("click", function(){
-			var page = $("#pageNumberInput").val();
-			if(!page) page = 1;
-			else if (page>me.pages) page = me.pages;
-			me.toPage(page);
-		});
-		$('#pageNumberInput').on('keypress', function(e){
-			var code = (e.keyCode ? e.keyCode : e.which);
-			if (code === 13){
-				var page = $('#pageNumberInput').val();
-				if(!page) page = 1;
-				else if (page>me.pages) page = that.pages;
-				me.toPage(page);
-			} else if (code<48 || code>57) {
-				e.preventDefault();
-			}
-		});
 	},
 
 	renderSearchResults: function(){
@@ -148,8 +131,6 @@ var MainPageView = Backbone.View.extend ({
 		}
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
-		this.toPage(1);
-		this.setPageNavigator();
 	},
 
 	renderError: function(){
@@ -283,31 +264,6 @@ var MainPageView = Backbone.View.extend ({
 			that.searchRepresentation.get("arrivalLocation").reverseFill();
 		});
 
-	},
-
-	toPage: function(page){
-		this.searchResultView.toPage(page);
-		this.currentPage = page;
-	},
-
-	setPageNavigator: function(){
-		$(".pageNumber").off();
-		
-		var length = this.filteredMessages ? this.filteredMessages.length : 0;
-		var pages =  Math.floor(length / 6) + 1;
-		this.pages = pages;
-		var buf = [];
-		for (var i = 1; i<=pages; i++) {
-			buf[i-1] = "<a href='javascript:void(0)' class = 'pageNumber' id='pageNumber_"+i+"'> "+ i +"</span>";
-		}
-		var html = buf.join("");
-		$("#pages").empty();
-		$("#pages").append(html);
-		var that = this;
-		$(".pageNumber").on("click", function(e){
-			var id = Utilities.toInt(Utilities.getId(e.target.id));
-
-		});
 	},
 
 	close: function () {

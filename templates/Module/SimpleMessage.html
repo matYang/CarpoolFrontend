@@ -3,9 +3,9 @@
   <div id = 'searchResultContainerInfo_<%= messageId %>' class = 'searchResultContainerInfo'>
     <div class = 'fromInfo'>
       <div class='label' style="font-weight:bold; float:none; !important ">出发</div>
-      <div class = 'searchResultOriginProvince'><%= departure_location.toJSON().province %></div>  
-      <div class = 'searchResultOriginCity'><%= departure_location.toJSON().city %></div>
-      <div class = 'searchResultDepartDate'><%= simple_departure_time %></div>
+      <div class = 'searchResultOriginProvince'><%= departure_location.province %></div>  
+      <div class = 'searchResultOriginCity'><%= departure_location.city %></div>
+      <div class = 'searchResultDepartDate'><%= departure_time %></div>
       <div class = 'searchResultDepartTime'><%= departure_timeSlot %></div>
       <div class = 'searchResultDepartSeat'>剩余 <%= departure_seatsNumber - departure_seatsBooked %> 座</div>
     </div>
@@ -16,21 +16,21 @@
     <% } %>
     <div class = 'toInfo'>
       <div class='label' style="font-weight:bold;float:none; !important">到达</div>
-      <div class = 'searchResultDestProvince'><%= arrival_location.toJSON().province %></div>  
-      <div class = 'searchResultDestCity'><%= arrival_location.toJSON().city %></div>
+      <div class = 'searchResultDestProvince'><%= arrival_location.province %></div>  
+      <div class = 'searchResultDestCity'><%= arrival_location.city %></div>
       <% if (isRoundTrip === true)  { %>
-        <div class = 'searchResultReturnDate'><%= simple_arrival_time %></div>
+        <div class = 'searchResultReturnDate'><%= arrival_time %></div>
         <div class = 'searchResultReturnTime'><%= departure_timeSlot %></div>
         <div class = 'searchResultReturnSeat'>剩余 <%= arrival_seatsNumber - arrival_seatsBooked %> 座</div>
       <% } %>
     </div>
 
-    <div class = 'searchResultUserName'><%= owner %></div>
   </div>
   <div id = 'searchResultContainerPrice_<%= messageId %>' class='searchResultContainerPrice'>
     <div class = 'searchResultPriceLogo'>￥ <%= currentPrice %>
     </div>
   </div>
-  <div class = 'searchResultPublishTime'>发布于<%= simple_creationTime %></div>
+  <div class = 'searchResultUserName'><%= owner %></div>
+  <div class = 'searchResultPublishTime'>发布于<%= creationTime %></div>
 </div>
 

@@ -499,7 +499,6 @@
 
             success:function(model, response){
 				//the returned is the watched user, add it to the social list
-				self.sessionUser.get('socialList').add(tempCurUser);
 				self.timeStamp = new Date();
 				if(callback){
 					callback.success();
@@ -563,7 +562,11 @@
 
 
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
-
+		// if(callback){
+		// 	watchedUsers = testMockObj.sampleUsers;
+		// 	callback.success(watchedUsers, 0);
+		// 	return;
+		// }
 		var self = this;
 
 		if (typeof intendedUserId !== 'number'){
@@ -586,7 +589,7 @@
             success:function(model, response){
 				self.socialList_timeStamp = new Date();
 				if(callback){
-					callback.success(watchedUsers);
+					callback.success(watchedUsers, 0);
 				}
             },
             error: function(model, response){

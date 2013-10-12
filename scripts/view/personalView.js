@@ -21,21 +21,21 @@ var PersonalView = Backbone.View.extend({
 		this.render();
 		this.switchChildView(this.activeViewState);
 		if (this.sessionUser.get("userId") !== this.curUserId){
-				for (var user = 0; user < this.sessionUser.get('socialList').length; user++) {
-					if (this.sessionUser.get('socialList')[user].get("userId") === this.curUserId) {
-						this.watched = true;
-						break;
-					}
+			for (var user = 0; user < this.sessionUser.get('socialList').length; user++) {
+				if (this.sessionUser.get('socialList')[user].get("userId") === this.curUserId) {
+					this.watched = true;
+					break;
 				}
-				//if user has watched this user
-				if (this.watched){
-					$("#profilePage_utilityTab").html(" + 已关注");
-					$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
-					this.bindDeWatchEvent();
-				} else {
-					$("#profilePage_utilityTab").html(" + 关注");
-					this.bindWatchEvent();
-				}
+			}
+			//if user has watched this user
+			if (this.watched){
+				$("#profilePage_utilityTab").html(" + 已关注");
+				$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
+				this.bindDeWatchEvent();
+			} else {
+				$("#profilePage_utilityTab").html(" + 关注");
+				this.bindWatchEvent();
+			}
 
 		}
 		this.bindEvents();
@@ -45,7 +45,7 @@ var PersonalView = Backbone.View.extend({
 		this.domContainer.append(this.template(this.sessionUser.toJSON()));
 	},
 	renderError: function(){
-		Info.warn("Unable to fetch User data");
+		Info.alert("Unable to fetch User data");
 	},
 	switchChildView: function(viewState){
 
