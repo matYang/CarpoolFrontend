@@ -57,7 +57,7 @@
 		this.message.set('messageId', messageId);
 
 		this.message.fetch({
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
@@ -89,9 +89,8 @@
 
 		newMessage.overrideUrl(this.apis.DM_dianming);
 		newMessage.set('messageId', -1);
+		newMessage.set('ownerId', this.sessionManager.getUserId());
 		newMessage.save({},{
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
@@ -126,9 +125,8 @@
 		var self = this;
 
 		updatedMessage.overrideUrl(this.apis.DM_dianming);
+		updatedMessage.set('ownerId', this.sessionManager.getUserId());
 		updatedMessage.save({},{
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
             dataType:'json',
 
             success:function(model, response){
@@ -165,7 +163,7 @@
 		//this will force to add id into api path, correcting it
 		this.message.destroy({
 
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: $.param({ 'userId': self.sessionManager.getUserId()}),
             dataType:'json',
 
             success:function(model, response){
