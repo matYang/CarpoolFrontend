@@ -30,18 +30,18 @@ var PersonalMessageView = Backbone.View.extend({
 			message = messages.at(i);
 			if (message.get("state") === Constants.messageState.normal){
 				if (message.get("ownerId") === this.curUserId && this.counter[0]+this.counter[1]<=6) {
-					this.myActiveContainer.append(this.messageTemplate(message.toJSON()));
+					this.myActiveContainer.append(this.messageTemplate(message._toJSON()));
 					this.counter[0]++;
 				} else if ( this.counter[2]+this.counter[3]<=6) {
-					this.participatedActiveContainer.append(this.messageTemplate(message.toJSON()));
+					this.participatedActiveContainer.append(this.messageTemplate(message._toJSON()));
 					this.counter[2]++;
 				}
 			} else {
 				if (message.get("ownerId") === this.curUserId && this.counter[0]+this.counter[1]<=6)  {
-					this.myFinishedContainer.append(this.messageTemplate(message.toJSON()));
+					this.myFinishedContainer.append(this.messageTemplate(message._toJSON_toJSON()));
 					this.counter[1]++;
 				} else if ( this.counter[2]+this.counter[3] <= 6 ) {
-					this.participatedFinishedContainer.append(this.messageTemplate(message.toJSON()));
+					this.participatedFinishedContainer.append(this.messageTemplate(message._toJSON()));
 					this.counter[3]++;
 				}
 			}
