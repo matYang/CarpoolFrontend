@@ -42,8 +42,8 @@
 
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
 		if (testMockObj.testMode){
-			this.recents = testMockObj.sampleMessages;
-			callback.success(this.recents);
+			this.message = testMockObj.sampleMessageA;
+			callback.success(this.message);
 			return;
 		}
 		if (typeof messageId === 'undefined' ){
