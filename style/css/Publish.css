@@ -135,6 +135,7 @@
   color: #585858;
   float: left;
   text-align: right;
+  padding-top:8px;
 }
 .publish_header {
   margin-left: 0;
@@ -324,6 +325,7 @@
 	width:13px;
 	margin-right:5px;
 	margin-left:10px;
+	top:8px;
 }
 
 .input_date {
@@ -481,4 +483,8 @@
 }
 #conditionalPriceSwitch.publish_selected{
 	border: 2px solid rgb(0, 170, 255);
+}
+
+.publish_time>select{
+	height:28px;
 }

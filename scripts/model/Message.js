@@ -121,18 +121,26 @@ var Message = Backbone.Model.extend({
             }
         }
         json.currentPrice = currentPrice;
-        json.departure_location = this.get('departure_location').toUiString();
-        json.arrival_location = this.get('arrival_location').toUiString();
+        if ( this.get('departure_location') instanceof UserLocation ) {
+        	json.departure_location = this.get('departure_location').toUiString();
+    	}
+    	if ( this.get('arrival_location') instanceof UserLocation ) {
+        	json.arrival_location = this.get('arrival_location').toUiString();
+    	}
         return json;
     },
 	toJSON: function(){
 		var json = _.clone(this.attributes);
 		
 		//ignore user here, meaningless to do anything to user persistence from inside message
-		json.departure_location = this.get('departure_location').toJSON();
+		if ( this.get('departure_location') instanceof UserLocation ) {
+			json.departure_location = this.get('departure_location').toJSON();
+		}
 		json.departure_time = Utilities.castToAPIFormat(this.get('departure_time'));
 
-		json.arrival_location = this.get('arrival_location').toJSON();
+		if ( this.get('arrival_location') instanceof UserLocation ) {
+			json.arrival_location = this.get('arrival_location').toJSON();
+		}
 		json.arrival_time = Utilities.castToAPIFormat(this.get('arrival_time'));
 
 		//these 2 are actually ignored by server side, placing here for uniformity

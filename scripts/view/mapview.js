@@ -16,7 +16,7 @@ var MapView = Backbone.View.extend({
 	},
 
 	mapInitialize:function(){
-		if (this.origin && !this.dest) {
+		if (this.origin instanceof Backbone.Model && !(this.dest instanceof Backbone.Model)) {
 			this.getLatLng(this.origin, this.oLatLng);
 		}
 		var center = new google.maps.LatLng(this.oLatLng.lat, this.oLatLng.lng);
@@ -27,7 +27,7 @@ var MapView = Backbone.View.extend({
 		this.map = new google.maps.Map(document.getElementById(this.div), myOptions);
 		this.directionDisplay.setMap(this.map);
 		var that = this;
-		if (this.origin && this.dest && this.origin.get("city") && this.dest.get("city") && this.origin.equals(this.dest)){
+		if (this.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && this.origin.equals(this.dest)){
 			that.getDirection(that.origin, that.dest);
 		}
 	},
@@ -76,8 +76,8 @@ var MapView = Backbone.View.extend({
 	},
 	getDirection:function(origin, dest){
 		var request = {}, that = this;
-		request.origin = origin.get("city") +" " + origin.get("province");
-		request.destination = dest.get("city") + " " + dest.get("province");
+		request.origin = origin.get("point")+" "+origin.get("city") +" " + origin.get("province");
+		request.destination = dest.get("point")+" "+ dest.get("city") + " " + dest.get("province");
 		request.travelMode = google.maps.TravelMode.DRIVING;
 		request.unitSystem = google.maps.UnitSystem.METRIC;
 		this.directionService.route(request, function(response, status) {

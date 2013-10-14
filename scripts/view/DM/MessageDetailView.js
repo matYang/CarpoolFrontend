@@ -11,21 +11,6 @@ var MessageDetailView = Backbone.View.extend({
 		this.user = app.sessionManager.getSessionUser();
 		this.userId = app.sessionManager.getUserId();
 
-		//if (testMockObj.testMode){
-		//this.message = testMockObj.sampleMessageA;
-		////To allow edit
-		//this.message.get("arrival_location").set("city","苏州");
-		//this.message.get("arrival_location").set("region","苏州市区");
-		//this.message.get("arrival_location").set("university","苏州大学");
-		//this.message.set("roundTrip", true);
-		//this.message.set("departure_seatsNumber", 5);
-		//this.message.set("departure_seatsBooked", 1);
-		//this.message.set("arrival_seatsNumber", 5);
-		//this.message.set("arrival_seatsBooked", 3);
-		//this.transactions = testMockObj.sampleTransactions;
-		//this.message.set("note", "火车站出发，谢绝大行李");
-		//this.message.set("departure_priceList", [20,18,15]);
-		//}
 		var self = this;
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
 			success: function(){
@@ -54,6 +39,22 @@ var MessageDetailView = Backbone.View.extend({
 	},
 
 	render: function(){
+
+		// if (testMockObj.testMode){
+		// this.message = testMockObj.sampleMessageA;
+		// //To allow edit
+		// this.message.get("arrival_location").set("province","上海");
+		// this.message.get("arrival_location").set("city","上海");
+		// this.message.get("arrival_location").set("point","浦东机场");
+		// this.message.set("roundTrip", true);
+		// this.message.set("departure_seatsNumber", 5);
+		// this.message.set("departure_seatsBooked", 1);
+		// this.message.set("arrival_seatsNumber", 5);
+		// this.message.set("arrival_seatsBooked", 3);
+		// this.transactions = testMockObj.sampleTransactions;
+		// this.message.set("note", "火车站出发，谢绝大行李");
+		// this.message.set("departure_priceList", [20,18,15]);
+		// }
 		this.domContainer.append(this.template(this.parsedMessage));
 		
 		this.map = new MapView({
@@ -101,12 +102,12 @@ var MessageDetailView = Backbone.View.extend({
 		$("#view_transactions_button").on("click", function(){
 			var content = $("#view_transactions_content");
 			if (that.showTransaction) {
+				content.slideUp(100);
+			} else {
 				app.userManager.fetchTransactionList(this.ownerId,{
 					"success":that.loadTransactions,
 					"error":that.error
 				});
-				content.slideUp(100);
-			} else {
 				content.slideDown(100);
 			}
 			that.showTransaction = !that.showTransaction;
@@ -180,8 +181,12 @@ var MessageDetailView = Backbone.View.extend({
 
 	parseMessage: function(message){
 		var parsedMessage = {};
-		parsedMessage.origin = message.get("departure_location").toString();
-		parsedMessage.dest = message.get("arrival_location").toString();
+		if (message.get("departure_location") instanceof UserLocation) {
+			parsedMessage.origin = message.get("departure_location").toUiString();
+		}
+		if (message.get("departure_location") instanceof UserLocation) {
+			parsedMessage.dest = message.get("arrival_location").toUiString();
+		}
 		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_time"), true);
 		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
 		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
