@@ -1,9 +1,8 @@
 var PersonalUtilityView = Backbone.View.extend({
 
 	initialize: function (params) {
-		_.bindAll(this, 'render', 'close', 'toggleBox', 'editPersonalInfo', 
-			'savePersonalInfo', 'cancelPersonalInfo', 'editLocation', 'saveFile', 
-			'savePassword', 'toggleNotificationMethods', 'testInput', 'bindEvents',
+		_.bindAll(this, 'render', 'close', 'savePersonalInfo', 'saveFile', 
+			'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents',
 			'saveSuccess', 'saveError');
 		this.isClosed = false;
 		this.domContainer=$("#profilePage_content");
@@ -16,38 +15,52 @@ var PersonalUtilityView = Backbone.View.extend({
 		if (testMockObj.testMode === true) {
 			this.sessionUser = testMockObj.sampleUser;
 		}
-		this.editingPersonalInfo = false;
 		this.render();
 		this.bindEvents();
+		this.bindValidator();
 	},
 
 	bindEvents: function () {
 		var that = this;
-		$('.expandableHeader').on('click', function(e){
-			that.toggleBox(e);
-		});
-		$('#edit_personalInfo').on('click',function(){
-			that.editPersonalInfo();
-		});
 		$('#save_personalInfo').on('click',function(){
-			that.savePersonalInfo();
-		});
-		$('#cancel_personalInfo').on('click',function(){
-			that.cancelPersonalInfo();
+				debugger;
+			if ($(".invalid_input").length === 0){
+				that.savePersonalInfo();
+			}
 		});
 		$('input[name=location]').on('click',function(){
-			that.editLocation();
+			// that.editLocation();
 		});
 		$('#file_picture').fineUploader({
 			request:{
 				endpoint:'/upload'
 			}
 		});
+		$('#basicInfo').on('click', function(){
+			$('#utility_personalInfo').show();
+			$('#utility_accountSetting').hide();
+			$('#utility_password').hide();
+			$('.invalid_input').removeClass('invalid_input');
+		});
+		$('#passwordInfo').on('click', function(){
+			$('#utility_password').show();
+			$('#utility_personalInfo').hide();
+			$('#utility_accountSetting').hide();
+			$('.invalid_input').removeClass('invalid_input');
+		});
+		$('#tradeInfo').on('click', function(){
+			$('#utility_accountSetting').show();
+			$('#utility_personalInfo').hide();
+			$('#utility_password').hide();
+			$('.invalid_input').removeClass('invalid_input');
+		});
 		$('#upload_picture').on('click',function(){
 			//TODO:
 		});
 		$("#submit_password").on('click', function() {
-			var valid = that.savePassword($("input[name=oldPassword]").val(),$("input[name=newPassword]").val(),$("input[name=confirmNewPassword]").val());
+			if ($('.invalid_input').length === 0 && $('input[name=oldPassword]').val().length && $('input[name=newPassword]').val().length && $('input[name=confirrmNewPassword]').val().length) {
+				that.savePassword($("input[name=oldPassword]").val(),$("input[name=newPassword]").val(),$("input[name=confirmNewPassword]").val());
+			}
 		});
 		$("#reset_password").on('click', function() {
 			$("input[name=oldPassword]").val("");
@@ -64,120 +77,133 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('input[name=location]').on('keypress', function(e){
 			e.preventDefault();
 		});
-		$("#utility").validate({
-			onKeyup:true,
-			onFocusOut:true,
-			errorContainer:"#name_validator, #qq_validator, #phone_validator",
-			rules: {
-				name: {
-					"required":true,
-					"minlength":2,
 
-				},
-				qq: {
-					"required": true,
-					"minlength": 5,
-					"maxlength": 10,
-					"digits":true
-				},
-				phone: {
-					"required":true,
-					"minlength": 11,
-					"maxlength": 11,
-					"digits":true
-				}
-			},
-			messages: {
-				name:{
-					required:"名字必须填写",
-					minlength:"名字必须两字以上"
-				},
-				qq:{
-					"required": "QQ号必须填写",
-					"minlength": "QQ号必须是5到10位数字",
-					"maxlength": "QQ号必须是5到10位数字",
-					"digits":"QQ号必须是5到10位数字"
-				},
-				phone:{
-					"required": "电话必须填写",
-					"minlength": "电话必须是5到10位数字",
-					"maxlength": "电话必须是5到10位数字",
-					"digits":"电话必须是5到10位数字"
-				}
-			},
-			errorPlacement: function ($error, $element) {
-				var name = $element.attr("name");
-				var messages = $("#" + name + "_validator_message").html();
-				if (!messages.indexOf($error)>-1){
-					$("#" + name + "_validator_message").empty();
-					$("#" + name + "_validator_message").append($error);
-				}
-			},
-			highlight: function(element, errorClass) {
-				$(element).css("background-color:#d1d1d1;");
-			}
+		$('input, textarea').on('focus', function(e){
+			this.classList.add("selected_input");
+		});
+		$('input, textarea').on('blur', function(e){
+			this.classList.remove("selected_input");
 		});
 
 		$('#toggleNotificationMethods').on('change', function(){
 			that.toggleNotificationMethods(this.value);
 		});
 	},
+
+	bindValidator: function(){
+		var cmv, cdv, cyv;
+		$('input[name=name]').on('blur', function(e){
+			if (Utilities.isEmpty(this.value)){
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=location]').on('blur', function(e){
+			if (Utilities.isEmpty(this.value)){
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=qq]').on('blur', function(e){
+			if (!($.isNumeric(this.value)) ||  this.value.length>10 || this.value.length<5){
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=phone]').on('blur', function(e){
+			if (!($.isNumeric(this.value)) ||  this.value.length>11 || this.value.length<8){
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=birthyear]').on('blur', function(e){
+			
+			if (!($.isNumeric(this.value)) || Utilities.toInt(this.value) < 1910 || Utilities.toInt(this.value) > 2012){
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=birthmonth]').on('blur', function(e){
+			cdv = Utilities.toInt($('input[name=birthday]').val()), 
+			cmv =  Utilities.toInt(this.value);
+			if (!($.isNumeric(this.value)) || cmv < 1 || cmv > 12){
+				this.classList.add("invalid_input");
+			} else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30){
+				this.classList.add("invalid_input");
+			} else if (cmv === 2 && cdv > 29 || (cdv>28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) )) {
+				this.classList.add("invalid_input");
+			} else {
+				this.classList.remove("invalid_input");
+				$('input[name=birthday]').removeClass("invalid_input");
+			}
+		});
+		$('input[name=birthday]').on('blur', function(e){
+			cmv = Utilities.toInt($('input[name=birthmonth]').val()), 
+			cdv =  Utilities.toInt(this.value);
+			cyv = Utilities.toInt($('input[name=birthyear]').val());
+			if (!($.isNumeric(this.value)) || cdv < 1 || cdv > 31){
+				this.classList.add("invalid_input");
+			} else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30){
+				this.classList.add("invalid_input");
+			} else if (cmv === 2 && cdv > 29 || (cdv>28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) )) {
+				this.classList.add("invalid_input");
+			} else {
+				$('input[name=birthmonth]').removeClass("invalid_input");
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=oldPassword]').on('blur', function(e) {
+			if (Utilities.isEmpty(this.value)){
+				this.classList.add("invalid_input");	
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=newPassword]').on('blur', function(e) {
+			if (Utilities.isEmpty(this.value) || this.value.length < 8){
+				this.classList.add("invalid_input");	
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+		$('input[name=confirmNewPassword]').on('blur', function(e) {
+			if (Utilities.isEmpty(this.value) || this.value !== $('input[name=newPassword]').val()){
+				this.classList.add("invalid_input");	
+			} else {
+				this.classList.remove("invalid_input");
+			}
+		});
+
+	},
 	render: function () {
 		var that = this;
 		this.domContainer.append(this.template);
-		$(".utilityBoxContent").hide();
-		$('#cancel_personalInfo').hide();
-		$('#save_personalInfo').hide();
 		$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
 		$('input[name=name]').val(this.sessionUser.get("name"));
 		$('input[name=phone]').val(this.sessionUser.get("phone"));
 		$('input[name=qq]').val(this.sessionUser.get("qq"));
-		$('input[name=location]').val(this.sessionUser.get("location"));
-
-		$(".validator").hide();
-
-
-	},
-
-	toggleBox: function (e) {
-		var id = e.delegateTarget.parentElement.id;
-		if ($("#"+id+">.expandableHeader>.collapsed").length>0){
-			$("#"+id+">.expandableHeader>.collapsed").removeClass('collapsed').addClass('expanded');
-			$("#"+id+">.utilityBoxContent").slideDown();
-			$(":not(#"+id+")>.utilityBoxContent").slideUp();
-			$(":not(#"+id+")>.expandableHeader>.expanded").removeClass('expanded').addClass('collapsed');
-			this.current = id;
-		} else {
-			$("#"+id+">.expandableHeader>.expanded").removeClass('expanded').addClass('collapsed');
-			$("#"+id+">.utilityBoxContent").slideUp();
-			this.current = "";
-		}
-	},
-	editPersonalInfo: function() {
-		this.editingPersonalInfo = true;
-		$('#edit_personalInfo').hide();
-		$('#cancel_personalInfo').show();
-		$('#save_personalInfo').show();
-		$('#utility_personalInfo>.utilityBoxContent>div>input').show();
-		$('#utility_personalInfo>.utilityBoxContent>div>.value').hide();
-	},
-	cancelPersonalInfo: function() {
-		this.editingPersonalInfo = false;
-		$('#edit_personalInfo').show();
-		$('#cancel_personalInfo').hide();
-		$('#save_personalInfo').hide();
-		$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
-		$('#utility_personalInfo>.utilityBoxContent>div>.value').show();
-
+		$('input[name=location]').val(this.sessionUser.get("location").toUiString());
+		$('input[name=gender][value='+this.sessionUser.get("gender")+']').prop("checked", true);
+		$('#utility_password').hide();
+		$('#utility_accountSetting').hide();
 	},
 	savePersonalInfo: function() {
-		var that = this;	
+		var that = this,
+			date = new Date();
+		date.setYear($('input[name=birthyear]'));
+		date.setMonth($('input[name=birthmonth]'));
+		date.setDate($('input[name=birthday]'));
 		app.userManager.changeContactInfo(
-			$('#utility_name>input').val(), 
-			that.sessionUser.get("age"), 
-			that.sessionUser.get("gender"), 
-			$('#utility_phone>input').val(), 
-			$('#utility_QQ>input').val(), 
+			$('input[name=name]').val(), 
+			$('input[name=gender]').val(), 
+			$('input[name=phone]').val(), 
+			$('input[name=qq]').val(), 
+			date, 
 			{
 			"success": that.saveSuccess,
 			"error": that.saveError
@@ -192,48 +218,23 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	saveSuccess: function(){
 		alert("user contactInfo update successful");
-		this.editingPersonalInfo = false;
-		$('#edit_personalInfo').show();
-		$('#cancel_personalInfo').hide();
-		$('#save_personalInfo').hide();
-		$('#utility_personalInfo>.utilityBoxContent>div>input').hide();
-		$('#utility_personalInfo>.utilityBoxContent>div>.value').show();
 	},
 	saveError:function(){
 		Info.warn("Personal info update failed");
 	},
-	editLocation: function() {
-		this.locationPickerView = new LocationPickerView();
-	},
-
 	saveFile: function( fileName ) {
-		var fileTypes= ["png","jpg","jpeg","bmp"];
+		var fileTypes= ["png","jpg","jpeg","bmp"],
+			dots, fileType;
 		if (!fileName) {
 			return;
 		}
-		var dots = fileName.split(".");
-		var fileType = "." + dots[dots.length-1];
+		dots = fileName.split(".");
+		fileType = "." + dots[dots.length-1];
 		return (fileTypes.join(".").indexOf(fileType.toLowerCase()) !== -1);
 	},
 
 	savePassword: function(oldPassword, newPassword, confirmNewPassword){
-		var valid = false;
-		if (newPassword.length<8) {
-			valid = false;
-		}
-		if(newPassword !== confirmNewPassword){
-			valid = false;
-		}
-		else{
-			valid = true;
-		}
-
-		if (valid){
-			app.userManager.changePassword(oldPassword, newPassword, confirmNewPassword, {"success":this.passwordSuccess,"error":this.passwordError});
-		} else {
-			alert("new password does not match");
-		}
-
+		app.userManager.changePassword(oldPassword, newPassword, confirmNewPassword, {"success":this.passwordSuccess,"error":this.passwordError});
 	},
 	passwordSuccess: function(){
 		alert("Password changed");
@@ -242,8 +243,7 @@ var PersonalUtilityView = Backbone.View.extend({
 		Info.warn("password change failed");
 	},
 	toggleNotificationMethods: function(value){
-		var shouldEmail = true;
-		var shouldPhone = true;
+		var shouldEmail = true, shouldPhone = true;
 		switch (value){
 			case "both":
 				shouldEmail = shouldPhone = true;
@@ -273,10 +273,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	close: function () {
 		if (!this.isClosed){
-			$('.expandableHeader').off();
-			$('#edit_personalInfo').off();
 			$('#save_personalInfo').off();
-			$('#cancel_personalInfo').off();
 			$('input[name=location]').off();
 			$('input[name=phone]').off();
 			$('input[name=qq]').off();
@@ -284,14 +281,17 @@ var PersonalUtilityView = Backbone.View.extend({
 			$('#upload_picture').off();
 			$("#submit_password").off();
 			$("#reset_password").off();
+			$('#basicInfo').off();
+			$('#passwordInfo').off();
+			$('#tradeInfo').off();
 			this.domContainer.empty();
 			this.isClosed = true;
 		}
 	},
 
 	testInput: function (event, regularEx) {
-		var regex = new RegExp(regularEx);
-		var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+		var regex = new RegExp(regularEx),
+		key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
 		if (!regex.test(key)) {
 			event.preventDefault();
 			return false;
@@ -303,3 +303,4 @@ var PersonalUtilityView = Backbone.View.extend({
 	}
 
 });
+

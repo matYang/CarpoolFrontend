@@ -177,7 +177,7 @@
 
 
 
-	UserManager.prototype.changeContactInfo = function(name, age, gender, phone, qq, birthday, callback) {
+	UserManager.prototype.changeContactInfo = function(name, gender, phone, qq, birthday, callback) {
 		//if invalid input or is already logged in, can not change contact information
 		if (!(name && age && (typeof gender === 'number') && phone && qq)){
 			Constants.dWarn("UserManager::changeContackInfo:: invalid parameter");
@@ -193,7 +193,6 @@
 
 		this.sessionUser.overrideUrl(this.apis.users_contactInfo);
 		this.sessionUser.set('name', name);
-		this.sessionUser.set('age', age);
 		this.sessionUser.set('gender', gender);
 		this.sessionUser.set('phone', phone);
 		this.sessionUser.set('qq', qq);
