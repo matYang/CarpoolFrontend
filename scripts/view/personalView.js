@@ -128,8 +128,8 @@ var PersonalView = Backbone.View.extend({
 				app.userManager.watchUser(this.curUserId, {
 					"success":that.watchSuccess,
 					"error":that.watchError
-				});	
-			});			
+				});
+			});
 		}
 	},
 	bindDeWatchEvent: function(){
@@ -138,13 +138,13 @@ var PersonalView = Backbone.View.extend({
 			app.userManager.deWatchUser(this.curUserId, {
 					"success":that.deWatchSuccess,
 					"error":that.deWatchError
-			});	
+			});
 		});
 	},
 
 	watchSuccess: function(){
 		$("#profilePage_utilityTab").html("已关注");
-		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>")
+		$("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
 		$('#profilePage_utilityTab').off();
 		this.bindDeWatchEvent();
 	},
