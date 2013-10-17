@@ -90,7 +90,7 @@
 }
 
 .no-input-value {
-  color:#aaaaaa;
+  color:#666;
   /*This class is used for default value (or instruction) in input field,
   need to be removed upon user input*/
 }

@@ -139,25 +139,27 @@ var TopBarView = Backbone.View.extend({
 
 						error: function(status){
 							alert("登录失败，请稍后再试");
-							$("#login_username").css("background-color","#ff7777");
-							$("#login_password").css("background-color","#ff7777");
+							$("#login_username").addClass('invalid_input');
+							$("#login_password").addClass('invalid_input');
 						}
 					});
 				} else {
 					//请输入密码
 					alert("用户名和密码不能为空");
-					$("#login_username").css("background-color","#ff7777");
-					$("#login_password").css("background-color","#ff7777");
+					$("#login_username").addClass('invalid_input');
+					$("#login_password").addClass('invalid_input');
 				}
 			});
 		}
 		else{
-			//TODO add a logout btn
 			$('#logout').on('click', function(){
 				self.logout();
 			});
 		}
 
+		$("#login_username,#login_password").on('focus', function(){
+			this.classList.remove('invalid_input');
+		});
 	},
 
 	logout: function(){
