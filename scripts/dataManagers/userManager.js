@@ -123,7 +123,7 @@
 
             success:function(model, response){
 				if(callback){
-					callback.success(this.user);
+					callback.success(self.user);
 				}
             },
             error: function(model, response){
