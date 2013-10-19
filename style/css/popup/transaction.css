@@ -92,15 +92,29 @@
 
 #transaction_state{
 	position:relative;
-	margin-left:15px;
-	width:75px;
+	width:102px;
 	height:30px;
 	padding-top:10px;
 	float:left;
 	text-align:center;
-	font-size:20px;
+	font-size:18px;
 	border:solid 1px #999999;
+	color:#ffffff;
 }
+
+.transactionState0, .transactionState2{
+	background-color: #359a64;
+}
+
+.transactionState1, .transactionState5{
+	background-color: rgb(228,52,27);
+}
+
+.transactionState3, .transactionState4{
+	background-color: #33aaff;
+}
+
+
 #transaction_creation{
 	
 }
@@ -208,5 +222,13 @@
 #transaction_totalPrice{
 	width:auto;
 	height:20px;
+	float:left;
+}
+
+#transaction_userNote{
+	margin:10px;
+	width:290px;
+	height:140px;
+	padding:5px;
 	float:left;
 }

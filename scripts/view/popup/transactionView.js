@@ -30,6 +30,7 @@ var TransactionDetailView = Backbone.View.extend({
 		this.domContainer = $('#popup');
 		this.render();
 		this.load();
+		this.textareaClicked = false;
 
 		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === 0) {
 			$("#closeButton").before($("<div>").attr("id","deleteButton"));
@@ -59,7 +60,7 @@ var TransactionDetailView = Backbone.View.extend({
 		if (!this.editable){
 			$("#transaction_number").prop("disabled", true);	
 			$("#startButton").remove();
-;		}
+		}
 	},
 	load: function(){
 		$("#transaction_number").val(this.transaction.get("people"));
@@ -102,9 +103,18 @@ var TransactionDetailView = Backbone.View.extend({
 			that.calculateTotal();
 		});
 		$("#startButton").on("click", function(){
+			if (that.textareaClicked) {
+				that.transaction.set("userNote", $("#transaction_userNote").val());
+			}
 			app.transactionManager.initTransaction(that.transaction, function(){
 				that.close();
 			});
+		});
+		$("#transaction_userNote").on("focus", function(e){
+			if (!that.textareaClicked) {
+				that.textareaClicked = true;
+				e.target.textContent = "";
+			}
 		});
 	},
 	calculateTotal:function(){
@@ -123,6 +133,9 @@ var TransactionDetailView = Backbone.View.extend({
 	close: function () {
 		if (!this.isClosed){
 			$("#transaction_close").off();
+			$("#startButton").off();
+			$("#transaction_go, #transaction_back").off();
+			$("#transaction_number").off();
 			this.domContainer.empty();
 			this.domContainer.hide();
 			this.isClosed = true;

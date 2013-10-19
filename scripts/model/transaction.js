@@ -150,14 +150,16 @@ var Transaction = Backbone.Model.extend({
 		}
 
 		if (json.state === 0 ){
-			json.stateText = "有效";
+			json.stateText = "接受预定中";
 		} else if (json.state === 1 ){
+			json.stateText = "已经取消";
+		} else if (json.state === 2 ){
 			json.stateText = "即将开始";
-		} else if (json.state === 2) {
-			json.stateText = "完成";
 		} else if (json.state === 3) {
-			json.stateText = "审查中";
+			json.stateText = "完成";
 		} else if (json.state === 4) {
+			json.stateText = "审查中";
+		} else if (json.state === 5) {
 			json.stateText = "无效";
 		} 
 		return json;
