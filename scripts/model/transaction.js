@@ -65,39 +65,46 @@ var Transaction = Backbone.Model.extend({
 
 	parse: function(response){
 
-        var modelHash  = {};
+        if (typeof data !== 'undefined' && typeof data.userId !== 'undefined'){
+            data.transactionId = parseInt(data.transactionId, 10);
+            data.providerId = parseInt(data.providerId, 10);
+            data.customerId = parseInt(data.customerId, 10);
+            data.messageId = parseInt(data.messageIdm, 10);
 
-        modelHash.transactionId = response.transactionId;
-		modelHash.initUserId = response.initUserId;
-		modelHash.targetUserId = response.targetUserId;
+            data.provider = new User(data.provider, {'parse': true});
+            data.customer = new User(data.customer, {'parse': true});
+            data.message = new Message(data.message, {'parse': true});
 
-		modelHash.initUserImgPath = response.initUserImgPath;
-		modelHash.initUserName = response.initUserName;
-		modelHash.initUserLevel = response.initUserLevel;
-		modelHash.targetUserImgPath = response.targetUserImgPath;
-		modelHash.targetUserName = response.targetUserName;
-		modelHash.targetUserLevel = response.targetUserLevel;
+            data.paymentMethod = parseInt(data.paymentMethod, 10);
+            data.customerEvaluation = parseInt(data.customerEvaluation, 10);
+            data.providerEvaluation = parseInt(data.providerEvaluation, 10);
+            data.direction = parseInt(data.direction, 10);
 
-		modelHash.messageId = response.messageId;
-		modelHash.messageNote = response.messageNote;
-		modelHash.paymentMethod = Constants.paymentMethod[response.paymentMethod];
-		modelHash.price = response.price;
-		modelHash.requestInfo = response.requestInfo;
-		modelHash.responseInfo = response.responseInfo;
+            data.departure_location = new UserLocation(data.departure_location, {'parse': true});
+            data.departure_time = Utilities.castFromAPIFormat(data.departure_time);
+            data.departure_timeSlot = parseInt(data.departure_timeSlot, 10);
+            data.departure_seatsBooked = parseInt(data.departure_seatsBooked, 10);
 
-		modelHash.established = response.established;
-		modelHash.success = response.success;
-		modelHash.state = Constants.transactionState[response.state];
-		modelHash.historyDeleted = response.historyDeleted;
+            data.arrival_location = new UserLocation(data.arrival_location, {'parse': true});
+            data.arrival_time = Utilities.castFromAPIFormat(data.arrival_time);
+            data.arrival_timeSlot = parseInt(data.arrival_timeSlot, 10);
+            data.arrival_seatsBooked = parseInt(data.arrival_seatsBooked, 10);
 
-		this.set("creationTime", new Date(response.creationTime));
+		
+            data.totalPrice = parseInt(data.totalPrice, 10);
+            data.state = parseInt(data.state, 10);
 
+            data.historyDeleted = data.historyDeleted === 'true';
+            data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
+
+        }
 		return modelHash;
 	},
+
 	_toJSON: function(){
 		var json = this.toJSON();
 		json.departure_time = Utilities.getDateString(this.get('departure_time'));
-		if ( this.departure_timeSlot == 0 ){
+		if ( this.departure_timeSlot === 0 ){
 			json.departure_timeSlot = "全天";
 		} else if ( this.departure_timeSlot == 1 ){
 			json.departure_timeSlot = "早上";
@@ -110,7 +117,7 @@ var Transaction = Backbone.Model.extend({
 		}
 		// json.arrival_location = this.get('arrival_location').toUiString();
 		json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
-		if ( this.arrival_timeSlot == 0 ){
+		if ( this.arrival_timeSlot === 0 ){
 			json.arrival_timeSlot = "全天";
 		} else if ( this.arrival_timeSlot == 1 ){
 			json.arrival_timeSlot = "早上";
@@ -126,9 +133,9 @@ var Transaction = Backbone.Model.extend({
 		json.editTime = Utilities.getDateString(this.get('editTime'));
 		var priceList = this.get("departure_priceList");
 		var currentPrice = 0;
-		var bookedSeats = this.get("departure_seatsBooked")
+		var bookedSeats = this.get("departure_seatsBooked");
 		if (priceList.length === 1) {
-		    currentPrice = priceList[0];
+			currentPrice = priceList[0];
 		} else {
 			for ( var p = 0; p < priceList.length; p++){
 				if (priceList[p] === 0) {
@@ -161,7 +168,7 @@ var Transaction = Backbone.Model.extend({
 			json.stateText = "审查中";
 		} else if (json.state === 5) {
 			json.stateText = "无效";
-		} 
+		}
 		return json;
 
 	}
