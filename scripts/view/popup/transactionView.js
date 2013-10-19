@@ -8,7 +8,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	initialize: function (transaction, info){
 		var i, that = this;
-		_.bindAll(this, 'render', 'bindEvents', 'acceptTransaction', 'calculateTotal','cancelTransaction', 'completeTransaction', 'evaluateTransaction', 'close');
+		_.bindAll(this, 'render', 'load',  'bindEvents', 'bookSuccess', 'calculateTotal','bookFail', 'close');
 		app.viewRegistration.register("transactionDetail", this, true);
 		this.isClosed = false;
 		this.transaction = transaction;
@@ -99,21 +99,35 @@ var TransactionDetailView = Backbone.View.extend({
 			} else {
 				that.bookInfo.back = (that.bookInfo.back + 1)%2;
 			}
+
 			that.calculateTotal();
 		});
 
 		$("#transaction_number").on("change", function(e){
 			that.bookInfo.number = Utilities.toInt(e.target.value);
+			if (that.bookInfo.go) {
+				that.transaction.set("departure_seatsBooked", that.bookInfo.number);
+			}
+			debugger;
+			if (that.bookInfo.back) {
+				that.transaction.set("arrival_seatsBooked", that.bookInfo.number);
+			}
+			$("#transaction_number").removeClass("invalid_input");
 			that.calculateTotal();
 		});
 		$("#startButton").on("click", function(){
 			if (that.textareaClicked) {
 				that.transaction.set("userNote", $("#transaction_userNote").val());
 			}
-		
-				app.transactionManager.initTransaction(that.transaction, function(){
-				that.close();
-			});
+			debugger;
+			if ( that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked")) {
+				app.transactionManager.initTransaction(that.transaction, {
+					"success":that.bookSuccess,
+					"error":that.bookFail
+				});
+			} else {
+				$("#transaction_number").addClass("invalid_input");
+			}
 		});
 		$("#transaction_userNote").on("focus", function(e){
 			if (!that.textareaClicked) {
@@ -131,10 +145,13 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 		$("#transaction_totalPrice").html("总价："+this.bookInfo.total+"元");
 	},
-	acceptTransaction: function(){},
-	cancelTransaction: function(){},
-	completeTransaction: function(){},
-	evaluateTransaction: function(){},
+	bookSuccess: function(){
+		this.close();
+	},
+	bookFail: function(){
+		Info.warn("unable to connect to server");
+	},
+
 	close: function () {
 		if (!this.isClosed){
 			$("#transaction_close").off();
