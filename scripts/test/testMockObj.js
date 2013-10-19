@@ -69,7 +69,7 @@ var testMockObj = {
 	"sampleUserF": (new User()).set("userId", 6),
 
 	"sampleTransactions": new Transactions(),
-	"sampleTransactionA": (new Transaction()).set("transactionId", 101).set("initUserId",12).set("initUserName","路卡修").set("targetUserName","Simon").set("price",20).set("initUserLevel","10"),
+	"sampleTransactionA": (new Transaction()).set("transactionId", 101).set("state",0).set("direction",0).set("departure_seatsNumber",5).set("departure_seatsBooked",2).set("arrival_seatsNumber",5).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 	"sampleTransactionB": (new Transaction()).set("transactionId", 102).set("initUserId",12).set("initUserName","路卡修").set("targetUserName","Simon").set("price",20).set("initUserLevel","10"),
 	"sampleTransactionC": (new Transaction()).set("transactionId", 103).set("initUserId",12).set("initUserName","路卡修").set("targetUserName","Simon").set("price",20).set("initUserLevel","10"),
 	"sampleTransactionD": (new Transaction()).set("transactionId", 104),

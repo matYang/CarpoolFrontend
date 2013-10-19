@@ -3,7 +3,7 @@ var MessageDetailView = Backbone.View.extend({
 	el: "",
 
 	initialize: function(messageIdWrapper){
-		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'close');
+		_.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'close');
 		app.viewRegistration.register("MessageDetail", this, true);
 		this.isClosed = false;
 
@@ -12,6 +12,8 @@ var MessageDetailView = Backbone.View.extend({
 		this.userId = app.sessionManager.getUserId();
 
 		var self = this;
+		this.newTransaction = new Transaction();
+		
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
 			success: function(){
 				self.message = app.messageManager.getMessage();
@@ -31,6 +33,7 @@ var MessageDetailView = Backbone.View.extend({
 				self.render();
 				self.bindEvents();
 				self.showTransaction = false;
+				self.createNewTransaction();
 			},
 			error: function(){
 				Info.alert("信息读取失败");
@@ -117,6 +120,7 @@ var MessageDetailView = Backbone.View.extend({
 		if (this.parsedMessage.departureSeats === 0 && this.parsedMessage.returnSeats === 0) {
 			$("#view_book_option").remove();
 			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
+			$("#view_book").off();
 		} else {
 			if ( this.parsedMessage.departureSeats > 0 ) {
 				$("#go").on("click", function(e){
@@ -145,7 +149,16 @@ var MessageDetailView = Backbone.View.extend({
 				$("#back, #returnTime, #returnSeats").remove();
 			}
 			$("#view_book").on("click", function(e) {
-				//Book API call
+				that.newTransaction.set("people", Utilities.toInt($("#chooseSeatNumber").val()));
+				debugger;
+				if (that.bookInfo.go && that.bookInfo.back){
+					that.newTransaction.set("myDirection", 0);
+				} else if (that.bookInfo.go) {
+					that.newTransaction.set("myDirection", 1);
+				} else {
+					that.newTransaction.set("myDirection", 2);
+				}
+				that.transactionView = new TransactionDetailView(that.newTransaction);
 			});
 			$("#chooseSeatNumber").on("keypress", function(e) {
 				if (e.keyCode < 48 || e.keyCode >57){
@@ -172,7 +185,35 @@ var MessageDetailView = Backbone.View.extend({
 		}
 
 	},
-
+	createNewTransaction: function(){
+		this.newTransaction.set("providerId", this.ownerId);
+		this.newTransaction.set("customerId", this.userId);
+		this.newTransaction.set("messageId", this.messageId);
+		this.newTransaction.set("provider", this.message.get("owner"));
+		this.newTransaction.set("customer", this.user);
+		this.newTransaction.set("message", this.message);
+		this.newTransaction.set("paymentMethod", this.message.get("paymentMethod"));
+		this.newTransaction.set("providerNote", this.message.get("note"));
+		if (this.message.get("roundTrip")){
+			this.newTransaction.set("direction", 0);
+		} else {
+			this.newTransaction.set("direction", 1);
+		}
+		this.newTransaction.set("departure_location",this.message.get("departure_location"));
+		this.newTransaction.set("departure_time",this.message.get("departure_time"));
+		this.newTransaction.set("departure_timeSlot",this.message.get("departure_timeSlot"));
+		this.newTransaction.set("departure_seatsNumber",this.message.get("departure_seatsNumber"));
+		this.newTransaction.set("departure_seatsBooked",this.message.get("departure_seatsBooked"));
+		this.newTransaction.set("departure_priceList",this.message.get("departure_priceList"));
+		this.newTransaction.set("arrival_location",this.message.get("arrival_location"));
+		this.newTransaction.set("arrival_time",this.message.get("arrival_time"));
+		this.newTransaction.set("arrival_timeSlot",this.message.get("arrival_timeSlot"));
+		this.newTransaction.set("arrival_seatsNumber",this.message.get("arrival_seatsNumber"));
+		this.newTransaction.set("arrival_seatsBooked",this.message.get("arrival_seatsBooked"));
+		this.newTransaction.set("arrival_priceList",this.message.get("arrival_priceList"));
+		debugger;
+		this.newTransaction.set("state", this.message.get("state"));
+	},
 	openTransactionDetail: function(transaction){
 		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "message/"+this.messageId);
 	},

@@ -17,7 +17,7 @@ var Transaction = Backbone.Model.extend({
 		"customerEvaluation": -1,
 		"providerEvaluation": -1,
 
-		"dirction":-1,
+		"direction":-1,
 		
 		"departure_location": new UserLocation(),
 		"departure_time": new Date(),
@@ -36,6 +36,7 @@ var Transaction = Backbone.Model.extend({
 		"totalPrice": -1,
 		"state": -1,
 
+		"people": 0,
 		"historyDeleted": false,
 		"creationTime": new Date()
 	},
@@ -96,10 +97,30 @@ var Transaction = Backbone.Model.extend({
 	_toJSON: function(){
 		var json = this.toJSON();
 		json.departure_time = Utilities.getDateString(this.get('departure_time'));
-
+		if ( this.departure_timeSlot == 0 ){
+			json.departure_timeSlot = "全天";
+		} else if ( this.departure_timeSlot == 1 ){
+			json.departure_timeSlot = "早上";
+		} else if ( this.departure_timeSlot == 2 ){
+			json.departure_timeSlot = "下午";
+		} else if ( this.departure_timeSlot == 3 ){
+			json.departure_timeSlot = "晚上";
+		} else {
+			json.departure_timeSlot += "点";
+		}
 		// json.arrival_location = this.get('arrival_location').toUiString();
 		json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
-
+		if ( this.arrival_timeSlot == 0 ){
+			json.arrival_timeSlot = "全天";
+		} else if ( this.arrival_timeSlot == 1 ){
+			json.arrival_timeSlot = "早上";
+		} else if ( this.arrival_timeSlot == 2 ){
+			json.arrival_timeSlot = "下午";
+		} else if ( this.arrival_timeSlot == 3 ){
+			json.arrival_timeSlot = "晚上";
+		} else {
+			json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
+		}
 		//these 2 are actually ignored by server side, placing here for uniformity
 		json.creationTime = Utilities.getDateString(this.get('creationTime'));
 		json.editTime = Utilities.getDateString(this.get('editTime'));
@@ -127,6 +148,18 @@ var Transaction = Backbone.Model.extend({
 		if ( this.get('arrival_location') instanceof UserLocation ) {
 			json.arrival_location = this.get('arrival_location').toUiString();
 		}
+
+		if (json.state === 0 ){
+			json.stateText = "有效";
+		} else if (json.state === 1 ){
+			json.stateText = "即将开始";
+		} else if (json.state === 2) {
+			json.stateText = "完成";
+		} else if (json.state === 3) {
+			json.stateText = "审查中";
+		} else if (json.state === 4) {
+			json.stateText = "无效";
+		} 
 		return json;
 
 	}

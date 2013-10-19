@@ -1,46 +1,52 @@
 <div id="transactionDetail_container">
 	<div id="transaction_close"></div>
 	<div id="transaction_id">交易编号 <%= transactionId %></div>
-
-	<div id = 'transaction_departureInfo'>
-		<div id = 'transaction_departureLocation'><%= departure_location %></div>
-		<div id = 'transaction_departureLocation2'></div>
-		<div id = 'transaction_departureTime'>出发时间： <%= departure_time %></div>
-		<div id = 'transaction_departureSeats'>剩余座位： <%= departure_seats %></div>
-	</div>
-	<div id = 'directionArrow'></div>
-	<div id = 'transaction_returnInfo'>
-		<div id = 'transaction_returnLocation'><%= arrival_location %></div>
-		<div id = 'transaction_returnLocation2'></div>
-		<div id = 'transaction_returnTime'>返回时间： <%= arrival_time %></div>
-		<div id = 'transaction_returnSeats'>剩余座位： <%= arrival_seats %></div>
-	</div>
-  <div id = 'note'><%= note %></div>
-	<div id="transaction_user">
-		<div id="transaction_user_img">
-			<img src="<%= userImgPath %>" />
+	<div id = "transaction_trip_info">
+		<div id = 'transaction_departureInfo'>
+			<div id = 'transaction_departureLocation'><%= departure_location %></div>
+			<div id = 'transaction_departureLocation2'>Home</div>
+			<% if (direction !== 2)  { %>
+				<div id = 'transaction_departureTime'>出发时间： <%= departure_time %>&nbsp;&nbsp;<%= arrival_timeSlot %></div>
+				<div id = 'transaction_departureSeats'>剩余座位： <%= departure_seatsNumber - departure_seatsBooked %></div>
+			<% } %>
 		</div>
-		<div id="transaction_user_name"><%= userName %></div>
-		<div id="transaction_user_level">Lv.<%= userLevel %></div>
-		<div id="transaction_user_eval"><%= userEval %></div>
-		<div id="transaction_user_info"><%= userInfo %></div>
-	</div>
-	<div id="transaction_state" class="transactionState<%= state %>"><%= stateText %></div>
-	<div id="transaction_control"></div>
-	<div id="transaction_info">
+		<div id = 'transaction_returnInfo'>
+			<div id = 'transaction_returnLocation'><%= arrival_location %></div>
+			<div id = 'transaction_returnLocation2'>Home</div>
+			<% if (direction !== 1)  { %>
+				<div id = 'transaction_returnTime'>返回时间： <%= arrival_time %>&nbsp;&nbsp;<%= arrival_timeSlot %></div>
+				<div id = 'transaction_returnSeats'>剩余座位：  <%= arrival_seatsNumber - arrival_seatsBooked %></div>
+			<% } %>
+			
+		</div>
+		<div id="transaction_priceList">
+			 <% for ( var priceCount = 0; priceCount < departure_priceList.length; priceCount++ ){ %>
+			 	<% if (departure_priceList[priceCount]> 0 ){ %>
+			 		<div class="transaction_priceEntry"><%- priceCount+1 %>人: <%- departure_priceList[priceCount] %>元</div>
+			 	<% } %>	
+			 <% } %>
+		</div>
 		<div id="transaction_note">
-			<%= messageNote %>
+			<%= message %>
 		</div>
-		<div id="transaction_payment">
-			<%= paymentMethod %>
-		</div>
-		<div id="transaction_time">
-			<div id="transaction_time_start"><%= startTime %></div>
-			<div id="transaction_time_end"><%= endTime %></div>
-		</div>
-		<div id="transaction_location"><%= location %></div>
-		<div id="transaction_creation"><%= creationDate %></div>
 	</div>
-	<div id = "startButton"></div>
-    <div id = "closeButton"></div>
+	<div id="triptypeselection">
+		<div id="transaction_state" class="transactionState<%= state %>"><%= stateText %></div>
+		<% if (direction !== 2 && departure_seatsNumber - departure_seatsBooked > 0)  { %>
+			<div id = 'transaction_go' class='button'>去<%= arrival_location.split(",")[0] %></div>
+		<% } %> 
+		<% if (direction !== 1 && arrival_seatsNumber - arrival_seatsBooked > 0 ) { %>
+			<div id = 'transaction_back' class='button'>回<%= departure_location.split(",")[0] %></div>
+		<% } %>
+		<div id="transaction_input">
+		人数: <input type="number" id="transaction_number"/>
+		</div>
+		<div id="transaction_totalPrice"></div>
+	</div>
+	<div id="transaction_map"></div>
+	<div id="transaction_user"></div>
+	<div id="transaction_control">
+		<div id = "startButton" class="button">订位</div>
+	    <div id = "closeButton" class="button">关闭</div>
+    </div>
 </div>

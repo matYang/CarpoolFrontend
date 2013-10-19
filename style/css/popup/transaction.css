@@ -36,15 +36,12 @@
 
 
 }
-#transaction_user{
+#transaction_map{
 	border:1px black solid;
 	width:450px;
 	height:225px;
 	margin-left:20px;
-	margin-top:20px;
-	float:left;
-}
-#transaction_user>div{
+	margin-top:10px;
 	float:left;
 }
 
@@ -85,27 +82,17 @@
 	margin-left:20px;	
 }
 #transaction_note{
+	float:left;
+	margin-top:5px;
+	height:80px;
+	width:300px;
+	margin-left:20px;
 	
 }
-#transaction_payment{
-	
-}
-#transaction_time{
-	
-}
-#transaction_time_start{
-	
-}
-#transaction_time_end{
-	
-}
-#transaction_location{
-	
-}
+
 #transaction_state{
 	position:relative;
-	margin-top:20px;
-	margin-left:10px;
+	margin-left:15px;
 	width:75px;
 	height:30px;
 	padding-top:10px;
@@ -117,17 +104,13 @@
 #transaction_creation{
 	
 }
-
-#transaction_info{
-	width:450px;
-	height:150px;
-	margin-left:20px;
-	margin-top:10px;
-	border: 1px solid rgb(157, 157, 157);
+#transaction_control{
+	width:200px;
+	height:50px;
 	float:left;
 }
 
-#accept, #cancel, #evaluate {
+#accept, #cancel, #evaluate, #startButton, #closeButton {
 	width:75px;
 	height:30px;
 	margin-left:20px;
@@ -139,12 +122,88 @@
 	font-weight: bolder;
 	box-shadow: rgb(136, 136, 136) 2px 2px 10px;
 }
-#accept{
+#startButton{
 	background-color:#359a64;
 }
-#cancel{
+#closeButton{
 	background-color:rgb(228,52,27);
 }
 #evaluate{
 	background-color:rgb(38,101,217);
+}
+
+#transaction_trip_info{
+	height:210px;
+	width:640px;
+	margin-top:20px;
+	margin-left:20px;
+	float:left;
+}
+#triptypeselection{
+	float:left;
+	width:120px;
+	margin-left:10px;
+	margin-top:20px;
+	height:200px;
+
+}
+
+#transaction_departureInfo, #transaction_returnInfo{
+	height: 120px;
+	width: 300px;
+	margin-left:5px;
+	margin-right:5px;
+	float:left;
+	border-radius:2px;
+	border:1px dashed #aaaaaa;
+}
+
+#transaction_departureLocation, #transaction_returnLocation, #transaction_departureLocation2, #transaction_returnLocation2 {
+	font-size:2em;
+	color:#225599;
+	font-weight:bold;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+
+}
+
+#transaction_go, #transaction_back{
+	width:100px;
+	height:22px;
+	text-align:center;
+	padding-top:5px;
+	border:2px solid #dddddd;
+	border-radius: 2px;
+	margin-top:5px;
+	float:left;
+}
+
+#transaction_go:hover, #transaction_back:hover{
+	border-color: #0099ff;
+}
+
+#transaction_input {
+	float:left;
+	margin-top:10px;
+}
+#transaction_number{
+	width:40px;
+}
+#transaction_priceList{
+	width:300px;
+	height:80px;
+	float:left;
+}
+.transaction_priceEntry{
+	width:100px;
+	height:20px;
+	margin-top:5px;
+	font-size:20px;
+	float:left;
+	padding-left: 10px;
+}
+
+#transaction_totalPrice{
+	width:auto;
+	height:20px;
+	float:left;
 }
