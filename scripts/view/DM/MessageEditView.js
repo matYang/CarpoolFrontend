@@ -50,6 +50,7 @@ var MessageEditView = MessagePostView.extend({
 				that.renderSecondPage();
 			}
 		});
+		$('#publish_type>div').off();
 	},
 	renderSecondPage: function(){
 		var that = this;
