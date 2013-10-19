@@ -101,6 +101,21 @@ var Transaction = Backbone.Model.extend({
 		return modelHash;
 	},
 
+	toJSON: function(){
+		var json = _.clone(this.attributes);
+		if ( this.get('departure_location') instanceof UserLocation ) {
+			json.departure_location = this.get('departure_location').toJSON();
+		}
+		json.departure_time = Utilities.castToAPIFormat(this.get('departure_time'));
+
+		if ( this.get('arrival_location') instanceof UserLocation ) {
+			json.arrival_location = this.get('arrival_location').toJSON();
+		}
+		json.arrival_time = Utilities.castToAPIFormat(this.get('arrival_time'));
+
+		return json;
+	},
+
 	_toJSON: function(){
 		var json = this.toJSON();
 		json.departure_time = Utilities.getDateString(this.get('departure_time'));
