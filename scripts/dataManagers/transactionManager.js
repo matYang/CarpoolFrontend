@@ -25,42 +25,6 @@
 		this.timeStamp = new Date();
 	};
 
-	TransactionManager.prototype.initTransaction = function(newTransaction, callback){
-		if (!newTransaction || typeof newTransaction !== 'object'){
-			Constants.dWarn("TransactionManager::initTransaction:: invalid parameter");
-			return;
-		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("TransactionManager::initTransaction:: session does not exist, exit");
-			return;
-		}
-
-		var self = this;
-
-		newTransaction.overrideUrl(this.apis.transaction_transaction);
-		newTransaction.set('transactionId', -1);
-
-		newTransaction.save({},{
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
-			dataType:'json',
-
-			success:function(model, response){
-				self.transaction = newTransaction;
-				self.timeStamp = new Date();
-
-				if(callback){
-					callback();
-				}
-			},
-
-			error: function(model, response){
-				Constants.dWarn("TransactionManager::initTransaction:: save failed with response:");
-				Constants.dLog(response);
-			}
-		});
-
-	};
 
 	TransactionManager.prototype.fetchTransaction = function(transactionId, callback) {
 		if (typeof transactionId !== 'number' ){
@@ -78,7 +42,6 @@
 		this.transaction.set('transactionId', transactionId);
 
 		this.transaction.fetch({
-
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
@@ -86,16 +49,61 @@
 				self.timeStamp = new Date();
 
 				if(callback){
-					callback();
+					callback.success();
 				}
 			},
 
 			error: function(model, response){
 				Constants.dWarn("TransactionManager::fetchTransaction:: fetch failed with response:");
 				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
 			}
 		});
 	};
+
+
+	TransactionManager.prototype.initTransaction = function(newTransaction, callback){
+		if (!newTransaction || typeof newTransaction !== 'object'){
+			Constants.dWarn("TransactionManager::initTransaction:: invalid parameter");
+			return;
+		}
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("TransactionManager::initTransaction:: session does not exist, exit");
+			return;
+		}
+
+		var self = this;
+
+		newTransaction.overrideUrl(this.apis.transaction_transaction);
+		newTransaction.set('transactionId', -1);
+
+		newTransaction.save({},{
+			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			dataType:'json',
+
+			success:function(model, response){
+				self.transaction = newTransaction;
+				self.timeStamp = new Date();
+
+				if(callback){
+					callback.success();
+				}
+			},
+
+			error: function(model, response){
+				Constants.dWarn("TransactionManager::initTransaction:: save failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
+
+	};
+
+
 
 	TransactionManager.prototype.changeTransactionState = function(transactionId, newState, callback) {
 		if (typeof transactionId !== 'number' || typeof newState !== 'number'){
@@ -113,92 +121,99 @@
 		this.transaction.set('transactionId', transactionId);
 
 		this.transaction.save({},{
-
 			data: $.param({ 'userId': this.sessionManager.getUserId(), 'stateIndex': newState}),
 			dataType:'json',
 
 			success:function(model, response){
 				self.timeStamp = new Date();
-
 				if(callback){
-					callback();
+					callback.success();
 				}
 			},
 
 			error: function(model, response){
 				Constants.dWarn("TransactionManager::changeTransactionState:: save failed with response:");
 				Constants.dLog(response);
-			}
-		});
-	};
-
-	TransactionManager.prototype.deleteTransaction = function(transactionId, callback) {
-		if (typeof transactionId !== 'number'){
-			Constants.dWarn("TransactionManager::deleteTransaction:: invalid parameter");
-			return;
-		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("TransactionManager::deleteTransaction:: session does not exist, exit");
-			return;
-		}
-
-		var self = this;
-
-		this.transaction.overrideUrl(this.apis.transaction_transaction);
-		this.transaction.set('transactionId', transactionId);
-
-		this.transaction.destroy({
-
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
-			dataType:'json',
-
-			success:function(model, response){
-				self.timeStamp = new Date();
-
 				if(callback){
-					callback();
+					callback.error();
 				}
-			},
-
-			error: function(model, response){
-				Constants.dWarn("TransactionManager::deleteTransaction:: delete failed with response:");
-				Constants.dLog(response);
 			}
 		});
 	};
 
+	//TransactionManager.prototype.deleteTransaction = function(transactionId, callback) {
+	//	if (typeof transactionId !== 'number'){
+	//		Constants.dWarn("TransactionManager::deleteTransaction:: invalid parameter");
+	//		return;
+	//	}
+	//	if (!this.sessionManager.hasSession()){
+	//		Constants.dWarn("TransactionManager::deleteTransaction:: session does not exist, exit");
+	//		return;
+	//	}
+
+	//	var self = this;
+
+	//	this.transaction.overrideUrl(this.apis.transaction_transaction);
+	//	this.transaction.set('transactionId', transactionId);
+
+	//	this.transaction.destroy({
+
+	//		data: $.param({ 'userId': this.sessionManager.getUserId()}),
+	//		dataType:'json',
+
+	//		success:function(model, response){
+	//			self.timeStamp = new Date();
+
+	//			if(callback){
+	//				callback.success();
+	//			}
+	//		},
+
+	//		error: function(model, response){
+	//			Constants.dWarn("TransactionManager::deleteTransaction:: delete failed with response:");
+	//			Constants.dLog(response);
+	//			if(callback){
+	//				callback.error();
+	//			}
+	//		}
+	//	});
+	//};
 
 
-	TransactionManager.prototype.changeTransactionState_admin = function(transactionId, newState, access_admin ,callback) {
-		if (!access_admin ||typeof transactionId !== 'number' || typeof newState !== 'number' || typeof access_admin !== 'string'){
-			Constants.dWarn("TransactionManager::changeTransactionState_admin:: invalid parameter");
-			return;
-		}
 
-		var self = this;
+	//TransactionManager.prototype.changeTransactionState_admin = function(transactionId, newState, access_admin ,callback) {
+	//	if (!access_admin ||typeof transactionId !== 'number' || typeof newState !== 'number' || typeof access_admin !== 'string'){
+	//		Constants.dWarn("TransactionManager::changeTransactionState_admin:: invalid parameter");
+	//		return;
+	//	}
 
-		this.transaction.overrideUrl(this.apis.transaction_admin);
-		this.transaction.set('transactionId', transactionId);
+	//	var self = this;
 
-		this.transaction.save({},{
+	//	this.transaction.overrideUrl(this.apis.transaction_admin);
+	//	this.transaction.set('transactionId', transactionId);
 
-			data: $.param({ 'access_admin': access_admin, 'stateIndex': newState}),
-			dataType:'json',
+	//	this.transaction.save({},{
 
-			success:function(model, response){
-				self.timeStamp = new Date();
+	//		data: $.param({ 'access_admin': access_admin, 'stateIndex': newState}),
+	//		dataType:'json',
 
-				if(callback){
-					callback();
-				}
-			},
+	//		success:function(model, response){
+	//			self.timeStamp = new Date();
 
-			error: function(model, response){
-				Constants.dWarn("TransactionManager::changeTransactionState_admin:: save failed with response:");
-				Constants.dLog(response);
-			}
-		});
-	};
+	//			if(callback){
+	//				callback.success();
+	//			}
+	//		},
+
+	//		error: function(model, response){
+	//			Constants.dWarn("TransactionManager::changeTransactionState_admin:: save failed with response:");
+	//			Constants.dLog(response);
+	//			if(callback){
+	//				callback.error();
+	//			}
+	//		}
+	//	});
+	//};
 
 
 }).call(this);
