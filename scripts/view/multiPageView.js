@@ -12,6 +12,7 @@ var MultiPageView = Backbone.View.extend({
 	messages:[],
 	entryHeight:-1,
 	entryRowNum:1,
+	minHeight:0,
 	initialize: function () {
 		_.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
 		this.isClosed = false;
@@ -38,7 +39,9 @@ var MultiPageView = Backbone.View.extend({
 		} else {
 			$("#"+this.entryContainer).append("<div id = 'mainPageNoMessage'>暂无消息</div>");
 		}
-		$("#"+this.entryContainer).css("height", Math.ceil(length/this.entryRowNum)*this.entryHeight+"px");
+		var height =  Math.ceil(length/this.entryRowNum)*this.entryHeight;
+		height = (height > this.minHeight) ? height : this.minHeight;
+		$("#"+this.entryContainer).css("height", height+"px");
 		this.setPageNavigator();
 	},
 	toPage: function(page){

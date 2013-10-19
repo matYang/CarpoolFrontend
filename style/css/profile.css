@@ -183,7 +183,7 @@
 }
 
 .selectedTabButton{
-	background-color:#60B7CF !important;
+	background-color:#ddfeff !important;
 	z-index: 2;
 	border-bottom-width: 1px;
 	border-bottom-color: #60B7CF;

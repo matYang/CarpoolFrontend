@@ -18,8 +18,6 @@ var AppRouter = Backbone.Router.extend({
 		":id/personal/:intendedUserId" : "personal",
 		":id/personal/:intendedUserId/*personalViewState" : "personalWithState",
 
-		":id/transaction/:transactionId/*link" : "transactionDetail",
-
 		":id/message/:messageId" : "MessageDetail",
 		":id/message/:messageId/edit" : "MessageEdit",
 		":id/message/:messageId/edit/*editState" : "MessageEdit",

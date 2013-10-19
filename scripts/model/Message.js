@@ -103,31 +103,30 @@ var Message = Backbone.Model.extend({
 		json.creationTime = Utilities.getDateString(this.get('creationTime'));
 		json.editTime = Utilities.getDateString(this.get('editTime'));
 		var priceList = this.get("departure_priceList");
-        var currentPrice = 0;
-        var bookedSeats = this.get("departure_seatsBooked")
-        if (priceList.length === 1) {
-            currentPrice = priceList[0];
-        } else {
-            for ( var p = 0; p < priceList.length; p++){
-                
-                if (priceList[p] === 0) {
-                    priceList[p] = priceList[p-1];
-                }
-            }
-            if (priceList.length <= bookedSeats) {
-                currentPrice = priceList[priceList.length-1];
-            } else {
-                currentPrice = priceList[bookedSeats];
-            }
-        }
-        json.currentPrice = currentPrice;
-        if ( this.get('departure_location') instanceof UserLocation ) {
-        	json.departure_location = this.get('departure_location').toUiString();
-    	}
-    	if ( this.get('arrival_location') instanceof UserLocation ) {
-        	json.arrival_location = this.get('arrival_location').toUiString();
-    	}
-        return json;
+		var currentPrice = 0;
+		var bookedSeats = this.get("departure_seatsBooked")
+		if (priceList.length === 1) {
+		    currentPrice = priceList[0];
+		} else {
+			for ( var p = 0; p < priceList.length; p++){
+				if (priceList[p] === 0) {
+					priceList[p] = priceList[p-1];
+				}
+			}
+			if (priceList.length <= bookedSeats) {
+				currentPrice = priceList[priceList.length-1];
+			} else {
+				currentPrice = priceList[bookedSeats];
+			}
+		}
+		json.currentPrice = currentPrice;
+		if ( this.get('departure_location') instanceof UserLocation ) {
+			json.departure_location = this.get('departure_location').toUiString();
+		}
+		if ( this.get('arrival_location') instanceof UserLocation ) {
+			json.arrival_location = this.get('arrival_location').toUiString();
+		}
+		return json;
     },
 	toJSON: function(){
 		var json = _.clone(this.attributes);

@@ -22,23 +22,24 @@ var PersonalHistoryView = Backbone.View.extend({
 	},
 
 	renderTransactions: function(transactionList){
-		this.transactions = transactionList;
-		this.transactionContainer = $("#transactionHistoryContent");
-		var that = this,
-			toBeAppended = [],
-			html = "",
-			i = 0;
+		this.transactionView = new TransactionHistoryView(transactionList);
+		// this.transactions = transactionList;
+		// this.transactionContainer = $("#transactionHistoryContent");
+		// var that = this,
+		// 	toBeAppended = [],
+		// 	html = "",
+		// 	i = 0;
 
-		for (i = 0; i < this.transactions.length; i++){
-			transactionList.at(i).set("stateText", Constants.stateText[transactionList.at(i).get("state") ]);
-			transactionList.at(i).set("startDateText", Utilities.getDateString(transactionList.at(i).get("startTime")));
-			toBeAppended[i] = this.transactionTemplate(transactionList.at(i).toJSON());
-			this.transactionLookup[transactionList.at(i).get("transactionId")] = i;
-		}
-		html = toBeAppended.join("");
-		this.transactionContainer.append(html);
+		// for (i = 0; i < this.transactions.length; i++){
+		// 	transactionList.at(i).set("stateText", Constants.stateText[transactionList.at(i).get("state") ]);
+		// 	transactionList.at(i).set("startDateText", Utilities.getDateString(transactionList.at(i).get("startTime")));
+		// 	toBeAppended[i] = this.transactionTemplate(transactionList.at(i).toJSON());
+		// 	this.transactionLookup[transactionList.at(i).get("transactionId")] = i;
+		// }
+		// html = toBeAppended.join("");
+		// this.transactionContainer.append(html);
 
-		this.bindTransactionEvents();
+		// this.bindTransactionEvents();
 	},
 
 	renderNotifications: function(notificationList){
@@ -79,7 +80,6 @@ var PersonalHistoryView = Backbone.View.extend({
 
 	},
 	openTransactionDetail: function(transaction, user){
-		app.navigate(user.get("userId")+"/transaction/"+transaction.get("transactionId")+"/personal/history");
 		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "personal/history");
 	},
 

@@ -174,8 +174,6 @@ var MessageDetailView = Backbone.View.extend({
 	},
 
 	openTransactionDetail: function(transaction){
-		var link = [this.userId,"/transaction/",transaction.get("transactionId"),"/message/",this.messageId];
-		app.navigate(link.join(""));
 		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "message/"+this.messageId);
 	},
 

@@ -1,6 +1,21 @@
 <div id="transactionDetail_container">
 	<div id="transaction_close"></div>
 	<div id="transaction_id">交易编号 <%= transactionId %></div>
+
+	<div id = 'transaction_departureInfo'>
+		<div id = 'transaction_departureLocation'><%= departure_location %></div>
+		<div id = 'transaction_departureLocation2'></div>
+		<div id = 'transaction_departureTime'>出发时间： <%= departure_time %></div>
+		<div id = 'transaction_departureSeats'>剩余座位： <%= departure_seats %></div>
+	</div>
+	<div id = 'directionArrow'></div>
+	<div id = 'transaction_returnInfo'>
+		<div id = 'transaction_returnLocation'><%= arrival_location %></div>
+		<div id = 'transaction_returnLocation2'></div>
+		<div id = 'transaction_returnTime'>返回时间： <%= arrival_time %></div>
+		<div id = 'transaction_returnSeats'>剩余座位： <%= arrival_seats %></div>
+	</div>
+  <div id = 'note'><%= note %></div>
 	<div id="transaction_user">
 		<div id="transaction_user_img">
 			<img src="<%= userImgPath %>" />
@@ -26,5 +41,6 @@
 		<div id="transaction_location"><%= location %></div>
 		<div id="transaction_creation"><%= creationDate %></div>
 	</div>
-
+	<div id = "startButton"></div>
+    <div id = "closeButton"></div>
 </div>
