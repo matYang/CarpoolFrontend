@@ -110,7 +110,7 @@
 	float:left;
 }
 
-#accept, #cancel, #evaluate, #startButton, #closeButton {
+#accept, #deleteButton, #evaluate, #startButton, #closeButton {
 	width:75px;
 	height:30px;
 	margin-left:20px;
@@ -126,6 +126,9 @@
 	background-color:#359a64;
 }
 #closeButton{
+	background-color:rgb(228,52,27);
+}
+#deleteButton{
 	background-color:rgb(228,52,27);
 }
 #evaluate{

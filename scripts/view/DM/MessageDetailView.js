@@ -33,6 +33,11 @@ var MessageDetailView = Backbone.View.extend({
 				self.render();
 				self.bindEvents();
 				self.showTransaction = false;
+				for (i = 0; i < self.pricelist.length; i++) {
+					if (self.pricelist[i] === 0) {
+						self.pricelist[i] = self.pricelist[i-1];
+					}
+				}
 				self.createNewTransaction();
 			},
 			error: function(){
@@ -82,11 +87,28 @@ var MessageDetailView = Backbone.View.extend({
 			buffer[i] = this.transactionTemplate(this.parseTransaction(this.transactions.at(i), i));
 		}
 		$("#view_transactions_content").append(buffer.join(""));
-		//$("#view_transactions_content>.transaction_content").on("click", function(e){
-		//var id = Utilities.getId(e.delegateTarget.id);
-		//var transaction = that.transactions.at(Utilities.toInt(id));
-		//that.openTransactionDetail(transaction);
-		//});
+		$("#view_transactions_content>.transaction_content").on("click", function(e){
+			var id = Utilities.getId(e.delegateTarget.id);
+			var transaction = that.transactions.at(Utilities.toInt(id));
+			that.openTransactionDetail(transaction);
+		});
+	},
+	calculateTotal:function(){
+		var temp = this.pricelist.length < this.bookInfo.number ? this.pricelist.length : this.bookInfo.number;
+		var trips = 0;
+		if (this.bookInfo.number > 0){
+
+			if (this.bookInfo.go) {
+				trips += 1;
+			}
+			if (this.bookInfo.back) {
+				trips += 1;
+			}
+			this.bookInfo.total = trips*this.bookInfo.number*(this.pricelist[temp-1]);
+		} else {
+			this.bookInfo.total = 0;
+		}
+		$("#price_total").html("总价："+this.bookInfo.total+"元");
 	},
 	loadError: function(){
 
@@ -130,6 +152,7 @@ var MessageDetailView = Backbone.View.extend({
 						this.classList.add("direction_selected");
 					}
 					that.bookInfo.go = !that.bookInfo.go;
+					that.calculateTotal();
 				});
 			} else {
 				$("#go").remove();
@@ -144,19 +167,21 @@ var MessageDetailView = Backbone.View.extend({
 						this.classList.add("direction_selected");
 					}
 					that.bookInfo.back = !that.bookInfo.back;
+					that.calculateTotal();
 				});
 			} else {
 				$("#back, #returnTime, #returnSeats").remove();
 			}
 			$("#view_book").on("click", function(e) {
 				that.newTransaction.set("people", Utilities.toInt($("#chooseSeatNumber").val()));
-				debugger;
 				if (that.bookInfo.go && that.bookInfo.back){
 					that.newTransaction.set("myDirection", 0);
 				} else if (that.bookInfo.go) {
 					that.newTransaction.set("myDirection", 1);
-				} else {
+				} else if (that.bookInfo.back){
 					that.newTransaction.set("myDirection", 2);
+				} else {
+					that.newTransaction.set("myDirection", -1);
 				}
 				that.transactionView = new TransactionDetailView(that.newTransaction);
 			});
@@ -165,7 +190,11 @@ var MessageDetailView = Backbone.View.extend({
 					e.preventDefault();
 				}
 			});
-			$("#chooseSeatNumber").on("keyup", function(e) {
+			// $("#chooseSeatNumber").on("keyup", function(e) {
+				
+			// });
+
+			$("#chooseSeatNumber").on("change", function(){
 				var value = this.value;
 				value = Utilities.toInt(value);
 				if (isNaN(value)) {
@@ -181,6 +210,8 @@ var MessageDetailView = Backbone.View.extend({
 					$("#chooseSeatNumber").val(that.parsedMessage.returnSeats);
 					value = that.parsedMessage.returnSeats;
 				}
+				that.bookInfo.number = value;
+				that.calculateTotal();
 			});
 		}
 
@@ -211,7 +242,6 @@ var MessageDetailView = Backbone.View.extend({
 		this.newTransaction.set("arrival_seatsNumber",this.message.get("arrival_seatsNumber"));
 		this.newTransaction.set("arrival_seatsBooked",this.message.get("arrival_seatsBooked"));
 		this.newTransaction.set("arrival_priceList",this.message.get("arrival_priceList"));
-		debugger;
 		this.newTransaction.set("state", this.message.get("state"));
 	},
 	openTransactionDetail: function(transaction){
@@ -260,23 +290,6 @@ var MessageDetailView = Backbone.View.extend({
 			}
 		}
 		$("#pricelist").append(appender.join(""));
-	},
-	computePrice: function(seats, tripNumber){
-		if (this.pricelist[seats] > 0) return this.priceResult[seats]*tripNumber;
-		var i = 1;
-		while ( i <= seats ) {
-			if (!(this.pricelist[i] && this.pricelist[i] > 0)) {
-				var j;
-				for ( j = 1; j < i; j++ ){
-
-					if (this.priceResult[i] === 0 || this.priceResult[i] > this.priceResult[i-j] + this.priceResult[j]) {
-						this.priceResult[i] = this.priceResult[i-j] + this.priceResult[j];
-					}
-				}
-			}
-			i++;
-		}
-		return this.pricelist[seats] * tripNumber;
 	},
 	close: function(){
 		if (!this.isClosed){

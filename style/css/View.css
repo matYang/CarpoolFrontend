@@ -219,12 +219,16 @@
 
 #price_total{
 	margin-top:7px;
-	margin-left:5px;
+	margin-left:auto;
+	margin-right:auto;
 	padding-top:2px;
 	height:20px;
-	width:50px;
+	width:150px;
+	font-size:18px;
+	color:#1BA700;
 	float:left;
-	text-align: right;
+	font-weight:bold;
+	text-align: center;
 }
 #view_book {
 	background-color: #3399ff;

@@ -26,7 +26,6 @@
 	};
 
 	TransactionManager.prototype.initTransaction = function(newTransaction, callback){
-
 		if (!newTransaction || typeof newTransaction !== 'object'){
 			Constants.dWarn("TransactionManager::initTransaction:: invalid parameter");
 			return;

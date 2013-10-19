@@ -7,7 +7,7 @@ var TransactionDetailView = Backbone.View.extend({
 		"number":0
 	},
 	initialize: function (transaction){
-		var i;
+		var i, that = this;
 		_.bindAll(this, 'render', 'bindEvents', 'acceptTransaction', 'calculateTotal','cancelTransaction', 'completeTransaction', 'evaluateTransaction', 'close');
 		app.viewRegistration.register("transactionDetail", this, true);
 		this.isClosed = false;
@@ -30,6 +30,15 @@ var TransactionDetailView = Backbone.View.extend({
 		this.domContainer = $('#popup');
 		this.render();
 		this.load();
+
+		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === 0) {
+			$("#closeButton").before($("<div>").attr("id","deleteButton"));
+			$("#deleteButton").on("click",function(){
+				app.transactionManager.deleteTransaction(that.transactionId, function(){
+					that.close();
+				});
+			});
+		}
 		if (this.editable){
 			this.bindEvents();
 		}
@@ -60,7 +69,7 @@ var TransactionDetailView = Backbone.View.extend({
 			this.bookInfo.back = 1;
 		} else if (this.transaction.get("myDirection") === 1) {
 			this.bookInfo.go = 1;
-		} else {
+		} else if (this.transaction.get("myDirection") === 2) {
 			this.bookInfo.back = 1;
 		}
 		if ( this.bookInfo.go === 1) {
@@ -93,13 +102,12 @@ var TransactionDetailView = Backbone.View.extend({
 			that.calculateTotal();
 		});
 		$("#startButton").on("click", function(){
-			app.transactionManager.initTransaction(this.transaction, function(){
+			app.transactionManager.initTransaction(that.transaction, function(){
 				that.close();
 			});
 		});
 	},
 	calculateTotal:function(){
-		debugger;
 		temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
 		if (this.bookInfo.number > 0){
 			this.bookInfo.total = (this.bookInfo.go+this.bookInfo.back)*this.bookInfo.number*(this.priceList[temp-1]);
