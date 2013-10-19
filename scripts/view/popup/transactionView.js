@@ -6,12 +6,17 @@ var TransactionDetailView = Backbone.View.extend({
 		"back":0,
 		"number":0
 	},
-	initialize: function (transaction){
+	initialize: function (transaction, info){
 		var i, that = this;
 		_.bindAll(this, 'render', 'bindEvents', 'acceptTransaction', 'calculateTotal','cancelTransaction', 'completeTransaction', 'evaluateTransaction', 'close');
 		app.viewRegistration.register("transactionDetail", this, true);
 		this.isClosed = false;
 		this.transaction = transaction;
+		this.info = info;
+		this.json = this.transaction._toJSON();
+		for ( i in info) {
+			this.json[i] = info[i];
+		}
 		this.priceList = this.transaction.get("departure_priceList");
 		for (i = 0; i < this.priceList.length; i++) {
 			if (this.priceList[i] === 0) {
@@ -31,7 +36,6 @@ var TransactionDetailView = Backbone.View.extend({
 		this.render();
 		this.load();
 		this.textareaClicked = false;
-
 		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === 0) {
 			$("#closeButton").before($("<div>").attr("id","deleteButton"));
 			$("#deleteButton").on("click",function(){
@@ -46,7 +50,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	render: function () {
 		var that = this;
-		this.domContainer.append(this.template(this.transaction._toJSON()));
+		this.domContainer.append(this.template(this.json));
 		this.domContainer.show();
 		
 		$("#transaction_close, #closeButton").on("click", function(){
@@ -63,8 +67,8 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 	},
 	load: function(){
-		$("#transaction_number").val(this.transaction.get("people"));
-		this.bookInfo.number = this.transaction.get("people");
+		$("#transaction_number").val(this.transaction.get("departure_seatsBooked"));
+		this.bookInfo.number = this.transaction.get("departure_seatsBooked");
 		if (this.transaction.get("myDirection") === 0){
 			this.bookInfo.go = 1;
 			this.bookInfo.back = 1;
@@ -106,7 +110,8 @@ var TransactionDetailView = Backbone.View.extend({
 			if (that.textareaClicked) {
 				that.transaction.set("userNote", $("#transaction_userNote").val());
 			}
-			app.transactionManager.initTransaction(that.transaction, function(){
+		
+				app.transactionManager.initTransaction(that.transaction, function(){
 				that.close();
 			});
 		});

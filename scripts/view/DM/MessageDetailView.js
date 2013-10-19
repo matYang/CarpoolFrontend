@@ -173,7 +173,8 @@ var MessageDetailView = Backbone.View.extend({
 				$("#back, #returnTime, #returnSeats").remove();
 			}
 			$("#view_book").on("click", function(e) {
-				that.newTransaction.set("people", Utilities.toInt($("#chooseSeatNumber").val()));
+				that.newTransaction.set("arrival_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
+				that.newTransaction.set("departure_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
 				if (that.bookInfo.go && that.bookInfo.back){
 					that.newTransaction.set("myDirection", 0);
 				} else if (that.bookInfo.go) {
@@ -183,7 +184,11 @@ var MessageDetailView = Backbone.View.extend({
 				} else {
 					that.newTransaction.set("myDirection", -1);
 				}
-				that.transactionView = new TransactionDetailView(that.newTransaction);
+				debugger;
+				that.transactionView = new TransactionDetailView(that.newTransaction, {
+					"departure_seatsNumber":that.message.get("departure_seatsNumber"),
+					"arrival_seatsNumber":that.message.get("arrival_seatsNumber")
+				});
 			});
 			$("#chooseSeatNumber").on("keypress", function(e) {
 				if (e.keyCode < 48 || e.keyCode >57){
@@ -233,13 +238,11 @@ var MessageDetailView = Backbone.View.extend({
 		this.newTransaction.set("departure_location",this.message.get("departure_location"));
 		this.newTransaction.set("departure_time",this.message.get("departure_time"));
 		this.newTransaction.set("departure_timeSlot",this.message.get("departure_timeSlot"));
-		this.newTransaction.set("departure_seatsNumber",this.message.get("departure_seatsNumber"));
 		this.newTransaction.set("departure_seatsBooked",this.message.get("departure_seatsBooked"));
 		this.newTransaction.set("departure_priceList",this.message.get("departure_priceList"));
 		this.newTransaction.set("arrival_location",this.message.get("arrival_location"));
 		this.newTransaction.set("arrival_time",this.message.get("arrival_time"));
 		this.newTransaction.set("arrival_timeSlot",this.message.get("arrival_timeSlot"));
-		this.newTransaction.set("arrival_seatsNumber",this.message.get("arrival_seatsNumber"));
 		this.newTransaction.set("arrival_seatsBooked",this.message.get("arrival_seatsBooked"));
 		this.newTransaction.set("arrival_priceList",this.message.get("arrival_priceList"));
 		this.newTransaction.set("state", this.message.get("state"));
@@ -258,8 +261,8 @@ var MessageDetailView = Backbone.View.extend({
 		}
 		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_time"), true);
 		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
-		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
-		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("arrival_seatsBooked");
+		parsedMessage.departureSeats = message.get("departure_seatsNumber");
+		parsedMessage.returnSeats = message.get("arrival_seatsNumber");
 		parsedMessage.ownerUser = message.get("ownerName");
 		parsedMessage.type = message.get("Type");
 		parsedMessage.note = message.get("note");

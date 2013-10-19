@@ -22,21 +22,18 @@ var Transaction = Backbone.Model.extend({
 		"departure_location": new UserLocation(),
 		"departure_time": new Date(),
 		"departure_timeSlot": 0,
-		"departure_seatsNumber":0,
 		"departure_seatsBooked":0,
 		"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
 		"arrival_location": new UserLocation(),
 		"arrival_time": new Date(),
 		"arrival_timeSlot": 0,
-		"arrival_seatsNumber":0,
 		"arrival_seatsBooked":0,
 		"arrival_priceList":[],
 
 		"totalPrice": -1,
 		"state": -1,
 
-		"people": 0,
 		"historyDeleted": false,
 		"creationTime": new Date()
 	},
