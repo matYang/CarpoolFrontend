@@ -106,6 +106,13 @@ var Constants = {
 		'invalid': 5
 	},
 
+	transactionStateChangeAction: {
+		'init': 0,
+		'cancel': 1,
+		'report': 2,
+		'evaluate': 3
+	},
+
 	stateText:[
 		"待确认",
 		"已确认",
