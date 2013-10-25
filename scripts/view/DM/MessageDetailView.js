@@ -272,8 +272,8 @@ var MessageDetailView = Backbone.View.extend({
 		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
 		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
 		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("departure_seatsBooked");
-		if ( message.get("ownerName") instanceof Backbone.Model) {
-			parsedMessage.ownerUser = message.get("ownerName").toJSON();
+		if ( message.get("owner") instanceof Backbone.Model) {
+			parsedMessage.ownerUser = message.get("owner").toJSON();
 		} else {
 			parsedMessage.ownerUser = new User().toJSON();
 		}
@@ -282,7 +282,6 @@ var MessageDetailView = Backbone.View.extend({
 		parsedMessage.price = message.get("price");
 		parsedMessage.creationTime = "发布于"+Utilities.getDateString(message.get("creationTime"));
 		parsedMessage.transactionCount = this.transactions ? this.transactions.length : 0;
-		debugger;
 		parsedMessage.sessionUserId = this.userId;
 		return parsedMessage;
 	},

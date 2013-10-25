@@ -52,3 +52,16 @@
 		<div id = "startButton" class="button">订位</div>
     </div>
 </div>
+<% if ( state === 3 ) { %>
+<div id = "evaluation_container" display="none">
+	<div class = 'label'>评分</div>
+	<select id="score_selection">
+	  <option value="5">5分</option>
+	  <option value="4">4分</option>
+	  <option value="3">3分</option>
+	  <option value="2">2分</option>
+	  <option value="1">1分</option>
+	</select>
+	<div id="confirm_score" class='button'>确认</div>
+</div>
+<%}%>

@@ -24,7 +24,6 @@ var TransactionDetailView = Backbone.View.extend({
 			}
 		}
 		this.user = app.sessionManager.getSessionUser();
-		debugger;
 		// if (testMockObj.testMode){
 		// 	this.transaction = testMockObj.sampleTransactionA;
 		// 	//To allow edit
@@ -38,13 +37,10 @@ var TransactionDetailView = Backbone.View.extend({
 		this.load();
 		this.textareaClicked = false;
 
-		if (this.editable){
-			this.bindEvents();
-		}
+		this.bindEvents();
 	},
 	render: function () {
 		var that = this;
-		debugger;
 		this.domContainer.append(this.template(this.json));
 		this.domContainer.show();
 		
@@ -59,7 +55,6 @@ var TransactionDetailView = Backbone.View.extend({
 		if (!this.editable){
 			$("#transaction_number").prop("disabled", true);	
 			$("#startButton").remove();
-			debugger;
 			$("#transaction_userNote").html(this.transaction.get("customerNote"));
 		}
 		if (this.userId === this.transaction.get("providerId")){
@@ -70,6 +65,10 @@ var TransactionDetailView = Backbone.View.extend({
 			$("#startButton").remove();
 		} else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") === Constants.transactionState.finished){
 			$("#startButton").remove();
+			$("#reportButton").on("click", app.transactionManager.changeTransactionState({
+				"transactionId":this.transaction.get("transactionId"),
+				"stateChangeAction":Constants.transactionStateChangeAction.report
+			}));
 		} else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") !== Constants.transactionState.finished){
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
@@ -104,77 +103,94 @@ var TransactionDetailView = Backbone.View.extend({
 
 	bindEvents: function () {
 		var that = this, temp;
-		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === Constants.transactionState.init) {
-			$("#closeButton").before($("<div>").attr("id","deleteButton"));
-			$("#deleteButton").on("click",function(){
-				app.transactionManager.deleteTransaction(that.transactionId, function(){
-					that.close();
+		if (this.editable){
+			if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === Constants.transactionState.init) {
+				$("#closeButton").before($("<div>").attr("id","deleteButton"));
+				$("#deleteButton").on("click",function(){
+					app.transactionManager.deleteTransaction(that.transactionId, function(){
+						that.close();
+					});
 				});
+			}
+
+			$("#transaction_go, #transaction_back").on("click", function(e){
+				if (this.classList.contains("direction_selected")) {
+					this.classList.remove("direction_selected");
+				} else {
+					this.classList.add("direction_selected");
+				}
+				if (e.delegateTarget.id === "transaction_go"){
+					that.bookInfo.go = (that.bookInfo.go + 1)%2;
+				} else {
+					that.bookInfo.back = (that.bookInfo.back + 1)%2;
+				}
+
+				that.calculateTotal();
+			});
+
+			$("#transaction_number").on("change", function(e){
+				that.bookInfo.number = Utilities.toInt(e.target.value);
+				if (that.bookInfo.go) {
+					that.transaction.set("departure_seatsBooked", that.bookInfo.number);
+				}
+				if (that.bookInfo.back) {
+					that.transaction.set("arrival_seatsBooked", that.bookInfo.number);
+				}
+				$("#transaction_number").removeClass("invalid_input");
+				that.calculateTotal();
+			});
+			$("#startButton").on("click", function(){
+				if (that.textareaClicked) {
+					that.transaction.set("userNote", $("#transaction_userNote").val());
+				}
+				if ( that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked")) {
+					app.transactionManager.initTransaction(that.transaction, {
+						"success":that.bookSuccess,
+						"error":that.bookFail
+					});
+				} else {
+					$("#transaction_number").addClass("invalid_input");
+				}
 			});
 		}
-
-		$("#transaction_go, #transaction_back").on("click", function(e){
-			if (this.classList.contains("direction_selected")) {
-				this.classList.remove("direction_selected");
-			} else {
-				this.classList.add("direction_selected");
-			}
-			if (e.delegateTarget.id === "transaction_go"){
-				that.bookInfo.go = (that.bookInfo.go + 1)%2;
-			} else {
-				that.bookInfo.back = (that.bookInfo.back + 1)%2;
-			}
-
-			that.calculateTotal();
-		});
-
-		$("#transaction_number").on("change", function(e){
-			that.bookInfo.number = Utilities.toInt(e.target.value);
-			if (that.bookInfo.go) {
-				that.transaction.set("departure_seatsBooked", that.bookInfo.number);
-			}
-			debugger;
-			if (that.bookInfo.back) {
-				that.transaction.set("arrival_seatsBooked", that.bookInfo.number);
-			}
-			$("#transaction_number").removeClass("invalid_input");
-			that.calculateTotal();
-		});
-		$("#startButton").on("click", function(){
-			if (that.textareaClicked) {
-				that.transaction.set("userNote", $("#transaction_userNote").val());
-			}
-			if ( that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked")) {
-				app.transactionManager.initTransaction(that.transaction, {
-					"success":that.bookSuccess,
-					"error":that.bookFail
-				});
-			} else {
-				$("#transaction_number").addClass("invalid_input");
-			}
-		});
 		$("#transaction_userNote").on("focus", function(e){
 			if (!that.textareaClicked) {
 				that.textareaClicked = true;
 				e.target.textContent = "";
 			}
 		});
-
-
 		if (this.userId === this.transaction.get("customerId")){
-			
+			$("#evaluation_container").hide();
+			if (this.transaction.get("state") === Constants.transactionState.finished) {
+				$("#evaluateButton").on("click", function(){
+					$("#evaluation_container").show();
+				});
+				$("#confirm_score").on("click", function(){
+					app.transactionManager.changeTransactionState({
+						"transactionId":that.transaction.id,
+						"stateChangeAction":Constants.transactionStateChangeAction.evaluate,
+						"score":Utilities.toInt($("#score_select").val())
+					},
+					{
+						"success":that.bookSuccess,
+						"error":that.bookFail
+					});
+				});
+			}
 		} else if (this.userId === this.transaction.get("providerId")){
-			$("#transaction_number").prop("disabled", true);
-			$("#transaction_userNote").prop("disabled", true)
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
 			$("#startButton").remove();
+			$("#evaluation_container").remove();
 		} else {
-			$("#transaction_number").prop("disabled", true);
-			$("#transaction_userNote").prop("disabled", true)
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
 			$("#startButton").remove();
+		}
+
+		if (this.transaction.id !== -1 ) {
+			$("#transaction_number").prop("disabled", true);
+			$("#transaction_userNote").prop("disabled", true)
 		}
 	},
 	calculateTotal:function(){
