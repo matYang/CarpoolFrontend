@@ -242,7 +242,7 @@
 		this.searchResults.overrideUrl(this.apis.DM_search);
 
 		this.searchResults.fetch({
-			data: encodeURI($.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId})),
+			data: $.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId}),
             dataType:'json',
 
             success:function(model, response){

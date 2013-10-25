@@ -131,6 +131,7 @@ var MainPageView = Backbone.View.extend ({
 		}
 		this.filteredMessages = this.filterMessage(this.allMessages);
 		this.searchResultView = new SearchResultView(this.filteredMessages, true);
+		//this.searchResultView = new SearchResultView(this.allMessages, true);
 	},
 
 	renderError: function(){
