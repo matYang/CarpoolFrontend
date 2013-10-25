@@ -17,12 +17,14 @@ var SearchResultView = MultiPageView.extend({
 			MultiPageView.prototype.entryClass = "searchResultBoxContainer";
 			MultiPageView.prototype.entryContainer = "searchResultDisplayPanel";
 			MultiPageView.prototype.domContainer = $("#searchResultDisplayPanel");
+
 		} else {
 			MultiPageView.prototype.entryHeight = 100;
 			MultiPageView.prototype.pageEntryNumber = 3;
 			MultiPageView.prototype.entryClass = "frontBoxContainer";
 			MultiPageView.prototype.entryContainer = "quickStart_resultPanel";
 			MultiPageView.prototype.domContainer = $("#quickStart_resultPanel");
+			MultiPageView.prototype.minHeight = 300;
 		}
 
 		MultiPageView.prototype.render();

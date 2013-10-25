@@ -29,35 +29,41 @@
   </div>
 </div>
 <div id = 'view_panel_right'>
+      <% if (ownerUser.userId !== sessionUserId ) { %>
   <div id = 'view_event_info_right'>
     <div id = 'view_event_info_right_container'>
-      <div id = 'view_book_option'>
-        <div>座位<input type = 'number' id = 'chooseSeatNumber' min="1"/></div>
-        <div id = 'directionSelection'>
-          <div id = "go" class="button">去</div><div id = "back" class="button">回</div>
+        <div id = 'view_book_option'>
+          <div>座位<input type = 'number' id = 'chooseSeatNumber' min="1"/></div>
+          <div id = 'directionSelection'>
+            <div id = "go" class="button">去</div><div id = "back" class="button">回</div>
+          </div>
         </div>
+        <div id = 'view_book' class='button'>
+          预 定
+        </div>
+        <div id = 'price_total'></div>
+      <% } else { %>
+        <div id = 'view_event_info_right' style='height:220px'>
+          <div id = 'view_event_info_right_container'>
+            <div id = 'view_edit' class='button'>修&nbsp;&nbsp;&nbsp;&nbsp;改</div>
+      <% } %>
+      <div id = 'pricelist' >    
       </div>
-      <div id = 'view_book' class='button'>
-        预 定
-      </div>
-      <div id = 'price_total'></div>
-      <div id = 'pricelist' >
-        
-      </div>
-      <div class = 'view_edit_inline'>修改</div>
+
     </div>
   </div>
+
   <div id = 'view_userInfo'>
     <a href = ""><div id='view_profilePicture'></div></a>
     <div id = 'view_profile_right'>
       <div id='view_account'>
-        <div id = 'view_account_name'>乔帮主</div>
+        <div id = 'view_account_name'><%= ownerUser.name %></div>
       </div>
       <div id='view_profileOverview'>
         <div id='view_accountScore' class = 'view_profileOverviewBlock'>
           <div id='view_accountScoreLabel'>平均分</div>
           <div id='view_accountScoreHolder'>
-            <div id='view_accountScoreValue' class = "dashboard_text">100
+            <div id='view_accountScoreValue' class = "dashboard_text"><%= ownerUser.averageScore %>
             <span class='view_unit1'>%</span>
             </div>
           </div>
@@ -65,7 +71,7 @@
         <div class='verticalSpacer'></div>
         <div id='view_tradeCount' class = 'view_profileOverviewBlock'>
           <div id='view_accountTradeCountLabel'>交易次数</div>
-          <div id='view_accountTradeCountValue' class = "dashboard_text">120</div>
+          <div id='view_accountTradeCountValue' class = "dashboard_text"><%= ownerUser.totalTranscations %></div>
         </div>
       </div>
     </div>  

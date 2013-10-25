@@ -76,6 +76,10 @@ var MessageDetailView = Backbone.View.extend({
 		} else {
 			$("#directionArrow").html("->");
 		}
+		app.userManager.fetchTransactionList(this.ownerId,{
+			"success":this.loadTransactions,
+			"error":this.error
+		});
 	},
 	loadTransactions: function(transactions){
 		var i,
@@ -92,6 +96,7 @@ var MessageDetailView = Backbone.View.extend({
 			var transaction = that.transactions.at(Utilities.toInt(id));
 			that.openTransactionDetail(transaction);
 		});
+		$("#reservation_count").html(this.transactions.length);
 	},
 	calculateTotal:function(){
 		var temp = this.pricelist.length < this.bookInfo.number ? this.pricelist.length : this.bookInfo.number;
@@ -116,12 +121,11 @@ var MessageDetailView = Backbone.View.extend({
 
 	bindEvents: function () {
 		var that = this;
+		debugger;
 		if ( this.ownerId === this.userId){
-			$(".view_edit_inline").on("click", function(){
+			$("#view_edit").on("click", function(){
 				app.navigate(that.userId + "/message/"+that.messageId+"/edit", true);
 			});
-		} else {
-			$(".view_edit_inline").hide();
 		}
 
 		$("#view_transactions_button").on("click", function(){
@@ -129,10 +133,7 @@ var MessageDetailView = Backbone.View.extend({
 			if (that.showTransaction) {
 				content.slideUp(100);
 			} else {
-				app.userManager.fetchTransactionList(this.ownerId,{
-					"success":that.loadTransactions,
-					"error":that.error
-				});
+
 				content.slideDown(100);
 			}
 			that.showTransaction = !that.showTransaction;
@@ -188,7 +189,6 @@ var MessageDetailView = Backbone.View.extend({
 				} else {
 					that.newTransaction.set("myDirection", -1);
 				}
-				debugger;
 				that.transactionView = new TransactionDetailView(that.newTransaction, {
 					"departure_seatsNumber":that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
 					"arrival_seatsNumber":that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
@@ -252,7 +252,12 @@ var MessageDetailView = Backbone.View.extend({
 		this.newTransaction.set("state", this.message.get("state"));
 	},
 	openTransactionDetail: function(transaction){
-		this.transactionDetailView = new TransactionDetailView(transaction, this.user, "message/"+this.messageId);
+		var that = this;
+		this.transactionDetailView = new TransactionDetailView(transaction, {
+			"departure_seatsNumber":that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
+			"arrival_seatsNumber":that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
+		});
+
 	},
 
 	parseMessage: function(message){
@@ -267,15 +272,18 @@ var MessageDetailView = Backbone.View.extend({
 		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
 		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
 		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("departure_seatsBooked");
-		parsedMessage.ownerUser = message.get("ownerName");
+		if ( message.get("ownerName") instanceof Backbone.Model) {
+			parsedMessage.ownerUser = message.get("ownerName").toJSON();
+		} else {
+			parsedMessage.ownerUser = new User().toJSON();
+		}
 		parsedMessage.type = message.get("Type");
 		parsedMessage.note = message.get("note");
 		parsedMessage.price = message.get("price");
 		parsedMessage.creationTime = "发布于"+Utilities.getDateString(message.get("creationTime"));
-		parsedMessage.phone = message.get("ownerPhone");
-		parsedMessage.qq = message.get("ownerQq");
-		parsedMessage.email = message.get("ownerEmail");
 		parsedMessage.transactionCount = this.transactions ? this.transactions.length : 0;
+		debugger;
+		parsedMessage.sessionUserId = this.userId;
 		return parsedMessage;
 	},
 
@@ -300,7 +308,7 @@ var MessageDetailView = Backbone.View.extend({
 	},
 	close: function(){
 		if (!this.isClosed){
-			$(".view_edit_inine").off();
+			$("#view_edit").off();
 			$("#view_transactions_button").off();
 			$("#chooseSeatNumber").off();
 			$("#view_book").off();

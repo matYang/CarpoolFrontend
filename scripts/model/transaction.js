@@ -60,7 +60,7 @@ var Transaction = Backbone.Model.extend({
             data.transactionId = parseInt(data.transactionId, 10);
             data.providerId = parseInt(data.providerId, 10);
             data.customerId = parseInt(data.customerId, 10);
-            data.messageId = parseInt(data.messageIdm, 10);
+            data.messageId = parseInt(data.messageId, 10);
 
             data.provider = new User(data.provider, {'parse': true});
             data.customer = new User(data.customer, {'parse': true});
