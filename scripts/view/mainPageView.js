@@ -203,11 +203,11 @@ var MainPageView = Backbone.View.extend ({
 	filterTime: function(time, timeslot){
 		if (time === 'all' || timeslot === Constants.DayTimeSlot.all) {
 			return true;
-		} else if ( time === "morning" && timeslot === Constants.DayTimeSlot.morning) {
+		} else if ( time === "morning" && ( timeslot === Constants.DayTimeSlot.morning || (timeslot >= 8 && timeslot < 15 ))) {
 			return true;
-		} else if ( time === "afternoon" && timeslot === Constants.DayTimeSlot.afternoon) {
+		} else if ( time === "afternoon" && ( timeslot === Constants.DayTimeSlot.afternoon || (timeslot >= 15 && timeslot < 22 ))) {
 			return true;
-		} else if ( time === "night" && timeslot === Constants.DayTimeSlot.night) {
+		} else if ( time === "night" && ( timeslot === Constants.DayTimeSlot.night || (timeslot >= 22 || (timeslot < 8 && timeslot > 3)))) {
 			return true;
 		} else {
 			return false;

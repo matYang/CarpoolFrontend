@@ -43,7 +43,11 @@
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
 		if (testMockObj.testMode){
 			this.message = testMockObj.sampleMessageA;
-			callback.success(this.message);
+				if(callback && callback.transaction){
+					callback.success(this.message, callback.transaction);
+				} else if (callback) {
+					callback.success(this.message);
+				}
 			return;
 		}
 		if (typeof messageId === 'undefined' ){
@@ -69,8 +73,10 @@
 
 			success:function(model, response){
 				self.timeStamp = new Date();
-				if(callback){
-					callback.success();
+				if(callback && callback.transaction){
+					callback.success(this.message, callback.transaction);
+				} else if (callback) {
+					callback.success(this.message);
 				}
 			},
 			error: function(model, response){

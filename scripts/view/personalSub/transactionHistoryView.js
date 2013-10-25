@@ -2,7 +2,7 @@ var TransactionHistoryView = MultiPageView.extend({
 
 
 	initialize: function(messageList){
-		_.bindAll(this, 'render', 'openTransactionDetail', 'close');
+		_.bindAll(this, 'render', 'openTransactionDetail','fetchMessageSuccess','fetchMessageError', 'close');
 		MultiPageView.prototype.messages = messageList;
 		MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
 		MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
@@ -23,9 +23,25 @@ var TransactionHistoryView = MultiPageView.extend({
 		
 	},
 	openTransactionDetail: function(messageId){
+		var currentTransaction = MultiPageView.prototype.messages.get(messageId);
+		app.messageManager.fetchMessage(currentTransaction.get("messageId"), {
+			"success":this.fetchMessageSuccess,
+			"error":this.fetchMessageError,
+			"transaction":currentTransaction
+		});
+
+	},
+	fetchMessageSuccess:function(message, transaction){
 		if (app.sessionManager.hasSession()){
-			this.transactionDetail = new TransactionDetailView(MultiPageView.prototype.messages.get(messageId));
+			this.transactionDetail = new TransactionDetailView(transaction, {
+				"departure_seatsNumber":message.get("departure_seatsNumber") - message.get("departure_seatsBooked"),
+				"arrival_seatsNumber":message.get("arrival_seatsBookedtsNumber") - message.get("arrival_seatsBooked"),
+				"status":"r"
+			});
 		}
+	},
+	fetchMessageError:function(){
+
 	},
 
 	close: function(){

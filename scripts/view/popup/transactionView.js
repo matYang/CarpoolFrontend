@@ -24,6 +24,7 @@ var TransactionDetailView = Backbone.View.extend({
 			}
 		}
 		this.user = app.sessionManager.getSessionUser();
+		debugger;
 		// if (testMockObj.testMode){
 		// 	this.transaction = testMockObj.sampleTransactionA;
 		// 	//To allow edit
@@ -36,14 +37,7 @@ var TransactionDetailView = Backbone.View.extend({
 		this.render();
 		this.load();
 		this.textareaClicked = false;
-		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === 0) {
-			$("#closeButton").before($("<div>").attr("id","deleteButton"));
-			$("#deleteButton").on("click",function(){
-				app.transactionManager.deleteTransaction(that.transactionId, function(){
-					that.close();
-				});
-			});
-		}
+
 		if (this.editable){
 			this.bindEvents();
 		}
@@ -63,6 +57,24 @@ var TransactionDetailView = Backbone.View.extend({
 		});
 		if (!this.editable){
 			$("#transaction_number").prop("disabled", true);	
+			$("#startButton").remove();
+			debugger;
+			$("#transaction_userNote").html(this.transaction.get("customerNote"));
+		}
+		if (this.userId === this.transaction.get("providerId")){
+			$("#deleteButton").remove();
+		} else if (this.userId === this.transaction.get("customerId")){
+			$("#transaction_number").prop("disabled", true);
+			$("#transaction_userNote").prop("disabled", true)
+			$("#reportButton").remove();
+			$("#evaluateButton").remove();
+			$("#startButton").remove();
+		} else {
+			$("#transaction_number").prop("disabled", true);
+			$("#transaction_userNote").prop("disabled", true)
+			$("#deleteButton").remove();
+			$("#reportButton").remove();
+			$("#evaluateButton").remove();
 			$("#startButton").remove();
 		}
 	},
@@ -88,6 +100,15 @@ var TransactionDetailView = Backbone.View.extend({
 
 	bindEvents: function () {
 		var that = this, temp;
+		if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === Constants.transactionState.init) {
+			$("#closeButton").before($("<div>").attr("id","deleteButton"));
+			$("#deleteButton").on("click",function(){
+				app.transactionManager.deleteTransaction(that.transactionId, function(){
+					that.close();
+				});
+			});
+		}
+
 		$("#transaction_go, #transaction_back").on("click", function(e){
 			if (this.classList.contains("direction_selected")) {
 				this.classList.remove("direction_selected");
@@ -119,7 +140,6 @@ var TransactionDetailView = Backbone.View.extend({
 			if (that.textareaClicked) {
 				that.transaction.set("userNote", $("#transaction_userNote").val());
 			}
-			debugger;
 			if ( that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked")) {
 				app.transactionManager.initTransaction(that.transaction, {
 					"success":that.bookSuccess,
@@ -134,6 +154,9 @@ var TransactionDetailView = Backbone.View.extend({
 				that.textareaClicked = true;
 				e.target.textContent = "";
 			}
+		});
+		$("#deleteButton").on("click", function(){
+
 		});
 	},
 	calculateTotal:function(){
