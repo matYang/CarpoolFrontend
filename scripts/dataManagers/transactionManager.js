@@ -104,8 +104,12 @@
 	};
 
 
-
-	TransactionManager.prototype.changeTransactionState = function(transactionId, newState, callback) {
+	//if evaluate, pass in score as well
+	TransactionManager.prototype.changeTransactionState = function(options, callback) {
+		var transactionId = options.transactionId;
+		var newState = options.newState;
+		var score = newState === Constants.transactionStateChangeAction.evaluate ? options.score : 0;
+		
 		if (typeof transactionId !== 'number' || typeof newState !== 'number'){
 			Constants.dWarn("TransactionManager::changeTransactionState:: invalid parameter");
 			return;
@@ -120,8 +124,10 @@
 		this.transaction.overrideUrl(this.apis.transaction_transaction);
 		this.transaction.set('transactionId', transactionId);
 
+
+
 		this.transaction.save({},{
-			data: $.param({ 'userId': this.sessionManager.getUserId(), 'stateIndex': newState}),
+			data: $.param({ 'userId': this.sessionManager.getUserId(), 'stateIndex': newState, 'score': score}),
 			dataType:'json',
 
 			success:function(model, response){
