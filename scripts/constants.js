@@ -98,11 +98,12 @@ var Constants = {
 	},
 
 	transactionState: {
-		"init": 0,
-		"cancelled": 1,
-		"aboutToStart": 2,
-		"finished": 3,
-		"invalid": 5
+		'init': 0,
+		'cancelled': 1,
+		'aboutToStart': 2,
+		'finished': 3,
+		'underInvestigation': 4,
+		'invalid': 5
 	},
 
 	stateText:[
