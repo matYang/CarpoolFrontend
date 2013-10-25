@@ -1,6 +1,6 @@
 
 var testMockObj = {
-	"testMode": false,
+	"testMode": true,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
@@ -69,12 +69,12 @@ var testMockObj = {
 	"sampleUserF": (new User()).set("userId", 6),
 
 	"sampleTransactions": new Transactions(),
-	"sampleTransactionA": (new Transaction()).set("transactionId", 101).set("state",0).set("direction",0).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
-	"sampleTransactionB": (new Transaction()).set("transactionId", 102).set("initUserId",12).set("initUserName","路卡修").set("targetUserName","Simon").set("price",20).set("initUserLevel","10"),
-	"sampleTransactionC": (new Transaction()).set("transactionId", 103).set("initUserId",12).set("initUserName","路卡修").set("targetUserName","Simon").set("price",20).set("initUserLevel","10"),
-	"sampleTransactionD": (new Transaction()).set("transactionId", 104),
-	"sampleTransactionE": (new Transaction()).set("transactionId", 105),
-	"sampleTransactionF": (new Transaction()).set("transactionId", 106),
+	"sampleTransactionA": (new Transaction()).set("transactionId", 101).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+	"sampleTransactionB": (new Transaction()).set("transactionId", 102).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+	"sampleTransactionC": (new Transaction()).set("transactionId", 103).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+	"sampleTransactionD": (new Transaction()).set("transactionId", 104).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+	"sampleTransactionE": (new Transaction()).set("transactionId", 105).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+	"sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 
 	"sampleNotifications": new Notifications(),
 	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message"),

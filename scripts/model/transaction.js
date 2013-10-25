@@ -116,19 +116,23 @@ var Transaction = Backbone.Model.extend({
 		} else {
 			json.departure_timeSlot += "点";
 		}
-		//// json.arrival_location = this.get('arrival_location').toUiString();
-		//json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
-		//if ( this.arrival_timeSlot === 0 ){
-		//	json.arrival_timeSlot = "全天";
-		//} else if ( this.arrival_timeSlot == 1 ){
-		//	json.arrival_timeSlot = "早上";
-		//} else if ( this.arrival_timeSlot == 2 ){
-		//	json.arrival_timeSlot = "下午";
-		//} else if ( this.arrival_timeSlot == 3 ){
-		//	json.arrival_timeSlot = "晚上";
-		//} else {
-		//	json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
-		//}
+		
+		json.arrival_location = this.get('arrival_location').toUiString();
+		if (json.arrival_time){
+			json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
+		}
+
+		if ( this.arrival_timeSlot === 0 ){
+			json.arrival_timeSlot = "全天";
+		} else if ( this.arrival_timeSlot == 1 ){
+			json.arrival_timeSlot = "早上";
+		} else if ( this.arrival_timeSlot == 2 ){
+			json.arrival_timeSlot = "下午";
+		} else if ( this.arrival_timeSlot == 3 ){
+			json.arrival_timeSlot = "晚上";
+		} else if ( this.arrival_timeSlot ){
+			json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
+		}
 		json.creationTime = Utilities.getDateString(this.get('creationTime'));
 
 		var priceList = this.get("departure_priceList");

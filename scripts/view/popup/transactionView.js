@@ -44,6 +44,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	render: function () {
 		var that = this;
+		debugger;
 		this.domContainer.append(this.template(this.json));
 		this.domContainer.show();
 		
@@ -62,13 +63,16 @@ var TransactionDetailView = Backbone.View.extend({
 			$("#transaction_userNote").html(this.transaction.get("customerNote"));
 		}
 		if (this.userId === this.transaction.get("providerId")){
-			$("#deleteButton").remove();
-		} else if (this.userId === this.transaction.get("customerId")){
 			$("#transaction_number").prop("disabled", true);
-			$("#transaction_userNote").prop("disabled", true)
+			$("#transaction_userNote").prop("disabled", true);
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
 			$("#startButton").remove();
+		} else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") === Constants.transactionState.finished){
+			$("#startButton").remove();
+		} else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") !== Constants.transactionState.finished){
+			$("#reportButton").remove();
+			$("#evaluateButton").remove();
 		} else {
 			$("#transaction_number").prop("disabled", true);
 			$("#transaction_userNote").prop("disabled", true)
@@ -155,9 +159,23 @@ var TransactionDetailView = Backbone.View.extend({
 				e.target.textContent = "";
 			}
 		});
-		$("#deleteButton").on("click", function(){
 
-		});
+
+		if (this.userId === this.transaction.get("customerId")){
+			
+		} else if (this.userId === this.transaction.get("providerId")){
+			$("#transaction_number").prop("disabled", true);
+			$("#transaction_userNote").prop("disabled", true)
+			$("#reportButton").remove();
+			$("#evaluateButton").remove();
+			$("#startButton").remove();
+		} else {
+			$("#transaction_number").prop("disabled", true);
+			$("#transaction_userNote").prop("disabled", true)
+			$("#reportButton").remove();
+			$("#evaluateButton").remove();
+			$("#startButton").remove();
+		}
 	},
 	calculateTotal:function(){
 		temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
