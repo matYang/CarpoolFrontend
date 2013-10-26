@@ -13,7 +13,6 @@ var MessageDetailView = Backbone.View.extend({
 
 		var self = this;
 		this.newTransaction = new Transaction();
-		
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
 			success: function(){
 				self.message = app.messageManager.getMessage();
@@ -24,7 +23,7 @@ var MessageDetailView = Backbone.View.extend({
 				};
 				self.parsedMessage = self.parseMessage(self.message);
 				self.messageId = self.message.get("messageId");
-				self.ownerId = self.message.get("ownerId");
+				self.ownerId = self.message.get("ownerId") || -1;
 
 				self.template = _.template(tpl.get('Module/DetailMessage'));
 				self.transactionTemplate = _.template(tpl.get('Module/Transaction'));

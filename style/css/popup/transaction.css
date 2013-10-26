@@ -45,14 +45,6 @@
 	float:left;
 }
 
-#transaction_user_img{
-	width:200px;
-	height:200px;
-	padding:5px;
-	margin:5px;
-
-	border:2px solid rgb(87,83,172);
-}
 #transaction_user_name{
 	height:30px;
 	padding-top:10px;
@@ -284,5 +276,6 @@
 	width:70px;
 	height:70px;
 	border:1px solid #999999;
-
+	background-image:url("../../../res/personal/default-avatar.jpg");
+	background-size: 100%;
 }

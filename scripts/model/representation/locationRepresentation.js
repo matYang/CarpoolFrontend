@@ -60,7 +60,6 @@ var UserLocation = Backbone.Model.extend({
 	//parse: no nested data structure, default parse is good enough
 	//toJSON: same as above
 	toUiString: function() {
-		debugger;
 		if (this.get('city') && this.get('province'))
 			return this.get('city')+", "+this.get("province");
 		else 
