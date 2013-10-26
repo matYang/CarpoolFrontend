@@ -269,7 +269,7 @@
 	font-size:12px;
 }
 
-.searchResultPublishTime{
+.searchResultUserName, .searchResultPublishTime{
   margin-left:8px;
 	margin-top:7px;
 	font-size:12px;
