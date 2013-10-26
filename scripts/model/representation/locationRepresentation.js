@@ -60,7 +60,11 @@ var UserLocation = Backbone.Model.extend({
 	//parse: no nested data structure, default parse is good enough
 	//toJSON: same as above
 	toUiString: function() {
-		return this.get('city')+", "+this.get("province");
+		debugger;
+		if (this.get('city') && this.get('province'))
+			return this.get('city')+", "+this.get("province");
+		else 
+			return this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex')-1]+", "+this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex')-2];
 	},
 	equals: function (val) {
 		if (val instanceof Backbone.Model) {
@@ -69,8 +73,8 @@ var UserLocation = Backbone.Model.extend({
 		return false;
 	},
 	isEquivalentTo: function (val) {
-		if (val instanceof Backbone.Model) {
-			return this.get('hierarchyNameList').compare(val.get('hierarchyNameList'));
+		if (val instanceof UserLocation) {
+			return this.get('city') === val.get('city');
 		}
 		return false;
 	},

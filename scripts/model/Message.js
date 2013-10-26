@@ -41,7 +41,7 @@ var Message = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/dianming/dianming",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON');
+		_.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON', '_toJSON');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
@@ -127,6 +127,29 @@ var Message = Backbone.Model.extend({
 		if ( this.get('arrival_location') instanceof UserLocation ) {
 			json.arrival_location = this.get('arrival_location').toUiString();
 		}
+		if ( this.departure_timeSlot === Constants.DayTimeSlot.all ){
+			json.departure_timeSlot = "全天";
+		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.morning ){
+			json.departure_timeSlot = "早上";
+		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.afternoon ){
+			json.departure_timeSlot = "下午";
+		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.night ){
+			json.departure_timeSlot = "晚上";
+		} else {
+			json.departure_timeSlot += "点";
+		}
+		if ( this.arrival_timeSlot === 0 ){
+			json.arrival_timeSlot = "全天";
+		} else if ( this.arrival_timeSlot == 1 ){
+			json.arrival_timeSlot = "早上";
+		} else if ( this.arrival_timeSlot == 2 ){
+			json.arrival_timeSlot = "下午";
+		} else if ( this.arrival_timeSlot == 3 ){
+			json.arrival_timeSlot = "晚上";
+		} else if ( this.arrival_timeSlot ){
+			json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
+		}
+
 		return json;
     },
 
