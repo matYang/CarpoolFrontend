@@ -75,7 +75,6 @@ var TransactionDetailView = Backbone.View.extend({
 		} else {
 			$("#transaction_number").prop("disabled", true);
 			$("#transaction_userNote").prop("disabled", true)
-			$("#deleteButton").remove();
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
 			$("#startButton").remove();
@@ -104,15 +103,6 @@ var TransactionDetailView = Backbone.View.extend({
 	bindEvents: function () {
 		var that = this, temp;
 		if (this.editable){
-			if (this.userId === this.transaction.get("providerId") && this.transaction.get("state") === Constants.transactionState.init) {
-				$("#closeButton").before($("<div>").attr("id","deleteButton"));
-				$("#deleteButton").on("click",function(){
-					app.transactionManager.deleteTransaction(that.transactionId, function(){
-						that.close();
-					});
-				});
-			}
-
 			$("#transaction_go, #transaction_back").on("click", function(e){
 				if (this.classList.contains("direction_selected")) {
 					this.classList.remove("direction_selected");
@@ -143,11 +133,23 @@ var TransactionDetailView = Backbone.View.extend({
 				if (that.textareaClicked) {
 					that.transaction.set("userNote", $("#transaction_userNote").val());
 				}
-				if ( that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked")) {
-					app.transactionManager.initTransaction(that.transaction, {
-						"success":that.bookSuccess,
-						"error":that.bookFail
-					});
+				if ( (that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.bookInfo.go) 
+					|| (that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked") &&  that.bookInfo.back)){
+					if (that.bookInfo.go === 1) {
+						app.transactionManager.initTransaction(that.transaction, {
+							"success":that.bookSuccess,
+							"error":that.bookFail
+						});
+					}
+					if (that.bookInfo.back === 1) {
+						var temp = that.transaction.get("arrival_location");
+						that.transaction.set("arrival_location", that.transaction.get("departure_location"));
+						that.transaction.set("departure_location", temp);
+						app.transactionManager.initTransaction(that.transaction, {
+							"success":that.bookSuccess,
+							"error":that.bookFail
+						});
+					}
 				} else {
 					$("#transaction_number").addClass("invalid_input");
 				}
@@ -178,10 +180,24 @@ var TransactionDetailView = Backbone.View.extend({
 				});
 			}
 		} else if (this.userId === this.transaction.get("providerId")){
+			if (this.transaction.get("state") === Constants.transactionState.finished) {
+				$("#evaluateButton").on("click", function(){
+					$("#evaluation_container").show();
+				});
+				$("#confirm_score").on("click", function(){
+					app.transactionManager.changeTransactionState({
+						"transactionId":that.transaction.id,
+						"stateChangeAction":Constants.transactionStateChangeAction.evaluate,
+						"score":Utilities.toInt($("#score_select").val())
+					},
+					{
+						"success":that.bookSuccess,
+						"error":that.bookFail
+					});
+				});
+			}
 			$("#reportButton").remove();
-			$("#evaluateButton").remove();
 			$("#startButton").remove();
-			$("#evaluation_container").remove();
 		} else {
 			$("#reportButton").remove();
 			$("#evaluateButton").remove();
@@ -204,6 +220,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	bookSuccess: function(){
 		this.close();
+		location.reload();
 	},
 	bookFail: function(){
 		Info.warn("unable to connect to server");
