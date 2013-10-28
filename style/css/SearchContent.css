@@ -222,18 +222,18 @@
   margin-left:3px;
 	margin-top:0;
 	height:80px;
-	width:400px;
+	width:410px;
 	color:#444444;
 	float:left;
 }
-.searchResultOriginCity, .searchResultOriginProvince, .searchResultDestCity, .searchResultDestProvince{
+.searchResultOrigin, .searchResultDest{
   float:left;
-  width:60px;
+  width:140px;
   height:20px;
   margin-left:5px;
   color:#58ab7f;
-  font-size:16px;
-  letter-spacing:1px;
+  font-size:15px;
+
   font-weight:bold;
 }
 .searchResultDepartDate, .searchResultReturnDate, .searchResultDepartTime, .searchResultReturnTime  {
@@ -269,7 +269,7 @@
 	font-size:12px;
 }
 
-.searchResultPublishTime{
+.searchResultUserName, .searchResultPublishTime{
   margin-left:8px;
 	margin-top:7px;
 	font-size:12px;
@@ -431,7 +431,7 @@
 }
 
 .fromInfo, .toInfo {
-  width:140px;
+  width:150px;
   height:85px;
   margin: 0 10px 0 10px;
   float:left;

@@ -2,9 +2,8 @@
   <div id = 'profilePicture_<%= messageId %>' class = 'searchResultProfilePicture'></div>
   <div id = 'searchResultContainerInfo_<%= messageId %>' class = 'searchResultContainerInfo'>
     <div class = 'fromInfo'>
-      <div class='label' style="font-weight:bold; float:none; !important ">出发</div>
-      <div class = 'searchResultOriginProvince'><%= departure_location.province %></div>  
-      <div class = 'searchResultOriginCity'><%= departure_location.city %></div>
+      <div >出发</div>
+      <div class = 'searchResultOrigin'><%= departure_location %></div>  
       <div class = 'searchResultDepartDate'><%= departure_time %></div>
       <div class = 'searchResultDepartTime'><%= departure_timeSlot %></div>
       <div class = 'searchResultDepartSeat'>剩余 <%= departure_seatsNumber %> 座</div>
@@ -15,9 +14,8 @@
     <div class = 'twoDirectionArrow'></div>
     <% } %>
     <div class = 'toInfo'>
-      <div class='label' style="font-weight:bold;float:none; !important">到达</div>
-      <div class = 'searchResultDestProvince'><%= arrival_location.province %></div>  
-      <div class = 'searchResultDestCity'><%= arrival_location.city %></div>
+      <div >到达</div>
+      <div class = 'searchResultDest'><%= arrival_location %></div>  
       <% if (isRoundTrip === true)  { %>
         <div class = 'searchResultReturnDate'><%= arrival_time %></div>
         <div class = 'searchResultReturnTime'><%= departure_timeSlot %></div>
@@ -30,7 +28,7 @@
     <div class = 'searchResultPriceLogo'>￥ <%= currentPrice %>
     </div>
   </div>
-  <div class = 'searchResultUserName'><%= owner %></div>
+  <div class = 'searchResultUserName'><%= owner.name %></div>
   <div class = 'searchResultPublishTime'>发布于<%= creationTime %></div>
 </div>
 

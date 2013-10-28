@@ -536,7 +536,7 @@
 	padding-top:10px;
 	float:left;
 	text-align:center;
-	font-size:20px;
+	font-size:12px;
 	border:solid 1px #999999;
 }
 
@@ -548,13 +548,14 @@
 	padding-top:10px;
 	float:left;
 	text-align:center;
-	font-size:20px;
+	font-size:20px
 }
 
 .personal_transactionHistory_containerInfo{
-	width:220px;
+	padding:10px;
+	width:200px;
 	margin-left:10px;
-	height:60px;
+	height:40px;
 	float:left;
 }
 

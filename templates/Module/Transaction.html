@@ -1,8 +1,13 @@
-<div id = "transaction_content_<%= id %>" class = "transaction_content">
-<div id="transaction_image_<%= id %>" class="transaction_image">
+<div id = "transaction_content_<%= transactionId %>" class = "transaction_content">
+<div id="transaction_image_<%= transactionId %>" class="transaction_image">
   <img src="" />
 </div>
 <div class="transaction_text">
-  
+  <% if (customer.name) { %>
+  	<%= customer.name %>
+  <% } else { %>
+  乘客A
+  <% } %>
+  于<%= creationTime %>预定了<%= departure_seatsBooked %>个座位
 </div>
 </div>

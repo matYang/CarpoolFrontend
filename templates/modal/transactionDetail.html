@@ -17,6 +17,7 @@
 			<% } %>
 			
 		</div>
+
 		<div id="transaction_priceList">
 			 <% for ( var priceCount = 0; priceCount < departure_priceList.length; priceCount++ ){ %>
 			 	<% if (departure_priceList[priceCount]> 0 ){ %>
@@ -25,8 +26,13 @@
 			 <% } %>
 		</div>
 		<div id="transaction_note">
-			<%= message %>
+			<%= providerNote %>
 		</div>
+
+	</div>
+	<div id = 'transaction_userInfo'>
+		司机 <img src='<%= provider.imgPath %>' />
+		乘客 <img src='<%= customer.imgPath %>' />
 	</div>
 	<div id="triptypeselection">
 		<div id="transaction_state" class="transactionState<%= state %>"><%= stateText %></div>

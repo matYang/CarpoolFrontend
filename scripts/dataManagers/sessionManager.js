@@ -49,7 +49,7 @@
 		
 		this.sessionUser = new User(this.apis.users_findSession);
 		if (testMockObj.testMode) {
-			this.sessionUser.set("userId", 10000);
+			this.sessionUser.set("userId", 10001);
 			this.isLoggedIn = true;
 			if(callback){
 				callback.success();

@@ -13,7 +13,6 @@ var MessageDetailView = Backbone.View.extend({
 
 		var self = this;
 		this.newTransaction = new Transaction();
-		
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
 			success: function(){
 				self.message = app.messageManager.getMessage();
@@ -24,7 +23,7 @@ var MessageDetailView = Backbone.View.extend({
 				};
 				self.parsedMessage = self.parseMessage(self.message);
 				self.messageId = self.message.get("messageId");
-				self.ownerId = self.message.get("ownerId");
+				self.ownerId = self.message.get("ownerId") || -1;
 
 				self.template = _.template(tpl.get('Module/DetailMessage'));
 				self.transactionTemplate = _.template(tpl.get('Module/Transaction'));
@@ -88,12 +87,12 @@ var MessageDetailView = Backbone.View.extend({
 			this.transactions = transactions;
 		for ( i = 0; i < this.transactions.length; i++){
 			if ( Utilities.isEmpty(this.transactions.at(i).targetUserName === null)) continue;
-			buffer[i] = this.transactionTemplate(this.parseTransaction(this.transactions.at(i), i));
+			buffer[i] = this.transactionTemplate(this.transactions.at(i)._toJSON());
 		}
 		$("#view_transactions_content").append(buffer.join(""));
 		$("#view_transactions_content>.transaction_content").on("click", function(e){
 			var id = Utilities.getId(e.delegateTarget.id);
-			var transaction = that.transactions.at(Utilities.toInt(id));
+			var transaction = that.transactions.get(Utilities.toInt(id));
 			that.openTransactionDetail(transaction);
 		});
 		$("#reservation_count").html(this.transactions.length);
@@ -121,7 +120,6 @@ var MessageDetailView = Backbone.View.extend({
 
 	bindEvents: function () {
 		var that = this;
-		debugger;
 		if ( this.ownerId === this.userId){
 			$("#view_edit").on("click", function(){
 				app.navigate(that.userId + "/message/"+that.messageId+"/edit", true);
