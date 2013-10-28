@@ -28,7 +28,7 @@
   position:relative;
   padding:0;
   margin:0;
-/*  background-image:url("../../res/topBar/logo.png");*/
+  background-image:url("../../res/topBar/logo.png");
   background-repeat:no-repeat;
   /*IE 8 does not support this, ask Lucas for a logo with finalized dimensions and delete it*/
   background-size: cover;
@@ -141,6 +141,7 @@
   font-size: 13px;
 
 }
+
 #signup_button{
   float:left;
   height:24px;
@@ -156,7 +157,7 @@
   font-size: 13px;
 }
 
-#messages, #likes, #favorites{
+#notifications, #letters, #favorites{
   width:30px;
   height:30px;
   padding:5px;
@@ -166,16 +167,16 @@
   background-position:center; 
 }
 
-#messages{
-  background-image: url('../../res/topBar/messages.png');
+#notifications{
+  background-image: url('../../res/topBar/notification.png');
 }
-#likes{
-  background-image: url('../../res/topBar/likes.png');
+#letters{
+  background-image: url('../../res/topBar/letter.png');
 }
 #favorites{
   background-image: url('../../res/topBar/favorites.png');
 }
-#notifications{
+#personalNavContainer{
   width:205px;
   height:40px;
   position:relative;
@@ -197,56 +198,84 @@
 #dropdowns{
   position:relative;
   float:right;
-  width:295px;
+  width:395px;
 }
 
-#messageDropdown{
-  width:115px;
+.dropdownBase{
+  width:215px;
   height:150px;
   background-color: rgb(255,255,255);
   border: 1px solid #000000;
+  z-index: 100;
 }
-#likeDropdown{
-  margin-left:40px;
-  width:115px;
-  height:150px;
-  background-color: rgb(255,255,255);
-  border: 1px solid #000000;
+
+#notificationDropdown{
+  margin-left:85px;
 }
+
+#letterDropdown{
+  margin-left:125px;
+}
+
 #favoriteDropdown{
-  margin-left:80px;
-  width:115px;
-  height:150px;
-  background-color: rgb(255,255,255);
-  border: 1px solid #000000;
+  margin-left:165px;
 }
+
+
+#dropdowns .dropdownTitle{
+  width: 100%；
+  clear: both;
+  height: 18px;
+}
+
+#dropdowns .dropdownTitle .dropdownTitleText{
+  float: left;
+  font-weight: bold;
+}
+
+#dropdowns .dropdownTitle .dropdownTitleCheckAll{
+  float: right;
+  color: blue;
+}
+
+#dropdowns .dropdownTitle .dropdownTitleCheckAll:hover{
+  background-color: rgb(236,223,177);
+  cursor: pointer;
+}
+
+.dropdownContent{
+  font-size: 11px;
+  padding:3px 3px 3px 3px;
+  width:209px;
+  border-top: 1px solid #aaaaaa;
+}
+
+.dropdownContent:hover{
+  background-color: rgb(236,223,177);
+  cursor: pointer;
+}
+
+
 #profileDropdown{
-  margin-left:220px;
+  margin-left:320px;
   margin-top:20px;
   width:60px;
   height:25px;
   background-color: rgb(255,255,255);
   border: 1px solid #000000;
 }
+
 #profileDropdown>.dropdownContent{
   width:50px;
 }
-.dropdownContent{
-  height:19px;
-  padding:3px 0 3px 10px;
-  width:105px;
-}
 
-.dropdownContent:hover{
-  background-color: rgb(236,223,177);
-}
 #logout{
   color:#3377ff;
 }
 #logout.dropdownContent{
   text-align:center;
   padding-left:0;
-  width:60px;
+  width:57px;
 }
 .whiteBackground{
   background-color: #ffffff;

@@ -4,7 +4,6 @@ var TopBarView = Backbone.View.extend({
 
 	events: {
 
-
 	},
 
 	initialize:function(){
@@ -38,6 +37,8 @@ var TopBarView = Backbone.View.extend({
 			idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
 
 
+		/*  navigation events  */
+		//main nav
 		$('#logo').on('click', function(){
 			app.navigate(idString  + "/front" , true);
 		});
@@ -51,13 +52,26 @@ var TopBarView = Backbone.View.extend({
 			app.navigate(app.sessionManager.getUserId() + "/post" , true);
 		});
 
-		$('#messages').on('mouseenter', function(){
-			self.showMessage();
-			$("#messages").addClass("whiteBackground");
+		//personal nav
+		$('#notificationDropdown .dropdownTitleCheckAll').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history" , true);
 		});
-		$('#likes').on('mouseenter', function(){
+		$('#letterDropdown .dropdownTitleCheckAll').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history" , true);
+		});
+		$('#favoriteDropdown .dropdownTitleCheckAll').on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/social" , true);
+		});
+
+
+		/*  UI events  */
+		$('#notifications').on('mouseenter', function(){
+			self.showMessage();
+			$("#notifications").addClass("whiteBackground");
+		});
+		$('#letters').on('mouseenter', function(){
 			self.showLikes();
-			$("#likes").addClass("whiteBackground");
+			$("#letters").addClass("whiteBackground");
 		});
 		$('#favorites').on('mouseenter', function(){
 			self.showFavorite();
@@ -66,13 +80,13 @@ var TopBarView = Backbone.View.extend({
 		$('#profilePicture').on('mouseenter', function(){
 			self.showProfile();
 		});
-		$('#messages').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "messageDropdown" && e.toElement.parentElement.id !== "messageDropdown"){
+		$('#notifications').on('mouseleave', function(e){
+			if (e.toElement !== null && e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown"){
 				self.hideMessage();
 			}
 		});
-		$('#likes').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "likeDropdown" && e.toElement.parentElement.id !== "likeDropdown"){
+		$('#letters').on('mouseleave', function(e){
+			if (e.toElement !== null && e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown"){
 				self.hideLikes();
 			}
 		});
@@ -91,13 +105,13 @@ var TopBarView = Backbone.View.extend({
 				self.hideFavorite();
 			}
 		});
-		$('#messageDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "messages"){
+		$('#notificationDropdown').on('mouseleave', function(e){
+			if (e.toElement.id !== "notifications"){
 				self.hideMessage();
 			}
 		});
-		$('#likeDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "likes"){
+		$('#letterDropdown').on('mouseleave', function(e){
+			if (e.toElement.id !== "letters"){
 				self.hideLikes();
 			}
 		});
@@ -188,11 +202,11 @@ var TopBarView = Backbone.View.extend({
 	showMessage: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
-		$("#messageDropdown").show();
+		$("#notificationDropdown").show();
 	},
 	hideMessage:function(){
 		$("li").removeClass("whiteBackground");
-		$("#messageDropdown").hide();
+		$("#notificationDropdown").hide();
 	},
 	showFavorite: function(){
 		$("#dropdowns>div").hide();
@@ -207,11 +221,11 @@ var TopBarView = Backbone.View.extend({
 	showLikes: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
-		$("#likeDropdown").show();
+		$("#letterDropdown").show();
 	},
 	hideLikes:function(){
 		$("li").removeClass("whiteBackground");
-		$("#likeDropdown").hide();
+		$("#letterDropdown").hide();
 	},
 	showProfile: function(){
 		$("#dropdowns>div").hide();
@@ -229,11 +243,11 @@ var TopBarView = Backbone.View.extend({
 			$('.navigate_main').off();
 			$('.navigate_personal').off();
 			$('.navigate_feedBack').off();
-			$('#messages').off();
-			$('#likes').off();
+			$('#notifications').off();
+			$('#letters').off();
 			$('#favorites').off();
-			$('#messageDropdown').off();
-			$('#likeDropdown').off();
+			$('#notificationDropdown').off();
+			$('#letterDropdown').off();
 			$('#favoriteDropdown').off();
 			if (!app.sessionManager.hasSession()){
 				$('#signup_button').off();

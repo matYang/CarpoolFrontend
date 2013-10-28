@@ -14,6 +14,7 @@ var Constants = {
 	},
 
 	origin: 'http://localhost:8015',
+	socketOrigin: 'http://localhost:3000',
 
 	miliSecInDay: 86400000,
 
@@ -30,7 +31,7 @@ var Constants = {
 		"Module/Transaction",
 		"Module/Front",
 
-			/*-----------  modals  ---------*/
+		/*-----------  modals  ---------*/
 		"modal/genderEditWindow",
 		"modal/hourRateEditWindow",
 		"modal/locationEditWindow",
@@ -127,29 +128,19 @@ var Constants = {
 		"完成"
 	],
 
-	notificationType: {
-		"on_user": 0,
-		"on_message": 1,
-		"on_transaction": 2
+	notificationState: {
+		'unread': 0,
+		'read': 1
 	},
 
 	notificationEvent: {
-		"messageWatched": 0,
-		"watchingMessageModified": 1,
-		"watchingMessageDeleted": 2,
-		"watchingMessageAboutToExpire": 3,
-		"followerNewPost": 4,
-		"followed": 5,
-		"transactionPending": 6,
-		"transactionConfrimed": 7,
-		"transactionRefused": 8,
-		"transactionAboutToStart": 9,
-		"transactionCancelled": 10,
-		"transactionFinishedToEvaluate": 11,
-		"tranasctionUnderInvestigation": 12,
-		"transactionEvaluated": 13,
-		"transactionAboutToAutoMark": 14,
-		"transactionAutoMarked": 15
+		'transactionInit': 0,
+		'transactionCancelled': 1,
+		'transactionAboutToStart': 2,
+        'transactionEvaluated': 3,
+        'tranasctionUnderInvestigation': 4,
+        'transactionReleased': 5,
+        'watched': 6
 	},
 
 	userState: {

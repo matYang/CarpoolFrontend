@@ -34,7 +34,7 @@ var Transaction = Backbone.Model.extend({
 
 	idAttribute: "transactionId",
 
-	urlRoot: Constants.origin + "",
+	urlRoot: Constants.origin + "/api/v1.0/transaction/transaction",
 
 	initialize:function(urlRootOverride){
 		_.bindAll(this, 'overrideUrl');
@@ -183,7 +183,7 @@ var Transactions = Backbone.Collection.extend({
 
 	model: Transaction,
 
-	url: Constants.origin + "",
+	url: Constants.origin + "/api/v1.0/transaction/transaction",
 
 	initialize:function(urlOverride){
 		_.bindAll(this, 'overrideUrl');

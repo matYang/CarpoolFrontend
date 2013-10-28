@@ -5,39 +5,52 @@
       <li class = 'subTitle button navigate_personal'>个人主页</li>
       <li class = 'subTitle button navigate_feedBack'>发布消息</li>
     </ul>
-    <div id = 'notifications'>
+    <div id = 'personalNavContainer'>
       <ul>
-        <li id = 'messages'></li>
-        <li id = 'likes'></li>
+        <li id = 'notifications'></li>
+        <li id = 'letters'></li>
         <li id = 'favorites'></li>
       </ul>
       <div id = 'profilePicture'></div>
 
     </div>
     <div id = 'dropdowns'>
-      <div id='messageDropdown'>
-        <div id='messageDropDownTitle' class=''>消息提示</div>
-        <div id='unreadMessage' class='dropdownContent'>未读消息</div>
-        <div id='atMessage' class='dropdownContent'>查看@我</div>
-        <div id='writeMessage' class='dropdownContent'>写消息</div>
-        <div id='showAllMessages' class='dropdownContent'>查看全部</div>
+      <div id='notificationDropdown' class='dropdownBase'>
+        <div class='dropdownTitle'>
+          <div class='dropdownTitleText'>消息提示</div>
+          <div class='dropdownTitleCheckAll'>查看全部</div>
+        </div>
+        <div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+        </div>
       </div>
-      <div id='likeDropdown'>
-        <div id='likeDropDownTitle' class=''>我的关注</div>
-        <div id='unreadUserLike' class='dropdownContent'>未读用户关注</div>
-        <div id='unreadMessageLike' class='dropdownContent'>未读消息关注</div>
-        <div id='showAllLikes' class='dropdownContent'>查看全部</div>
+
+      <div id='letterDropdown' class='dropdownBase'>
+        <div class='dropdownTitle'>
+          <div class='dropdownTitleText'>我的关注</div>
+          <div class='dropdownTitleCheckAll'>查看全部</div>
+        </div>
+       <div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+        </div>
       </div>
-      <div id='favoriteDropdown'>
-        <div id='messageDropDownTitle' class=''>我的收藏</div>
-        <div id='unreadFavorites' class='dropdownContent'>未读收藏</div>
-        <div id='showAllFavorites' class='dropdownContent'>查看全部</div>
+
+      <div id='favoriteDropdown' class='dropdownBase'>
+        <div class='dropdownTitle'>
+          <div class='dropdownTitleText'>我的收藏</div>
+          <div class='dropdownTitleCheckAll'>查看全部</div>
+        </div>
+        <div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+          <div id='showAllMessages' class='dropdownContent'>Sample</div>
+        </div>
       </div>
-      <div id='favoriteDropdown'>
-        <div id='messageDropDownTitle' class=''>我的收藏</div>
-        <div id='unreadFavorites' class='dropdownContent'>未读收藏</div>
-        <div id='showAllFavorites' class='dropdownContent'>查看全部</div>
-      </div>
+
       <div id='profileDropdown'>
         <div id='logout' class='dropdownContent'>退出</div>
       </div>

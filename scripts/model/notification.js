@@ -1,26 +1,26 @@
 var Notification = Backbone.Model.extend({
 
 	defaults:{
-        "notificationId": -1,
-		"notificationType": Constants.notificationType.on_user,
-		"notificationEvent": Constants.notificationEvent.followed,
+        'notificationId': -1,
+		'notificationEvent': Constants.notificationEvent.watched,
+		'targetUserId': -1,
 
-		"initUserId": -1,
-		"initUserName": "default",
-		"messageId": -1,
-		"transactionId": -1,
+		'initUserId': -1,
+		'messageId': -1,
+		'transactionId': -1,
 
-		"targetUserId": -1,
-		"summary": "default",
-
-		"creationTime": new Date(),
-		"checked": false,
-		"historyDeleted": false
+		'initUser': {},
+		'message': {},
+		'transaction': {},
+		
+		'state': Constants.notificationState.unread,
+		'creationTime': new Date(),
+		'historyDeleted': false
 	},
 
-	idAttribute: "notificationId",
+	idAttribute: 'notificationId',
 
-	urlRoot: Constants.origin + "",
+	urlRoot: Constants.origin + "/api/v1.0/notification/notification",
 
 	initialize:function(urlRootOverride){
 		_.bindAll(this, 'overrideUrl');
@@ -29,7 +29,6 @@ var Notification = Backbone.Model.extend({
 			this.urlRoot = urlRootOverride;
 		}
 
-		//warning: this fall back is kinda dangerous
 	},
 
 	overrideUrl:function(urlRootOverride){
@@ -42,28 +41,35 @@ var Notification = Backbone.Model.extend({
         return this.id === -1;
     },
 
-	parse: function(response){
+	parse: function(data){
 
-        var modelHash  = {};
+		data.notificationId = parseInt(data.notificationId, 10);
+		data.notificationEvent = parseInt(data.notificationEvent, 10);
+		data.targetUserId = parseInt(data.targetUserId, 10);
 
-        modelHash.notificationId = response.notificationId;
-		modelHash.notificationType = Constants.notificationType[response.notificationType];
-		modelHash.notificationEvent = Constants.notificationEvent[response.notificationEvent],
+		data.initUserId = parseInt(data.initUserId, 10);
+		data.messageId = parseInt(data.messageId, 10);
+		data.transactionId = parseInt(data.transactionId, 10);
 
-		modelHash.initUserId = response.initUserId;
-		modelHash.initUserName = response.initUsername;
-		modelHash.messageId = response.messageId;
-		modelHash.transactionId = response.transactionId;
+		data.initUser = new User(data.initUser, {'parse': true});
+		data.message = new Message(data.message, {'parse': true});
+		data.transaction = new Transaction(data.transaction, {'parse': true});
 
-		modelHash.targetUserId = response.targetUserId;
-		modelHash.summary = response.summary;
+		data.state = parseInt(data.state, 10);
+		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
+		data.historyDeleted = data.historyDeleted === 'true';
 
-		this.set("creationTime", new Date(response.creationTime));
+        return data;
+    },
 
-		modelHash.checked = response.checked;
-		modelHash.historyDeleted = response.historyDeleted;
+    //place holder, since notification are never posted to server
+    toJSON: function(){
+		return {};
+    },
 
-        return modelHash;
+    //TODO to user JSON
+    _toJSON: function(){
+
     }
 
 });
@@ -72,7 +78,8 @@ var Notifications = Backbone.Collection.extend({
 
 	model: Notification,
 
-	url: Constants.origin + "",
+	//use 1 to force an request with id attr
+	url: Constants.origin + "/api/v1.0/notification/notification/1",
 
 	initialize:function(urlOverride){
 		_.bindAll(this, 'overrideUrl');

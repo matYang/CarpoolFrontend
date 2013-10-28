@@ -43,7 +43,12 @@ var AppRouter = Backbone.Router.extend({
 		this.transactionManager = new TransactionManager(this.sessionManager, this.userManager);
 		this.notificationManager = new NotificationManager(this.sessionManager, this.userManager);
 		this.generalManager = new GeneralManager(this.sessionManager, this.userManager);
-
+		this.socketManager = new SocketManager(this.sessionManager, {
+			'newNotification': this.notificationManager,
+			'broadcast': {'handleSocket': function(eventName, data){
+				info.alert(data);
+			}}
+		});
 		//determine if the user has logged in or not
 		this.sessionManager.fetchSession(false, {
 			success: function(){
