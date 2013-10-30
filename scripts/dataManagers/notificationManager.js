@@ -9,22 +9,23 @@
 		this.userManager = userManager;
 
 		this.notification = new Notification();
+		this.notifications = new Notifications();
 		this.timeStamp = new Date();
 
 		this.sessionManager.resgisterManager(this);
 	};
 
-	Notification.prototype.getNotification = function() {
+	NotificationManager.prototype.getNotification = function() {
 		return this.notification;
 	};
 
-	Notification.prototype.getNotifications = function() {
+	NotificationManager.prototype.getNotifications = function() {
 		return this.notifications;
 	};
 
 	NotificationManager.prototype.release = function() {
-		this.notifications = new Notifications();
 		this.timeStamp = new Date();
+		this.fetchNotification();
 	};
 
 

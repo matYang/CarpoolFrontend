@@ -83,14 +83,14 @@ var Notifications = Backbone.Collection.extend({
 
 	initialize:function(urlOverride){
 		_.bindAll(this, 'overrideUrl');
-		if (urlOverride !== null){
+		if (typeof urlOverride !== 'undefined'){
 			this.url = urlOverride;
 		}
 
 	},
 
 	overrideUrl:function(urlOverride){
-		if (urlOverride !== null){
+		if (typeof urlOverride !== 'undefined'){
 			this.url = urlOverride;
 		}
 	}

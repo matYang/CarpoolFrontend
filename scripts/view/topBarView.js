@@ -7,7 +7,7 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	initialize:function(){
-		_.bindAll(this, 'render', 'bindEvents','close', 'logout','showMessage','hideMessage','showLikes','hideLikes','showFavorite','hideFavorite');
+		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown','close', 'logout','showMessage','hideMessage','showLikes','hideLikes','showFavorite','hideFavorite');
 		app.viewRegistration.register("topBar", this, true);
 		this.isClosed = false;
 
@@ -18,6 +18,16 @@ var TopBarView = Backbone.View.extend({
 		this.render();
 		this.bindEvents();
 
+		this.notifications = app.notificationManager.getNotifications();
+		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
+
+		this.notifiationContainer = $('#notificationDropdownContentContainer');
+		this.letterContainer = $('#letterDropdownContentContainer');
+		this.favoriteContainer = $('#favoriteDropdownContentContainer');
+
+		this.renderNotificationDropdown();
+		this.renderLetterDropdown();
+		this.renderFavoriteDropdown();
 	},
 
 
@@ -29,6 +39,18 @@ var TopBarView = Backbone.View.extend({
 		else{
 			$(this.el).append(this.notLoggedInTemplate);
 		}
+
+	},
+
+	renderNotificationDropdown: function(notifications){
+
+	},
+
+	renderLetterDropdown: function(){
+
+	},
+
+	renderFavoriteDropdown: function(){
 
 	},
 
@@ -253,6 +275,7 @@ var TopBarView = Backbone.View.extend({
 				$('#signup_button').off();
 				$('#login_button').off();
 			}
+			this.stopListening();
 			this.unbind();
 			$(this.el).empty();
 
