@@ -64,12 +64,46 @@ var Notification = Backbone.Model.extend({
 
     //place holder, since notification are never posted to server
     toJSON: function(){
-		return {};
+		var json = _.clone(this.attributes);
+		return json;
     },
 
-    //TODO to user JSON
-    _toJSON: function(){
 
+    toDropdownJSON: function(){
+		var json = this.toJSON();
+        json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
+        if (this.get('initUser') instanceof Backbone.Model) {
+            json.initUserName = this.get('initUser').get('name');
+            json.imgPath = this.get('initUser').get('imgPath');
+        }
+
+        switch (this.get('notificationEvent')){
+			case Constants.notificationEvent.transactionInit:
+				json.notificationText = "预约了你的拼车";
+				break;
+            case Constants.notificationEvent.transactionCancelled:
+				json.notificationText = "取消了他向你的预约";
+				break;
+            case Constants.notificationEvent.transactionAboutToStart:
+				json.notificationText = "与你的拼车即将开始";
+				break;
+            case Constants.notificationEvent.transactionEvaluated:
+                json.notificationText = "与你的拼车已经完成，请给对方打分";
+                break;
+			case Constants.notificationEvent.tranasctionUnderInvestigation:
+				json.notificationText = "投诉了与你的拼车，现已开始调查";
+				break;
+			case Constants.notificationEvent.transactionReleased:
+				json.notificationText = "与你的拼车投诉调查完毕";
+				break;
+			case Constants.notificationEvent.watched:
+				json.notificationText = "关注了你的主页";
+				break;
+			default:
+				info.warn('Invalid notificationEvent');
+				json.notificationText = "Invalid notificationEvent";
+        }
+        return json;
     }
 
 });

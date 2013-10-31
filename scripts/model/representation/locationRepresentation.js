@@ -62,7 +62,7 @@ var UserLocation = Backbone.Model.extend({
 	toUiString: function() {
 		if (this.get('city') && this.get('province'))
 			return this.get('city')+", "+this.get("province");
-		else 
+		else
 			return this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex')-1]+", "+this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex')-2];
 	},
 	equals: function (val) {

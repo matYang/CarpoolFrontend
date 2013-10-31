@@ -31,6 +31,9 @@ var Constants = {
 		"Module/Transaction",
 		"Module/Front",
 
+		/*----------- dropdowns  ----------*/
+		"dropdown/notificationDropdown",
+
 		/*-----------  modals  ---------*/
 		"modal/genderEditWindow",
 		"modal/hourRateEditWindow",

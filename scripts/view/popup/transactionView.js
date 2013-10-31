@@ -206,7 +206,7 @@ var TransactionDetailView = Backbone.View.extend({
 
 		if (this.transaction.id !== -1 ) {
 			$("#transaction_number").prop("disabled", true);
-			$("#transaction_userNote").prop("disabled", true)
+			$("#transaction_userNote").prop("disabled", true);
 		}
 	},
 	calculateTotal:function(){

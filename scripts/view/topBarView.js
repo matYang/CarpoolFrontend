@@ -7,12 +7,13 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	initialize:function(){
-		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown','close', 'logout','showMessage','hideMessage','showLikes','hideLikes','showFavorite','hideFavorite');
+		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'close', 'logout','showMessage','hideMessage','showLikes','hideLikes','showFavorite','hideFavorite');
 		app.viewRegistration.register("topBar", this, true);
 		this.isClosed = false;
 
 		this.loggedInTemplate = _.template(tpl.get('topBar/topBar-loggedIn'));
 		this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
+		this.dropdown_notifiationTemplate = _.template(tpl.get('dropdown/notificationDropdown'));
 
 		this.sessionUser = app.sessionManager.getSessionUser();
 		this.render();
@@ -21,7 +22,7 @@ var TopBarView = Backbone.View.extend({
 		this.notifications = app.notificationManager.getNotifications();
 		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
 
-		this.notifiationContainer = $('#notificationDropdownContentContainer');
+		this.notificationContainer = $('#notificationDropdownContentContainer');
 		this.letterContainer = $('#letterDropdownContentContainer');
 		this.favoriteContainer = $('#favoriteDropdownContentContainer');
 
@@ -43,7 +44,15 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	renderNotificationDropdown: function(notifications){
+		var i = 0,
+			htmlContext = '';
 
+		for (i = 0; i < this.notifications.length; i++){
+			htmlContext += this.template(this.notifications.get(i).toDropdownJSON());
+		}
+
+		this.notificationContainer.html(htmlContext);
+		this.bindDropdownEvents('notification');
 	},
 
 	renderLetterDropdown: function(){
@@ -52,6 +61,31 @@ var TopBarView = Backbone.View.extend({
 
 	renderFavoriteDropdown: function(){
 
+	},
+
+	bindDropdownEvents: function(dropdownName){
+		var self = this;
+		this._unbindDropdownEvents(dropdownName);
+		this.notificationContainer.find('.dropdownContent').on('click', function(e){
+			var n_id = $(this).attr("data-notificationId");
+			var n_model = self.notifications.where({'id': n_id})[0];
+			var n_evt = n_model.get('notificationEvent');
+
+			//async, don't care about result
+			app.notificationManager.checkNotification();
+
+			if (n_evt === Constants.notificationEvent.watched){
+				app.navigate(app.sessionManager.getUserId() + "/personal/" + n_model.get('initUserId') , true);
+			}
+			//transaction related
+			else if (n_evt < Constants.notificationEvent.watched){
+				app.navigate(app.sessionManager.getUserId() + "/message/" + n_model.get('messageId') , true);
+			}
+		});
+	},
+
+	_unbindDropdownEvents: function(dropdownName){
+		this.notificationContainer.find('.dropdownContent').off();
 	},
 
 	bindEvents: function(){

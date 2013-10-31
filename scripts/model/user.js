@@ -59,7 +59,7 @@ var User = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/users/user",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl', 'isNew', 'parse');
+		_.bindAll(this, 'overrideUrl', 'isNew', 'parse', '_toJSON', 'toJSON', 'toDropdownJSON');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;
@@ -128,6 +128,17 @@ var User = Backbone.Model.extend({
         json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));
         json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
         return json;
+    },
+
+    toDropdownJSON: function(){
+        var json = {};
+
+        json.userId = this.get('userId');
+        json.imgPath = this.get('imgPath');
+        json.name = this.get('name');
+        json.gender = this.get('gender');
+        json.averageScore = this.get('averageScore');
+        json.location = this.get('location').toUiString();
     }
 
 });
