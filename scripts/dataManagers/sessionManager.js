@@ -12,6 +12,9 @@
 
 		//this is used to reset all manager data upon logouts
 		this.sessionRegistraTable = [];
+		
+		this.cur_notifications = new Notifications();
+		this.cur_socialList = new Users();
 
 	};
 
@@ -162,6 +165,17 @@
         this.timeStamp = new Date();
 	};
 
-
+	
+	SessionManager.prototype.fetchCurUserNotifications = function(emailVal, passwordVal, callback){
+		
+	};
+	
+	SessionManager.prototype.fetchCurUserLetters = function(emailVal, passwordVal, callback){
+		
+	};
+	
+	SessionManager.prototype.fetchCurUserFavorites = function(emailVal, passwordVal, callback){
+		
+	}
 
 }).call(this);
