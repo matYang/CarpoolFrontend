@@ -16,7 +16,10 @@
 	NotificationManager.prototype.release = function() {
 		this.timeStamp = new Date();
 	};
-
+	
+	NotificationManager.prototype.getTimeStamp = function() {
+		return this.timeStamp;
+	};
 
 	NotificationManager.prototype.checkNotification = function(notificationId, callback) {
 		if (typeof notificationId !== 'number'){
