@@ -7,7 +7,7 @@
 
 		this.sessionManager = sessionManager;
 		this.userManager = userManager;
-
+	
 		this.notification = new Notification();
 		this.notifications = new Notifications();
 		this.timeStamp = new Date();
@@ -15,9 +15,6 @@
 		this.sessionManager.resgisterManager(this);
 	};
 
-	NotificationManager.prototype.getNotification = function() {
-		return this.notification;
-	};
 
 	NotificationManager.prototype.getNotifications = function() {
 		return this.notifications;
@@ -25,11 +22,14 @@
 
 	NotificationManager.prototype.release = function() {
 		this.timeStamp = new Date();
-		this.fetchNotification();
 	};
 
 
-	NotificationManager.prototype.fetchNotification = function(callback){
+	NotificationManager.prototype.fetchNotification = function(userId, callback){
+		if (typeof userId !== 'number'){
+			Constants.dWarn("NotificationManager::fetchNotification:: userId invalid");
+			return;
+		}
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("NotificationManager::fetchNotification:: session does not exist, exit");
 			return;
@@ -39,12 +39,12 @@
 		//passing reset true to make sure notifications are always sync with server
 		this.notifications.fetch({
 			reset: true,
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: $.param({ 'userId': userId}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(self.notifications);
 				}
 			},
 			error: function(model, response){
@@ -77,7 +77,7 @@
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(self.notification);
 				}
 			},
 			error: function(model, response){
@@ -110,7 +110,7 @@
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(self.notification);
 				}
 			},
 			error: function(model, response){
