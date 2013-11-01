@@ -123,11 +123,5 @@
 		});
 	};
 
-	NotificationManager.prototype.handleSocket = function(eventName, data) {
-		if (eventName === 'newNotification'){
-			this.fetchNotification();
-		}
-	};
-
 
 }).call(this);
