@@ -5,7 +5,6 @@
 
 		this.apis = new ApiResource();
 
-
 		//time stamp updates when user data changes or sycns
 		this.timeStamp = new Date();
 
