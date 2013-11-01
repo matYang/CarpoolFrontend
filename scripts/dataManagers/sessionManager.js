@@ -79,7 +79,11 @@
             success:function(model, response){
 				self.isLoggedIn = self.sessionUser.id >= 0 ? true : false;
 				self.releaseManager();
-
+				if (self.hasSession()){
+					self.fetchCurUserNotifications();
+					self.fetchCurUserLetters();
+					self.fetchCurUserFavorites();
+				}
 				if(callback){
 					callback.success();
 				}
@@ -121,6 +125,11 @@
 
             success:function(model, response){
 				self.isLoggedIn = true;
+
+				self.fetchCurUserNotifications();
+				self.fetchCurUserLetters();
+				self.fetchCurUserFavorites();
+
 				Constants.dLog(model);
 				if(callback){
 					callback.success(response);
