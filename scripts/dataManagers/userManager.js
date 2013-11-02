@@ -5,7 +5,6 @@
 
 		this.apis = new ApiResource();
 
-
 		//time stamp updates when user data changes or sycns
 		this.timeStamp = new Date();
 
@@ -691,43 +690,37 @@
 	};
 
 
-	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback) {
-		if(testMockObj.testMode){
-			callback.success(testMockObj.sampleNotifications);
-			return;
-		}
-		var self = this;
-
+	UserManager.prototype.fetchNotification = function(intendedUserId, callback){
 		if (typeof intendedUserId !== 'number'){
-			Constants.dWarn("UserManager::fetchNotificationList:: invalid parameter, exit");
+			Constants.dWarn("UserManager::fetchNotification:: userId invalid");
 			return;
 		}
 		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("UserManager::fetchNotificationList:: session does not exist, exit");
+			Constants.dWarn("UserManager::fetchNotification:: session does not exist, exit");
 			return;
 		}
 
-		var notificationList = new Notifications();
-		notificationList.overrideUrl(this.apis.users_notification + '/' + self.sessionManager.getUserId());
-		notificationList.fetch({
-			data: $.param({ 'intendedUserId': intendedUserId}),
-            dataType:'json',
-
-            success:function(model, response){
-				self.user.set('notificationList', notificationList);
+		var self = this;
+		//passing reset true to make sure notifications are always sync with server
+		var notifications = new Notifications();
+		notifications.fetch({
+			reset: true,
+			data: $.param({ 'userId': intendedUserId}),
+			dataType:'json',
+			success:function(model, response){
 				self.notificationList_timeStamp = new Date();
 				if(callback){
-					callback.success()
+					callback.success(notifications);
 				}
-            },
-            error: function(model, response){
-                Constants.dWarn("UserManager::fetchNotificationList:: fetch failed with response:");
-                Constants.dLog(response);
-                if(callback){
+			},
+			error: function(model, response){
+				Constants.dWarn("UserManager::fetchNotification:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
 					callback.error();
 				}
-            }
-        });
+			}
+		});
 	};
 
 }).call(this);

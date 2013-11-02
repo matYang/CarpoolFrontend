@@ -46,7 +46,7 @@ var AppRouter = Backbone.Router.extend({
 		this.notificationManager = new NotificationManager(this.sessionManager, this.userManager);
 		this.generalManager = new GeneralManager(this.sessionManager, this.userManager);
 		this.socketManager = new SocketManager(this.sessionManager, {
-			'newNotification': this.notificationManager,
+			'newNotification': this.sessionManager,
 			'broadcast': {'handleSocket': function(eventName, data){
 				info.alert(data);
 			}}

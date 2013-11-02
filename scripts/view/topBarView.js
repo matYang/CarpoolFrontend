@@ -20,8 +20,10 @@ var TopBarView = Backbone.View.extend({
 		this.render();
 		this.bindEvents();
 
-		this.notifications = app.notificationManager.getNotifications();
+		this.notifications = app.sessionManager.getCurNotifications();
 		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
+		this.favorites = app.sessionManager.getCurSocialList();
+		this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
 
 		this.socialList = app.userManager.get
 
@@ -75,7 +77,7 @@ var TopBarView = Backbone.View.extend({
 			var n_evt = n_model.get('notificationEvent');
 
 			//async, don't care about result
-			app.notificationManager.checkNotification();
+			app.notificationManager.checkNotification(n_id);
 
 			if (n_evt === Constants.notificationEvent.watched){
 				app.navigate(app.sessionManager.getUserId() + "/personal/" + n_model.get('initUserId') , true);

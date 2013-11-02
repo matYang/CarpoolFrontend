@@ -12,6 +12,11 @@
 
 		//this is used to reset all manager data upon logouts
 		this.sessionRegistraTable = [];
+		
+		this.cur_notifications = new Notifications();
+		this.cur_notificationsTimeStamp = new Date();
+		this.cur_socialList = new Users();
+		this.cur_socialListTimeStamp = new Date();
 
 	};
 
@@ -42,7 +47,15 @@
 	SessionManager.prototype.getTimeStamp = function() {
 		return this.timeStamp;
 	};
-
+	
+	SessionManager.prototype.getCurNotifications = function(){
+		return this.cur_notifications;
+	}
+	
+	SessionManager.prototype.getCurSocialList = function(){
+		return this.cur_socialList;
+	}
+	
 	//using the find session API to determine if the uer has logged in or not
 	SessionManager.prototype.fetchSession = function(asyncFlag, callback){
 		var self = this;
@@ -66,7 +79,11 @@
             success:function(model, response){
 				self.isLoggedIn = self.sessionUser.id >= 0 ? true : false;
 				self.releaseManager();
-
+				if (self.hasSession()){
+					self.fetchCurUserNotifications();
+					self.fetchCurUserLetters();
+					self.fetchCurUserFavorites();
+				}
 				if(callback){
 					callback.success();
 				}
@@ -108,6 +125,11 @@
 
             success:function(model, response){
 				self.isLoggedIn = true;
+
+				self.fetchCurUserNotifications();
+				self.fetchCurUserLetters();
+				self.fetchCurUserFavorites();
+
 				Constants.dLog(model);
 				if(callback){
 					callback.success(response);
@@ -162,6 +184,74 @@
         this.timeStamp = new Date();
 	};
 
+	
+	SessionManager.prototype.fetchCurUserNotifications = function(callback){
+                var self = this;
 
+                if (!this.hasSession()){
+                        Constants.dWarn("SessionManager::fetchNotificationList:: session does not exist, exit");
+                        return;
+                }
+
+                this.cur_notifications.fetch({
+                        data: $.param({ 'userId': this.getUserId()}),
+        		 dataType:'json',
+
+            		success:function(model, response){
+                                self.cur_notificationsTimeStamp = new Date();
+                                if(callback){
+                                	//should've used binding, not retrurning or passing models back
+                                        callback.success();
+                                }
+            		},
+            		error: function(model, response){
+        			Constants.dWarn("SessionManager::fetchNotificationList:: fetch failed with response:");
+               			Constants.dLog(response);
+               			if(callback){
+                                	callback.error();
+                                }
+        		}
+        	});
+	};
+	
+	SessionManager.prototype.fetchCurUserLetters = function(callback){
+		
+	};
+
+	
+	SessionManager.prototype.fetchCurUserFavorites = function(callback) {
+		var self = this;
+
+		if (!this.hasSession()){
+			Constants.dWarn("SessionManager::fetchWatchedUsers:: session does not exist, exit");
+			return;
+		}
+
+		this.cur_socialList.overrideUrl(this.apis.users_watchUser + '/' + this.getUserId());
+		this.cur_socialList.fetch({
+			data: $.param({ 'intendedUserId': this.getUserId()}),
+		        dataType:'json',
+		
+		        success:function(model, response){
+				self.socialList_timeStamp = new Date();
+				if(callback){
+					callback.success();
+				}
+		        },
+	            	error: function(model, response){
+		                Constants.dWarn("SessionManager::fetchSocialList:: fetch failed with response:");
+		                Constants.dLog(response);
+		                if(callback){
+					callback.error();
+				}
+	            	}
+        	});
+	};
+	
+	SessionManager.prototype.handleSocket = function(eventName, data) {
+        	if (eventName === 'newNotification'){
+                        this.fetchCurUserNotifications();
+                }
+        };
 
 }).call(this);

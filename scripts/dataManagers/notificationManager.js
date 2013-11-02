@@ -7,54 +7,18 @@
 
 		this.sessionManager = sessionManager;
 		this.userManager = userManager;
-
-		this.notification = new Notification();
-		this.notifications = new Notifications();
+	
 		this.timeStamp = new Date();
 
 		this.sessionManager.resgisterManager(this);
 	};
 
-	NotificationManager.prototype.getNotification = function() {
-		return this.notification;
-	};
-
-	NotificationManager.prototype.getNotifications = function() {
-		return this.notifications;
-	};
-
 	NotificationManager.prototype.release = function() {
 		this.timeStamp = new Date();
-		this.fetchNotification();
 	};
-
-
-	NotificationManager.prototype.fetchNotification = function(callback){
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("NotificationManager::fetchNotification:: session does not exist, exit");
-			return;
-		}
-
-		var self = this;
-		//passing reset true to make sure notifications are always sync with server
-		this.notifications.fetch({
-			reset: true,
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
-			dataType:'json',
-			success:function(model, response){
-				self.timeStamp = new Date();
-				if(callback){
-					callback.success();
-				}
-			},
-			error: function(model, response){
-				Constants.dWarn("NotificationManager::fetchNotification:: fetch failed with response:");
-				Constants.dLog(response);
-				if(callback){
-					callback.error();
-				}
-			}
-		});
+	
+	NotificationManager.prototype.getTimeStamp = function() {
+		return this.timeStamp;
 	};
 
 	NotificationManager.prototype.checkNotification = function(notificationId, callback) {
@@ -68,16 +32,17 @@
 		}
 
 		var self = this;
-
-		this.notification.overrideUrl(this.apis.notification_notification);
-		this.notification.set('notificationId', notificationId);
-		this.notification.save({},{
+	
+		var notification = new Notification();
+		notification.overrideUrl(this.apis.notification_notification);
+		notification.set('notificationId', notificationId);
+		notification.save({},{
 			data: $.param({'userId': this.sessionManager.getUserId() }),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(notification);
 				}
 			},
 			error: function(model, response){
@@ -101,16 +66,16 @@
 		}
 
 		var self = this;
-
-		this.notification.overrideUrl(this.apis.notification_notification);
-		this.notification.set('notificationId', notificationId);
-		this.notification.destroy({
+		var notification = new Notification();
+		notification.overrideUrl(this.apis.notification_notification);
+		notification.set('notificationId', notificationId);
+		notification.destroy({
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(notification);
 				}
 			},
 			error: function(model, response){
@@ -121,12 +86,6 @@
 				}
 			}
 		});
-	};
-
-	NotificationManager.prototype.handleSocket = function(eventName, data) {
-		if (eventName === 'newNotification'){
-			this.fetchNotification();
-		}
 	};
 
 
