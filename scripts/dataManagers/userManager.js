@@ -20,6 +20,7 @@
 		this.sessionUser = this.sessionManager.getSessionUser();
 		//used for personalPage and testing purpose mainly
 		this.user = new User();
+		this.curUserSocialList = new Users();
 
 		this.sessionManager.resgisterManager(this);
 
@@ -42,6 +43,7 @@
 		this.historyList_timeStamp = new Date();
 		this.transactionList_timeStamp = new Date();
 		this.notificationList_timeStamp = new Date();
+
 	};
 
 
@@ -671,7 +673,7 @@
             dataType:'json',
 
             success:function(model, response){
-            	//caching?
+				//caching?
 				self.transactionList_timeStamp = new Date();
 				if(callback){
 					callback.success(transactionList);

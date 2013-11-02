@@ -14,6 +14,7 @@ var TopBarView = Backbone.View.extend({
 		this.loggedInTemplate = _.template(tpl.get('topBar/topBar-loggedIn'));
 		this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
 		this.dropdown_notifiationTemplate = _.template(tpl.get('dropdown/notificationDropdown'));
+		this.dropdown_favoriteTemplate = _.template(tpl.get('dropdown/favoriteDropdown'));
 
 		this.sessionUser = app.sessionManager.getSessionUser();
 		this.render();
@@ -21,6 +22,8 @@ var TopBarView = Backbone.View.extend({
 
 		this.notifications = app.notificationManager.getNotifications();
 		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
+
+		this.socialList = app.userManager.get
 
 		this.notificationContainer = $('#notificationDropdownContentContainer');
 		this.letterContainer = $('#letterDropdownContentContainer');

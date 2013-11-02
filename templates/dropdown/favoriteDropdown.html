@@ -1,19 +1,19 @@
-<div class='dropdownContent'>
+<div class='dropdownContent' data-userId='<%= userId %>'>
   <div class='dropdown-img'>
-    <img src='res/personal/default-avatar.jpg'/>
+    <img src='<%= imgPath %>'/>
   </div>
   <div class='dropdown-text dropdown-favorite-text'>
     <div class='dropdown-favorite-text-wrapper'>
       <div class='dropdown-text-row1'>
-        <span class='dropdown-text-name'>Matthew小超人</span>
-        <span class='dropdown-text-gender'><img src='res/dropdown/gender-0.png' /></span>
+        <span class='dropdown-text-name'><%= name %></span>
+        <span class='dropdown-text-gender'><img src='res/dropdown/gender-<%= gender %>.png' /></span>
       </div>
       <div class='dropdown-text-row2'>
-        <span>MC3022, Waterloo, Ontario</span>
+        <span><%= location %></span>
       </div>
     </div>
     <div class='dropdown-text-avgScore'>
-      <span>10</span>
+      <span><%= averageScore %></span>
     <div>
   </div>
 </div>

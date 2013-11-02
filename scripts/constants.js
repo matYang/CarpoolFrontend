@@ -33,6 +33,7 @@ var Constants = {
 
 		/*----------- dropdowns  ----------*/
 		"dropdown/notificationDropdown",
+		"dropdown/favoriteDropdown",
 
 		/*-----------  modals  ---------*/
 		"modal/genderEditWindow",
