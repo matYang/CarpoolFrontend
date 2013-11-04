@@ -14,7 +14,7 @@ var Config = {
 	},
 
 	getPossiblePersonalViewStates: function(){
-		return [ 'message', 'history', 'utility'];
+		return ['social', 'message', 'history', 'utility'];
 	},
 
 	validatePersonalViewState: function(personalViewState){

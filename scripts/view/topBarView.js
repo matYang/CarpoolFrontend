@@ -7,7 +7,7 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	initialize:function(){
-		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'close', 'logout','showMessage','hideMessage','showLikes','hideLikes','showFavorite','hideFavorite');
+		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout','showMessage','hideMessage','showLikes','hideLetterDropdown','showFavorite','hideFavorite');
 		app.viewRegistration.register("topBar", this, true);
 		this.isClosed = false;
 
@@ -17,15 +17,15 @@ var TopBarView = Backbone.View.extend({
 		this.dropdown_favoriteTemplate = _.template(tpl.get('dropdown/favoriteDropdown'));
 
 		this.sessionUser = app.sessionManager.getSessionUser();
+		this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
 		this.render();
 		this.bindEvents();
 
-		this.notifications = app.sessionManager.getCurNotifications();
+		this.notifications = app.sessionManager.getCurUserNotifications();
 		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
-		this.favorites = app.sessionManager.getCurSocialList();
+		this.favorites = app.sessionManager.getCurUserFavorites();
 		this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
 
-		this.socialList = app.userManager.get
 
 		this.notificationContainer = $('#notificationDropdownContentContainer');
 		this.letterContainer = $('#letterDropdownContentContainer');
@@ -53,11 +53,11 @@ var TopBarView = Backbone.View.extend({
 			htmlContext = '';
 
 		for (i = 0; i < this.notifications.length; i++){
-			htmlContext += this.template(this.notifications.get(i).toDropdownJSON());
+			htmlContext += this.dropdown_notifiationTemplate(this.notifications.get(i).toDropdownJSON());
 		}
 
 		this.notificationContainer.html(htmlContext);
-		this.bindDropdownEvents('notification');
+		this.bindDropdownEvents('notifications');
 	},
 
 	renderLetterDropdown: function(){
@@ -65,32 +65,58 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	renderFavoriteDropdown: function(){
+		var i = 0,
+			htmlContext = '';
 
+		for (i = 0; i < this.favorites.length; i++){
+			htmlContext += this.dropdown_favoriteTemplate(this.favorites.get(i).toDropdownJSON());
+		}
+
+		this.favoriteContainer.html(htmlContext);
+		this.bindDropdownEvents('favorites');
 	},
 
 	bindDropdownEvents: function(dropdownName){
 		var self = this;
 		this._unbindDropdownEvents(dropdownName);
-		this.notificationContainer.find('.dropdownContent').on('click', function(e){
-			var n_id = $(this).attr("data-notificationId");
-			var n_model = self.notifications.where({'id': n_id})[0];
-			var n_evt = n_model.get('notificationEvent');
+		if (dropdownName === 'notifications'){
+			this.notificationContainer.find('.dropdownContent').on('click', function(e){
+				var n_id = $(this).attr("data-notificationId");
+				var n_model = self.notifications.where({'id': n_id})[0];
+				var n_evt = n_model.get('notificationEvent');
 
-			//async, don't care about result
-			app.notificationManager.checkNotification(n_id);
+				//async, don't care about result
+				app.notificationManager.checkNotification(n_id);
 
-			if (n_evt === Constants.notificationEvent.watched){
-				app.navigate(app.sessionManager.getUserId() + "/personal/" + n_model.get('initUserId') , true);
-			}
-			//transaction related
-			else if (n_evt < Constants.notificationEvent.watched){
-				app.navigate(app.sessionManager.getUserId() + "/message/" + n_model.get('messageId') , true);
-			}
-		});
+				if (n_evt === Constants.notificationEvent.watched){
+					app.navigate(app.sessionManager.getUserId() + "/personal/" + n_model.get('initUserId'), true);
+				}
+				//transaction related
+				else if (n_evt < Constants.notificationEvent.watched){
+					app.navigate(app.sessionManager.getUserId() + "/message/" + n_model.get('messageId'), true);
+				}
+			});
+		}
+		else if (dropdownName === 'favorites'){
+			this.favoriteContainer.find('.dropdownContent').on('click', function(e){
+				var u_id = $(this).attr("data-userId");
+				app.navigate(app.sessionManager.getUserId() + "/personal/" + u_id, true);
+			});
+		}
 	},
 
 	_unbindDropdownEvents: function(dropdownName){
-		this.notificationContainer.find('.dropdownContent').off();
+		if (dropdownName === 'notifications'){
+			this.notificationContainer.find('.dropdownContent').off();
+		}
+		else if (dropdownName ===  'favorites'){
+			this.favoriteContainer.find('.dropdownContent').off();
+		}
+		
+	},
+
+	updateProfileImg: function(sessionUser){
+
 	},
 
 	bindEvents: function(){
@@ -148,7 +174,7 @@ var TopBarView = Backbone.View.extend({
 		});
 		$('#letters').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown"){
-				self.hideLikes();
+				self.hideLetterDropdown();
 			}
 		});
 		$('#favorites').on('mouseleave', function(e){
@@ -173,7 +199,7 @@ var TopBarView = Backbone.View.extend({
 		});
 		$('#letterDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "letters"){
-				self.hideLikes();
+				self.hideLetterDropdown();
 			}
 		});
 		$('#profileDropdown').on('mouseleave', function(e){
@@ -284,7 +310,7 @@ var TopBarView = Backbone.View.extend({
 		$("li").removeClass("whiteBackground");
 		$("#letterDropdown").show();
 	},
-	hideLikes:function(){
+	hideLetterDropdown: function(){
 		$("li").removeClass("whiteBackground");
 		$("#letterDropdown").hide();
 	},

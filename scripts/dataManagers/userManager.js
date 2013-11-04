@@ -16,10 +16,6 @@
 
 
 		this.sessionManager = sessionManager;
-		this.sessionUser = this.sessionManager.getSessionUser();
-		//used for personalPage and testing purpose mainly
-		this.user = new User();
-		this.curUserSocialList = new Users();
 
 		this.sessionManager.resgisterManager(this);
 
@@ -111,20 +107,21 @@
 			return;
 		}
 
-		this.user.overrideUrl(this.apis.users_user);
-		this.user.set('userId', this.sessionManager.getUserId());
+		var user = new User();
+		user.overrideUrl(this.apis.users_user);
+		user.set('userId', this.sessionManager.getUserId());
 		//this will force to add id into api path, correcting it
 		if (testMockObj.testMode) {
 			callback.success();
 			return;
 		}
-		this.user.fetch({
+		user.fetch({
 			data: $.param({ 'intendedUserId': intendedUserId}),
             dataType:'json',
 
             success:function(model, response){
 				if(callback){
-					callback.success(self.user);
+					callback.success(user);
 				}
             },
             error: function(model, response){
@@ -192,27 +189,21 @@
 
 		var self = this;
 
-		this.sessionUser.overrideUrl(this.apis.users_contactInfo);
-		this.sessionUser.set('name', name);
-		this.sessionUser.set('gender', gender);
-		this.sessionUser.set('phone', phone);
-		this.sessionUser.set('qq', qq);
-		this.sessionUser.set('birthday', birthday);
-		this.sessionUser.save({},{
+		var sessionUser = app.sessionManager.getSessionUser();
+		sessionUser.overrideUrl(this.apis.users_contactInfo);
+		sessionUser.set('name', name);
+		sessionUser.set('gender', gender);
+		sessionUser.set('phone', phone);
+		sessionUser.set('qq', qq);
+		sessionUser.set('birthday', birthday);
+		sessionUser.save({},{
             dataType:'json',
 
             success:function(model, response){
 				self.timeStamp = new Date();
-				self.user.set({
-					'name': self.sessionUser.get('name'),
-					'age': self.sessionUser.get('age'),
-					'gender': self.sessionUser.get('gender'),
-					'phone': self.sessionUser.get('phone'),
-					'qq': self.sessionUser.get('qq'),
-					'birthday': self.sessionUser.get('birthday')
-				});
+
 				if(callback){
-					callback.success();
+					callback.success(sessionUser);
 				}
             },
             error: function(model, response){
@@ -240,17 +231,17 @@
 
 		var self = this;
 
-		this.sessionUser.overrideUrl(this.apis.users_singleLocation);
+		var sessionUser = app.sessionManager.getSessionUser();
+		sessionUser.overrideUrl(this.apis.users_singleLocation);
 		//url encoded, not setting in user
-		this.sessionUser.save({},{
+		sessionUser.save({},{
 			data: $.param({ 'location': location.toString()}),
             dataType:'json',
 
             success:function(model, response){
 				self.timeStamp = new Date();
-				self.user.set('location', self.sessionUser.get('location'));
 				if(callback){
-					callback.success();
+					callback.success(sessionUser);
 				}
             },
             error: function(model, response){
@@ -273,18 +264,17 @@
 			return;
 		}
 
-		this.sessionUser.overrideUrl(this.apis.users_toggleNotices);
+		var sessionUser = app.sessionManager.getSessionUser();
+		sessionUser.overrideUrl(this.apis.users_toggleNotices);
 		//url encoded, not setting in user
-		this.sessionUser.save({},{
+		sessionUser.save({},{
 			data: $.param({ 'emailNotice': shouldEmail, 'phoneNotice': shouldPhone}),
             dataType:'json',
 
             success:function(model, response){
 				self.timeStamp = new Date();
-				self.user.set('emailNotice', self.sessionUser.get('emailNotice'));
-				self.user.set('phoneNotice', self.sessionUser.get('phoneNotice'));
 				if(callback){
-					callback.success();
+					callback.success(sessionUser);
 				}
             },
             error: function(model, response){
@@ -340,8 +330,7 @@
 	};
 
 	UserManager.prototype.activateAccount = function(key, callback) {
-		var self = this,
-			newTopBarUser = new User();
+		var self = this;
 
 		if (!(key)){
 			Constants.dWarn("UserManager::activateAccount:: invalid parameter");
@@ -690,7 +679,7 @@
 	};
 
 
-	UserManager.prototype.fetchNotification = function(intendedUserId, callback){
+	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback){
 		if (typeof intendedUserId !== 'number'){
 			Constants.dWarn("UserManager::fetchNotification:: userId invalid");
 			return;
