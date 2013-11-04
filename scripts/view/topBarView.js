@@ -7,7 +7,7 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	initialize:function(){
-		_.bindAll(this, 'render', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout','showMessage','hideMessage','showLikes','hideLetterDropdown','showFavorite','hideFavorite');
+		_.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout','showNotificationDropdown','hideNotificationDropdown','showLetterDropdown','hideLetterDropdown','showFavoriteDropdown','hideFavoriteDropdown', '_clearAll');
 		app.viewRegistration.register("topBar", this, true);
 		this.isClosed = false;
 
@@ -17,36 +17,48 @@ var TopBarView = Backbone.View.extend({
 		this.dropdown_favoriteTemplate = _.template(tpl.get('dropdown/favoriteDropdown'));
 
 		this.sessionUser = app.sessionManager.getSessionUser();
-		this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
+		
 		this.render();
-		this.bindEvents();
-
-		this.notifications = app.sessionManager.getCurUserNotifications();
-		this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
-		this.favorites = app.sessionManager.getCurUserFavorites();
-		this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
-
-
-		this.notificationContainer = $('#notificationDropdownContentContainer');
-		this.letterContainer = $('#letterDropdownContentContainer');
-		this.favoriteContainer = $('#favoriteDropdownContentContainer');
-
-		this.renderNotificationDropdown();
-		this.renderLetterDropdown();
-		this.renderFavoriteDropdown();
+		
 	},
 
 
 	render: function(){
+		this.listenTo(this.sessionUser, 'change:userId', this.reRender);
+
 		if (app.sessionManager.hasSession()){
-			$(this.el).append(this.loggedInTemplate);
+			$(this.el).append(this.loggedInTemplate(this.sessionUser.toJSON()));
 			$("#dropdowns>div").hide();
+			this.bindEvents();
+
+			//dropdown specific data binding
+			this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
+			this.notifications = app.sessionManager.getCurUserNotifications();
+			this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
+			this.favorites = app.sessionManager.getCurUserFavorites();
+			this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
+
+
+			this.notificationContainer = $('#notificationDropdownContentContainer');
+			this.letterContainer = $('#letterDropdownContentContainer');
+			this.favoriteContainer = $('#favoriteDropdownContentContainer');
+
+			this.renderNotificationDropdown();
+			this.renderLetterDropdown();
+			this.renderFavoriteDropdown();
 		}
 		else{
 			$(this.el).append(this.notLoggedInTemplate);
+			this.bindEvents();
 		}
 
 	},
+
+	reRender: function(){
+		this._clearAll();
+		this.render();
+	},
+
 
 	renderNotificationDropdown: function(notifications){
 		var i = 0,
@@ -112,11 +124,14 @@ var TopBarView = Backbone.View.extend({
 		else if (dropdownName ===  'favorites'){
 			this.favoriteContainer.find('.dropdownContent').off();
 		}
-		
+		else{
+			this.notificationContainer.find('.dropdownContent').off();
+			this.favoriteContainer.find('.dropdownContent').off();
+		}
 	},
 
 	updateProfileImg: function(sessionUser){
-
+		$('profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
 	},
 
 	bindEvents: function(){
@@ -153,23 +168,23 @@ var TopBarView = Backbone.View.extend({
 
 		/*  UI events  */
 		$('#notifications').on('mouseenter', function(){
-			self.showMessage();
+			self.showNotificationDropdown();
 			$("#notifications").addClass("whiteBackground");
 		});
 		$('#letters').on('mouseenter', function(){
-			self.showLikes();
+			self.showLetterDropdown();
 			$("#letters").addClass("whiteBackground");
 		});
 		$('#favorites').on('mouseenter', function(){
-			self.showFavorite();
+			self.showFavoriteDropdown();
 			$("#favorites").addClass("whiteBackground");
 		});
 		$('#profilePicture').on('mouseenter', function(){
-			self.showProfile();
+			self.showProfileDropdown();
 		});
 		$('#notifications').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown"){
-				self.hideMessage();
+				self.hideNotificationDropdown();
 			}
 		});
 		$('#letters').on('mouseleave', function(e){
@@ -179,22 +194,22 @@ var TopBarView = Backbone.View.extend({
 		});
 		$('#favorites').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown"){
-				self.hideFavorite();
+				self.hideFavoriteDropdown();
 			}
 		});
 		$('#profilePicture').on('mouseleave', function(e){
 			if (e.toElement !== null && e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown"){
-				self.hideProfile();
+				self.hideProfileDropdown();
 			}
 		});
 		$('#favoriteDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "favorites"){
-				self.hideFavorite();
+				self.hideFavoriteDropdown();
 			}
 		});
 		$('#notificationDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "notifications"){
-				self.hideMessage();
+				self.hideNotificationDropdown();
 			}
 		});
 		$('#letterDropdown').on('mouseleave', function(e){
@@ -204,7 +219,7 @@ var TopBarView = Backbone.View.extend({
 		});
 		$('#profileDropdown').on('mouseleave', function(e){
 			if (e.toElement.id !== "profilePicture"){
-				self.hideProfile();
+				self.hideProfileDropdown();
 			}
 		});
 		//	$('#logout').on('mouseleave', function(e)) {
@@ -286,26 +301,25 @@ var TopBarView = Backbone.View.extend({
 		});
 	},
 
-	showMessage: function(){
+	showNotificationDropdown: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
 		$("#notificationDropdown").show();
 	},
-	hideMessage:function(){
+	hideNotificationDropdown:function(){
 		$("li").removeClass("whiteBackground");
 		$("#notificationDropdown").hide();
 	},
-	showFavorite: function(){
+	showFavoriteDropdown: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
 		$("#favoriteDropdown").show();
 	},
-
-	hideFavorite:function(){
+	hideFavoriteDropdown:function(){
 		$("li").removeClass("whiteBackground");
 		$("#favoriteDropdown").hide();
 	},
-	showLikes: function(){
+	showLetterDropdown: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
 		$("#letterDropdown").show();
@@ -314,35 +328,40 @@ var TopBarView = Backbone.View.extend({
 		$("li").removeClass("whiteBackground");
 		$("#letterDropdown").hide();
 	},
-	showProfile: function(){
+	showProfileDropdown: function(){
 		$("#dropdowns>div").hide();
 		$("li").removeClass("whiteBackground");
 		$("#profileDropdown").show();
 	},
-	hideProfile: function(){
+	hideProfileDropdown: function(){
 		$("li").removeClass("whiteBackground");
 		$("#profileDropdown").hide();
 	},
 
+	_clearAll: function(){
+		$('#logo').off();
+		$('.navigate_main').off();
+		$('.navigate_personal').off();
+		$('.navigate_feedBack').off();
+		$('#notifications').off();
+		$('#letters').off();
+		$('#favorites').off();
+		$('#notificationDropdown').off();
+		$('#letterDropdown').off();
+		$('#favoriteDropdown').off();
+		if (!app.sessionManager.hasSession()){
+			$('#signup_button').off();
+			$('#login_button').off();
+		}
+		this._unbindDropdownEvents();
+		this.stopListening();
+		this.unbind();
+		$(this.el).empty();
+	},
+
 	close:function(){
 		if (!this.isClosed){
-			$('#logo').off();
-			$('.navigate_main').off();
-			$('.navigate_personal').off();
-			$('.navigate_feedBack').off();
-			$('#notifications').off();
-			$('#letters').off();
-			$('#favorites').off();
-			$('#notificationDropdown').off();
-			$('#letterDropdown').off();
-			$('#favoriteDropdown').off();
-			if (!app.sessionManager.hasSession()){
-				$('#signup_button').off();
-				$('#login_button').off();
-			}
-			this.stopListening();
-			this.unbind();
-			$(this.el).empty();
+			this._clearAll();
 
 			this.isClosed = true;
 		}
