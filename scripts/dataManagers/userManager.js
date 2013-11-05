@@ -165,7 +165,7 @@
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");
-				Constants.dWarn("UserManager::getImgPath:: action failed");
+				Constants.dWarn("UserManager::verifyEmail:: action failed");
 				if(callback && callback.error){
 					callback.error(data.val);
 				}
@@ -208,7 +208,7 @@
             },
             error: function(model, response){
                 alert("请稍后再试");
-				Constants.dWarn("UserManager::changePassword:: action failed");
+				Constants.dWarn("UserManager::changeContactInfo:: action failed");
 				if(callback){
 					callback.error();
 				}
@@ -246,7 +246,7 @@
             },
             error: function(model, response){
                 alert("请稍后再试");
-				Constants.dWarn("UserManager::changePassword:: action failed");
+				Constants.dWarn("UserManager::changeLocation:: action failed");
 				if(callback){
 					callback.error();
 				}
@@ -549,6 +549,39 @@
 				}
             }
         });
+	};
+	
+	UserManager.prototype.isUserWatched = function(intendedUserId, callback) {
+		//don't care about session
+		if (typeof intendedUserId !== 'number'){
+			Constants.dWarn("UserManager::isUserWatched:: invalid parameter");
+			return;
+		}
+
+		var self = this;
+
+		$.ajax({
+			type: "GET",
+			async: true,
+			url: self.apis.users_isUserWatched+'/'+self.sessionManager.getUserId(),
+			data: $.param({ 'intendedUserId': intendedUserId}),
+			dataType: 'json',
+			success: function(data){
+				Info.log("isUserWatched call succeeded with response:");
+				Info.log(data);
+
+				if(callback && callback.success){
+					callback.success(data === 'true');
+				}
+			},
+			error: function (data, textStatus, jqXHR){
+				alert("请稍后再试");
+				Constants.dWarn("UserManager::isUserWatched:: action failed");
+				if(callback && callback.error){
+					callback.error(data === 'true');
+				}
+			}
+		});
 	};
 
 
