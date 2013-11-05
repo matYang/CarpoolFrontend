@@ -55,6 +55,7 @@ we do not give up, not this time
 					forgetPassword: '/forgetPassword',
 					toggleNotices: '/toggleNotices',
 					watchUser: '/watchUser',
+					isUserWatched: '/isWatched/:id',
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
 					notification: '/notification'
