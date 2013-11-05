@@ -14,8 +14,8 @@ var MessageDetailView = Backbone.View.extend({
 		var self = this;
 		this.newTransaction = new Transaction();
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
-			success: function(){
-				self.message = app.messageManager.getMessage();
+			success: function(message){
+				self.message = message;
 				self.pricelist = self.message.get("departure_priceList");
 				self.bookInfo = {
 					"go":false,
