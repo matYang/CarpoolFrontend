@@ -18,8 +18,8 @@ var MessageEditView = MessagePostView.extend({
 		//}
 		var self = this;
 		app.messageManager.fetchMessage(messageIdObj.messageId, {
-			success: function(){
-				self.message = app.messageManager.getMessage();
+			success: function(message){
+				self.message = message;
 				self.reverseMessage(self.message);
 				MessagePostView.prototype.initialize({"method":"message/"+ self.message.get("messageId") +"/edit"});
 				self.renderFirstPage();

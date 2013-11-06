@@ -55,6 +55,7 @@ we do not give up, not this time
 					forgetPassword: '/forgetPassword',
 					toggleNotices: '/toggleNotices',
 					watchUser: '/watchUser',
+					isUserWatched: '/isWatched/:id',
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
 					notification: '/notification'
@@ -106,6 +107,7 @@ we do not give up, not this time
 				users_forgetPassword : api_maker('users', 'forgetPassword'),
 				users_toggleNotices : api_maker('users', 'toggleNotices'),
 				users_watchUser : api_maker('users', 'watchUser'),
+				users_isUserWatched : api_maker('users', 'isUserWatched'),
 				users_messageHistory : api_maker('users', 'messageHistory'),
 				users_transaction : api_maker('users', 'transaction'),
 				users_notification : api_maker('users', 'notification'),

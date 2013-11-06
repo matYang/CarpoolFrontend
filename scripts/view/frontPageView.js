@@ -1,4 +1,3 @@
-
 var FrontPageView = Backbone.View.extend({
 
 	el: $('#content'),
@@ -32,8 +31,8 @@ var FrontPageView = Backbone.View.extend({
 	},
 
 
-	renderRecents: function(){
-		recentMessages = app.messageManager.getRecents();
+	renderRecents: function(recents){
+		recentMessages = recents;
 		for ( var i = 0; i < 3 && i < recentMessages.length; i++ ) {
 			this.displayMessages.add(recentMessages.at(i));
 		}

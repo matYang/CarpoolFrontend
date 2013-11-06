@@ -120,12 +120,12 @@ var MainPageView = Backbone.View.extend ({
 		});
 	},
 
-	renderSearchResults: function(){
+	renderSearchResults: function(searchResults){
 		//prevent memory leaks
 		if (this.searchResultView){
 			this.searchResultView.close();
 		}
-		this.allMessages = app.messageManager.getSearchResults();
+		this.allMessages = searchResults;
 		if (testMockObj.testMode){
 			this.allMessages = testMockObj.sampleMessages;
 		}
