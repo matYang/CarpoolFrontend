@@ -174,7 +174,6 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	filterMessage: function(messages){
-		debugger;
 		var filtered = new Messages();
 		var l = messages ? messages.length : 0;
 

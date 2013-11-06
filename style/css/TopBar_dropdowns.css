@@ -51,7 +51,7 @@
 
 
 /*-----   notification dropdowns -----*/
-.dropdownContent ..dropdown-notification-text{
+.dropdownContent .dropdown-notification-text{
   width: 185px;
   height: 40px;
   float: right;

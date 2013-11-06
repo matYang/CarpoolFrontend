@@ -11,43 +11,29 @@
 		this.sessionManager = sessionManager;
 		this.userManager = userManager;
 
-		this.message = new Message();
 		this.timeStamp = new Date();
-		this.searchResults = new Messages();
 		this.searchResults_timeStamp = new Date();
-		this.recents = new Messages();
 		this.recents_timeStamp = new Date();
 
 		this.sessionManager.resgisterManager(this);
 	};
 
-	MessageManager.prototype.getMessage = function() {
-		return this.message;
-	};
-
-	MessageManager.prototype.getSearchResults = function() {
-		return this.searchResults;
-	};
-
-	MessageManager.prototype.getRecents = function() {
-		return this.recents;
-	};
 
 	//only reset the detailed message upon logout
 	MessageManager.prototype.release = function() {
-		this.message = new Message();
 		this.timeStamp = new Date();
 	};
 
 
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
+		var message = new Message();
 		if (testMockObj.testMode){
-			this.message = testMockObj.sampleMessageA;
-				if(callback && callback.transaction){
-					callback.success(this.message, callback.transaction);
-				} else if (callback) {
-					callback.success(this.message);
-				}
+			message = testMockObj.sampleMessageA;
+			if(callback && callback.transaction){
+				callback.success(message, callback.transaction);
+			} else if (callback) {
+				callback.success(message);
+			}
 			return;
 		}
 		if (typeof messageId === 'undefined' ){
@@ -64,19 +50,19 @@
 
 		var self = this;
 
-		this.message.overrideUrl(this.apis.DM_dianming);
-		this.message.set('messageId', messageId);
+		message.overrideUrl(this.apis.DM_dianming);
+		message.set('messageId', messageId);
 
-		this.message.fetch({
+		message.fetch({
 			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback && callback.transaction){
-					callback.success(this.message, callback.transaction);
+					callback.success(message, callback.transaction);
 				} else if (callback) {
-					callback.success(this.message);
+					callback.success(message);
 				}
 			},
 			error: function(model, response){
@@ -100,7 +86,6 @@
 			dataType:'json',
 
 			success:function(model, response){
-				self.message = newMessage;
 				self.timeStamp = new Date();
 
 				if(promiseback){
@@ -176,11 +161,9 @@
 		updatedMessage.set('ownerId', this.sessionManager.getUserId());
 		updatedMessage.save({},{
             dataType:'json',
-
             success:function(model, response){
-				self.message = updatedMessage;
 				if(callback){
-					callback.success();
+					callback.success(updatedMessage);
 				}
             },
             error: function(model, response){
@@ -195,7 +178,7 @@
 	};
 
 
-	MessageManager.prototype.deleteMessage = function(messageId, callback) {
+	MessageManager.prototype.deactivateMessage = function(messageId, callback) {
 		var self = this;
 		if (typeof messageId !== 'number'){
 			Constants.dWarn("MessageManager::deleteMessage:: invalid parameter");
@@ -205,17 +188,13 @@
 			Constants.dWarn("MessageManager::deleteMessage::current user does not have session, exit");
 			return;
 		}
-
-		this.message.overrideUrl(this.apis.messages_message);
-		this.message.set('messageId', messageId);
-		//this will force to add id into api path, correcting it
-		this.message.destroy({
-
-			data: $.param({ 'userId': self.sessionManager.getUserId()}),
+		//do not destory the message itself
+		var message = new Message();
+		message.overrideUrl(this.apis.messages_message);
+		message.set('messageId', messageId);
+		message.destroy({
             dataType:'json',
-
             success:function(model, response){
-
 				if(callback){
 					callback.success();
 				}
@@ -234,9 +213,10 @@
 	//cannot use search because of naming collisions
 	MessageManager.prototype.searchMessage = function(searchRepresentationObj, callback) {
 		var self = this;
+		var searchResults = new Messages();
 		if(testMockObj.testMode){
-			this.searchResults = testMockObj.sampleMessages;
-			callback.success();
+			searchResults = testMockObj.sampleMessages;
+			callback.success(searchResults);
 			return;
 		}
 		if (typeof searchRepresentationObj !== 'object'){
@@ -245,20 +225,15 @@
 		}
 
 		var userId = this.sessionManager.hasSession() ? this.sessionManager.getUserId() : -1;
-		this.searchResults.overrideUrl(this.apis.DM_search);
-
-		this.searchResults.fetch({
+		searchResults.overrideUrl(this.apis.DM_search);
+		searchResults.fetch({
 			data: $.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId}),
             dataType:'json',
 
             success:function(model, response){
-
-				// self.searchResults_timeStamp = new Date();
-				// //sync the search state
-				// self.sessionManager.getSessionUser().set('searchState', searchState);
-
+				self.searchResults_timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(searchResult);
 				}
             },
             error: function(model, response){
@@ -272,21 +247,20 @@
 	};
 
 	MessageManager.prototype.fetchRecents = function(callback) {
+		var recents = new Messages();
 		if (testMockObj.testMode){
-			this.recents = testMockObj.sampleMessages;
-			callback.success(this.recents);
+			recents = testMockObj.sampleMessages;
+			callback.success(recents);
 			return;
 		}
 		var self = this;
-		//confront to API requirements
-		this.recents.overrideUrl(this.apis.DM_recent);
-		this.recents.fetch({
+		recents.overrideUrl(this.apis.DM_recent);
+		recents.fetch({
             dataType:'json',
-
             success:function(model, response){
 				self.recents_timeStamp = new Date();
 				if(callback){
-					callback.success(self.recents);
+					callback.success(recents);
 				}
             },
             error: function(model, response){

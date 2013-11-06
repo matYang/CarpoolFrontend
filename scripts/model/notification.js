@@ -51,9 +51,15 @@ var Notification = Backbone.Model.extend({
 		data.messageId = parseInt(data.messageId, 10);
 		data.transactionId = parseInt(data.transactionId, 10);
 
-		data.initUser = new User(data.initUser, {'parse': true});
-		data.message = new Message(data.message, {'parse': true});
-		data.transaction = new Transaction(data.transaction, {'parse': true});
+		if (typeof data.initUser.userId !== 'undefined'){
+			data.initUser = new User(data.initUser, {'parse': true});
+		}
+		if (typeof data.message.messageId !== 'undefined'){
+			data.message = new Message(data.message, {'parse': true});
+		}
+		if (typeof data.transaction.transactionId !== 'undefined'){
+			data.transaction = new Transaction(data.transaction, {'parse': true});
+		}
 
 		data.state = parseInt(data.state, 10);
 		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);

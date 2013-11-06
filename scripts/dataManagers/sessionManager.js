@@ -71,9 +71,7 @@
 		}
 		//make sure the session user is new, and sends Get to /findSession
 		this.sessionUser.fetch({
-
 			async:asyncFlag,
-
             dataType:'json',
 
             success:function(model, response){
@@ -120,7 +118,6 @@
 		this.sessionUser.set('email', emailVal);
 		this.sessionUser.set('password', passwordVal);
 		this.sessionUser.save({},{
-
             dataType:'json',
 
             success:function(model, response){
@@ -160,7 +157,6 @@
 		//if session user is new, no id in path, then already logged out
 		//if session user is not new, then has id in path, will launch right call
 		this.sessionUser.save({},{
-
             dataType:'json',
 
             success:function(model, response){
@@ -186,33 +182,33 @@
 
 	
 	SessionManager.prototype.fetchCurUserNotifications = function(callback){
-            var self = this;
+        var self = this;
 
-            if (!this.hasSession()){
-                    Constants.dWarn("SessionManager::fetchNotificationList:: session does not exist, exit");
-                    return;
-            }
+        if (!this.hasSession()){
+                Constants.dWarn("SessionManager::fetchNotificationList:: session does not exist, exit");
+                return;
+        }
 
-            this.cur_notifications.fetch({
-				data: $.param({ 'userId': this.getUserId()}),
-				dataType:'json',
-				reset: true,
+        this.cur_notifications.fetch({
+			data: $.param({ 'userId': this.getUserId()}),
+			dataType:'json',
+			reset: true,
 
-				success:function(model, response){
-					self.cur_notificationsTimeStamp = new Date();
-					if(callback){
-						//should've used binding, not retrurning or passing models back
-						callback.success();
-					}
-				},
-				error: function(model, response){
-					Constants.dWarn("SessionManager::fetchNotificationList:: fetch failed with response:");
-					Constants.dLog(response);
-					if(callback){
-						callback.error();
-					}
+			success:function(model, response){
+				self.cur_notificationsTimeStamp = new Date();
+				if(callback){
+					//should've used binding, not retrurning or passing models back
+					callback.success();
 				}
-			});
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchNotificationList:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
 	};
 	
 	SessionManager.prototype.fetchCurUserLetters = function(callback){
@@ -231,27 +227,27 @@
 		this.cur_socialList.overrideUrl(this.apis.users_watchUser + '/' + this.getUserId());
 		this.cur_socialList.fetch({
 			data: $.param({ 'intendedUserId': this.getUserId()}),
-				dataType:'json',
-				reset: true,
+			dataType:'json',
+			reset: true,
 
-				success:function(model, response){
-					self.socialList_timeStamp = new Date();
-					if(callback){
-						callback.success();
-					}
-				},
-				error: function(model, response){
-					Constants.dWarn("SessionManager::fetchSocialList:: fetch failed with response:");
-					Constants.dLog(response);
-					if(callback){
-						callback.error();
-					}
+			success:function(model, response){
+				self.socialList_timeStamp = new Date();
+				if(callback){
+					callback.success();
 				}
-			});
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchSocialList:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
 	};
 	
 	SessionManager.prototype.handleSocket = function(eventName, data) {
-			if (eventName === 'newNotification'){
+		if (eventName === 'newNotification'){
 				this.fetchCurUserNotifications();
 			}
         };

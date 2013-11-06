@@ -65,7 +65,7 @@ var TopBarView = Backbone.View.extend({
 			htmlContext = '';
 
 		for (i = 0; i < this.notifications.length; i++){
-			htmlContext += this.dropdown_notifiationTemplate(this.notifications.get(i).toDropdownJSON());
+			htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
 		}
 
 		this.notificationContainer.html(htmlContext);
@@ -81,7 +81,7 @@ var TopBarView = Backbone.View.extend({
 			htmlContext = '';
 
 		for (i = 0; i < this.favorites.length; i++){
-			htmlContext += this.dropdown_favoriteTemplate(this.favorites.get(i).toDropdownJSON());
+			htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
 		}
 
 		this.favoriteContainer.html(htmlContext);
@@ -93,8 +93,8 @@ var TopBarView = Backbone.View.extend({
 		this._unbindDropdownEvents(dropdownName);
 		if (dropdownName === 'notifications'){
 			this.notificationContainer.find('.dropdownContent').on('click', function(e){
-				var n_id = $(this).attr("data-notificationId");
-				var n_model = self.notifications.where({'id': n_id})[0];
+				var n_id = parseInt($(this).attr("data-notificationId"), 10);
+				var n_model = self.notifications.get(n_id);
 				var n_evt = n_model.get('notificationEvent');
 
 				//async, don't care about result
@@ -118,15 +118,20 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	_unbindDropdownEvents: function(dropdownName){
-		if (dropdownName === 'notifications'){
+		if (dropdownName === 'notifications' && this.notificationContainer){
 			this.notificationContainer.find('.dropdownContent').off();
 		}
-		else if (dropdownName ===  'favorites'){
+		else if (dropdownName ===  'favorites' && this.favoriteContainer){
 			this.favoriteContainer.find('.dropdownContent').off();
 		}
 		else{
-			this.notificationContainer.find('.dropdownContent').off();
-			this.favoriteContainer.find('.dropdownContent').off();
+
+			if (this.notificationContainer){
+				this.notificationContainer.find('.dropdownContent').off();
+			}
+			if (this.favoriteContainer){
+				this.favoriteContainer.find('.dropdownContent').off();
+			}
 		}
 	},
 
@@ -290,7 +295,9 @@ var TopBarView = Backbone.View.extend({
 						app.navigate("front", true);
 					},
 					error: function(){
-						Info.alert("登出失败，请稍后再试");
+						Info.warn("Session fetch failed");
+						app.navigate("front", true);
+						app.userManager.sessionUser = app.sessionManager.getSessionUser();
 					}
 				});
 			},

@@ -9,19 +9,14 @@
 		this.sessionManager = sessionManager;
 		this.userManager = userManager;
 
-		this.transaction = new Transaction();
 		this.timeStamp = new Date();
 
 		this.sessionManager.resgisterManager(this);
 
 	};
 
-	TransactionManager.prototype.getTransaction = function() {
-		return this.transaction;
-	};
 
 	TransactionManager.prototype.release = function() {
-		this.transaction = new Transaction();
 		this.timeStamp = new Date();
 	};
 
@@ -38,18 +33,18 @@
 
 		var self = this;
 
-		this.transaction.overrideUrl(this.apis.transaction_transaction);
-		this.transaction.set('transactionId', transactionId);
+		var transaction = new Transaction();
+		transaction.overrideUrl(this.apis.transaction_transaction);
+		transaction.set('transactionId', transactionId);
 
-		this.transaction.fetch({
+		transaction.fetch({
 			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
 				self.timeStamp = new Date();
-
 				if(callback){
-					callback.success();
+					callback.success(transaction);
 				}
 			},
 
@@ -80,7 +75,7 @@
 		newTransaction.set('transactionId', -1);
 
 		newTransaction.save({},{
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
+			data: JSON.stringify({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
@@ -120,18 +115,18 @@
 		}
 
 		var self = this;
+		var transaction = new Transaction();
+		transaction.overrideUrl(this.apis.transaction_transaction);
+		transaction.set('transactionId', transactionId);
 
-		this.transaction.overrideUrl(this.apis.transaction_transaction);
-		this.transaction.set('transactionId', transactionId);
-
-		this.transaction.save({},{
-			data: $.param({ 'userId': this.sessionManager.getUserId(), 'stateChangeAction': stateChangeAction, 'score': score}),
+		transaction.save({},{
+			data: JSON.stringify({ 'userId': this.sessionManager.getUserId(), 'stateChangeAction': stateChangeAction, 'score': score}),
 			dataType:'json',
 
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(transaction);
 				}
 			},
 

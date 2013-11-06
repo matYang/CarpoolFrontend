@@ -14,25 +14,15 @@
 		this.transactionList_timeStamp = new Date();
 		this.notificationList_timeStamp = new Date();
 
-
 		this.sessionManager = sessionManager;
-
 		this.sessionManager.resgisterManager(this);
-
 	};
 
-	UserManager.prototype.getUser = function() {
-		if (testMockObj.testMode){
-			return testMockObj.sampleUser;
-		}
-		return this.user;
-	};
 
 	//reset the manager state upon logout
 	UserManager.prototype.release = function() {
 		this.sessionUser = this.sessionManager.getSessionUser();
 
-		this.topBarUser = new User();
 		this.timeStamp = new Date();
 		this.socialList_timeStamp = new Date();
 		this.historyList_timeStamp = new Date();
@@ -72,16 +62,17 @@
 			return;
 		}
 
-		this.sessionUser = newUser;
-		this.sessionUser.overrideUrl(this.apis.users_user);
-		this.sessionUser.set('userId', -1);
-		this.sessionUser.save({},{
+		var sessionUser = newUser;
+		sessionUser.overrideUrl(this.apis.users_user);
+		sessionUser.set('userId', -1);
+		sessionUser.save({},{
             dataType:'json',
 
             success:function(model, response){
 				self.timeStamp = new Date();
+				app.sessionManager.sessionUser = sessionUser;
 				if(callback){
-					callback.success();
+					callback.success(sessionUser);
 				}
             },
             error: function(model, response){
@@ -110,11 +101,6 @@
 		var user = new User();
 		user.overrideUrl(this.apis.users_user);
 		user.set('userId', this.sessionManager.getUserId());
-		//this will force to add id into api path, correcting it
-		if (testMockObj.testMode) {
-			callback.success();
-			return;
-		}
 		user.fetch({
 			data: $.param({ 'intendedUserId': intendedUserId}),
             dataType:'json',
@@ -201,7 +187,6 @@
 
             success:function(model, response){
 				self.timeStamp = new Date();
-
 				if(callback){
 					callback.success(sessionUser);
 				}
@@ -235,7 +220,7 @@
 		sessionUser.overrideUrl(this.apis.users_singleLocation);
 		//url encoded, not setting in user
 		sessionUser.save({},{
-			data: $.param({ 'location': location.toString()}),
+			data: JSON.stringify({ 'location': location.toString()}),
             dataType:'json',
 
             success:function(model, response){
@@ -267,7 +252,7 @@
 		var sessionUser = app.sessionManager.getSessionUser();
 		sessionUser.overrideUrl(this.apis.users_toggleNotices);
 		//url encoded, not setting in user
-		sessionUser.save({},{
+		sessionUser.fetch({
 			data: $.param({ 'emailNotice': shouldEmail, 'phoneNotice': shouldPhone}),
             dataType:'json',
 
@@ -485,14 +470,13 @@
 		tempCurUser.overrideUrl(this.apis.users_watchUser);
 		tempCurUser.set('userId', self.sessionManager.getUserId());
 		tempCurUser.save({},{
-			data: $.param({ 'targetUserId': targetUserId}),
+			data: JSON.stringify({'targetUserId': targetUserId, 'action': 'watch'}),
             dataType:'json',
 
             success:function(model, response){
-				//the returned is the watched user, add it to the social list
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(tempCurUser);
 				}
             },
             error: function(model, response){
@@ -521,24 +505,14 @@
 		//set the id of the temp user to curUserId to confront to API requirements
 		tempCurUser.overrideUrl(this.apis.users_watchUser);
 		tempCurUser.set('userId', self.sessionManager.getUserId());
-		tempCurUser.destroy({
-			data: $.param({ 'targetUserId': targetUserId}),
+		tempCurUser.save({
+			data: $.param({ 'targetUserId': targetUserId, 'action': 'dewatch'}),
             dataType:'json',
 
             success:function(model, response){
-				var watchedUsers = self.sessionUser.get('socialList');
-				var found = false;
-
-				//remove the deleted user from the socialList
-				for (var i = 0; i < watchUsers.length && !found; i++){
-					if (watchedUsers.at(i).id === targetUserId){
-						self.sessionUser.get('socialList').remove(watchedUsers.at(i));
-						found = true;
-					}
-				}
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(tempCurUser);
 				}
             },
             error: function(model, response){

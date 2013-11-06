@@ -37,7 +37,7 @@
 		notification.overrideUrl(this.apis.notification_notification);
 		notification.set('notificationId', notificationId);
 		notification.save({},{
-			data: $.param({'userId': this.sessionManager.getUserId() }),
+			data: JSON.stringify({'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
@@ -70,7 +70,6 @@
 		notification.overrideUrl(this.apis.notification_notification);
 		notification.set('notificationId', notificationId);
 		notification.destroy({
-			data: $.param({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
