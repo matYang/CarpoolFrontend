@@ -233,7 +233,7 @@
             success:function(model, response){
 				self.searchResults_timeStamp = new Date();
 				if(callback){
-					callback.success(searchResult);
+					callback.success(searchResults);
 				}
             },
             error: function(model, response){
