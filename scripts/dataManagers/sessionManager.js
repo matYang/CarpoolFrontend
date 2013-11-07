@@ -5,7 +5,6 @@
 		this.apis = new ApiResource();
 		this.sessionUser = new User();
 
-		this.isLoggedIn = false;
 		this.sessionUser = new User(this.apis.users_findSession);
 
 		this.timeStamp = new Date();
@@ -32,7 +31,7 @@
 
 	SessionManager.prototype.hasSession = function(){
 		if (testMockObj.testMode) return true;
-		return this.isLoggedIn;
+		return this.sessionUser.id >= 0;
 	};
 
 	//avoid using this
@@ -63,7 +62,6 @@
 		this.sessionUser.overrideUrl(this.apis.users_findSession);
 		if (testMockObj.testMode) {
 			this.sessionUser.set("userId", 10001);
-			this.isLoggedIn = true;
 			if(callback){
 				callback.success();
 			}
@@ -75,7 +73,6 @@
             dataType:'json',
 
             success:function(model, response){
-				self.isLoggedIn = self.sessionUser.id >= 0 ? true : false;
 				self.releaseManager();
 				if (self.hasSession()){
 					self.fetchCurUserNotifications();
@@ -91,7 +88,6 @@
                 Constants.dWarn("SessionManager::updateSession:: fetch failed with response:");
                 Constants.dLog(response);
 
-                self.isLoggedIn = false;
                 if(callback){
 					callback.error();
 				}
@@ -108,7 +104,7 @@
 			Constants.dWarn("SessionManager::lougout:: invalid parameter");
 			return;
 		}
-		if (this.isLoggedIn){
+		if (this.hasSession()){
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
 		}
 		var self = this;
@@ -121,7 +117,6 @@
             dataType:'json',
 
             success:function(model, response){
-				self.isLoggedIn = true;
 
 				self.fetchCurUserNotifications();
 				self.fetchCurUserLetters();
@@ -147,7 +142,7 @@
 	};
 
 	SessionManager.prototype.logout = function(callback){
-		if (!this.isLoggedIn){
+		if (!this.hasSession()){
 			Constants.dWarn("SessionManager::logout::not logged in, conflict, still sending the logout request");
 		}
 
@@ -160,8 +155,6 @@
             dataType:'json',
 
             success:function(model, response){
-				self.isLoggedIn = false;
-
 				if(callback){
 					callback.success(response);
 				}
