@@ -1,7 +1,7 @@
 var PersonalHistoryView = Backbone.View.extend({
 
 	initialize: function(params){
-		_.bindAll(this, 'renderTransactions', 'renderNotifications', 'bindTransactionEvents', 'bindNotificationEvents', 'openTransactionDetail', 'close');
+		_.bindAll(this, 'renderTransactions', 'renderNotifications', 'bindNotificationEvents', 'openTransactionDetail', 'close');
 		this.isClosed = false;
 		this.domContainer = $("#profilePage_content");
 
@@ -23,23 +23,6 @@ var PersonalHistoryView = Backbone.View.extend({
 
 	renderTransactions: function(transactionList){
 		this.transactionView = new TransactionHistoryView(transactionList);
-		// this.transactions = transactionList;
-		// this.transactionContainer = $("#transactionHistoryContent");
-		// var that = this,
-		// 	toBeAppended = [],
-		// 	html = "",
-		// 	i = 0;
-
-		// for (i = 0; i < this.transactions.length; i++){
-		// 	transactionList.at(i).set("stateText", Constants.stateText[transactionList.at(i).get("state") ]);
-		// 	transactionList.at(i).set("startDateText", Utilities.getDateString(transactionList.at(i).get("startTime")));
-		// 	toBeAppended[i] = this.transactionTemplate(transactionList.at(i).toJSON());
-		// 	this.transactionLookup[transactionList.at(i).get("transactionId")] = i;
-		// }
-		// html = toBeAppended.join("");
-		// this.transactionContainer.append(html);
-
-		// this.bindTransactionEvents();
 	},
 
 	renderNotifications: function(notificationList){
@@ -70,9 +53,6 @@ var PersonalHistoryView = Backbone.View.extend({
 		});
 	},
 
-	bindNotificationEvents: function(){
-		//TODO: bind notification events
-	},
 	renderTransactionError: function(){
 
 	},

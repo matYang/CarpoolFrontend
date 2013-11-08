@@ -6,7 +6,7 @@ var MessagePostView = Backbone.View.extend({
 	toSubmit:{
 		"origin":new UserLocation(),
 		"dest":new UserLocation(),
-		"type":"ask",
+		"type":Constants.messageType.ask,
 		"numberRequests":0,
 		"requests":[],
 		"description":"",
@@ -70,7 +70,7 @@ var MessagePostView = Backbone.View.extend({
 		$("#publish_progress").attr("class","publish_progress_step1");
 		var that = this;
 		$('#publish_type>div').on('click', function(e){
-			that.onTypeSelect(e.target.id);
+			that.onTypeSelect(e.delegateTarget.id);
 		});
 		$('#publish_originInput').on("click", function(e){
 				that.locationPicker = new LocationPickerView(that.toSubmit.origin, that, "publish_originInput");
@@ -119,21 +119,6 @@ var MessagePostView = Backbone.View.extend({
 		this.currentTemplate = this.askSlotTemplate;
 		this.refactorRequests();
 		if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
-			$('#publish_info').on('change', 'input[value=round]', function(e) {
-				var id = Utilities.toInt(Utilities.getId(e.target.name));
-				var maximumDate = $("input[name=publish_returnDate_"+id+"]").datepicker("getDate");
-				if (this.checked){
-					that.toggleDateVisibility(e, false);
-					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", maximumDate);
-				} else {
-					that.toggleDateVisibility(e, true);
-					var date = $("input[name=publish_departDate_"+id+"]").datepicker("getDate");
-					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", null);
-					if (date) {
-						$("input[name=publish_departDate_"+id+"]").val((date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear());
-					}
-				}
-			});
 			this.toSubmit.requests = [];
 			this.toSubmit.requests[0]={};
 			this.toSubmit.requests[0].timeAvailable = "";
@@ -141,7 +126,26 @@ var MessagePostView = Backbone.View.extend({
 			this.toSubmit.requests[0].returnTime = 0;
 			this.toSubmit.requests[0].id = 1;
 			this.toSubmit.requests[0].type = this.toSubmit.type;
+			this.toSubmit.requests[0].round = true;
 			this.toSubmit.numberRequests = 1;
+			$('#publish_info').on('change', 'input[value=round]', function(e) {
+				debugger;
+				var id = Utilities.toInt(Utilities.getId(e.target.name));
+				var maximumDate = $("input[name=publish_returnDate_"+id+"]").datepicker("getDate");
+				if (this.checked){
+					that.toggleDateVisibility(e, false);
+					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", maximumDate);
+					that.toSubmit.requests[id-1].round = true;
+				} else {
+					that.toggleDateVisibility(e, true);
+					var date = $("input[name=publish_departDate_"+id+"]").datepicker("getDate");
+					$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", null);
+					if (date) {
+						$("input[name=publish_departDate_"+id+"]").val((date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear());
+					}
+					that.toSubmit.requests[id-1].round = false;
+				}
+			});
 
 			this.toSubmit.requests[0].timeAvailable=[false,false,false];
 			$('#publish_time_slots').append(this.currentTemplate({id:1}));
@@ -213,8 +217,10 @@ var MessagePostView = Backbone.View.extend({
 				var id = Utilities.toInt(Utilities.getId(e.target.name));
 				if (this.checked){
 					that.toggleDateVisibility(e, false);
+					that.toSubmit.requests[id-1].round = true;
 				} else {
 					that.toggleDateVisibility(e, true);
+					that.toSubmit.requests[id-1].round = false;
 				}
 				var maximumDate = $("input[name=publish_returnDate_"+id+"]").datepicker("getDate");
 				if (e.target.checked){
@@ -310,7 +316,6 @@ var MessagePostView = Backbone.View.extend({
 		});
 	},
 	restoreState:function(page){
-		debugger;
 		if (page === 1) {
 			$('.selectBox_selected').removeClass('selectBox_selected');
 			$('#publish_'+this.toSubmit.type).addClass('selectBox_selected');
@@ -330,6 +335,9 @@ var MessagePostView = Backbone.View.extend({
 						var date = r[request].departDate;
 						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", this.toSubmit.requests[request].returnDate);
 						$('input[name=publish_returnDate_'+id+']').val((1+date.getMonth())+"/"+date.getDate()+"/"+date.getFullYear());
+					} else {
+						$('input[name=publish_returnDate_'+id+']').prop("disabled", true);
+						$('select[name=return_time_'+id+']').prop("disabled",true);
 					}
 					$('select[name=depart_time_'+id+']').val(r[request].departTime);
 					$('select[name=return_time_'+id+']').val(r[request].returnTime);
@@ -339,7 +347,7 @@ var MessagePostView = Backbone.View.extend({
 			$("#publish_description_input").val(this.toSubmit.description);
 			$("#seats").val(this.toSubmit.departureSeats);
 			$(".publish_priceEntry").remove();
-			if (this.toSubmit.type === "ask") {
+			if (this.toSubmit.type === Constants.messageType.ask) {
 				$("#publish_pricelist_container").remove();
 			}
 			if (this.toSubmit.conditionalPrice) {
@@ -409,14 +417,14 @@ var MessagePostView = Backbone.View.extend({
 	},
 
 	onTypeSelect: function(id) {
-		if (id.indexOf('publish_ask')>-1) {
+		if (id.indexOf('publish_0')>-1) {
 			$('.selectBox_selected').removeClass('selectBox_selected');
-			$('#publish_ask').addClass('selectBox_selected'); //passenger
-			this.toSubmit.type = "ask";
-		} else if (id.indexOf('publish_help')>-1){
+			$('#publish_0').addClass('selectBox_selected'); //passenger
+			this.toSubmit.type = Constants.messageType.ask;
+		} else if (id.indexOf('publish_1')>-1){
 			$('.selectBox_selected').removeClass('selectBox_selected');
-			$('#publish_help').addClass('selectBox_selected'); //driver
-			this.toSubmit.type = "help";
+			$('#publish_1').addClass('selectBox_selected'); //driver
+			this.toSubmit.type = Constants.messageType.help;
 		}
 	},
 	onAddClick: function(){
@@ -446,9 +454,11 @@ var MessagePostView = Backbone.View.extend({
 			var id = Utilities.toInt(Utilities.getId(e.target.name));
 			var maximumDate = $("input[name=publish_returnDate_"+id+"]").datepicker("getDate");
 			if (this.checked){
+				that.toSubmit.requests[index].round = true;
 				$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", maximumDate);
 				that.toggleDateVisibility(e, false);
 			} else {
+				that.toSubmit.requests[index].round = false;
 				$("input[name=publish_departDate_"+id+"]").datepicker("option", "maxDate", null);
 				that.toggleDateVisibility(e, true);
 			}
@@ -578,7 +588,7 @@ var MessagePostView = Backbone.View.extend({
 	toMessage: function () {
 		//validate before finish
 		var messages = new Messages(), i;
-		if (this.toSubmit.type === "ask"){
+		if (this.toSubmit.type === Constants.messageType.ask){
 			this.toSubmit.priceList = [];
 		} else {
 			if (!this.toSubmit.conditionalPrice) {
@@ -600,7 +610,7 @@ var MessagePostView = Backbone.View.extend({
 			if (this.toSubmit.requests[r]){
 				var t = new Transaction();
 				var m = new Message();
-				m.set("type", this.toSubmit.type === "ask" ? Constants.messageType.ask : Constants.messageType.help);
+				m.set("type", this.toSubmit.type === Constants.messageType.ask ? Constants.messageType.ask : Constants.messageType.help);
 				m.set("ownerId", this.user.get("userId"));
 				m.set("departure_location", this.toSubmit.origin);
 				m.set("arrival_location", this.toSubmit.dest);
@@ -630,7 +640,7 @@ var MessagePostView = Backbone.View.extend({
 			this.toSubmit = {
 				"origin":new UserLocation(),
 				"dest":new UserLocation(),
-				"type":"ask",
+				"type":Constants.messageType.ask,
 				"numberRequests":0,
 				"requests":[],
 				"description":"",

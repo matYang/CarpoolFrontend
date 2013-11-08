@@ -42,7 +42,9 @@ var MultiPageView = Backbone.View.extend({
 		var height =  Math.ceil(length/this.entryRowNum)*this.entryHeight;
 		height = (height > this.minHeight) ? height : this.minHeight;
 		$("#"+this.entryContainer).css("height", height+"px");
-		this.setPageNavigator();
+		if (this.messages.length > this.pageEntryNumber){
+			this.setPageNavigator();
+		}
 	},
 	toPage: function(page){
 		this.startIndex = (this.pageEntryNumber)*(page-1);

@@ -1,6 +1,6 @@
 
 var testMockObj = {
-	"testMode": false,
+	"testMode": true,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
@@ -77,11 +77,11 @@ var testMockObj = {
 	"sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",5).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 
 	"sampleNotifications": new Notifications(),
-	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message"),
-	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("messageSummary", "sample message"),
-	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("messageSummary", "sample message"),
-	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("messageSummary", "sample message"),
-	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("messageSummary", "sample message"),
+	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message").set("initUser", sampleUser).set("creationTime", new Date()),
+	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("messageSummary", "sample message").set("initUser", sampleUser).set("creationTime", new Date()),
+	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("messageSummary", "sample message").set("initUser", sampleUser).set("creationTime", new Date()),
+	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("messageSummary", "sample message").set("initUser", sampleUser).set("creationTime", new Date()),
+	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("messageSummary", "sample message").set("initUser", sampleUser).set("creationTime", new Date()),
 	"sampleNotificationF": (new Notification()).set
 	("notificationId", 6).set("messageSummary", "sample message"),
 

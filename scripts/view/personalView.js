@@ -125,7 +125,7 @@ var PersonalView = Backbone.View.extend({
 		var that = this;
 		if (this.sessionUser.get("userId") !== this.curUserId) {
 			$('#profilePage_utilityTab').on("click", function(){
-				app.userManager.watchUser(this.curUserId, {
+				app.userManager.watchUser(that.curUserId, {
 					"success":that.watchSuccess,
 					"error":that.watchError
 				});
@@ -135,7 +135,7 @@ var PersonalView = Backbone.View.extend({
 	bindDeWatchEvent: function(){
 		var that = this;
 		$("#deWatch").on("click", function(){
-			app.userManager.deWatchUser(this.curUserId, {
+			app.userManager.deWatchUser(that.curUserId, {
 					"success":that.deWatchSuccess,
 					"error":that.deWatchError
 			});

@@ -212,7 +212,7 @@
 .searchResultBoxContainer:hover {
   background-color:#f8faf7;
 }
-.searchResultProfilePicture {
+.searchResultProfilePicture, .searchResultProfilePicture>img {
   background-color:#aaaaaa;
 	height:86px;
 	width:86px;

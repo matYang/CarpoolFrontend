@@ -155,7 +155,9 @@ var Message = Backbone.Model.extend({
 
 	toJSON: function(){
 		var json = _.clone(this.attributes);
-		
+		if (this.get('owner' instanceof User)) {
+			json.owner = this.get('owner').toJSON();
+		}
 		//ignore user here, meaningless to do anything to user persistence from inside message
 		if ( this.get('departure_location') instanceof UserLocation ) {
 			json.departure_location = this.get('departure_location').toJSON();
