@@ -299,7 +299,7 @@ var MessagePostView = Backbone.View.extend({
 			}, 200);
 
 
-		})
+		});
 		$("#conditionalPriceSwitch").on("click", function(e) {
 			if ($("#conditionalPriceSwitch").hasClass("publish_selected")) {
 				$("#conditionalPriceSwitch").removeClass("publish_selected");

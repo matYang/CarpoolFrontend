@@ -20,9 +20,9 @@ var RegistrationView = Backbone.View.extend({
 		this.registerContainer = $('#registerContainer');
 		this.contentContainer = $('#registerContent');
 		this.registerInfo = {};
-		var that = this;
+		var self = this;
 		$("#register-modal-closeButton").on("click",function(){
-			that.close();
+			self.close();
 		});
 
 		this.registerPopup = true;
@@ -57,17 +57,17 @@ var RegistrationView = Backbone.View.extend({
 
 	renderFirstPage: function(){
 		this.contentContainer.append(this.step1Template);
-		var that = this;
+		var self = this;
 		this.registerInfo.location = new UserLocation();
 		this.registerContainer.attr("class", "registerContainer_step1");
 		$("#registerLocationInput").on("mouseup", function(){
-			that.locationPicker = new LocationPickerView(that.registerInfo.location, that);
+			self.locationPicker = new LocationPickerView(self.registerInfo.location, self);
 		});
 		$(".registerNextStep").on("click", function(){
 			app.navigate("register/step2");
-			that.previousStepIndex = 1;
-			that.render(2);
-			that.restore(2);
+			self.previousStepIndex = 1;
+			self.render(2);
+			self.restore(2);
 
 		});
 	},
@@ -77,31 +77,31 @@ var RegistrationView = Backbone.View.extend({
 		$("#registerCustomizeInput").val(this.registerInfo.location.get("point"));
 	},
 	renderSecondPage: function(){
-		var that = this;
+		var self = this;
 		this.contentContainer.append(this.step2Template);
 		this.registerContainer.attr("class", "registerContainer_step2");
 		$(".registerNextStep").on("click", function(){
 			app.navigate("register/step3");
-			that.previousStepIndex = 2;
-			that.render(3);
-			that.restore(3);
+			self.previousStepIndex = 2;
+			self.render(3);
+			self.restore(3);
 		});
 
 		$("#registerInputMaleContainer").on("click", function(){
 			$("#femalecheckmark").hide();
 			$("#malecheckmark").show();
-			that.registerInfo.gender = Constants.gender.male;
+			self.registerInfo.gender = Constants.gender.male;
 		});
 		$("#registerInputFemaleContainer").on("click", function(){
 			$("#malecheckmark").hide();
 			$("#femalecheckmark").show();
-			that.registerInfo.gender = Constants.gender.female;
+			self.registerInfo.gender = Constants.gender.female;
 		});
 		$(".registerPreviousStep").on("click", function(){
 			app.navigate("register/step1");
-			that.previousStepIndex = 2;
-			that.render(1);
-			that.restore(1);
+			self.previousStepIndex = 2;
+			self.render(1);
+			self.restore(1);
 
 		});
 	},
@@ -109,49 +109,50 @@ var RegistrationView = Backbone.View.extend({
 	renderThirdPage: function(){
 		this.contentContainer.append(this.step3Template);
 		this.registerContainer.attr("class", "registerContainer_step3");
-		var that = this;
+		var self = this;
 		$(".registerNextStep").on("click", function(){
 			
-			that.registerInfo.email = $('#registerEmailInput').val();
-			that.registerInfo.password = $('#registerPasswordInput').val();
+			self.registerInfo.email = $('#registerEmailInput').val();
+			self.registerInfo.password = $('#registerPasswordInput').val();
 
 			var user = new User();
-			user.set('location', that.registerInfo.location);
-			user.set('gender', that.registerInfo.gender);
-			user.set('email', that.registerInfo.email);
-			user.set('password', that.registerInfo.password);
+			user.set('location', self.registerInfo.location);
+			user.set('gender', self.registerInfo.gender);
+			user.set('email', self.registerInfo.email);
+			user.set('password', self.registerInfo.password);
 
 			app.userManager.registerUser(user, {
 				success: function(){
+					self.emailCache = user.get('email');
 					app.navigate("register/step4");
-					that.previousStepIndex = 3;
-					that.render(4);
+					self.previousStepIndex = 3;
+					self.render(4);
 				},
 
 				error: function(){
-					alert("注册失败，请稍后再试");
+					Info.alert("注册失败，请稍后再试");
 				}
 
 			});
-
 			
 		});
 		$(".registerPreviousStep").on("click", function(){
 			app.navigate("register/step2");
-			that.previousStepIndex = 3;
-			that.render(2);
-			that.restore(2);
+			self.previousStepIndex = 3;
+			self.render(2);
+			self.restore(2);
 		});
 	},
 
 	renderForthPage: function(){
-		var that = this;
+		var self = this;
 		this.contentContainer.append(this.step4Template);
 		this.registerContainer.attr("class", "registerContainer_step4");
+		$('#registerYourEmail').html(this.emailCache);
 		$(".registerFinish").on("click", function(){
-			that.previousStepIndex = 4;
+			self.previousStepIndex = 4;
 			
-			that.close();
+			self.close();
 		});
 	},
 

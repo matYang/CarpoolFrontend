@@ -90,12 +90,12 @@ var MessageEditView = MessagePostView.extend({
 			app.messageManager.updateMessage(messages.at(r), {"success":this.success, "error":this.error});
 		}
 	},
-	success: function(successId){
-		Info.alert("Message Post successful");
-		app.navigate(app.sessionManager.getUserId() + "/message/" + successId, true);
+	success: function(message){
+		Info.alert("Message update successful");
+		app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
 	},
 	error: function(){
-		Info.alert("Message Post failed");
+		Info.alert("Message update failed");
 	},
 	reverseMessage: function(message){
 		var toSubmit = MessagePostView.prototype.toSubmit;

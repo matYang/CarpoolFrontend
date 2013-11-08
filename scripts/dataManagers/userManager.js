@@ -76,8 +76,7 @@
 				}
             },
             error: function(model, response){
-                alert("请稍后再试");
-				Constants.dWarn("UserManager::changePassword:: action failed");
+				Constants.dWarn("UserManager::register:: action failed");
 				if(callback){
 					callback.error();
 				}
