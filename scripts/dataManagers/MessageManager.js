@@ -112,7 +112,7 @@
 			immediateCaller.message = firstSuccessMessage;
 
 			if (firstSuccessMessage !== null){
-				callback.success(firstSuccessMessage.id);
+				callback.success(firstSuccessMessage);
 				firstSuccessMessage = null;
 			}
 			else{

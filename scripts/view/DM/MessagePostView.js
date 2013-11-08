@@ -293,7 +293,7 @@ var MessagePostView = Backbone.View.extend({
 			}, 200);
 
 
-		})
+		});
 		$("#conditionalPriceSwitch").on("click", function(e) {
 			if ($("#conditionalPriceSwitch").hasClass("publish_selected")) {
 				$("#conditionalPriceSwitch").removeClass("publish_selected");
@@ -310,7 +310,6 @@ var MessagePostView = Backbone.View.extend({
 		});
 	},
 	restoreState:function(page){
-		debugger;
 		if (page === 1) {
 			$('.selectBox_selected').removeClass('selectBox_selected');
 			$('#publish_'+this.toSubmit.type).addClass('selectBox_selected');

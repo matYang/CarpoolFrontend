@@ -66,9 +66,9 @@ var MessagePublishView = MessagePostView.extend({
 		var length = messages.length;
 		app.messageManager.postMessage(messages, {"success":this.success, "error":this.error});
 	},
-	success: function(){
+	success: function(message){
 		alert("Message Post successful");
-		app.navigate(app.sessionManager.getUserId() + "/message/" + app.messageManager.getMessage().id, true);
+		app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
 	},
 	error:function(){
 		
