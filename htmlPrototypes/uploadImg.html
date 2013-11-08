@@ -1,0 +1,46 @@
+  <!DOCTYPE html>
+  <html>
+    <head></head>
+    <body onload='onload()'>
+        <form method="post"  action="uploadImg.html" enctype="multipart/form-data" id="uploadform">
+        <input type="file" name="image"/>
+        <input type="submit" value="upload"/>
+        </form>
+      <script type="text/javascript">
+          function processResponse(response) {
+            if (!response.success) {
+                alert('woopsie');
+                return;
+              }
+          };
+          
+          function iframeSubmit(formElem, action, callback) {
+        
+              // we name a callback that will be called from inside the iframe
+              var callbackName = 'iframe' + Math.ceil(Math.random()*10000);
+              var iframe = document.createElement('iframe');
+              action = action + (action.indexOf('?')==-1?'?':'&');
+
+              // we create an iframe and use the callback as its name (why not).
+          
+              iframe.setAttribute('name', callbackName);
+              iframe.style.display = 'none';
+
+              // we add the target and edit the action of the form
+              formElem.setAttribute('target', callbackName);
+              formElem.setAttribute('action', action);
+
+              // we add the hidden iframe after the form
+              formElem.parentNode.appendChild(iframe);
+
+              window[callbackName] = callback;
+          };
+
+          function onload() {
+    
+             iframeSubmit(document.getElementById('uploadform'), 'http://localhost:8015/api/v1.0/users/img/1', processResponse);
+
+          };       
+      </script>
+    </body>
+  </html>
