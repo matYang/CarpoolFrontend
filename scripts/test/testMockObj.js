@@ -1,6 +1,6 @@
 
 var testMockObj = {
-	"testMode": true,
+	"testMode": false,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
@@ -77,18 +77,23 @@ var testMockObj = {
 	"sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",5).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 
 	"sampleNotifications": new Notifications(),
-	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message").set("initUser", this.sampleUser).set("creationTime", new Date()),
-	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("messageSummary", "sample message").set("initUser", this.sampleUser).set("creationTime", new Date()),
-	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("messageSummary", "sample message").set("initUser", this.sampleUser).set("creationTime", new Date()),
-	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("messageSummary", "sample message").set("initUser", this.sampleUser).set("creationTime", new Date()),
-	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("messageSummary", "sample message").set("initUser", this.sampleUser).set("creationTime", new Date()),
+	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message").set("creationTime", new Date()),
+	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("messageSummary", "sample message").set("creationTime", new Date()),
+	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("messageSummary", "sample message").set("creationTime", new Date()),
+	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("messageSummary", "sample message").set("creationTime", new Date()),
+	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("messageSummary", "sample message").set("creationTime", new Date()),
 	"sampleNotificationF": (new Notification()).set
 	("notificationId", 6).set("messageSummary", "sample message"),
 
 	"sampleLocationSZ": new UserLocation().set("province", "江苏").set("city","苏州"),
 	"sampleLocationNJ": new UserLocation().set("province", "江苏").set("city","南京"),
 };
-
+testMockObj.sampleNotificationA.set("initUser", testMockObj.sampleUser);
+testMockObj.sampleNotificationB.set("initUser", testMockObj.sampleUser);
+testMockObj.sampleNotificationC.set("initUser", testMockObj.sampleUser);
+testMockObj.sampleNotificationD.set("initUser", testMockObj.sampleUser);
+testMockObj.sampleNotificationE.set("initUser", testMockObj.sampleUser);
+testMockObj.sampleNotificationF.set("initUser", testMockObj.sampleUser);
 testMockObj.sampleTransactions.add([testMockObj.sampleTransactionA, testMockObj.sampleTransactionB, testMockObj.sampleTransactionC, testMockObj.sampleTransactionD, testMockObj.sampleTransactionE, testMockObj.sampleTransactionF]);
 testMockObj.sampleMessages.add([testMockObj.sampleMessageA, testMockObj.sampleMessageB, testMockObj.sampleMessageC, testMockObj.sampleMessageD, testMockObj.sampleMessageE, testMockObj.sampleMessageF, testMockObj.sampleMessageG, testMockObj.sampleMessageH]);
 testMockObj.sampleNotifications.add([testMockObj.sampleNotificationA, testMockObj.sampleNotificationB, testMockObj.sampleNotificationC, testMockObj.sampleNotificationD, testMockObj.sampleNotificationE, testMockObj.sampleNotificationF]);

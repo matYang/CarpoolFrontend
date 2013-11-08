@@ -686,6 +686,10 @@
 
 
 	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback){
+		if (testMockObj.testMode) {
+        	callback.success(testMockObj.sampleNotifications);
+        	return;
+        }
 		if (typeof intendedUserId !== 'number'){
 			Constants.dWarn("UserManager::fetchNotification:: userId invalid");
 			return;

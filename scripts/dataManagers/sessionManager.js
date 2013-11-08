@@ -176,7 +176,6 @@
 	
 	SessionManager.prototype.fetchCurUserNotifications = function(callback){
         var self = this;
-
         if (!this.hasSession()){
                 Constants.dWarn("SessionManager::fetchNotificationList:: session does not exist, exit");
                 return;

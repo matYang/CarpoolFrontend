@@ -74,6 +74,10 @@ var Notification = Backbone.Model.extend({
 		return json;
     },
 
+    _toJSON: function(){
+        var json = this.toDropdownJSON();
+        return json;
+    },
 
     toDropdownJSON: function(){
 		var json = this.toJSON();

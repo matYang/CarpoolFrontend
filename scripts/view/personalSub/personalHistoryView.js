@@ -16,9 +16,11 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.domContainer.append(this.wrapperTemplate);
 
 		app.userManager.fetchTransactionList(this.curUserId, {"success":this.renderTransactions, "error":this.renderTransactionError});
+		debugger;
 		if (this.user.id === this.curUserId) {
 			app.userManager.fetchNotificationList(this.curUserId, {"success":this.renderNotifications, "error":this.renderNotificationError});
 		}
+		
 	},
 
 	renderTransactions: function(transactionList){
@@ -26,21 +28,22 @@ var PersonalHistoryView = Backbone.View.extend({
 	},
 
 	renderNotifications: function(notificationList){
-		this.notifications = notificationList;
-		this.notificationContainer = $("#notificationHistoryContent");
+		this.notificationView = new NotificationHistoryView(notificationList);
+		// this.notifications = notificationList;
+		// this.notificationContainer = $("#notificationHistoryContent");
 		
-		var that = this;
-			toBeAppended = [],
-			html = "",
-			i = 0;
+		// var that = this;
+		// 	toBeAppended = [],
+		// 	html = "",
+		// 	i = 0;
 
-		for (i = 0; i < this.notifications.length; i++){
-			toBeAppended[i]=this.notificationTemplate(this.notifications.at(i).toJSON());
-		}
-		html = toBeAppended.join("");
-		this.notificationContainer.append(html);
+		// for (i = 0; i < this.notifications.length; i++){
+		// 	toBeAppended[i]=this.notificationTemplate(this.notifications.at(i).toJSON());
+		// }
+		// html = toBeAppended.join("");
+		// this.notificationContainer.append(html);
 
-		this.bindNotificationEvents();
+		// this.bindNotificationEvents();
 	},
 
 	bindNotificationEvents: function(){

@@ -1,5 +1,7 @@
 <div id='profilePage_eventBox_<%= messageId %>' class = 'profilePage_eventBox'>
-    <div id = 'profilePage_profilePicture_<%= messageId %>' class = 'profilePage_profilePicture'></div>
+    <div id = 'profilePage_profilePicture_<%= messageId %>' class = 'profilePage_profilePicture'>
+      <img src='<%= owner.imgPath %>' />
+    </div>
     <div id = 'profilePage_containerInfo_<%= messageId %>' class = 'profilePage_containerInfo'>
       <div class = 'profilePage_schoolName'><%= location.university %></div>  
       <div class = 'profilePage_date'><%= simple_date %></div>

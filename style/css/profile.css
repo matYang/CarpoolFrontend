@@ -263,7 +263,7 @@
 	border-style: solid;
 }
 
-.profilePage_profilePicture {
+.profilePage_profilePicture, .profilePage_profilePicture>img {
 	height:60px;
 	width:60px;
 	position:relative;
@@ -584,10 +584,9 @@
 }
 
 .personal_notification_message{
-	padding:3px;
-	margin-bottom:2px;
-	height:30px;
+	height:60px;
 	font-size:18px;
+	border-bottom: 1px dashed #999999;
 }
 
 .profilePage_userWatch{
@@ -696,4 +695,13 @@
 .selected_input{
 	background-color:rgb(244, 255, 212);
 	border-color:rgb(165, 199, 96);
+}
+
+.personal_notification_userDp>img {
+	height:50px;
+	width:50px;
+	margin-right:5px;
+	margin-top:5px;
+	margin-left:5px;
+	float:left;
 }

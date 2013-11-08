@@ -2,12 +2,12 @@ var NotificationHistoryView = MultiPageView.extend({
 
 
     initialize: function(messageList){
-        _.bindAll(this, 'render', 'openNotificationDetail','fetchMessageSuccess','fetchMessageError', 'close');
+        _.bindAll(this, 'render', 'bindNotificationEvent','fetchMessageSuccess','fetchMessageError', 'close');
         MultiPageView.prototype.messages = messageList;
         MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
         MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
         MultiPageView.prototype.pageNumberId = "notificationPageNumber";
-        MultiPageView.prototype.entryEvent = this.openNotificationDetail;
+        MultiPageView.prototype.entryEvent = this.bindNotificationEvent;
         MultiPageView.prototype.pageNavigator = "notificationHistoryNavigator";
         MultiPageView.prototype.user = app.sessionManager.getSessionUser();
         MultiPageView.prototype.entryHeight = 61;
@@ -22,14 +22,17 @@ var NotificationHistoryView = MultiPageView.extend({
     render: function(start){
         
     },
-    openNotificationDetail: function(messageId){
-        // var currentTransaction = MultiPageView.prototype.messages.get(messageId);
-        // app.messageManager.fetchMessage(currentTransaction.get("messageId"), {
-        //     "success":this.fetchMessageSuccess,
-        //     "error":this.fetchMessageError,
-        //     "transaction":currentTransaction
-        // });
+    bindNotificationEvent: function(messageId){
+        var currentNotification = MultiPageView.prototype.messages.get(messageId);
 
+        app.notificationManager.checkNotification(messageId);
+
+        if (n_evt === Constants.notificationEvent.watched){
+            app.navigate(app.sessionManager.getUserId() + "/personal/" + currentNotification.get('initUserId'), true);
+        }
+        else if (n_evt < Constants.notificationEvent.watched){
+            app.navigate(app.sessionManager.getUserId() + "/message/" + messageId, true);
+        }
     },
     fetchMessageSuccess:function(message, transaction){
         if (app.sessionManager.hasSession()){
