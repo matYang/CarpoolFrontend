@@ -2,6 +2,7 @@
 	<div id='utilitySelect'>
 		<h3>账号设置</h3>
 		<div class='utilityTab' id="basicInfo">基本资料</div>
+		<div class='utilityTab' id="changeDp">修改头像</div>
 		<div class='utilityTab' id="passwordInfo">修改密码</div>
 		<div class='utilityTab' id="tradeInfo">交易信息</div>
 	</div>
@@ -46,7 +47,12 @@
 		</div>
 		<div id="save_personalInfo" class="button">保存</div>
 	</div>
-
+	<div id='utility_dp'>
+		<form method="post"  action="uploadImg.html" enctype="multipart/form-data" id="uploadform">
+	        <input type="file" name="image"/>
+	        <input type="submit" value="upload"/>
+        </form>
+	</div>
 	<div id='utility_password'>
 		<div id="oldPassword">
 			<div class='label'>原密码</div>

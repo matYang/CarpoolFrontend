@@ -40,16 +40,26 @@ var PersonalUtilityView = Backbone.View.extend({
 			$('#utility_personalInfo').show();
 			$('#utility_accountSetting').hide();
 			$('#utility_password').hide();
+			$('#utility_dp').hide();
 			$('.invalid_input').removeClass('invalid_input');
 		});
 		$('#passwordInfo').on('click', function(){
 			$('#utility_password').show();
 			$('#utility_personalInfo').hide();
 			$('#utility_accountSetting').hide();
+			$('#utility_dp').hide();
 			$('.invalid_input').removeClass('invalid_input');
 		});
 		$('#tradeInfo').on('click', function(){
 			$('#utility_accountSetting').show();
+			$('#utility_personalInfo').hide();
+			$('#utility_password').hide();
+			$('#utility_dp').hide();
+			$('.invalid_input').removeClass('invalid_input');
+		});
+		$('#changeDp').on('click', function(){
+			$('#utility_dp').show();
+			$('#utility_accountSetting').hide();
 			$('#utility_personalInfo').hide();
 			$('#utility_password').hide();
 			$('.invalid_input').removeClass('invalid_input');
@@ -191,6 +201,7 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('input[name=gender][value='+this.sessionUser.get("gender")+']').prop("checked", true);
 		$('#utility_password').hide();
 		$('#utility_accountSetting').hide();
+		$('#utility_dp').hide();
 	},
 	savePersonalInfo: function() {
 		var that = this,

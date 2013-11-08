@@ -43,16 +43,9 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.bindNotificationEvents();
 	},
 
-	bindTransactionEvents: function(){
-		var that = this;
-		$("#transactionHistoryContent>.personal_transactionHistory_message").on("click", function(e){
-			var id = Utilities.getId(e.delegateTarget.id);
-			var transaction = that.transactions.at(that.transactionLookup[id]);
-
-			that.openTransactionDetail(transaction, that.user);
-		});
+	bindNotificationEvents: function(){
+		//TODO: bind notification events
 	},
-
 	renderTransactionError: function(){
 
 	},
