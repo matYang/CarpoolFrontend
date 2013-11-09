@@ -25,8 +25,13 @@
 	width: 240px;
 	position:relative;
 	background-color: #aaaaaa;
-	background-image:url("");
 	float:left;
+}
+
+#profilePage_profilePicture>img {
+	height: 100%;
+	width: 100%;
+	background-size: 100%;
 }
 
 #profilePage_profileOverview {

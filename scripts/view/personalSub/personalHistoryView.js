@@ -16,7 +16,6 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.domContainer.append(this.wrapperTemplate);
 
 		app.userManager.fetchTransactionList(this.curUserId, {"success":this.renderTransactions, "error":this.renderTransactionError});
-		debugger;
 		if (this.user.id === this.curUserId) {
 			app.userManager.fetchNotificationList(this.curUserId, {"success":this.renderNotifications, "error":this.renderNotificationError});
 		}
