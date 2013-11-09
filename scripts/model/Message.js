@@ -64,7 +64,7 @@ var Message = Backbone.Model.extend({
 		data.ownerId = parseInt(data.ownerId, 10);
 
 		data.owner = new User(data.owner, {'parse': true});
-		data.isRoundTrip = data.isRoundTrip === 'true';
+		data.isRoundTrip = data.isRoundTrip;
 		
 		data.departure_location = new UserLocation(data.departure_location, {'parse': true});
 		data.departure_time = Utilities.castFromAPIFormat(data.departure_time);

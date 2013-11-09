@@ -332,7 +332,7 @@ var MessagePostView = Backbone.View.extend({
 						$('input[name=publish_returnDate_'+id+']').datepicker( "option", "minDate", date);
 					}
 					if (r[request].round && r[request].returnDate) {
-						var date = r[request].departDate;
+						var date = r[request].returnDate;
 						$('input[name=publish_departDate_'+id+']').datepicker( "option", "maxDate", this.toSubmit.requests[request].returnDate);
 						$('input[name=publish_returnDate_'+id+']').val((1+date.getMonth())+"/"+date.getDate()+"/"+date.getFullYear());
 					} else {

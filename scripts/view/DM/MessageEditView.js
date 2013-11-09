@@ -46,7 +46,7 @@ var MessageEditView = MessagePostView.extend({
 		$('#publish_nextStep').off();
 		$('#publish_nextStep').on('click', function(){
 			if (MessagePostView.prototype.validate(1)) {
-				app.navigate(that.user.id + "/post/step2");
+				app.navigate(that.user.id + "/message/"+ that.message.id +"/edit/step2");
 				that.renderSecondPage();
 			}
 		});
@@ -58,12 +58,12 @@ var MessageEditView = MessagePostView.extend({
 		$('#publish_nextStep').off();
 		$('#publish_nextStep').on('click', function(){
 			if (MessagePostView.prototype.validate(2)) {
-				app.navigate(that.user.id + "/post/step3");
+				app.navigate(that.user.id + "/message/"+ that.message.id +"/edit/step3");
 				that.renderThirdPage(3);
 			}
 		});
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/post/step1");
+			app.navigate(that.user.id + "/message/"+ that.message.id +"/edit/step1");
 			that.renderFirstPage(1);
 		});
 		$("#publish_time_add").hide();
@@ -75,7 +75,7 @@ var MessageEditView = MessagePostView.extend({
 		$('#publish_nextStep').off();
 		$('#publish_back').off();
 		$('#publish_back').on('click', function(){
-			app.navigate(that.user.id + "/post/step1");
+			app.navigate(that.user.id + "/message/"+ that.message.id +"/edit/step1");
 			that.renderSecondPage();
 		});
 		$("#publish_finish").on("click", function(e) {
@@ -98,6 +98,7 @@ var MessageEditView = MessagePostView.extend({
 		Info.alert("Message update failed");
 	},
 	reverseMessage: function(message){
+		debugger;
 		var toSubmit = MessagePostView.prototype.toSubmit;
 		toSubmit.origin = message.get("departure_location");
 		toSubmit.dest = message.get("arrival_location");
