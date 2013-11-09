@@ -15,37 +15,25 @@ var PersonalMessageView = Backbone.View.extend({
 	},
 
 	render: function(messages){
-		this.myActiveContainer = $("#profilePage_activeMessagePublished");
-		this.myFinishedContainer = $("#profilePage_finishedMessagePublished");
-		this.participatedActiveContainer = $("#profilePage_activeMessageParticipated");
-		this.participatedFinishedContainer = $("#profilePage_finishedMessageParticipated");
+		this.myActiveContainer = $("#profilePage_messagePublishedContent");
+		this.myFinishedContainer = $("#profilePage_messageParticipatedContent");
 		this.loadMessage(messages);
 		this.bindEventsForParticipated();
 	},
 
 	loadMessage: function(messages) {
-		var message;
-		this.counter=[0,0,0,0];
+		debugger;
+		var myMessages = new Messages(), pMessages = new Messages();
 		for (var i = 0; i < messages.length; i++) {
 			message = messages.at(i);
-			if (message.get("state") === Constants.messageState.normal){
-				if (message.get("ownerId") === this.curUserId && this.counter[0]+this.counter[1] < 6) {
-					this.myActiveContainer.append(this.messageTemplate(message._toJSON()));
-					this.counter[0]++;
-				} else if ( this.counter[2]+this.counter[3] < 6) {
-					this.participatedActiveContainer.append(this.messageTemplate(message._toJSON()));
-					this.counter[2]++;
-				}
+			if (message.get("ownerId") === this.curUserId ) {
+				myMessages.add(message);
 			} else {
-				if (message.get("ownerId") === this.curUserId && this.counter[0]+this.counter[1] < 6)  {
-					this.myFinishedContainer.append(this.messageTemplate(message._toJSON()));
-					this.counter[1]++;
-				} else if ( this.counter[2]+this.counter[3] < 6 ) {
-					this.participatedFinishedContainer.append(this.messageTemplate(message._toJSON()));
-					this.counter[3]++;
-				}
+				pMessages.add(message);
 			}
 		}
+		this.myMessageHistoryView = new MessageHistoryView(myMessages,"my","profilePage_messagePublishedContent");
+		this.pMessageHistoryView = new MessageHistoryView(pMessages,"my","profilePage_messageParticipatedContent");
 
 	},
 

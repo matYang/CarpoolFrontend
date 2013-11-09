@@ -129,7 +129,6 @@ var MessagePostView = Backbone.View.extend({
 			this.toSubmit.requests[0].round = true;
 			this.toSubmit.numberRequests = 1;
 			$('#publish_info').on('change', 'input[value=round]', function(e) {
-				debugger;
 				var id = Utilities.toInt(Utilities.getId(e.target.name));
 				var maximumDate = $("input[name=publish_returnDate_"+id+"]").datepicker("getDate");
 				if (this.checked){

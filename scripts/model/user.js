@@ -8,7 +8,6 @@ var User = Backbone.Model.extend({
             "email": "default",
             "phone": "default",
             "qq": "default",
-            "age": 0,
             "gender": Constants.gender.male,
             "birthday": new Date(),
             "imgPath": "default",

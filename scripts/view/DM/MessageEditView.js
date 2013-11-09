@@ -98,7 +98,6 @@ var MessageEditView = MessagePostView.extend({
 		Info.alert("Message update failed");
 	},
 	reverseMessage: function(message){
-		debugger;
 		var toSubmit = MessagePostView.prototype.toSubmit;
 		toSubmit.origin = message.get("departure_location");
 		toSubmit.dest = message.get("arrival_location");

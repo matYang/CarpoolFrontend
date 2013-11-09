@@ -23,7 +23,6 @@ var PersonalUtilityView = Backbone.View.extend({
 	bindEvents: function () {
 		var that = this;
 		$('#save_personalInfo').on('click',function(){
-				debugger;
 			if ($(".invalid_input").length === 0){
 				that.savePersonalInfo();
 			}

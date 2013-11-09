@@ -8,8 +8,14 @@
     <div class = 'profilePage_date'><%= departure_time %></div>
     <div class = 'profilePage_time'><%= departure_timeSlot %></div>
     </div>
+    <% if (type === Constants.messageType.help) {%>
     <div id = 'profilePage_boxContentPrice_<%= messageId %>' class='profilePage_containerPrice'>
         <div class = 'profilePage_priceUnit'>￥</div>
         <div class = 'profilePage_price'><%= currentPrice %></div>
     </div>
+    <% } else { %>
+        <div id = 'profilePage_boxContentPrice_<%= messageId %>' class='profilePage_containerPrice'>
+            <div class = 'profilePage_price'>找车</div>
+        </div>
+    <% } %>
 </div>
