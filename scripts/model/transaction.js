@@ -81,7 +81,6 @@ var Transaction = Backbone.Model.extend({
             data.totalPrice = parseInt(data.totalPrice, 10);
             data.state = parseInt(data.state, 10);
 
-            data.historyDeleted = data.historyDeleted === 'true';
             data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
         }
