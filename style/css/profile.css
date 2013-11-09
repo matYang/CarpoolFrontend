@@ -255,7 +255,7 @@
 }
 .profilePage_eventBox {
 	height:65px;
-	width:310px;
+	width:325px;
 	margin:5px 5px 0 5px;
 	position: relative;
 	border-color: #cecece;
@@ -272,30 +272,32 @@
 }
 
 .profilePage_containerInfo {
-	width:200px;
+	width:220px;
 	height:60px;
 	margin-left:5px;
 	float:left;
 }
-.profilePage_containerFollow {
-	float:left;
-}
+
 .profilePage_containerPrice {
+	font-size:20px;
 	float:left;
 }
 
-.profilePage_departure, .profilePage_departure{
+
+.profilePage_arrival, .profilePage_departure{
+	width:180px;
 	color:#585858;
 }
 .profilePage_date {
 	float:left;
-	font-size:10px;
+	margin-top:10px;
+	font-size:15px;
 	color:#585858;
 }
 
 .profilePage_time{
-
-	font-size:10px;
+	margin-top:10px;
+	font-size:15px;
 	color:#aa6059;
 }
 .profilePage_containerPrice{
@@ -304,15 +306,15 @@
 }
 .profilePage_priceUnit{
 	float:left;
-	font-size:10px;
-	color:#585858;
+	font-size:15px;
+	color:#009900;
 	margin-top:8px;
 }
 
 .profilePage_price{
 	float:left;
-	font-size:20px;
-	color:#585858;
+	font-size:22px;
+	color:#009900;
 }
 .profilePage_follow {
 	width:30px;

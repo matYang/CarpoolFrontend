@@ -3,13 +3,13 @@
         <img src='<%= owner.imgPath %>' />
     </div>
     <div id = 'profilePage_containerInfo_<%= messageId %>' class = 'profilePage_containerInfo'>
-    <div class = 'profilePage_departure'><%= departure_location %></div>
-    <div class = 'profilePage_arrival'><%= arrival_location %></div>
+    <div class = 'profilePage_departure'>出发地：<%= departure_location %></div>
+    <div class = 'profilePage_arrival'>目的地：<%= arrival_location %></div>
     <div class = 'profilePage_date'><%= departure_time %></div>
     <div class = 'profilePage_time'><%= departure_timeSlot %></div>
+    </div>
     <div id = 'profilePage_boxContentPrice_<%= messageId %>' class='profilePage_containerPrice'>
         <div class = 'profilePage_priceUnit'>￥</div>
         <div class = 'profilePage_price'><%= currentPrice %></div>
-    </div>
     </div>
 </div>
