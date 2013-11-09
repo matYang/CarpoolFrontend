@@ -63,7 +63,6 @@ var Notification = Backbone.Model.extend({
 
 		data.state = parseInt(data.state, 10);
 		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
-		data.historyDeleted = data.historyDeleted === 'true';
 
         return data;
     },

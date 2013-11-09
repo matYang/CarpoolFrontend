@@ -87,8 +87,6 @@ var Message = Backbone.Model.extend({
 		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 		data.editTime = Utilities.castFromAPIFormat(data.editTime);
 
-		data.historyDeleted = data.historyDeleted === 'true';
-
         return data;
 	},
 

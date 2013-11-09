@@ -90,10 +90,6 @@ var User = Backbone.Model.extend({
             data.lastLogin = Utilities.castFromAPIFormat(data.lastLogin);
             data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
-            data.emailActivated = data.emailActivated === 'true';
-            data.phoneActivated = data.phoneActivated === 'true';
-            data.emailNotice = data.emailNotice === 'true';
-            data.phoneNotice = data.phoneNotice === 'true';
             data.state = parseInt(data.state, 10);
             data.searchState = parseInt(data.searchState, 10);
 
