@@ -28,24 +28,24 @@
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
 
 			this.socket.on('newNotification', function(data){
-				info.log("push message: newNotification received, with data: ");
-				info.log(data);
+				Info.log("push message: newNotification received, with data: ");
+				Info.log(data);
 				if (this.map_handlers['newNotification']){
 					this.map_handlers['newNotification'].handleSocket('newNotification', data);
 				}
 				else{
-					info.alert("Broadcast event not handled");
+					Info.alert("Broadcast event not handled");
 				}
 			});
 
 			this.socket.on('broadCast', function(data){
-				info.log("broadcast received with data: ");
-				info.log(data);
+				Info.log("broadcast received with data: ");
+				Info.log(data);
 				if (this.map_handlers['broadCast']){
 					this.map_handlers['broadCast'].handleSocket('broadCast', data);
 				}
 				else{
-					info.alert("Broadcast event not handled");
+					Info.alert("Broadcast event not handled");
 				}
 			});
 		}
