@@ -1,6 +1,6 @@
 var PersonalView = Backbone.View.extend({
 	initialize: function (params) {
-		_.bindAll(this, 'preRender','render', 'switchChildView', 'createChildView', 'getCurrentUserId', 'bindEvents', 'close');
+		_.bindAll(this, 'preRender','render', 'switchChildView', 'bindDeWatchEvent','createChildView', 'getCurrentUserId', 'bindEvents', 'close');
 		app.viewRegistration.register("personal", this, true);
 		this.isClosed = false;
 

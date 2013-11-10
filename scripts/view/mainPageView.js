@@ -35,6 +35,9 @@ var MainPageView = Backbone.View.extend ({
 			this.searchRepresentation = app.storage.getSearchRepresentationCache();
 		}
 
+		//TODO force target type to be all
+		this.searchRepresentation.set('targetType', Constants.messageType.both);
+
 		//after data intialiazation, start render curreny view
 		this.render();
 		this.messageSearch();
@@ -155,6 +158,7 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	submitSearch: function () {
+		
 		if (app.sessionManager.hasSession()) {
 			app.navigate(app.sessionManager.getUserId() + "/main/" + this.searchRepresentation.toString());
 		} else {
