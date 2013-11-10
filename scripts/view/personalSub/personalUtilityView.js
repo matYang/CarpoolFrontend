@@ -205,12 +205,12 @@ var PersonalUtilityView = Backbone.View.extend({
 	savePersonalInfo: function() {
 		var that = this,
 			date = new Date();
-		date.setYear($('input[name=birthyear]'));
-		date.setMonth($('input[name=birthmonth]'));
-		date.setDate($('input[name=birthday]'));
+		date.setYear(Utilities.toInt($('input[name=birthyear]')));
+		date.setMonth(Utilities.toInt($('input[name=birthmonth]')));
+		date.setDate(Utilities.toInt($('input[name=birthday]')));
 		app.userManager.changeContactInfo(
 			$('input[name=name]').val(), 
-			$('input[name=gender]').val(), 
+			Utilities.toInt($('input[name=gender]').val()), 
 			$('input[name=phone]').val(), 
 			$('input[name=qq]').val(), 
 			date, 
@@ -228,6 +228,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	saveSuccess: function(){
 		alert("user contactInfo update successful");
+		alert("Password changed");
 	},
 	saveError:function(){
 		Info.warn("Personal info update failed");
@@ -247,6 +248,7 @@ var PersonalUtilityView = Backbone.View.extend({
 		app.userManager.changePassword(oldPassword, newPassword, confirmNewPassword, {"success":this.passwordSuccess,"error":this.passwordError});
 	},
 	passwordSuccess: function(){
+		alert("Password changed");
 		alert("Password changed");
 	},
 	passwordError: function(){

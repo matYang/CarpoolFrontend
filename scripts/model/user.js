@@ -79,7 +79,6 @@ var User = Backbone.Model.extend({
         if (typeof data !== 'undefined' && typeof data.userId !== 'undefined'){
             data.userId = parseInt(data.userId, 10);
 
-            data.age = parseInt(data.age, 10);
             data.gender = parseInt(data.gender, 10);
             data.birthday = Utilities.castFromAPIFormat(data.birthday);
 

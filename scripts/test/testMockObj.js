@@ -77,11 +77,11 @@ var testMockObj = {
 	"sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",5).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 
 	"sampleNotifications": new Notifications(),
-	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("messageSummary", "sample message").set("creationTime", new Date()),
-	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("messageSummary", "sample message").set("creationTime", new Date()),
-	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("messageSummary", "sample message").set("creationTime", new Date()),
-	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("messageSummary", "sample message").set("creationTime", new Date()),
-	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("messageSummary", "sample message").set("creationTime", new Date()),
+	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("notificationEvent", 0).set("creationTime", new Date()),
+	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("notificationEvent", 1).set("creationTime", new Date()),
+	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("notificationEvent", 2).set("creationTime", new Date()),
+	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("notificationEvent", 3).set("creationTime", new Date()),
+	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("notificationEvent", 4).set("creationTime", new Date()),
 	"sampleNotificationF": (new Notification()).set
 	("notificationId", 6).set("messageSummary", "sample message"),
 
