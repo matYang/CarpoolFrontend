@@ -50,7 +50,7 @@ var AppRouter = Backbone.Router.extend({
 		this.socketManager = new SocketManager(this.sessionManager, {
 			'newNotification': this.sessionManager,
 			'broadcast': {'handleSocket': function(eventName, data){
-				info.alert(data);
+				Info.alert(data);
 			}}
 		});
 		//determine if the user has logged in or not

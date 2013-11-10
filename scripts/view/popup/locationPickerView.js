@@ -25,6 +25,7 @@ var LocationPickerView = Backbone.View.extend({
 		this.render();
 		this.getProvinces();
 		this.getCities();
+		this.getCustomNameList();
 	},
 
 	render:function(){
