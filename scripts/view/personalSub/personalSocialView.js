@@ -14,6 +14,7 @@ var PersonalSocialView = Backbone.View.extend({
 		MultiPageView.prototype.entryClass = "socialCard";
 		MultiPageView.prototype.entryContainer = "socialListContent";
 		MultiPageView.prototype.domContainer = $("#socialListContent");
+		MultiPageView.prototype.minHeight = 480;
 
 		this.domContainer = $("#profilePage_content");
 		this.wrapperTemplate = _.template(tpl.get('personalPage/personalSocial'));

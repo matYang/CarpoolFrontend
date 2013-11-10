@@ -1,6 +1,6 @@
 var PersonalView = Backbone.View.extend({
 	initialize: function (params) {
-		_.bindAll(this, 'preRender','render', 'switchChildView', 'bindDeWatchEvent','createChildView', 'getCurrentUserId', 'bindEvents', 'close');
+		_.bindAll(this, 'preRender','render', 'renderError', 'switchChildView', 'createChildView', 'getCurrentUserId', 'renderWatchButton', 'bindEvents', 'bindWatchEvent', 'bindDeWatchEvent', 'watchSuccess', 'watchError', 'deWatchSuccess', 'deWatchError', 'close');
 		app.viewRegistration.register("personal", this, true);
 		this.isClosed = false;
 
@@ -17,13 +17,19 @@ var PersonalView = Backbone.View.extend({
 	},
 
 	preRender: function(user){
+		 app.userManager.fetchWatchedUsers(this.sessionUser.id, {"success":this.renderWatchButton});
 		var that = this;
 		this.user = user;
 		this.render();
 		this.switchChildView(this.activeViewState);
+		this.bindEvents();
+	},
+	renderWatchButton: function(socialList){
 		if (this.sessionUser.get("userId") !== this.curUserId){
-			for (var user = 0; user < this.sessionUser.get('socialList').length; user++) {
-				if (this.sessionUser.get('socialList')[user].get("userId") === this.curUserId) {
+
+			for (var user = 0; user < socialList.length; user++) {
+			debugger;
+				if (socialList.at(user).get("userId") === this.curUserId) {
 					this.watched = true;
 					break;
 				}
@@ -39,9 +45,7 @@ var PersonalView = Backbone.View.extend({
 			}
 
 		}
-		this.bindEvents();
 	},
-
 	render: function () {
 		this.domContainer.append(this.template(this.user.toJSON()));
 	},
@@ -125,6 +129,7 @@ var PersonalView = Backbone.View.extend({
 		var that = this;
 		if (this.sessionUser.get("userId") !== this.curUserId) {
 			$('#profilePage_utilityTab').on("click", function(){
+				debugger;
 				app.userManager.watchUser(that.curUserId, {
 					"success":that.watchSuccess,
 					"error":that.watchError
