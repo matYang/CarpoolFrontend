@@ -3,7 +3,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	initialize: function (params) {
 		_.bindAll(this, 'render', 'close', 'savePersonalInfo', 'saveFile', 
 			'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents',
-			'saveSuccess', 'saveError');
+			'saveSuccess', 'saveError', 'updateLocation');
 		this.isClosed = false;
 		this.domContainer=$("#profilePage_content");
 		this.template = _.template(tpl.get('personalPage/personalUtility'));
@@ -202,6 +202,10 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('#utility_accountSetting').hide();
 		$('#utility_dp').hide();
 		this.editedLocation = this.sessionUser.get("location");
+
+		$("input[name=location]").on('click', function(e){
+			that.locationPickerView = new LocationPickerView(that.editedLocation, that, "personal_editLocation");
+		});
 	},
 	savePersonalInfo: function() {
 		var that = this,
@@ -229,7 +233,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	saveSuccess: function(){
 		alert("user contactInfo update successful");
-		alert("Password changed");
+		location.reload();
 	},
 	saveError:function(){
 		Info.warn("Personal info update failed");
@@ -250,7 +254,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	passwordSuccess: function(){
 		alert("Password changed");
-		alert("Password changed");
+		location.reload();
 	},
 	passwordError: function(){
 		Info.warn("password change failed");
@@ -283,6 +287,10 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	noticeError:function(){
 		Info.warn("notice setting change failed");
+	},
+
+	updateLocation:function(){
+		$("#personal_editLocation").val(this.editedLocation.toUiString());
 	},
 	close: function () {
 		if (!this.isClosed){
