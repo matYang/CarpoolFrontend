@@ -544,7 +544,7 @@
 				Info.log(data);
 
 				if(callback && callback.success){
-					callback.success(data === 'true');
+					callback.success(data.val === 'true' || data.val === true);
 				}
 			},
 			error: function (data, textStatus, jqXHR){

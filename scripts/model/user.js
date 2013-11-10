@@ -134,6 +134,7 @@ var User = Backbone.Model.extend({
         json.gender = this.get('gender');
         json.averageScore = this.get('averageScore');
         json.location = this.get('location').toUiString();
+        return json;
     }
 
 });
