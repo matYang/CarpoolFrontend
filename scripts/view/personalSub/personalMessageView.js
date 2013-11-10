@@ -22,7 +22,6 @@ var PersonalMessageView = Backbone.View.extend({
 	},
 
 	loadMessage: function(messages) {
-		debugger;
 		var myMessages = new Messages(), pMessages = new Messages();
 		for (var i = 0; i < messages.length; i++) {
 			message = messages.at(i);

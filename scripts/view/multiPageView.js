@@ -75,7 +75,7 @@ var MultiPageView = Backbone.View.extend({
 		$("#"+this.pageNavigator).empty();
 		$("#"+this.pageNavigator).append(html);
 		var self = this;
-		$("."+this.pageNumberClass).on("click", function(e){
+		$("#"+this.pageNavigator+">."+this.pageNumberClass).on("click", function(e){
 			var id = Utilities.toInt(Utilities.getId(e.target.id));
 			self.toPage(id);
 		});
