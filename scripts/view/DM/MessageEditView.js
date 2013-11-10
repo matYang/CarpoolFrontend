@@ -85,8 +85,10 @@ var MessageEditView = MessagePostView.extend({
 
 	finish: function() {
 		var messages = this.toMessage();
+
 		var length = messages.length;
 		for (var r = 0; r < length; r++){
+			messages.at(r).set("messageId", this.message.get("messageId"));
 			app.messageManager.updateMessage(messages.at(r), {"success":this.success, "error":this.error});
 		}
 	},
