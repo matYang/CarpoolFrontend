@@ -201,6 +201,7 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('#utility_password').hide();
 		$('#utility_accountSetting').hide();
 		$('#utility_dp').hide();
+		this.editedLocation = this.sessionUser.get("location");
 	},
 	savePersonalInfo: function() {
 		var that = this,
@@ -219,7 +220,7 @@ var PersonalUtilityView = Backbone.View.extend({
 			"error": that.saveError
 		});
 
-		app.userManager.changeLocation(location, {
+		app.userManager.changeLocation(this.editedLocation, {
 			"success": that.saveSuccess,
 			"error": that.saveError
 		});
