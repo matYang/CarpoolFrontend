@@ -112,6 +112,18 @@ var Notification = Backbone.Model.extend({
 				info.warn('Invalid notificationEvent');
 				json.notificationText = "Invalid notificationEvent";
         }
+
+        if (typeof this.get('initUser')._toJSON === 'function'){
+			json.initUser = this.get('initUser')._toJSON();
+		}
+		if (typeof this.get('message')._toJSON === 'function'){
+			json.message = this.get('message')._toJSON();
+		}
+		if (typeof this.get('transaction')._toJSON === 'function'){
+			json.transaction = this.get('transaction')._toJSON();
+		}
+		
+
         return json;
     }
 

@@ -84,6 +84,8 @@ var Transaction = Backbone.Model.extend({
 
             data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
+			data.customerNote = decodeURI(data.customerNote);
+			data.providerNote = decodeURI(data.providerNote);
         }
 		return data;
 	},
@@ -97,6 +99,8 @@ var Transaction = Backbone.Model.extend({
 			json.arrival_location = this.get('arrival_location').toJSON();
 		}
 		json.departure_time = Utilities.castToAPIFormat(this.get('departure_time'));
+		json.customerNote = encodeURI(json.customerNote);
+		json.providerNote = encodeURI(json.providerNote);
 
 		return json;
 	},
@@ -173,8 +177,21 @@ var Transaction = Backbone.Model.extend({
 		} else if (json.state === Constants.transactionState.invalid) {
 			json.stateText = "无效";
 		}
-		return json;
 
+		json.customerNote = decodeURI(json.customerNote);
+		json.providerNote = decodeURI(json.providerNote);
+
+		if (typeof this.get('provider')._toJSON ==='function'){
+			json.provider = this.get('provider')._toJSON();
+		}
+		if (typeof this.get('customer')._toJSON ==='function'){
+			json.customer = this.get('customer')._toJSON();
+		}
+		if (typeof this.get('message')._toJSON ==='function'){
+			json.message = this.get('message')._toJSON();
+		}
+
+		return json;
 	}
 
 });

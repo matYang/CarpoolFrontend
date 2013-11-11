@@ -136,7 +136,8 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	updateProfileImg: function(sessionUser){
-		$('profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
+		Info.alert("ahhhh, time to change profile image");
+		$('#profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
 	},
 
 	bindEvents: function(){

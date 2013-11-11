@@ -17,7 +17,7 @@ var PersonalView = Backbone.View.extend({
 	},
 
 	preRender: function(user){
-		 app.userManager.fetchWatchedUsers(this.sessionUser.id, {"success":this.renderWatchButton});
+		app.userManager.fetchWatchedUsers(this.sessionUser.id, {"success":this.renderWatchButton});
 		var that = this;
 		this.user = user;
 		this.render();
@@ -28,7 +28,6 @@ var PersonalView = Backbone.View.extend({
 		if (this.sessionUser.get("userId") !== this.curUserId){
 
 			for (var user = 0; user < socialList.length; user++) {
-			debugger;
 				if (socialList.at(user).get("userId") === this.curUserId) {
 					this.watched = true;
 					break;
@@ -47,7 +46,7 @@ var PersonalView = Backbone.View.extend({
 		}
 	},
 	render: function () {
-		this.domContainer.append(this.template(this.user.toJSON()));
+		this.domContainer.append(this.template(this.user._toJSON()));
 	},
 	renderError: function(){
 		Info.alert("Unable to fetch User data");

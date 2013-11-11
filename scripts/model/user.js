@@ -53,7 +53,7 @@ var User = Backbone.Model.extend({
         };
 	},
 
-        idAttribute: "userId",
+    idAttribute: "userId",
 
 	urlRoot: Constants.origin + "/api/v1.0/users/user",
 
@@ -95,7 +95,7 @@ var User = Backbone.Model.extend({
             data.averageScore = parseInt(data.averageScore, 10);
             data.totalTranscations = parseInt(data.totalTranscations, 10);
 
-
+            data.name = decodeURI(data.name);
             //this is just used for presentation, no direct API call to update it
             data.accountValue = parseFloat(data.accountValue);
         }
@@ -106,6 +106,7 @@ var User = Backbone.Model.extend({
         if (this.get('location') instanceof Backbone.Model) {
             json.location = this.get('location').toUiString();
         }
+        json.name = decodeURI(json.name);
         return json;
     },
     toJSON: function(){
@@ -121,6 +122,7 @@ var User = Backbone.Model.extend({
         //these 2 are actually ignored by server side, placing here for uniformity
         json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));
         json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
+        json.name = encodeURI(json.name);
         return json;
     },
 

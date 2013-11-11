@@ -5,7 +5,7 @@
 		this.apis = new ApiResource();
 		this.sessionUser = new User();
 
-		this.sessionUser = new User(this.apis.users_findSession);
+		this.sessionUser.overrideUrl(this.apis.users_findSession);
 
 		this.timeStamp = new Date();
 

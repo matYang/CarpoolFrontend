@@ -86,6 +86,7 @@ var Message = Backbone.Model.extend({
 
 		data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 		data.editTime = Utilities.castFromAPIFormat(data.editTime);
+		data.note = decodeURI(data.note);
 
         return data;
 	},
@@ -148,6 +149,13 @@ var Message = Backbone.Model.extend({
 			json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
 		}
 
+		if (typeof this.get('owner')._toJSON === 'function'){
+			json.owner = this.get('owner')._toJSON();
+		}
+
+		
+		json.note = decodeURI(json.note);
+
 		return json;
     },
 
@@ -170,6 +178,8 @@ var Message = Backbone.Model.extend({
 		//these 2 are actually ignored by server side, placing here for uniformity
 		json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
 		json.editTime = Utilities.castToAPIFormat(this.get('editTime'));
+
+		json.note = encodeURI(json.note);
 
 		return json;
 	}

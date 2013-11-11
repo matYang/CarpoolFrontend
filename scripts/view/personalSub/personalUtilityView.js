@@ -93,12 +93,7 @@ var PersonalUtilityView = Backbone.View.extend({
 			that.toggleNotificationMethods(this.value);
 		});
 
-		this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin+'/api/v1.0/users/img/'+app.sessionManager.getUserId(), function(response){
-			if (response.success){
-				app.sessionManager.fetchSession();
-				app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() , {trigger: true});
-			}
-		});
+		this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin+'/api/v1.0/users/img/'+app.sessionManager.getUserId());
 	},
 
 	prepareImgUpload: function(formElem, action, callback){
@@ -118,7 +113,13 @@ var PersonalUtilityView = Backbone.View.extend({
 		// we add the hidden iframe after the form
 		formElem.parentNode.appendChild(iframe);
 
-		window[callbackName] = callback;
+		$(iframe).one("load", function() {
+			Info.alert("done");
+			app.sessionManager.fetchSession(true);
+			app.navigate('/temp', {replace: true});
+			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility" , {trigger: true});
+        });
+
 	},
 
 	bindValidator: function(){
@@ -232,15 +233,15 @@ var PersonalUtilityView = Backbone.View.extend({
 	savePersonalInfo: function() {
 		var that = this,
 			date = new Date();
-		date.setYear(Utilities.toInt($('input[name=birthyear]')));
-		date.setMonth(Utilities.toInt($('input[name=birthmonth]')));
-		date.setDate(Utilities.toInt($('input[name=birthday]')));
+		date.setYear(Utilities.toInt($('input[name=birthyear]').val()));
+		date.setMonth(Utilities.toInt($('input[name=birthmonth]').val()));
+		date.setDate(Utilities.toInt($('input[name=birthday]').val()));
 		app.userManager.changeContactInfo(
-			$('input[name=name]').val(), 
-			Utilities.toInt($('input[name=gender]').val()), 
-			$('input[name=phone]').val(), 
-			$('input[name=qq]').val(), 
-			date, 
+			$('input[name=name]').val(),
+			Utilities.toInt($('input[name=gender]').val()),
+			$('input[name=phone]').val(),
+			$('input[name=qq]').val(),
+			date,
 			{
 			"success": that.saveSuccess,
 			"error": that.saveError
