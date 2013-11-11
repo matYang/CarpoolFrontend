@@ -67,7 +67,7 @@ var PersonalUtilityView = Backbone.View.extend({
 			//TODO:
 		});
 		$("#submit_password").on('click', function() {
-			if ($('.invalid_input').length === 0 && $('input[name=oldPassword]').val().length && $('input[name=newPassword]').val().length && $('input[name=confirrmNewPassword]').val().length) {
+			if ($('.invalid_input').length === 0 && $('input[name=oldPassword]').val().length && $('input[name=newPassword]').val().length && $('input[name=confirmNewPassword]').val().length) {
 				that.savePassword($("input[name=oldPassword]").val(),$("input[name=newPassword]").val(),$("input[name=confirmNewPassword]").val());
 			}
 		});

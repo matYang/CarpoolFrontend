@@ -62,6 +62,7 @@ var MessageDetailView = Backbone.View.extend({
 		// this.message.set("note", "火车站出发，谢绝大行李");
 		// this.message.set("departure_priceList", [20,18,15]);
 		// }
+		debugger;
 		this.domContainer.append(this.template(this.parsedMessage));
 		
 		this.map = new MapView({
@@ -70,7 +71,7 @@ var MessageDetailView = Backbone.View.extend({
 			destLocation:this.message.get("arrival_location"),
 		});
 		this.renderPriceList();
-		if (this.message.get("roundTrip")) {
+		if (this.message.get("isRoundTrip")) {
 			$("#directionArrow").html("<->");
 		} else {
 			$("#directionArrow").html("->");
@@ -156,7 +157,7 @@ var MessageDetailView = Backbone.View.extend({
 			} else {
 				$("#go").remove();
 			}
-			if ( this.parsedMessage.returnSeats > 0 && this.message.get("roundTrip")) {
+			if ( this.parsedMessage.returnSeats > 0 && this.message.get("isRoundTrip")) {
 
 				$("#chooseSeatNumber").attr("max", n);
 				$("#back").on("click", function(e){
@@ -232,7 +233,7 @@ var MessageDetailView = Backbone.View.extend({
 		this.newTransaction.set("message", this.message);
 		this.newTransaction.set("paymentMethod", this.message.get("paymentMethod"));
 		this.newTransaction.set("providerNote", this.message.get("note"));
-		if (this.message.get("roundTrip")){
+		if (this.message.get("isRoundTrip")){
 			this.newTransaction.set("direction", 0);
 		} else {
 			this.newTransaction.set("direction", 1);
