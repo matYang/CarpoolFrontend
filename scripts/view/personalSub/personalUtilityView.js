@@ -30,11 +30,6 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('input[name=location]').on('click',function(){
 			// that.editLocation();
 		});
-		$('#file_picture').fineUploader({
-			request:{
-				endpoint:'/upload'
-			}
-		});
 		$('#basicInfo').on('click', function(){
 			$('#utility_personalInfo').show();
 			$('#utility_accountSetting').hide();
