@@ -274,6 +274,45 @@
 
 
 	};
+	
+	 MessageManager.prototype.fetchTransactionList = function(intendedMessageId, callback) {
+                if(testMockObj.testMode){
+                        callback.success(testMockObj.sampleTransactions);
+                        return;
+                }
+                var self = this;
+
+                if (typeof intendedMessageId !== 'number'){
+                        Constants.dWarn("MessageManager::fetchTransactionList:: invalid parameter, exit");
+                        return;
+                }
+                if (!this.sessionManager.hasSession()){
+                        Constants.dWarn("MessageManager::fetchTransactionList:: session does not exist, exit");
+                        return;
+                }
+
+
+                var transactionList = new Transactions();
+                transactionList.overrideUrl(this.apis.DM_transaction + '/' + intendedMessageId);
+                transactionList.fetch({
+                        data: $.param({ 'userId': self.sessionManager.getUserId()}),
+        		dataType:'json',
+
+            		success:function(model, response){
+                                if(callback){
+                                        callback.success(transactionList);
+                                }
+            		},
+
+            		error: function(model, response){
+        			Constants.dWarn("MessageManager::fetchTransactionList:: fetch failed with response:");
+                		Constants.dLog(response);
+                		if(callback){
+                                        callback.error();
+                                }
+            		}
+        	});
+        };
 
 
 }).call(this);
