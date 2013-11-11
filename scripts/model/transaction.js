@@ -24,6 +24,7 @@ var Transaction = Backbone.Model.extend({
 		"departure_seatsBooked":0,
 		"departure_priceList":[],				//If only single price is set, then priceList has length 1
 
+		"transactionType": Constants.transactionType.departure,
 		"type":-1,				//used to specify if a transaction is associated with messages's departure or return trip
 		"totalPrice": -1,
 		"state": -1,

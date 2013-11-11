@@ -118,6 +118,11 @@ var Constants = {
 		'evaluate': 3
 	},
 
+	transactionType:{
+		'departure': 0,
+		'arrival': 1
+	},
+
 	stateText:[
 		"待确认",
 		"已确认",
