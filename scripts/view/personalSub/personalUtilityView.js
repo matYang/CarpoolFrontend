@@ -224,6 +224,16 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('#utility_password').hide();
 		$('#utility_accountSetting').hide();
 		$('#utility_dp').hide();
+
+		var notificationMethod;
+		if ( this.sessionUser.get("emailNotice") && this.sessionUser.get("phoneNotice") ){
+			notificationMethod = "both";
+		} else if ( this.sessionUser.get("emailNotice") ) {
+			notificationMethod = "email";
+		} else if (this.sessionUser.get("phoneNotice") ) {
+			notificationMethod = "phone";
+		}
+		$("#toggleNotificationMethods").val(notificationMethod);
 		this.editedLocation = this.sessionUser.get("location");
 
 		$("input[name=location]").on('click', function(e){
@@ -256,7 +266,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	saveSuccess: function(){
 		alert("user contactInfo update successful");
-		location.reload();
+		app.navigate('/temp', {replace: true});
 	},
 	saveError:function(){
 		Info.warn("Personal info update failed");
@@ -277,7 +287,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	passwordSuccess: function(){
 		alert("Password changed");
-		location.reload();
+		app.navigate('/temp', {replace: true});
 	},
 	passwordError: function(){
 		Info.warn("password change failed");
@@ -306,7 +316,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
 	},
 	noticeSuccess:function(){
-
+		app.navigate('/temp', {replace: true});
 	},
 	noticeError:function(){
 		Info.warn("notice setting change failed");

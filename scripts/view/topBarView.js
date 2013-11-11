@@ -27,7 +27,7 @@ var TopBarView = Backbone.View.extend({
 		this.listenTo(this.sessionUser, 'change:userId', this.reRender);
 
 		if (app.sessionManager.hasSession()){
-			$(this.el).append(this.loggedInTemplate(this.sessionUser.toJSON()));
+			$(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
 			$("#dropdowns>div").hide();
 			this.bindEvents();
 

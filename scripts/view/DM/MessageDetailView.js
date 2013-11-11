@@ -19,7 +19,8 @@ var MessageDetailView = Backbone.View.extend({
 				self.pricelist = self.message.get("departure_priceList");
 				self.bookInfo = {
 					"go":false,
-					"back":false
+					"back":false,
+					"number":1
 				};
 				self.parsedMessage = self.parseMessage(self.message);
 				self.messageId = self.message.get("messageId");
@@ -141,7 +142,14 @@ var MessageDetailView = Backbone.View.extend({
 			$("#view_book_option").remove();
 			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
 			$("#view_book").off();
-		} else {
+		} else if (this.parsedMessage.type === Constants.messageType.help ) {
+			$("#directionSelection>div").first().addClass("direction_selected");
+			if ( $(".direction_selected").attr("id") === "go" ) {
+				this.bookInfo.go = true;
+			} else {
+				this.bookInfo.back = true;
+			}
+			$("#chooseSeatNumber").val(1);
 			if ( this.departureSeats > 0 ) {
 				$("#go").on("click", function(e){
 					if (that.bookInfo.go) {
@@ -220,7 +228,7 @@ var MessageDetailView = Backbone.View.extend({
 				that.calculateTotal();
 			});
 		}
-
+		this.calculateTotal();
 	},
 	createNewTransaction: function(){
 		this.newTransaction.set("providerId", this.ownerId);

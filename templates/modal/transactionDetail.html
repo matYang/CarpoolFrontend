@@ -9,6 +9,10 @@
 		<div id = 'transaction_returnInfo'>
 			<div id = 'transaction_returnLocation'><%= arrival_location %></div>
 			<div id = 'transaction_returnLocation2'></div>
+			<% if ( transactionId === -1 && arrival_seatsNumber &&  arrival_seatsNumber > 0 ) { %>
+			<div id = 'transaction_returnTime'>出发时间： <%= arrival_time %>&nbsp;&nbsp;<% arrival_timeSlot %></div>
+			<div id = 'transaction_returnSeats'>剩余座位： <%= arrival_seatsNumber %></div>
+			<% } %>
 		</div>
 
 		<div id="transaction_priceList">
@@ -36,7 +40,7 @@
 			<div id = 'transaction_back' class='button'>回<%= departure_location.split(",")[0] %></div>
 		<% } %>
 		<div id="transaction_input">
-		人数: <input type="number" id="transaction_number"/>
+		人数: <input type="number" id="transaction_number" min="1" max="<%= departure_seatsNumber < arrival_seatsNumber ? departure_seatsNumber : arrival_seatsNumber %>"/>
 		</div>
 		<div id="transaction_totalPrice"></div>
 	</div>

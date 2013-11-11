@@ -28,21 +28,6 @@ var PersonalHistoryView = Backbone.View.extend({
 
 	renderNotifications: function(notificationList){
 		this.notificationView = new NotificationHistoryView(notificationList);
-		// this.notifications = notificationList;
-		// this.notificationContainer = $("#notificationHistoryContent");
-		
-		// var that = this;
-		// 	toBeAppended = [],
-		// 	html = "",
-		// 	i = 0;
-
-		// for (i = 0; i < this.notifications.length; i++){
-		// 	toBeAppended[i]=this.notificationTemplate(this.notifications.at(i).toJSON());
-		// }
-		// html = toBeAppended.join("");
-		// this.notificationContainer.append(html);
-
-		// this.bindNotificationEvents();
 	},
 
 	bindNotificationEvents: function(){

@@ -56,7 +56,8 @@ var TransactionDetailView = Backbone.View.extend({
 			$("#transaction_number").prop("disabled", true);	
 			$("#startButton").remove();
 			$("#transaction_userNote").html(this.transaction.get("customerNote"));
-		}
+		} 
+	
 		if (this.userId === this.transaction.get("providerId")){
 			$("#transaction_number").prop("disabled", true);
 			$("#transaction_userNote").prop("disabled", true);
@@ -210,17 +211,24 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 	},
 	calculateTotal:function(){
-		temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
-		if (this.bookInfo.number > 0){
-			this.bookInfo.total = (this.bookInfo.go+this.bookInfo.back)*this.bookInfo.number*(this.priceList[temp-1]);
+		var total, temp;
+		if (this.editable) {
+			temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
+			if (this.bookInfo.number > 0){
+				this.bookInfo.total = (this.bookInfo.go+this.bookInfo.back)*this.bookInfo.number*(this.priceList[temp-1]);
+			} else {
+				this.bookInfo.total = 0;
+			}
+			total = this.bookInfo.total;
 		} else {
-			this.bookInfo.total = 0;
+			temp = this.priceList.length < this.transaction.get("departure_seatsBooked") ? this.priceList.length : this.transaction.get("departure_seatsBooked");
+			total = this.transaction.get("departure_seatsBooked")*this.priceList[temp-1];
 		}
-		$("#transaction_totalPrice").html("总价："+this.bookInfo.total+"元");
+		$("#transaction_totalPrice").html("总价："+total+"元");
 	},
 	bookSuccess: function(){
 		this.close();
-		location.reload();
+		app.navigate("/temp", {"replace":true});
 	},
 	bookFail: function(){
 		Info.warn("unable to connect to server");

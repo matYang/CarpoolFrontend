@@ -25,7 +25,7 @@ var User = Backbone.Model.extend({
             
             "emailActivated": false,
             "phoneActivated": false,
-            "emailNotice": false,
+            "emailNotice": true,
             "phoneNotice": false,
             "state": Constants.userState.normal,
             "searchRepresentation": new SearchRepresentation(),
