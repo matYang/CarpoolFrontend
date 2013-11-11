@@ -1,7 +1,7 @@
 var PersonalUtilityView = Backbone.View.extend({
 
 	initialize: function (params) {
-		_.bindAll(this, 'render', 'close', 'savePersonalInfo', 'saveFile', 
+		_.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile',
 			'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents',
 			'saveSuccess', 'saveError', 'updateLocation');
 		this.isClosed = false;
@@ -97,6 +97,33 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('#toggleNotificationMethods').on('change', function(){
 			that.toggleNotificationMethods(this.value);
 		});
+
+		this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin+'/api/v1.0/users/img/'+app.sessionManager.getUserId(), function(response){
+			if (response.success){
+				app.sessionManager.fetchSession();
+				app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() , {trigger: true});
+			}
+		});
+	},
+
+	prepareImgUpload: function(formElem, action, callback){
+		// we name a callback that will be called from inside the iframe
+		var callbackName = 'iframe' + Math.ceil(Math.random()*10000);
+		var iframe = document.createElement('iframe');
+		action = action + (action.indexOf('?')==-1?'?':'&');
+
+		// we create an iframe and use the callback as its name (why not).
+		iframe.setAttribute('name', callbackName);
+		iframe.style.display = 'none';
+
+		// we add the target and edit the action of the form
+		formElem.setAttribute('target', callbackName);
+		formElem.setAttribute('action', action);
+
+		// we add the hidden iframe after the form
+		formElem.parentNode.appendChild(iframe);
+
+		window[callbackName] = callback;
 	},
 
 	bindValidator: function(){
@@ -138,8 +165,8 @@ var PersonalUtilityView = Backbone.View.extend({
 			}
 		});
 		$('input[name=birthmonth]').on('blur', function(e){
-			cdv = Utilities.toInt($('input[name=birthday]').val()), 
-			cmv =  Utilities.toInt(this.value);
+			cdv = Utilities.toInt($('input[name=birthday]').val()),
+			cmv = Utilities.toInt(this.value);
 			if (!($.isNumeric(this.value)) || cmv < 1 || cmv > 12){
 				this.classList.add("invalid_input");
 			} else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30){
@@ -152,8 +179,8 @@ var PersonalUtilityView = Backbone.View.extend({
 			}
 		});
 		$('input[name=birthday]').on('blur', function(e){
-			cmv = Utilities.toInt($('input[name=birthmonth]').val()), 
-			cdv =  Utilities.toInt(this.value);
+			cmv = Utilities.toInt($('input[name=birthmonth]').val()),
+			cdv = Utilities.toInt(this.value);
 			cyv = Utilities.toInt($('input[name=birthyear]').val());
 			if (!($.isNumeric(this.value)) || cdv < 1 || cdv > 31){
 				this.classList.add("invalid_input");
@@ -168,21 +195,21 @@ var PersonalUtilityView = Backbone.View.extend({
 		});
 		$('input[name=oldPassword]').on('blur', function(e) {
 			if (Utilities.isEmpty(this.value)){
-				this.classList.add("invalid_input");	
+				this.classList.add("invalid_input");
 			} else {
 				this.classList.remove("invalid_input");
 			}
 		});
 		$('input[name=newPassword]').on('blur', function(e) {
 			if (Utilities.isEmpty(this.value) || this.value.length < 8){
-				this.classList.add("invalid_input");	
+				this.classList.add("invalid_input");
 			} else {
 				this.classList.remove("invalid_input");
 			}
 		});
 		$('input[name=confirmNewPassword]').on('blur', function(e) {
 			if (Utilities.isEmpty(this.value) || this.value !== $('input[name=newPassword]').val()){
-				this.classList.add("invalid_input");	
+				this.classList.add("invalid_input");
 			} else {
 				this.classList.remove("invalid_input");
 			}

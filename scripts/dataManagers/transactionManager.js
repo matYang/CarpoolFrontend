@@ -73,9 +73,8 @@
 
 		newTransaction.overrideUrl(this.apis.transaction_transaction);
 		newTransaction.set('transactionId', -1);
-
+		newTransaction.set('userId', this.sessionManager.getUserId());
 		newTransaction.save({},{
-			data: JSON.stringify({ 'userId': this.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
