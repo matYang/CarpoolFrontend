@@ -57,7 +57,7 @@ var Transaction = Backbone.Model.extend({
 
 	parse: function(data){
 
-        if (typeof data !== 'undefined' && typeof data.userId !== 'undefined'){
+        if (typeof data !== 'undefined'){
             data.transactionId = parseInt(data.transactionId, 10);
             data.providerId = parseInt(data.providerId, 10);
             data.customerId = parseInt(data.customerId, 10);
