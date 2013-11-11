@@ -221,6 +221,11 @@ var PersonalUtilityView = Backbone.View.extend({
 		$('input[name=qq]').val(this.sessionUser.get("qq"));
 		$('input[name=location]').val(this.sessionUser.get("location").toUiString());
 		$('input[name=gender][value='+this.sessionUser.get("gender")+']').prop("checked", true);
+		if ( this.sessionUser.get("birthday").getFullYear() !== new Date().getFullYear()) {
+			$('input[name=birthyear]').val(this.sessionUser.get("birthday").getFullYear());
+			$('input[name=birthmonth]').val(this.sessionUser.get("birthday").getMonth());
+			$('input[name=birthday]').val(this.sessionUser.get("birthday").getDate());
+		}
 		$('#utility_password').hide();
 		$('#utility_accountSetting').hide();
 		$('#utility_dp').hide();
@@ -267,6 +272,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	saveSuccess: function(){
 		alert("user contactInfo update successful");
 		app.navigate('/temp', {replace: true});
+		app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility" , {trigger: true});
 	},
 	saveError:function(){
 		Info.warn("Personal info update failed");
@@ -288,6 +294,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	passwordSuccess: function(){
 		alert("Password changed");
 		app.navigate('/temp', {replace: true});
+		app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility" , {trigger: true});
 	},
 	passwordError: function(){
 		Info.warn("password change failed");
@@ -317,6 +324,7 @@ var PersonalUtilityView = Backbone.View.extend({
 	},
 	noticeSuccess:function(){
 		app.navigate('/temp', {replace: true});
+		app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility" , {trigger: true});
 	},
 	noticeError:function(){
 		Info.warn("notice setting change failed");
