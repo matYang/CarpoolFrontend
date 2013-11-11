@@ -58,44 +58,6 @@
 		});
 	};
 
-	TransactionManager.prototype.fetchTransactionByMessageId = function(messageId, callback) {
-		if (typeof messageId !== 'number' ){
-			Constants.dWarn("TransactionManager::fetchTransaction:: invalid parameter");
-			return;
-		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("TransactionManager::fetchTransaction:: session does not exist, exit");
-			return;
-		}
-
-		// var self = this;
-
-		// var message = new Message();
-		// message.overrideUrl(this.apis.transaction_transaction);
-		// message.set('messageId', messageId);
-
-		// message.fetch({
-		// 	data: $.param({ 'userId': this.sessionManager.getUserId()}),
-		// 	dataType:'json',
-
-		// 	success:function(model, response){
-		// 		self.timeStamp = new Date();
-		// 		if(callback){
-		// 			callback.success(transaction);
-		// 		}
-		// 	},
-
-		// 	error: function(model, response){
-		// 		Constants.dWarn("TransactionManager::fetchTransaction:: fetch failed with response:");
-		// 		Constants.dLog(response);
-		// 		if(callback){
-		// 			callback.error();
-		// 		}
-		// 	}
-		// });
-	};
-
-
 	TransactionManager.prototype.initTransaction = function(newTransaction, callback){
 		if (!newTransaction || typeof newTransaction !== 'object'){
 			Constants.dWarn("TransactionManager::initTransaction:: invalid parameter");
