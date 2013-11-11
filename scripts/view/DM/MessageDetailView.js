@@ -76,7 +76,7 @@ var MessageDetailView = Backbone.View.extend({
 		} else {
 			$("#directionArrow").html("->");
 		}
-		app.userManager.fetchTransactionByMessageId(this.message.id,{
+		app.messageManager.fetchTransactionList(this.message.id,{
 			"success":this.loadTransactions,
 			"error":this.error
 		});
