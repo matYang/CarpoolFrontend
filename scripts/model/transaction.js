@@ -55,7 +55,7 @@ var Transaction = Backbone.Model.extend({
         return this.id === -1;
     },
 
-	parse: function(response){
+	parse: function(data){
 
         if (typeof data !== 'undefined' && typeof data.userId !== 'undefined'){
             data.transactionId = parseInt(data.transactionId, 10);
@@ -85,7 +85,7 @@ var Transaction = Backbone.Model.extend({
             data.creationTime = Utilities.castFromAPIFormat(data.creationTime);
 
         }
-		return modelHash;
+		return data;
 	},
 
 	toJSON: function(){
