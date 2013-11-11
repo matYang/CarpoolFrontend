@@ -62,7 +62,6 @@ var MessageDetailView = Backbone.View.extend({
 		// this.message.set("note", "火车站出发，谢绝大行李");
 		// this.message.set("departure_priceList", [20,18,15]);
 		// }
-		debugger;
 		this.domContainer.append(this.template(this.parsedMessage));
 		
 		this.map = new MapView({
@@ -137,14 +136,13 @@ var MessageDetailView = Backbone.View.extend({
 			}
 			that.showTransaction = !that.showTransaction;
 		});
-		var n = this.parsedMessage.departureSeats < this.parsedMessage.returnSeats ? this.parsedMessage.departureSeats : this.parsedMessage.returnSeats;
-
-		if (this.parsedMessage.departureSeats === 0 && this.parsedMessage.returnSeats === 0) {
+		var n = this.departureSeats < this.arrivalSeats ? this.departureSeats : this.arrivalSeats;
+		if (this.departureSeats === 0 && this.arrivalSeats === 0) {
 			$("#view_book_option").remove();
 			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
 			$("#view_book").off();
 		} else {
-			if ( this.parsedMessage.departureSeats > 0 ) {
+			if ( this.departureSeats > 0 ) {
 				$("#go").on("click", function(e){
 					if (that.bookInfo.go) {
 						this.classList.remove("direction_selected");
@@ -157,7 +155,7 @@ var MessageDetailView = Backbone.View.extend({
 			} else {
 				$("#go").remove();
 			}
-			if ( this.parsedMessage.returnSeats > 0 && this.message.get("isRoundTrip")) {
+			if ( this.arrivalSeats > 0 && this.message.get("isRoundTrip")) {
 
 				$("#chooseSeatNumber").attr("max", n);
 				$("#back").on("click", function(e){
@@ -260,28 +258,9 @@ var MessageDetailView = Backbone.View.extend({
 	},
 
 	parseMessage: function(message){
-		var parsedMessage = {};
-		if (message.get("departure_location") instanceof UserLocation) {
-			parsedMessage.origin = message.get("departure_location").toUiString();
-		}
-		if (message.get("departure_location") instanceof UserLocation) {
-			parsedMessage.dest = message.get("arrival_location").toUiString();
-		}
-		parsedMessage.departureTime = Utilities.getDateString(message.get("departure_time"), true);
-		parsedMessage.returnTime = Utilities.getDateString(message.get("arrival_time"), true);
-		parsedMessage.departureSeats = message.get("departure_seatsNumber") - message.get("departure_seatsBooked");
-		parsedMessage.returnSeats = message.get("arrival_seatsNumber") - message.get("departure_seatsBooked");
-		if ( message.get("owner") instanceof Backbone.Model) {
-			parsedMessage.ownerUser = message.get("owner").toJSON();
-		} else {
-			parsedMessage.ownerUser = new User().toJSON();
-		}
-		parsedMessage.type = message.get("Type");
-		parsedMessage.note = message.get("note");
-		parsedMessage.price = message.get("price");
-		parsedMessage.creationTime = "发布于"+Utilities.getDateString(message.get("creationTime"));
-		parsedMessage.transactionCount = this.transactions ? this.transactions.length : 0;
-		parsedMessage.sessionUserId = this.userId;
+		var parsedMessage = message._toJSON();
+		this.departureSeats = parsedMessage.departure_seatsNumber-parsedMessage.departure_seatsBooked;
+		this.arrivalSeats = parsedMessage.arrival_seatsNumber-parsedMessage.arrival_seatsBooked;
 		return parsedMessage;
 	},
 
