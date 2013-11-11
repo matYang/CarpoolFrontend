@@ -2,20 +2,13 @@
 	<div id = "transaction_trip_info">
 		<div id = 'transaction_departureInfo'>
 			<div id = 'transaction_departureLocation'><%= departure_location %></div>
-			<div id = 'transaction_departureLocation2'>Home</div>
-			<% if (type !== 2)  { %>
-				<div id = 'transaction_departureTime'>出发时间： <%= departure_time %>&nbsp;&nbsp;<% departure_timeSlot %></div>
-				<div id = 'transaction_departureSeats'>剩余座位： <%= departure_seatsNumber%></div>
-			<% } %>
+			<div id = 'transaction_departureLocation2'></div>
+			<div id = 'transaction_departureTime'>出发时间： <%= departure_time %>&nbsp;&nbsp;<% departure_timeSlot %></div>
+			<div id = 'transaction_departureSeats'>剩余座位： <%= departure_seatsNumber%></div>
 		</div>
 		<div id = 'transaction_returnInfo'>
 			<div id = 'transaction_returnLocation'><%= arrival_location %></div>
-			<div id = 'transaction_returnLocation2'>Home</div>
-			<% if (type !== 1)  { %>
-				<div id = 'transaction_returnTime'>返回时间： <%= arrival_time %>&nbsp;&nbsp;<%= arrival_timeSlot %></div>
-				<div id = 'transaction_returnSeats'>剩余座位：  <%= arrival_seatsNumber %></div>
-			<% } %>
-			
+			<div id = 'transaction_returnLocation2'></div>
 		</div>
 
 		<div id="transaction_priceList">
