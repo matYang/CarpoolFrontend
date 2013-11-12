@@ -172,12 +172,12 @@ var AppRouter = Backbone.Router.extend({
 			this.navigate(this.sessionManager.getUserId() + "/personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState() , true);
 		}
 		else{
-			if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== intendedUserId){
+			if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)){
 				if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId)) personalViewState = "history";
 				this.personalView = new PersonalView({'intendedUserId': intendedUserId, 'viewState': personalViewState});
 			}
 			else{
-				this.personalView.switchChildView({'intendedUserId': intendedUserId, 'viewState':personalViewState});
+				this.personalView.switchChildView({'viewState':personalViewState});
 			}
 		}
 	},

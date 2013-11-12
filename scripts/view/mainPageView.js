@@ -220,12 +220,19 @@ var MainPageView = Backbone.View.extend ({
 	},
 
 	updateLocation: function (id) {
+		var custTemp;
 		if ( id === "searchLocationInput_from") {
 			$("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
-			$("#customizeLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("point"));
+			cust = this.searchRepresentation.get("departureLocation").get("point");
+			if (cust !== "Undetermined"){
+				$("#customizeLocationInput_from").val(cust);
+			}
 		} else {
 			$("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
-			$("#customizeLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("point"));
+			cust = this.searchRepresentation.get("arrivalLocation").get("point");
+			if (cust !== "Undetermined"){
+				$("#customizeLocationInput_from").val(cust);
+			}
 		}
 	},
 
