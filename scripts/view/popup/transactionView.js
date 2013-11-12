@@ -43,7 +43,7 @@ var TransactionDetailView = Backbone.View.extend({
 		var that = this;
 		this.domContainer.append(this.template(this.json));
 		this.domContainer.show();
-		
+
 		$("#transaction_close, #closeButton").on("click", function(){
 			that.close();
 		});
@@ -82,8 +82,14 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 	},
 	load: function(){
-		$("#transaction_number").val(this.transaction.get("departure_seatsBooked"));
-		this.bookInfo.number = this.transaction.get("departure_seatsBooked");
+		debugger;
+		if (this.transaction.get("arrival_seatsBooked")) {
+			this.bookInfo.number = this.transaction.get("departure_seatsBooked") > this.transaction.get("arrival_seatsBooked") ?
+									this.transaction.get("departure_seatsBooked") : this.transaction.get("arrival_seatsBooked");
+		} else {
+			this.bookInfo.number = this.transaction.get("departure_seatsBooked");
+		}
+		$("#transaction_number").val(this.bookInfo.number);
 		if (this.transaction.get("myDirection") === 0){
 			this.bookInfo.go = 1;
 			this.bookInfo.back = 1;
@@ -212,6 +218,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	calculateTotal:function(){
 		var total, temp;
+		debugger;
 		if (this.editable) {
 			temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
 			if (this.bookInfo.number > 0){

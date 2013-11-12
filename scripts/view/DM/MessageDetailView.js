@@ -78,7 +78,7 @@ var MessageDetailView = Backbone.View.extend({
 		}
 		app.messageManager.fetchTransactionList(this.message.id,{
 			"success":this.loadTransactions,
-			"error":this.error
+			"error":this.loadError
 		});
 	},
 	loadTransactions: function(transactions){
@@ -143,13 +143,7 @@ var MessageDetailView = Backbone.View.extend({
 			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
 			$("#view_book").off();
 		} else if (this.parsedMessage.type === Constants.messageType.help ) {
-			$("#directionSelection>div").first().addClass("direction_selected");
-			if ( $(".direction_selected").attr("id") === "go" ) {
-				this.bookInfo.go = true;
-			} else {
-				this.bookInfo.back = true;
-			}
-			$("#chooseSeatNumber").val(1);
+			debugger;
 			if ( this.departureSeats > 0 ) {
 				$("#go").on("click", function(e){
 					if (that.bookInfo.go) {
@@ -178,6 +172,14 @@ var MessageDetailView = Backbone.View.extend({
 			} else {
 				$("#back, #returnTime, #returnSeats").remove();
 			}
+
+			$("#directionSelection>div").first().addClass("direction_selected");
+			if ( $(".direction_selected").attr("id") === "go" ) {
+				this.bookInfo.go = true;
+			} else {
+				this.bookInfo.back = true;
+			}
+			$("#chooseSeatNumber").val(1);
 			$("#view_book").on("click", function(e) {
 
 				if (that.bookInfo.go && that.bookInfo.back){

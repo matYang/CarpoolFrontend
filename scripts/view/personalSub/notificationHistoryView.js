@@ -2,7 +2,7 @@ var NotificationHistoryView = MultiPageView.extend({
 
 
     initialize: function(messageList){
-        _.bindAll(this, 'render', 'bindNotificationEvent','fetchMessageSuccess','fetchMessageError', 'close');
+        _.bindAll(this, 'render', 'bindNotificationEvent','fetchMessageError', 'close');
         MultiPageView.prototype.messages = messageList;
         MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
         MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
@@ -24,7 +24,7 @@ var NotificationHistoryView = MultiPageView.extend({
     },
     bindNotificationEvent: function(messageId){
         var currentNotification = MultiPageView.prototype.messages.get(messageId);
-        var n_evt = currentNotificationEvent.get('notificationEvent');
+        var n_evt = currentNotification.get('notificationEvent');
         app.notificationManager.checkNotification(messageId);
         if (n_evt === Constants.notificationEvent.watched){
             app.navigate(app.sessionManager.getUserId() + "/personal/" + currentNotification.get('initUserId'), true);
@@ -33,15 +33,7 @@ var NotificationHistoryView = MultiPageView.extend({
             app.navigate(app.sessionManager.getUserId() + "/message/" + messageId, true);
         }
     },
-    fetchMessageSuccess:function(message, transaction){
-        if (app.sessionManager.hasSession()){
-            this.transactionDetail = new TransactionDetailView(transaction, {
-                "departure_seatsNumber":message.get("departure_seatsNumber") - message.get("departure_seatsBooked"),
-                "arrival_seatsNumber":message.get("arrival_seatsBookedtsNumber") - message.get("arrival_seatsBooked"),
-                "status":"r"
-            });
-        }
-    },
+
     fetchMessageError:function(){
 
     },
