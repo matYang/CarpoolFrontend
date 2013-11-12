@@ -143,7 +143,6 @@ var MessageDetailView = Backbone.View.extend({
 			$("#view_book").text("座位已满").css("background-color","#888888").css("width","100%");
 			$("#view_book").off();
 		} else if (this.parsedMessage.type === Constants.messageType.help ) {
-			debugger;
 			if ( this.departureSeats > 0 ) {
 				$("#go").on("click", function(e){
 					if (that.bookInfo.go) {

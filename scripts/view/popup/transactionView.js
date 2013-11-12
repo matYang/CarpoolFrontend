@@ -82,7 +82,6 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 	},
 	load: function(){
-		debugger;
 		if (this.transaction.get("arrival_seatsBooked")) {
 			this.bookInfo.number = this.transaction.get("departure_seatsBooked") > this.transaction.get("arrival_seatsBooked") ?
 									this.transaction.get("departure_seatsBooked") : this.transaction.get("arrival_seatsBooked");
@@ -218,7 +217,6 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	calculateTotal:function(){
 		var total, temp;
-		debugger;
 		if (this.editable) {
 			temp = this.priceList.length < this.bookInfo.number ? this.priceList.length : this.bookInfo.number;
 			if (this.bookInfo.number > 0){
@@ -235,7 +233,6 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	bookSuccess: function(){
 		this.close();
-		app.navigate("/temp", {"replace":true});
 	},
 	bookFail: function(){
 		Info.warn("unable to connect to server");
