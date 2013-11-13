@@ -189,14 +189,14 @@ var MainPageView = Backbone.View.extend ({
 				if (this.filterTime(this.filter.time1, dt)) {
 					filtered.add(m);
 				}
-				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time2, at)) {
+				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time2, rt)) {
 					filtered.add(m);
 				}
 			} else if ( m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location")) ){
 				if (this.filterTime(this.filter.time2, dt)) {
 					filtered.add(m);
 				}
-				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time1, at)) {
+				if ( this.filter.isRoundTrip && this.filterTime(this.filter.time1, rt)) {
 					filtered.add(m);
 				}
 
