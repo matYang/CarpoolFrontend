@@ -275,9 +275,10 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	emailActivation: function(authKey){
+		var self = this;
 		this.userManager.activateAccount(authKey,{
 			success: function(){
-				this.sessionManager.fetchSession(false, {
+				self.sessionManager.fetchSession(false, {
 					success: function(){
 						Info.log("session fetch success");
 					},

@@ -335,11 +335,9 @@
 			success: function(data){
 				//update session
 				if(callback){
-					self.sessionManager.fetchSession(callback.sucess);
+					callback.success();
 				}
-				else{
-					self.sessionManager.fetchSession();
-				}
+
 			},
 			error: function (data, textStatus, jqXHR){
 				alert("请稍后再试");

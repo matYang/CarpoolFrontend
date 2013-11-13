@@ -181,13 +181,13 @@ var Transaction = Backbone.Model.extend({
 		json.customerNote = decodeURI(json.customerNote);
 		json.providerNote = decodeURI(json.providerNote);
 
-		if (typeof this.get('provider')._toJSON ==='function'){
+		if (typeof this.get('provider')._toJSON === 'function'){
 			json.provider = this.get('provider')._toJSON();
 		}
-		if (typeof this.get('customer')._toJSON ==='function'){
+		if (typeof this.get('customer')._toJSON === 'function'){
 			json.customer = this.get('customer')._toJSON();
 		}
-		if (typeof this.get('message')._toJSON ==='function'){
+		if (typeof this.get('message')._toJSON === 'function'){
 			json.message = this.get('message')._toJSON();
 		}
 
