@@ -3,27 +3,28 @@ var TransactionHistoryView = MultiPageView.extend({
 
 	initialize: function(messageList){
 		_.bindAll(this, 'render', 'openTransactionDetail','fetchMessageSuccess','fetchMessageError', 'close');
-		MultiPageView.prototype.messages = messageList;
-		MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
-		MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
-		MultiPageView.prototype.pageNumberId = "transactionPageNumber";
-		MultiPageView.prototype.entryEvent = this.openTransactionDetail;
-		MultiPageView.prototype.pageNavigator = "transactionHistoryNavigator";
-		MultiPageView.prototype.user = app.sessionManager.getSessionUser();
-		MultiPageView.prototype.entryHeight = 61;
-		MultiPageView.prototype.pageEntryNumber = 7;
-		MultiPageView.prototype.entryClass = "personal_transactionHistory_message";
-		MultiPageView.prototype.entryContainer = "transactionHistoryContent";
-		MultiPageView.prototype.domContainer = $("#transactionHistoryContent");
-		MultiPageView.prototype.minHeight = 427;
-		MultiPageView.prototype.render();
+		this.messages = messageList;
+		this.entryTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
+		this.pageNumberClass = "searchResultPageNumber";
+		this.pageNumberId = "transactionPageNumber";
+		this.entryEvent = this.openTransactionDetail;
+		this.pageNavigator = "transactionHistoryNavigator";
+		this.user = app.sessionManager.getSessionUser();
+		this.entryHeight = 61;
+		this.pageEntryNumber = 7;
+		this.entryClass = "personal_transactionHistory_message";
+		this.entryContainer = "transactionHistoryContent";
+		this.domContainer = $("#transactionHistoryContent");
+		this.minHeight = 427;
+		debugger;
+		MultiPageView.prototype.render.call(this);
 	},
 
 	render: function(start){
 		
 	},
 	openTransactionDetail: function(messageId){
-		var currentTransaction = MultiPageView.prototype.messages.get(messageId);
+		var currentTransaction = this.messages.get(messageId);
 		app.messageManager.fetchMessage(currentTransaction.get("messageId"), {
 			"success":this.fetchMessageSuccess,
 			"error":this.fetchMessageError,

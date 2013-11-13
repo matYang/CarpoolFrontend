@@ -3,20 +3,20 @@ var MessageHistoryView = MultiPageView.extend({
 
     initialize: function(messageList, type, container){
         _.bindAll(this, 'render', 'openDetailMessage', 'close');
-        MultiPageView.prototype.messages = messageList;
-        MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalDetailMessage'));
-        MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
-        MultiPageView.prototype.pageNumberId = type+"MessagePageNumber";
-        MultiPageView.prototype.entryEvent = this.openDetailMessage;
-        MultiPageView.prototype.pageNavigator = type+"MessageHistoryNavigator";
-        MultiPageView.prototype.user = app.sessionManager.getSessionUser();
-        MultiPageView.prototype.entryHeight = 67;
-        MultiPageView.prototype.pageEntryNumber = 7;
-        MultiPageView.prototype.entryClass = "profilePage_eventBox";
-        MultiPageView.prototype.entryContainer = container;
-        MultiPageView.prototype.domContainer = $("#"+container);
-        MultiPageView.prototype.minHeight = 427;
-        MultiPageView.prototype.render();
+        this.messages = messageList;
+        this.entryTemplate = _.template(tpl.get('personalPage/personalDetailMessage'));
+        this.pageNumberClass = "searchResultPageNumber";
+        this.pageNumberId = type+"MessagePageNumber";
+        this.entryEvent = this.openDetailMessage;
+        this.pageNavigator = type+"MessageHistoryNavigator";
+        this.user = app.sessionManager.getSessionUser();
+        this.entryHeight = 67;
+        this.pageEntryNumber = 7;
+        this.entryClass = "profilePage_eventBox";
+        this.entryContainer = container;
+        this.domContainer = $("#"+container);
+        this.minHeight = 427;
+        MultiPageView.prototype.render.call(this);
     },
 
     render: function(start){

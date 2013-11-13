@@ -3,31 +3,31 @@ var SearchResultView = MultiPageView.extend({
 
 	initialize: function(messageList, isSearchResult){
 		_.bindAll(this, 'render', 'transferURL', 'close');
-		MultiPageView.prototype.messages = messageList;
-		MultiPageView.prototype.isSearchResult = isSearchResult;
-		MultiPageView.prototype.entryTemplate = _.template(tpl.get('Module/SimpleMessage'));
-		MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
-		MultiPageView.prototype.pageNumberId = "searchResultPageNumber";
-		MultiPageView.prototype.entryEvent = this.transferURL;
-		MultiPageView.prototype.pageNavigator = "pageNavigator";
-		MultiPageView.prototype.user = app.sessionManager.getSessionUser();
+		this.messages = messageList;
+		this.isSearchResult = isSearchResult;
+		this.entryTemplate = _.template(tpl.get('Module/SimpleMessage'));
+		this.pageNumberClass = "searchResultPageNumber";
+		this.pageNumberId = "searchResultPageNumber";
+		this.entryEvent = this.transferURL;
+		this.pageNavigator = "pageNavigator";
+		this.user = app.sessionManager.getSessionUser();
 		if (isSearchResult){
-			MultiPageView.prototype.entryHeight = 108;
-			MultiPageView.prototype.pageEntryNumber = 6;
-			MultiPageView.prototype.entryClass = "searchResultBoxContainer";
-			MultiPageView.prototype.entryContainer = "searchResultDisplayPanel";
-			MultiPageView.prototype.domContainer = $("#searchResultDisplayPanel");
+			this.entryHeight = 108;
+			this.pageEntryNumber = 6;
+			this.entryClass = "searchResultBoxContainer";
+			this.entryContainer = "searchResultDisplayPanel";
+			this.domContainer = $("#searchResultDisplayPanel");
 
 		} else {
-			MultiPageView.prototype.entryHeight = 100;
-			MultiPageView.prototype.pageEntryNumber = 3;
-			MultiPageView.prototype.entryClass = "frontBoxContainer";
-			MultiPageView.prototype.entryContainer = "quickStart_resultPanel";
-			MultiPageView.prototype.domContainer = $("#quickStart_resultPanel");
-			MultiPageView.prototype.minHeight = 300;
+			this.entryHeight = 100;
+			this.pageEntryNumber = 3;
+			this.entryClass = "frontBoxContainer";
+			this.entryContainer = "quickStart_resultPanel";
+			this.domContainer = $("#quickStart_resultPanel");
+			this.minHeight = 300;
 		}
 
-		MultiPageView.prototype.render();
+		MultiPageView.prototype.render.call(this);
 
 	},
 	transferURL: function(messageId){

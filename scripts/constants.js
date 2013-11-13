@@ -73,7 +73,7 @@ var Constants = {
 
 
 		/*-----------  top level moduels  ----------*/
-		"advertisement",
+		"adv",
 		"front",
 		"main"
 	],
