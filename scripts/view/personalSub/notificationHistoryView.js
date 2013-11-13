@@ -23,7 +23,6 @@ var NotificationHistoryView = MultiPageView.extend({
         
     },
     bindNotificationEvent: function(messageId){
-        debugger;
         var currentNotification = this.messages.get(messageId);
         var n_evt = currentNotification.get('notificationEvent');
         app.notificationManager.checkNotification(messageId);

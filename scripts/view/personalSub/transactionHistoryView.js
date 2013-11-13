@@ -16,7 +16,6 @@ var TransactionHistoryView = MultiPageView.extend({
 		this.entryContainer = "transactionHistoryContent";
 		this.domContainer = $("#transactionHistoryContent");
 		this.minHeight = 427;
-		debugger;
 		MultiPageView.prototype.render.call(this);
 	},
 
