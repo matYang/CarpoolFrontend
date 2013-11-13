@@ -13,8 +13,9 @@ var Constants = {
 		Info.warn(err);
 	},
 
-	origin: 'http://localhost:8015',
-	socketOrigin: 'http://localhost:3000',
+	origin: '..',
+	socketOrigin: 'http://huaixuesheng.com:3000',
+
 
 	miliSecInDay: 86400000,
 
