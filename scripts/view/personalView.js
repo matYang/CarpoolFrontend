@@ -63,7 +63,11 @@ var PersonalView = Backbone.View.extend({
 
 		//validity of viewState is guranteed on the URL level, since deep linking is applied
 		//reduncy of safety check is not necessary here because in development, we need to know where things go wrong
-		this.activeViewState = viewState;
+		if (viewState instanceof Object) {
+			this.activeViewState = viewState.viewState;
+		} else {
+			this.activeViewState = viewState;
+		}
 		this.createChildView();
 	},
 
@@ -136,7 +140,6 @@ var PersonalView = Backbone.View.extend({
 		var that = this;
 		if (this.sessionUser.get("userId") !== this.curUserId) {
 			$('#profilePage_utilityTab').on("click", function(){
-				debugger;
 				app.userManager.watchUser(that.curUserId, {
 					"success":that.watchSuccess,
 					"error":that.watchError

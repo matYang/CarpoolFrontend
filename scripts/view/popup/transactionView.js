@@ -43,7 +43,7 @@ var TransactionDetailView = Backbone.View.extend({
 		var that = this;
 		this.domContainer.append(this.template(this.json));
 		this.domContainer.show();
-		
+
 		$("#transaction_close, #closeButton").on("click", function(){
 			that.close();
 		});
@@ -82,8 +82,13 @@ var TransactionDetailView = Backbone.View.extend({
 		}
 	},
 	load: function(){
-		$("#transaction_number").val(this.transaction.get("departure_seatsBooked"));
-		this.bookInfo.number = this.transaction.get("departure_seatsBooked");
+		if (this.transaction.get("arrival_seatsBooked")) {
+			this.bookInfo.number = this.transaction.get("departure_seatsBooked") > this.transaction.get("arrival_seatsBooked") ?
+									this.transaction.get("departure_seatsBooked") : this.transaction.get("arrival_seatsBooked");
+		} else {
+			this.bookInfo.number = this.transaction.get("departure_seatsBooked");
+		}
+		$("#transaction_number").val(this.bookInfo.number);
 		if (this.transaction.get("myDirection") === 0){
 			this.bookInfo.go = 1;
 			this.bookInfo.back = 1;
@@ -228,7 +233,6 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	bookSuccess: function(){
 		this.close();
-		app.navigate("/temp", {"replace":true});
 	},
 	bookFail: function(){
 		Info.warn("unable to connect to server");

@@ -109,33 +109,32 @@ var Transaction = Backbone.Model.extend({
 		var json = this.toJSON();
 		json.departure_time = Utilities.getDateString(this.get('departure_time'));
 		//do use Constants.DayTimeSlot, otherwise it'll be difficult to manage
-		if ( this.departure_timeSlot === Constants.DayTimeSlot.all ){
+		if ( json.departure_timeSlot === Constants.DayTimeSlot.all ){
 			json.departure_timeSlot = "全天";
-		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.morning ){
+		} else if ( json.departure_timeSlot == Constants.DayTimeSlot.morning ){
 			json.departure_timeSlot = "早上";
-		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.afternoon ){
+		} else if ( json.departure_timeSlot == Constants.DayTimeSlot.afternoon ){
 			json.departure_timeSlot = "下午";
-		} else if ( this.departure_timeSlot == Constants.DayTimeSlot.night ){
+		} else if ( json.departure_timeSlot == Constants.DayTimeSlot.night ){
 			json.departure_timeSlot = "晚上";
 		} else {
-			json.departure_timeSlot += "点";
+			json.departure_timeSlot += (json.departure_timeSlot-3) + "点";
 		}
 		
 		json.arrival_location = this.get('arrival_location').toUiString();
 		if (json.arrival_time){
 			json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
 		}
-
-		if ( this.arrival_timeSlot === 0 ){
+		if ( json.arrival_timeSlot === 0 ){
 			json.arrival_timeSlot = "全天";
-		} else if ( this.arrival_timeSlot == 1 ){
+		} else if ( json.arrival_timeSlot == 1 ){
 			json.arrival_timeSlot = "早上";
-		} else if ( this.arrival_timeSlot == 2 ){
+		} else if ( json.arrival_timeSlot == 2 ){
 			json.arrival_timeSlot = "下午";
-		} else if ( this.arrival_timeSlot == 3 ){
+		} else if ( json.arrival_timeSlot == 3 ){
 			json.arrival_timeSlot = "晚上";
-		} else if ( this.arrival_timeSlot ){
-			json.arrival_timeSlot = (this.arrival_timeSlot-3) + "点";
+		} else if ( json.arrival_timeSlot ){
+			json.arrival_timeSlot = (json.arrival_timeSlot-3) + "点";
 		}
 		json.creationTime = Utilities.getDateString(this.get('creationTime'));
 
