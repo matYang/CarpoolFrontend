@@ -6,7 +6,7 @@ var AdvertisementView = Backbone.View.extend({
 
 	initialize: function(){
 		_.bindAll(this, 'render', 'close');
-		app.viewRegistration.register("advertisement", this, true);
+		app.viewRegistration.register("adv", this, true);
 		this.isClosed = false;
 
 	},

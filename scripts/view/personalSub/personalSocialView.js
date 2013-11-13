@@ -2,19 +2,19 @@ var PersonalSocialView = Backbone.View.extend({
 	initialize: function(params) {
 		this.isClosed = false;
 		_.bindAll(this, 'render', 'bindEvents', 'entryEvent', 'error', 'close');
-		MultiPageView.prototype.user = app.sessionManager.getSessionUser();
+		this.user = app.sessionManager.getSessionUser();
 
-		MultiPageView.prototype.entryTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
-		MultiPageView.prototype.pageNumberClass = "searchResultPageNumber";
-		MultiPageView.prototype.pageNumberId = "searchResultPageNumber";
-		MultiPageView.prototype.entryEvent = this.entryEvent;
-		MultiPageView.prototype.pageNavigator = "pageNavigator";
-		MultiPageView.prototype.entryHeight = 117;
-		MultiPageView.prototype.pageEntryNumber = 12;
-		MultiPageView.prototype.entryClass = "socialCard";
-		MultiPageView.prototype.entryContainer = "socialListContent";
-		MultiPageView.prototype.domContainer = $("#socialListContent");
-		MultiPageView.prototype.minHeight = 480;
+		this.entryTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
+		this.pageNumberClass = "searchResultPageNumber";
+		this.pageNumberId = "searchResultPageNumber";
+		this.entryEvent = this.entryEvent;
+		this.pageNavigator = "pageNavigator";
+		this.entryHeight = 117;
+		this.pageEntryNumber = 12;
+		this.entryClass = "socialCard";
+		this.entryContainer = "socialListContent";
+		this.domContainer = $("#socialListContent");
+		this.minHeight = 480;
 
 		this.domContainer = $("#profilePage_content");
 		this.wrapperTemplate = _.template(tpl.get('personalPage/personalSocial'));
@@ -28,8 +28,8 @@ var PersonalSocialView = Backbone.View.extend({
 	},
 
 	render: function(socialList){
-		MultiPageView.prototype.messages = socialList;
-		MultiPageView.prototype.render();
+		this.messages = socialList;
+		MultiPageView.prototype.render.call(this);
 		$(".social_gender_0").html("♂");
 		$(".social_gender_1").html("♀");
 	},

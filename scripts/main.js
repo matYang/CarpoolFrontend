@@ -1,7 +1,6 @@
 //IE 8 fallBack for placeholders
 $('input, textarea').placeholder();
 
-
 var AppRouter = Backbone.Router.extend({
 
 	routes:{

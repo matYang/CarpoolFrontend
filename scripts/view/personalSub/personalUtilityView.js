@@ -167,7 +167,7 @@ var PersonalUtilityView = Backbone.View.extend({
 				this.classList.add("invalid_input");
 			} else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30){
 				this.classList.add("invalid_input");
-			} else if (cmv === 2 && cdv > 29 || (cdv>28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) )) {
+			} else if (cmv === 2 && ( cdv > 29 || (cdv>28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) ))) {
 				this.classList.add("invalid_input");
 			} else {
 				this.classList.remove("invalid_input");

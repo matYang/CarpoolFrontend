@@ -15,9 +15,9 @@
 				request: ['topBar'],
 				antiRequest: ['topBar']
 			},
-			'advertisement': {
-				request: ['advertisement'],
-				antiRequest: ['advertisement']
+			'adv': {
+				request: ['adv'],
+				antiRequest: ['adv']
 			},
 			'personal': {
 				request: ['content'],

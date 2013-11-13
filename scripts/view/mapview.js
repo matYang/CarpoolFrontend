@@ -27,7 +27,7 @@ var MapView = Backbone.View.extend({
 		this.map = new google.maps.Map(document.getElementById(this.div), myOptions);
 		this.directionDisplay.setMap(this.map);
 		var that = this;
-		if (this.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && this.origin.equals(this.dest)){
+		if (this.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)){
 			that.getDirection(that.origin, that.dest);
 		}
 	},
