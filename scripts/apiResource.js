@@ -37,7 +37,7 @@ we do not give up, not this time
 					dianming: '/dianming',
 					recent: '/recent',
 					search: '/search',
-					transaction: '/transacion'
+					transaction: '/transaction'
 				},
 
 				'users': {
