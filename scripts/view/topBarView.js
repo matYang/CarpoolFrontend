@@ -189,42 +189,42 @@ var TopBarView = Backbone.View.extend({
 			self.showProfileDropdown();
 		});
 		$('#notifications').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown"){
+			if (e.toElement === null || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")){
 				self.hideNotificationDropdown();
 			}
 		});
 		$('#letters').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown"){
+			if (e.toElement === null || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")){
 				self.hideLetterDropdown();
 			}
 		});
 		$('#favorites').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown"){
+			if (e.toElement === null || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")){
 				self.hideFavoriteDropdown();
 			}
 		});
 		$('#profilePicture').on('mouseleave', function(e){
-			if (e.toElement !== null && e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown"){
+			if (e.toElement === null || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")){
 				self.hideProfileDropdown();
 			}
 		});
 		$('#favoriteDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "favorites"){
+			if (e.toElement === null || e.toElement.id !== "favorites"){
 				self.hideFavoriteDropdown();
 			}
 		});
 		$('#notificationDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "notifications"){
+			if (e.toElement === null || e.toElement.id !== "notifications"){
 				self.hideNotificationDropdown();
 			}
 		});
 		$('#letterDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "letters"){
+			if (e.toElement === null || e.toElement.id !== "letters"){
 				self.hideLetterDropdown();
 			}
 		});
 		$('#profileDropdown').on('mouseleave', function(e){
-			if (e.toElement.id !== "profilePicture"){
+			if (e.toElement === null || e.toElement.id !== "profilePicture"){
 				self.hideProfileDropdown();
 			}
 		});

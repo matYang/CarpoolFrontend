@@ -164,7 +164,7 @@ var Transaction = Backbone.Model.extend({
 		}
 
 		if (json.state === Constants.transactionState.init ){
-			json.stateText = "接受预定中";
+			json.stateText = "预定中";
 		} else if (json.state === Constants.transactionState.cancelled ){
 			json.stateText = "已经取消";
 		} else if (json.state === Constants.transactionState.aboutToStart ){
