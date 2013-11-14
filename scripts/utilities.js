@@ -101,7 +101,7 @@ var Utilities = {
 		else if (dayDifference === -2){
 			return "前天"+time;
 		} else if (dayDifference < -2 && dayDifference > -8) {
-			return dayDifference + "天前"+time;
+			return (0-dayDifference) + "天前"+time;
 		}
 
 		var curDayOfWeek = curDate.getDay();
