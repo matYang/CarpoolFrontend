@@ -8,7 +8,7 @@ var TransactionDetailView = Backbone.View.extend({
 	},
 	initialize: function (transaction, info){
 		var i, that = this;
-		_.bindAll(this, 'render', 'load',  'bindEvents', 'bookSuccess', 'calculateTotal','bookFail', 'close');
+		_.bindAll(this, 'render', 'load',  'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal','bookFail', 'close');
 		app.viewRegistration.register("transactionDetail", this, true);
 		this.isClosed = false;
 		this.transaction = transaction;
@@ -180,7 +180,7 @@ var TransactionDetailView = Backbone.View.extend({
 						"score":Utilities.toInt($("#score_select").val())
 					},
 					{
-						"success":that.bookSuccess,
+						"success":that.scoreSuccess,
 						"error":that.bookFail
 					});
 				});
@@ -197,7 +197,7 @@ var TransactionDetailView = Backbone.View.extend({
 						"score":Utilities.toInt($("#score_select").val())
 					},
 					{
-						"success":that.bookSuccess,
+						"success":that.scoreSuccess,
 						"error":that.bookFail
 					});
 				});
@@ -232,6 +232,9 @@ var TransactionDetailView = Backbone.View.extend({
 		$("#transaction_totalPrice").html("总价："+total+"元");
 	},
 	bookSuccess: function(){
+		this.close();
+	},
+	scoreSuccess: function(){
 		this.close();
 	},
 	bookFail: function(){

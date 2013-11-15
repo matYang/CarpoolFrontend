@@ -29,7 +29,6 @@ var MessageDetailView = Backbone.View.extend({
 				self.template = _.template(tpl.get('Module/DetailMessage'));
 				self.transactionTemplate = _.template(tpl.get('Module/Transaction'));
 				self.domContainer = $('#content');
-				// self.transactions = self.message.get("transactions");
 				self.render();
 				self.bindEvents();
 				self.showTransaction = false;
@@ -64,7 +63,6 @@ var MessageDetailView = Backbone.View.extend({
 		// this.message.set("departure_priceList", [20,18,15]);
 		// }
 		this.domContainer.append(this.template(this.parsedMessage));
-		
 		this.map = new MapView({
 			div:"view_map",
 			originLocation:this.message.get("departure_location"),
@@ -291,6 +289,10 @@ var MessageDetailView = Backbone.View.extend({
 			}
 		}
 		$("#pricelist").append(appender.join(""));
+		if (appender.length > 12 ) {
+			debugger;
+			$("#view_event_info_right").css("height", 120+Math.ceil(appender.length/2)*20);
+		}
 	},
 	close: function(){
 		if (!this.isClosed){

@@ -1,62 +1,62 @@
 
 var testMockObj = {
-	"testMode": false,
+	"testMode": true,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 3)
-															.set("departure_priceList", [30]).set("arrival_priceList", [30]),
+															.set("departure_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]).set("arrival_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]),
 	"sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 1)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [30]).set("arrival_priceList", [30]),
 	"sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleMessageG": (new Message()).set("messageId", 1007).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleMessageH": (new Message()).set("messageId", 1008).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
 															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
 															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
 															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3)
+															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
 	"sampleUser": (new User()).set("userId", 1560198).set("name", "卢卡子").set("imgPath","http://tp3.sinaimg.cn/2018108150/180/40023913088/1"),
