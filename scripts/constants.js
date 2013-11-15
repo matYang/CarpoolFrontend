@@ -13,7 +13,7 @@ var Constants = {
 		Info.warn(err);
 	},
 
-	origin: '..',
+	origin: 'http://localhost:8015',
 	socketOrigin: 'http://huaixuesheng.com:3000',
 
 
@@ -187,6 +187,18 @@ var Constants = {
 		'afternoon': 2,
 		'night': 3,
 		'specific': 4
+	},
+
+	LetterType:{
+		'user': 0,
+		'admin': 1,
+		'system': 2
+	},
+
+	LetterState:{
+		'unread': 0,
+		'read': 1,
+		'invalid': 2
 	},
 
 	weekDayArray: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],

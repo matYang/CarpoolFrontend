@@ -685,9 +685,9 @@
 
 	UserManager.prototype.fetchNotificationList = function(intendedUserId, callback){
 		if (testMockObj.testMode) {
-        	callback.success(testMockObj.sampleNotifications);
-        	return;
-        }
+			callback.success(testMockObj.sampleNotifications);
+			return;
+		}
 		if (typeof intendedUserId !== 'number'){
 			Constants.dWarn("UserManager::fetchNotification:: userId invalid");
 			return;
@@ -700,6 +700,7 @@
 		var self = this;
 		//passing reset true to make sure notifications are always sync with server
 		var notifications = new Notifications();
+		notifications.overrideUrl(this.apis.users_notification + '/' + self.sessionManager.getUserId());
 		notifications.fetch({
 			reset: true,
 			data: $.param({ 'userId': intendedUserId}),
