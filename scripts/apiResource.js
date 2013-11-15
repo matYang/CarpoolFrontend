@@ -59,7 +59,8 @@ we do not give up, not this time
 					isUserWatched: '/isWatched/:id',
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
-					notification: '/notification'
+					notification: '/notification',
+					letter: '/letter'
 				},
 
 				'transaction': {
@@ -77,6 +78,10 @@ we do not give up, not this time
 
 				'location': {
 					location: '/location'
+				},
+
+				'letter': {
+					letter: '/letter'
 				}
 			}
 		};
@@ -117,8 +122,9 @@ we do not give up, not this time
 				transaction_transaction : api_maker('transaction', 'transaction'),
 				transaction_admin : api_maker('transaction', 'admin'),
 
-
 				notification_notification: api_maker('notification', 'notification'),
+
+				letter_letter: api_maker('letter', 'letter'),
 
 				general_feedBack : api_maker('general', 'feedBack'),
 

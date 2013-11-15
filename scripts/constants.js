@@ -191,8 +191,7 @@ var Constants = {
 
 	LetterType:{
 		'user': 0,
-		'admin': 1,
-		'system': 2
+		'system': 1
 	},
 
 	LetterState:{

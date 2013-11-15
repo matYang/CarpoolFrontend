@@ -22,7 +22,7 @@ var Letter = Backbone.Model.extend({
 	urlRoot: Constants.origin + "/api/v1.0/letter/letter",
 
 	initialize:function(urlRootOverride){
-		_.bindAll(this, 'overrideUrl');
+		_.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON', '_toJSON', 'toDropdownJSON');
 
 		if (urlRootOverride !== null){
 			this.urlRoot = urlRootOverride;

@@ -36,10 +36,6 @@
 			}
 			return;
 		}
-		if (typeof messageId === 'undefined' ){
-			Constants.dWarn("MessageManager::fetchMessage:: invalid parameter");
-			return;
-		}
 		if (typeof messageId !== 'number'){
 			messageId = parseInt(messageId, 10);
 		}
