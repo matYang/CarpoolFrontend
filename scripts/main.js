@@ -26,6 +26,7 @@ var AppRouter = Backbone.Router.extend({
 		":id/post" : "postMessage",
 		":id/post/*postState" : "postMessageWithState",
 
+		":id/letter/:targetUserId" : "letter",
 
 		"register" : "register",
 		"register/*registerState" : "register",
@@ -254,6 +255,10 @@ var AppRouter = Backbone.Router.extend({
 		this.transactionView = new TransactionDetailView({},{},link);
 	},
 
+	letter: function(id, targetUserId){
+		this.letterView = new LetterView({"toUserId":targetUserId});
+	},
+
 	register: function(registrationState){
 		if (this.sessionManager.hasSession()){
 			this.navigate(this.sessionManager.getUserId() + "/main", true);
@@ -303,5 +308,6 @@ tpl.loadTemplates(Constants.templateResources, function () {
     app.topBarView = new TopBarView();
     Backbone.history.start();
 });
+
 
 

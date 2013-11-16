@@ -88,7 +88,7 @@ var Letter = Backbone.Model.extend({
 
 });
 
-var Letter = Backbone.Collection.extend({
+var Letters = Backbone.Collection.extend({
 
 	model: Letter,
 

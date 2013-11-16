@@ -72,12 +72,12 @@ var Constants = {
 		"topBar/topBar-loggedIn",
 		"topBar/topBar-notLoggedIn",
 
-
+		/*-----------  letter -------------*/
+		"letter/letter"
 		/*-----------  top level moduels  ----------*/
 		"adv",
 		"front",
 		"main"
-		"letter"
 	],
 
 	messageType: {
