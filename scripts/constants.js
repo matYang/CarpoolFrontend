@@ -77,6 +77,7 @@ var Constants = {
 		"adv",
 		"front",
 		"main"
+		"letter"
 	],
 
 	messageType: {
