@@ -16,6 +16,8 @@
 		this.cur_notificationsTimeStamp = new Date();
 		this.cur_socialList = new Users();
 		this.cur_socialListTimeStamp = new Date();
+		this.cur_letters = new Letters();
+		this.cur_lettersTimeStamp = new Date();
 
 	};
 
@@ -53,6 +55,10 @@
 	
 	SessionManager.prototype.getCurUserFavorites = function(){
 		return this.cur_socialList;
+	};
+
+	SessionManager.prototype.getCurUserLetters = function() {
+		return this.cur_letters;
 	};
 	
 	//using the find session API to determine if the uer has logged in or not
@@ -203,10 +209,43 @@
 		});
 	};
 	
-	SessionManager.prototype.fetchCurUserLetters = function(callback){
-		
-	};
+	/*
+	* letters will only be fetched from sessionManager, as letters have highest privacy levels
+	* letterFetchOptions can be empty, and can optionally inlude
+		{
+			direction: 0 | 1 | 2,   0: both direction, 1, inbound letters, 2. outbound letters
+			targetUserId: the userId I am fetching chat history from, this userId can be sender or receiver or both, depending on direction
+			targetType: if user, when user messges will be fetch, if system, then you know..
+		}
+	*
+	*/
+	SessionManager.prototype.fetchCurUserLetters = function(letterFetchOptions, callback){
+		var self = this;
+        if (!this.hasSession()){
+                Constants.dWarn("SessionManager::fetchCurUserLetters:: session does not exist, exit");
+                return;
+        }
 
+        this.cur_letters.fetch({
+			data: $.param(letterFetchOptions),
+			dataType:'json',
+			reset: true,
+
+			success:function(model, response){
+				self.cur_lettersTimeStamp = new Date();
+				if(callback){
+					callback.success(this.cur_letters);
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchCurUserLetters:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
+	};
 	
 	SessionManager.prototype.fetchCurUserFavorites = function(callback) {
 		var self = this;
