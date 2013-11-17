@@ -73,7 +73,7 @@ var Constants = {
 		"topBar/topBar-notLoggedIn",
 
 		/*-----------  letter -------------*/
-		"letter/letter"
+		"letter/letter",
 		/*-----------  top level moduels  ----------*/
 		"adv",
 		"front",

@@ -43,6 +43,10 @@
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
 			},
+			'letter': {
+				request: ['content'],
+				antiRequest: ['content', 'advertisement']
+			},
 			'registration': {
 				request: ['overlay'],
 				antiRequest: ['overlay']

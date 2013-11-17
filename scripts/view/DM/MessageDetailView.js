@@ -226,6 +226,10 @@ var MessageDetailView = Backbone.View.extend({
 				that.bookInfo.number = value;
 				that.calculateTotal();
 			});
+		} else if (this.parsedMessage.type === Constants.messageType.ask ){
+			$("#view_contact").on('click', function(){
+				app.navigate( that.userId + "/letter/" + that.ownerId, true);
+			});
 		}
 		this.calculateTotal();
 	},

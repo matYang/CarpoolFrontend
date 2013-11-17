@@ -2,17 +2,20 @@ var LetterView = Backbone.View.extend({
     el:"",
     initialize:function(params){
         var self = this;
-        _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'sendError', 'close');
+        _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'renderContacts', 'switchContact', 'sendError', 'close');
+        app.viewRegistration.register("letter", this, true);
         this.isClosed = false;
         this.sessionUser = app.sessionManager.getSessionUser();
         if (params.targetUserId) {
             this.toUserId = params.targetUserId;
         }
-        app.userManager.fetchUser(this.toUserId, function(user){
-            this.toUser = user;
-            $("#letter_toUser_name").html(user.get("name"));
-            $("#letter_toUser_pic").html(user.get("imgPath"));
-        });
+        app.userManager.fetchUser(this.toUserId, {"success":function(user){
+                this.toUser = user;
+                $("#letter_toUser_name").html(user.get("name"));
+                $("#letter_toUser_pic").html(user.get("imgPath"));
+            }, "error":function(){}
+        }
+        );
         //TODO: fetch letter by user-pair
         this.recentLetters = new Letters();
         this.domContainer = $('#content');
@@ -21,32 +24,41 @@ var LetterView = Backbone.View.extend({
                                     "</div></div><img src='", null, "'/></div>"];
         this.dateSplitTemplate = ["<div class='letterDateSplit'>",null,"</div>"];
         this.contactListTemplate = ["<div class='letterContactListEntry' id='contactList_", null,"'><img src='",null,"'><span>",null,"</span></div>"];
-        this.template = _.template(tpl.get('letter'));
+        this.template = _.template(tpl.get('letter/letter'));
         this.render();
-        app.userManager.fetchWatchedUsers(this.sessionUser.id, function(list){
-            this.sessionUser.set("watchList", list);
-            self.renderContacts(list);
+        app.userManager.fetchWatchedUsers(this.sessionUser.id, {
+            "success":this.renderContacts,
+            "error":function(){}
         });
     }, 
     render: function(){
-        this.domContainer.append(this.template());
+        this.domContainer.append(this.template);
         this.fillRecentHistory();
         this.bindEvent();
+        $("#letter_flash").hide();
     },
     bindEvent: function(){
         var self = this;
         $("#letter_send_button").on("click", function(e){
-            app.letterManager.sendLetter($("letter_input").val(), self.toUser, {
+            if (!$("letter_input").val()) {
+                $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
+                return;
+            }
+            app.letterManager.sendLetter(self.toUserId, $("letter_input").val(), {
                 "success":self.sendSuccess,
                 "error":self.sendError
             });
             $("#letter_message_panel").append(self.buildMessageBox($("letter_input").val(), new Date(), true));
             $("letter_input").val("");
         });
-        $("letter_input").on("keydown", function(e) {
+        $("#letter_input").on("keydown", function(e) {
             if (e.which == 13) {
                 e.preventDefault();
-                app.letterManager.sendLetter($("letter_input").val(), self.toUser, {
+                if (!$("letter_input").val()) {
+                    $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
+                    return;
+                }
+                app.letterManager.sendLetter(self.toUserId, $("letter_input").val(), {
                     "success":self.sendSuccess,
                     "error":self.sendError
                 });
@@ -57,7 +69,7 @@ var LetterView = Backbone.View.extend({
     },
     renderContacts: function(list){
         var buf = [], len = list.length, bufLen = 0, self = this, user;
-
+        this.sessionUser.set("watchList", list);
         for ( i = 0; i < len; i++ ) {
             user = list.at(i);
             this.contactListTemplate[1] = user.get("userId");
@@ -79,7 +91,7 @@ var LetterView = Backbone.View.extend({
         this.toUserId = id;
         $("#letter_toUser_name").html(user.get("name"));
         $("#letter_toUser_pic").html(user.get("imgPath"));
-    }
+    },
 
     fillRecentHistory: function(){
         var len = this.recentLetters.length, i = 0, buf = [], letter, bufLen = 0;
@@ -87,8 +99,8 @@ var LetterView = Backbone.View.extend({
         for ( i = 0; i < len; i++ ) {
             letter = this.recentLetters.at(i);
             send_time = new Date(letter.get("send_time")).set(0,0,0,0);
-            if (!lastDay || lastDay<send_time {
-                this.dateSplitTemplate[2] = letter.get("send_time").toLocaleDateString();
+            if (!lastDay || lastDay<send_time) {
+                this.dateSplitTemplate[1] = letter.get("send_time").toLocaleDateString();
                 buf[bufLen++] = this.dateSplitTemplate.join("");
                 lastDay = send_time;
             }

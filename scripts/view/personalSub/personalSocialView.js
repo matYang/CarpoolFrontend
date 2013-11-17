@@ -15,6 +15,7 @@ var PersonalSocialView = Backbone.View.extend({
 		this.entryContainer = "socialListContent";
 		this.domContainer = $("#socialListContent");
 		this.minHeight = 480;
+		this.startIndex = 0;
 
 		this.domContainer = $("#profilePage_content");
 		this.wrapperTemplate = _.template(tpl.get('personalPage/personalSocial'));
@@ -41,7 +42,6 @@ var PersonalSocialView = Backbone.View.extend({
 		});
 	},
 	entryEvent: function(id){
-		app.navigate(this.sessionUser.id+"/personal/"+id, true);
 	},
 	error: function() {
 

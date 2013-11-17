@@ -35,7 +35,9 @@ var MultiPageView = Backbone.View.extend({
 			}
 			$("#"+this.entryContainer).append(buf.join(""));
 			$("#"+this.entryContainer+">div").addClass(this.entryClass);
-			this.bindEntryEvent();
+			if (this.bindEntryEvent) {
+				this.bindEntryEvent();
+			}
 		} else {
 			$("#"+this.entryContainer).append("<div id = 'mainPageNoMessage'>暂无消息</div>");
 		}

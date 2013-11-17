@@ -1,0 +1,61 @@
+#letter_left_panel{
+    width:150px;
+    float:left;
+}
+#letter_main_panel{
+    width:750px;
+    float:left;
+    margin-left:10px;
+}
+#letter_user_search{
+    height:20px;
+}
+#letter_user_list{
+
+}
+#letter_targetUser_info{
+    height:70px;
+    padding:5px;
+}
+#letter_toUser_pic{
+    float:left;
+    width:70px;
+    height:70px;
+}
+#letter_toUser_name{
+    float:left;
+    height:30px;
+    margin-left:10px;
+}
+#letter_message_panel{
+    float:left;
+    width:750px;
+    height:500px;
+    margin-top:10px;
+    margin-bottom:10px;
+    background-color:#fdfdfd;
+}
+#letter_input{
+    float:left;
+    width:680px;
+    height:60px;
+}
+#letter_send_button{
+    float:left;
+    height:40px;
+    width:60px;
+    padding-top:20px;
+    font-size:15px;
+    color:#ffffff;
+    text-align:center;
+    background-color:#359a64;
+    margin-left: 5px;
+    box-shadow: 2px 2px 2px #aaaaaa;
+}
+#letter_flash{
+    float:left;
+    width:681px;
+    height:60px;
+    background-color:#F38F76;
+    margin-top:-61px;
+}
