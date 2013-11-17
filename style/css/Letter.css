@@ -1,14 +1,15 @@
 #letter_left_panel{
-    width:150px;
+    width:190px;
     float:left;
+    margin-top:20px;
+}
+#letter_user_search{
+    height:30px;
 }
 #letter_main_panel{
     width:750px;
     float:left;
     margin-left:10px;
-}
-#letter_user_search{
-    height:20px;
 }
 #letter_user_list{
 
@@ -29,11 +30,12 @@
 }
 #letter_message_panel{
     float:left;
-    width:750px;
+    width:760px;
     height:500px;
     margin-top:10px;
     margin-bottom:10px;
     background-color:#fdfdfd;
+    overflow-y:auto;
 }
 #letter_input{
     float:left;
@@ -58,4 +60,62 @@
     height:60px;
     background-color:#F38F76;
     margin-top:-61px;
+}
+.letterBoxContainer{
+    height:auto;
+    margin:5px;
+    width:740px;
+
+}
+.sendByMe>img{
+    float:right;
+    width:60px;
+    height:60px;
+    margin:5px;
+}
+.letterBoxMessage{
+    width: 649px;
+    height:auto;
+    min-height:54px;
+    float:left;
+    margin:5px;
+    padding:3px;
+    border:#aaaaaa 1px solid;
+    border-radius:2px;
+    display: block;
+}
+.letterBoxText{
+    display:block;
+    margin-bottom: 15px;
+}
+.sendByYou>img{
+    float:left;
+    width:60px;
+    height:60px;
+    margin:5px;
+}
+
+.sendByYou>.letterBoxMessage{
+    float:right;
+}
+.letterBoxTime{
+    position:absolute;
+    bottom:3px;
+    right:3px;
+}
+
+.letterContactListEntry{
+    height:40px;
+    width:180px;
+    padding:5px;
+}
+.letterContactListEntry>img{
+    width:40px;
+    height:40px;
+}
+.letterContactListEntry>span{
+    width:130px;
+    margin-left:15px;
+    bottom:15px;
+    font-size:16px;
 }
