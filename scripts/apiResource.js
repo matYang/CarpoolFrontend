@@ -81,7 +81,8 @@ we do not give up, not this time
 				},
 
 				'letter': {
-					letter: '/letter'
+					letter: '/letter',
+					user: '/user'
 				}
 			}
 		};
@@ -125,6 +126,7 @@ we do not give up, not this time
 				notification_notification: api_maker('notification', 'notification'),
 
 				letter_letter: api_maker('letter', 'letter'),
+				letter_user: api_maker('letter', 'user'),
 
 				general_feedBack : api_maker('general', 'feedBack'),
 
