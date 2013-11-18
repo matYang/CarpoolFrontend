@@ -728,7 +728,7 @@
 	* letters will only be fetched from sessionManager, as letters have highest privacy levels
 	* letterFetchOptions can be empty, and can optionally inlude
 		{
-			direction: 0 | 1 | 2,   0: both direction, 1, inbound letters, 2. outbound letters
+			direction: 0 | 1 | 2,  0, inbound letters, 1. outbound letters 2: both direction, 
 			targetUserId: the userId I am fetching chat history from, this userId can be sender or receiver or both, depending on direction
 			targetType: if user, when user messges will be fetch, if system, then you know..
 		}
@@ -764,5 +764,35 @@
 			}
 		});
 	};
+	
+	UserManager.prototype.fetchLetterUsers = function(callback){
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("UserManager::fetchLetterUsers:: session does not exist, exit");
+			return;
+		}
+
+		var self = this,
+			users = new Users();
+
+		users.overrideUrl(this.apis.letter_user + '/' + self.sessionManager.getUserId());
+		users.fetch({
+			dataType:'json',
+
+			success:function(model, response){
+				if (callback) {
+					callback.success(users);
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("UserManager::fetchLetterUsers:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
+	};
+	
+	
 
 }).call(this);
