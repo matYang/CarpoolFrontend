@@ -26,6 +26,7 @@ var AppRouter = Backbone.Router.extend({
 		":id/post" : "postMessage",
 		":id/post/*postState" : "postMessageWithState",
 
+		":id/letter": "letter"
 		":id/letter/:targetUserId" : "letter",
 
 		"register" : "register",
@@ -254,7 +255,9 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	letter: function(id, targetUserId){
-		this.letterView = new LetterView({"toUserId":targetUserId});
+		var options = {"toUserId":targetUserId};
+		options.type = typeof targetUserId == 'undefined' ? Constants.letterType.system : Constants.letterType.user;]
+		this.letterView = new LetterView(options);
 	},
 
 	register: function(registrationState){
