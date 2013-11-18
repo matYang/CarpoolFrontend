@@ -34,7 +34,18 @@
 					this.map_handlers['newNotification'].handleSocket('newNotification', data);
 				}
 				else{
-					Info.alert("Broadcast event not handled");
+					Info.alert("newNotification event not handled");
+				}
+			});
+
+			this.socket.on('newLetter', function(data){
+				Info.log("push letter: newLetter received, with data: ");
+				Info.log(data);
+				if (this.map_handlers['newLetter']){
+					this.map_handlers['newLetter'].handleSocket('newLetter', data);
+				}
+				else{
+					Info.alert("newLetter event not handled");
 				}
 			});
 
@@ -45,7 +56,7 @@
 					this.map_handlers['broadCast'].handleSocket('broadCast', data);
 				}
 				else{
-					Info.alert("Broadcast event not handled");
+					Info.alert("broadcast event not handled");
 				}
 			});
 		}

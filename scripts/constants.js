@@ -201,6 +201,12 @@ var Constants = {
 		'invalid': 2
 	},
 
+	LetterDirection:{
+		'inbound': 0,
+		'outbound': 1,
+		'both': 2
+	},
+
 	weekDayArray: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
 
 	/*---------------  Personal view constants   --------------*/

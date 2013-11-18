@@ -209,23 +209,20 @@
 		});
 	};
 	
-	/*
-	* letters will only be fetched from sessionManager, as letters have highest privacy levels
-	* letterFetchOptions can be empty, and can optionally inlude
-		{
-			direction: 0 | 1 | 2,   0: both direction, 1, inbound letters, 2. outbound letters
-			targetUserId: the userId I am fetching chat history from, this userId can be sender or receiver or both, depending on direction
-			targetType: if user, when user messges will be fetch, if system, then you know..
-		}
-	*
-	*/
-	SessionManager.prototype.fetchCurUserLetters = function(letterFetchOptions, callback){
+
+	SessionManager.prototype.fetchCurUserLetters = function(callback){
 		var self = this;
         if (!this.hasSession()){
                 Constants.dWarn("SessionManager::fetchCurUserLetters:: session does not exist, exit");
                 return;
         }
 
+        letterFetchOptions.direction = Constants.LetterDirection.inbound;
+        letterFetchOptions.userId = this.getUserid();
+        letterFetchOptions.targetUserId = -1;
+        letterFetchOptions.targetType = Constants.LetterType.user;
+
+        this.cur_letters.overrideUrl(this.apis.letter_letter + '/' + this.getUserId());
         this.cur_letters.fetch({
 			data: $.param(letterFetchOptions),
 			dataType:'json',
@@ -234,7 +231,7 @@
 			success:function(model, response){
 				self.cur_lettersTimeStamp = new Date();
 				if(callback){
-					callback.success(this.cur_letters);
+					callback.success();
 				}
 			},
 			error: function(model, response){
@@ -278,9 +275,13 @@
 	};
 	
 	SessionManager.prototype.handleSocket = function(eventName, data) {
+		Info.log("Session Manager received socket with event: " + eventName + " and data: " + data);
 		if (eventName === 'newNotification'){
-				this.fetchCurUserNotifications();
-			}
-        };
+			this.fetchCurUserNotifications();
+		}
+		else if (eventName === 'newLetter'){
+			this.fetchCurUserLetters();
+		}
+	};
 
 }).call(this);

@@ -50,6 +50,7 @@ var AppRouter = Backbone.Router.extend({
 		this.letterManager = new LetterManager(this.sessionManager);
 		this.socketManager = new SocketManager(this.sessionManager, {
 			'newNotification': this.sessionManager,
+			'newLetter': this.sessionManager,
 			'broadcast': {'handleSocket': function(eventName, data){
 				Info.alert(data);
 			}}
@@ -87,7 +88,6 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	defaultRoute: function(){
-
 		//if login, procees to main/:id, if not, proceed to front
 		if (this.sessionManager.hasSession()){
 			this.navigate(this.sessionManager.getUserId() + "/main", true);
@@ -95,7 +95,6 @@ var AppRouter = Backbone.Router.extend({
 		else{
 			this.navigate("front", true);
 		}
-
 	},
 
 	front: function(){
@@ -104,7 +103,6 @@ var AppRouter = Backbone.Router.extend({
 			//return here to prevent further execution of following logic
 			return;
 		}
-
 		this.frontPageVew = new FrontPageView();
 	},
 
@@ -113,7 +111,6 @@ var AppRouter = Backbone.Router.extend({
 			this.navigate("front", true);
 			return;
 		}
-
 		this.frontPageVew = new FrontPageView();
 	},
 

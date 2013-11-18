@@ -18,35 +18,6 @@
 		return this.timeStamp;
 	};
 
-	LetterManager.prototype.fetchLetter = function(letterId, callback){
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("LetterManager::fetchLetter:: session does not exist, exit");
-			return;
-		}
-
-		var self = this,
-			letter = new Letter();
-		letter.overrideUrl(this.apis.letter_letter);
-		letter.set('letterId', letterId);
-		letter.fetch({
-			data: $.param({ 'userId': self.sessionManager.getUserId()}),
-			dataType:'json',
-
-			success:function(model, response){
-				self.timeStamp = new Date();
-				if (callback) {
-					callback.success(letter);
-				}
-			},
-			error: function(model, response){
-				Constants.dWarn("LetterManager::fetchLetter:: fetch failed with response:");
-				Constants.dLog(response);
-				if(callback){
-					callback.error();
-				}
-			}
-		});
-	};
 
 	LetterManager.prototype.sendLetter = function(targetId, content, callback) {
 		if (typeof targetId !== 'number'){
@@ -64,7 +35,7 @@
 		letter.overrideUrl(this.apis.letter_letter);
 		letter.set('letterId', -1);
 		letter.set('from_userId', this.sessionManager.getUserId());
-		letter.set('to_userId', targetId);
+		letter.set('to_userId', targetId);Ï
 		letter.set('content', content);
 
 		/*optional, this will be inforced by server API logic,leaving here for reference*/
@@ -90,7 +61,7 @@
 		});
 	};
 
-	/*TODO probably should check all the letters from same user all at once, and probably should be done on server side*/
+	/*TODO probably should check all the letters from same user all at once, and probably should be done on server side	*/
 	LetterManager.prototype.checkLetter = function(letterId, callback) {
 		if (typeof letterId !== 'number'){
 			Constants.dWarn("LetterManager::checkLetter:: invalid parameter");

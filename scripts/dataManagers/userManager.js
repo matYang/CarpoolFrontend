@@ -13,6 +13,7 @@
 		this.historyList_timeStamp = new Date();
 		this.transactionList_timeStamp = new Date();
 		this.notificationList_timeStamp = new Date();
+		this.letter_timeStamp = new Date();
 
 		this.sessionManager = sessionManager;
 		this.sessionManager.resgisterManager(this);
@@ -28,6 +29,7 @@
 		this.historyList_timeStamp = new Date();
 		this.transactionList_timeStamp = new Date();
 		this.notificationList_timeStamp = new Date();
+		this.letter_timeStamp = new Date();
 
 	};
 
@@ -35,23 +37,22 @@
 	UserManager.prototype.getTimeStamp = function() {
 		return this.timeStamp;
 	};
-
 	UserManager.prototype.getSocialListTimeStamp = function() {
 		return this.socialList_timeStamp;
 	};
-
-
 	UserManager.prototype.getHistoryListTimeStamp = function() {
 		return this.historyList_timeStamp;
 	};
-
 	UserManager.prototype.getTransactionListTimeStamp = function() {
 		return this.transactionList_timeStamp;
 	};
-
 	UserManager.prototype.getNotificationListTimeStamp = function() {
 		return this.notificationList_timeStamp;
 	};
+	UserManager.prototype.getLetterTimeStamp = function() {
+		return this.letter_timeStamp;
+	};
+
 
 
 	UserManager.prototype.registerUser = function(newUser, callback) {
@@ -713,6 +714,49 @@
 			},
 			error: function(model, response){
 				Constants.dWarn("UserManager::fetchNotification:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
+	};
+
+
+
+	/*
+	* letters will only be fetched from sessionManager, as letters have highest privacy levels
+	* letterFetchOptions can be empty, and can optionally inlude
+		{
+			direction: 0 | 1 | 2,   0: both direction, 1, inbound letters, 2. outbound letters
+			targetUserId: the userId I am fetching chat history from, this userId can be sender or receiver or both, depending on direction
+			targetType: if user, when user messges will be fetch, if system, then you know..
+		}
+	*
+	*/
+	UserManager.prototype.fetchLetters = function(letterFetchOptions, callback){
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("UserManager::fetchLetter:: session does not exist, exit");
+			return;
+		}
+
+		var self = this,
+			letters = new Letters();
+
+		letterFetchOptions.userId = self.sessionManager.getUserId();
+		letters.overrideUrl(this.apis.letter_letter + '/' + self.sessionManager.getUserId());
+		letters.fetch({
+			data: $.param(letterFetchOptions),
+			dataType:'json',
+
+			success:function(model, response){
+				self.letter_timeStamp = new Date();
+				if (callback) {
+					callback.success(letters);
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("UserManager::fetchLetter:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
 					callback.error();
