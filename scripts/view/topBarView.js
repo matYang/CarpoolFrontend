@@ -14,6 +14,7 @@ var TopBarView = Backbone.View.extend({
 		this.loggedInTemplate = _.template(tpl.get('topBar/topBar-loggedIn'));
 		this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
 		this.dropdown_notifiationTemplate = _.template(tpl.get('dropdown/notificationDropdown'));
+		this.dropdown_letterTemplate = _.template(tpl.get('dropdown/letterDropdown'));
 		this.dropdown_favoriteTemplate = _.template(tpl.get('dropdown/favoriteDropdown'));
 
 		this.sessionUser = app.sessionManager.getSessionUser();
@@ -35,6 +36,8 @@ var TopBarView = Backbone.View.extend({
 			this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
 			this.notifications = app.sessionManager.getCurUserNotifications();
 			this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
+			this.letters = app.sessionManager.getCurUserLetters();
+			this.listenTo(this.letters, 'reset', this.renderLetterDropdown);
 			this.favorites = app.sessionManager.getCurUserFavorites();
 			this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
 
@@ -73,7 +76,15 @@ var TopBarView = Backbone.View.extend({
 	},
 
 	renderLetterDropdown: function(){
+		var i = 0,
+			htmlContext = '';
 
+		for (i = 0; i < this.letters.length; i++){
+			htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
+		}
+
+		this.letterContainer.html(htmlContext);
+		this.bindDropdownEvents('letter');	
 	},
 
 	renderFavoriteDropdown: function(){
@@ -109,6 +120,12 @@ var TopBarView = Backbone.View.extend({
 				}
 			});
 		}
+		else if (dropdownName === 'letter'){
+			this.letterContainer.find('.dropdownContent').on('click', function(e){
+				var l_id = $(this).attr("data-letterId");
+				app.navigate(app.sessionManager.getUserId() + "/letter/" + l_id, true);
+			});	
+		}
 		else if (dropdownName === 'favorites'){
 			this.favoriteContainer.find('.dropdownContent').on('click', function(e){
 				var u_id = $(this).attr("data-userId");
@@ -121,13 +138,19 @@ var TopBarView = Backbone.View.extend({
 		if (dropdownName === 'notifications' && this.notificationContainer){
 			this.notificationContainer.find('.dropdownContent').off();
 		}
+		else if (dropdownName === 'letter' && this.letterContainer){
+			this.letterContainer.find('.dropdownContent').off();	
+		}
 		else if (dropdownName ===  'favorites' && this.favoriteContainer){
 			this.favoriteContainer.find('.dropdownContent').off();
 		}
 		else{
-
+			//unbind all
 			if (this.notificationContainer){
 				this.notificationContainer.find('.dropdownContent').off();
+			}
+			if (this.letterContainer){
+				this.letterContainer.find('.dropdownContent').off();	
 			}
 			if (this.favoriteContainer){
 				this.favoriteContainer.find('.dropdownContent').off();
