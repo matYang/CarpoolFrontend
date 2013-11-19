@@ -34,6 +34,7 @@ var Constants = {
 
 		/*----------- dropdowns  ----------*/
 		"dropdown/notificationDropdown",
+		"dropdown/letterDropdown",
 		"dropdown/favoriteDropdown",
 
 		/*-----------  modals  ---------*/
