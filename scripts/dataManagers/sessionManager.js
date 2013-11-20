@@ -281,6 +281,9 @@
 		}
 		else if (eventName === 'newLetter'){
 			this.fetchCurUserLetters();
+			if (app.letterView){
+				app.letterView.onNewLetter(data);
+			}
 		}
 	};
 
