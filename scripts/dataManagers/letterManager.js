@@ -35,7 +35,7 @@
 		letter.overrideUrl(this.apis.letter_letter);
 		letter.set('letterId', -1);
 		letter.set('from_userId', this.sessionManager.getUserId());
-		letter.set('to_userId', targetId);Ï
+		letter.set('to_userId', targetId);
 		letter.set('content', content);
 
 		/*optional, this will be inforced by server API logic,leaving here for reference*/
@@ -61,9 +61,8 @@
 		});
 	};
 
-	/*TODO probably should check all the letters from same user all at once, and probably should be done on server side	*/
-	LetterManager.prototype.checkLetter = function(letterId, callback) {
-		if (typeof letterId !== 'number'){
+	LetterManager.prototype.checkLetter = function(targetUserId, callback) {
+		if (typeof targetUserId !== 'number'){
 			Constants.dWarn("LetterManager::checkLetter:: invalid parameter");
 			return;
 		}
@@ -76,9 +75,9 @@
 	
 		var letter = new Letter();
 		letter.overrideUrl(this.apis.letter_letter);
-		letter.set('letterId', letterId);
+		letter.set('letterId', 1);
 		letter.save({},{
-			data: JSON.stringify({'userId': this.sessionManager.getUserId()}),
+			data: JSON.stringify({'userId': this.sessionManager.getUserId(), 'targetUserId': targetUserId}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
