@@ -84,7 +84,7 @@ var TopBarView = Backbone.View.extend({
 		}
 
 		this.letterContainer.html(htmlContext);
-		this.bindDropdownEvents('letter');	
+		this.bindDropdownEvents('letter');
 	},
 
 	renderFavoriteDropdown: function(){
@@ -124,7 +124,7 @@ var TopBarView = Backbone.View.extend({
 			this.letterContainer.find('.dropdownContent').on('click', function(e){
 				var l_id = $(this).attr("data-letterId");
 				app.navigate(app.sessionManager.getUserId() + "/letter/" + l_id, true);
-			});	
+			});
 		}
 		else if (dropdownName === 'favorites'){
 			this.favoriteContainer.find('.dropdownContent').on('click', function(e){
@@ -139,7 +139,7 @@ var TopBarView = Backbone.View.extend({
 			this.notificationContainer.find('.dropdownContent').off();
 		}
 		else if (dropdownName === 'letter' && this.letterContainer){
-			this.letterContainer.find('.dropdownContent').off();	
+			this.letterContainer.find('.dropdownContent').off();
 		}
 		else if (dropdownName ===  'favorites' && this.favoriteContainer){
 			this.favoriteContainer.find('.dropdownContent').off();
@@ -150,7 +150,7 @@ var TopBarView = Backbone.View.extend({
 				this.notificationContainer.find('.dropdownContent').off();
 			}
 			if (this.letterContainer){
-				this.letterContainer.find('.dropdownContent').off();	
+				this.letterContainer.find('.dropdownContent').off();
 			}
 			if (this.favoriteContainer){
 				this.favoriteContainer.find('.dropdownContent').off();
@@ -188,7 +188,7 @@ var TopBarView = Backbone.View.extend({
 			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history" , true);
 		});
 		$('#letterDropdown .dropdownTitleCheckAll').on('click', function(){
-			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history" , true);
+			app.navigate(app.sessionManager.getUserId() + "/letter" , true);
 		});
 		$('#favoriteDropdown .dropdownTitleCheckAll').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/social" , true);

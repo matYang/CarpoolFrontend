@@ -71,7 +71,7 @@
 
             success:function(model, response){
 				self.timeStamp = new Date();
-				app.sessionManager.sessionUser = sessionUser;
+				//app.sessionManager.sessionUser = sessionUser;
 				if(callback){
 					callback.success(sessionUser);
 				}

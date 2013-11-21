@@ -183,7 +183,7 @@ var RegistrationView = Backbone.View.extend({
 		}
 	},
 	finish: function(){
-		alert("should POST");
+		Info.alert("should POST");
 	},
 
 	close: function(){
