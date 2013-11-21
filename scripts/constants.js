@@ -2,6 +2,16 @@
 *   This is a special global object that will be instantiated only once, storing all constants
 */
 
+
+var getEnvironmentServerOrigin = function(){
+	var isOnLocal = true;
+	return {
+		'httpOrigin': isOnLocal ? 'localhost:8015' : 'www.huaixuesheng.com',
+		'socketOrigin': isOnLocal ? 'localhost:3000' : 'www.huaixuesheng.com:3000'
+	};
+	
+};
+
 var Constants = {
 
 	//all console logs/warns should use these methods to help IE compatability
@@ -13,8 +23,8 @@ var Constants = {
 		Info.warn(err);
 	},
 
-	origin: 'http://localhost:8015',
-	socketOrigin: 'http://huaixuesheng.com:3000',
+	origin: 'http://' + getEnvironmentServerOrigin().httpOrigin,
+	socketOrigin: 'http://' + getEnvironmentServerOrigin().socketOrigin,
 
 
 	miliSecInDay: 86400000,
