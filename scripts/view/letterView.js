@@ -17,7 +17,7 @@ var LetterView = Backbone.View.extend({
             app.userManager.fetchUser(this.toUserId, {"success":function(user){
                 self.toUser = user;
                 $("#letter_toUser_name").html(user.get("name"));
-                $("#letter_toUser_pic").html(user.get("imgPath"));
+                $("#letter_toUser_pic").attr("src", user.get("imgPath"));
             }, "error":function(){}
         });
         } else {
@@ -96,6 +96,7 @@ var LetterView = Backbone.View.extend({
         }
         $("#letter_user_list").append(buf.join(""));
         $("#letter_user_list>.letterContactListEntry").on("click", function(e){
+            debugger;
             id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
             if ( id !== self.toUserId) {
                 app.navigate(self.sessionUser.id+"/letter/"+id); //do not recreate view.
@@ -110,7 +111,7 @@ var LetterView = Backbone.View.extend({
         this.toUser = user;
         this.toUserId = id;
         $("#letter_toUser_name").html(user.get("name"));
-        $("#letter_toUser_pic").html(user.get("imgPath"));
+        $("#letter_toUser_pic").attr("src", user.get("imgPath"));
         $(".highlitedUser.userNewMessage").removeClass("userNewMessage");
         $(".highlitedUser").removeClass("highlitedUser");
         $("#contactList_"+id).addClass("highlitedUser");
