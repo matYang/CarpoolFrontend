@@ -20,8 +20,12 @@
 
 
 	LetterManager.prototype.sendLetter = function(targetId, content, callback) {
+		// if (testMockObj.testMode) {
+		// 	callback.err((new Letter()).set("letterId",123).set("content",content));
+		// 	return;
+		// }
 		if (typeof targetId !== 'number'){
-			Constants.dWarn("LetterManager::sendetter:: invalid parameter");
+			Constants.dWarn("LetterManager::sendLetter:: invalid parameter");
 			return;
 		}
 		if (!this.sessionManager.hasSession()){
@@ -55,7 +59,7 @@
 				Constants.dWarn("LetterManager::sendLetter:: save failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(letter);
 				}
 			}
 		});

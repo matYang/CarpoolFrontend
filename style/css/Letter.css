@@ -65,7 +65,7 @@
     height:auto;
     margin:5px;
     width:740px;
-
+    overflow: auto;
 }
 .sendByMe>img{
     float:right;
@@ -73,8 +73,11 @@
     height:60px;
     margin:5px;
 }
+.sendByMe>.letterBoxMessage{
+    float:right;
+}
 .letterBoxMessage{
-    width: 649px;
+    width: 590px;
     height:auto;
     min-height:54px;
     float:left;
@@ -97,6 +100,7 @@
 
 .sendByYou>.letterBoxMessage{
     float:right;
+    width:625px;
 }
 .letterBoxTime{
     position:absolute;
@@ -118,4 +122,19 @@
     margin-left:15px;
     bottom:15px;
     font-size:16px;
+}
+.highlitedUser{
+    background-color:#1199ff;
+}
+.userNewMessage{
+    background-color:#ff9933;  
+}
+.letterSendFail{
+    background-image:url("../../res/warn.png");
+    width:40px;
+    height:40px;
+    background-size: 100%;
+    float:left;
+    margin-left:10px;
+    margin-top:10px;
 }
