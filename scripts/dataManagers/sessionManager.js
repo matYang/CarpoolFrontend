@@ -216,9 +216,9 @@
                 Constants.dWarn("SessionManager::fetchCurUserLetters:: session does not exist, exit");
                 return;
         }
-
+        var letterFetchOptions = {};
         letterFetchOptions.direction = Constants.LetterDirection.inbound;
-        letterFetchOptions.userId = this.getUserid();
+        letterFetchOptions.userId = this.getUserId();
         letterFetchOptions.targetUserId = -1;
         letterFetchOptions.targetType = Constants.LetterType.user;
 

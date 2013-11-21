@@ -28,8 +28,9 @@ we do not give up, not this time
 				'users': '/users',
 				'transaction': '/transaction',
 				'notification': '/notification',
+				'letter': '/letter',
 				'general': '/general',
-				'location': '/location'
+				'location': '/location',
 			},
 
 			moduleSufixResource: {

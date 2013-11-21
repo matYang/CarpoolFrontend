@@ -31,7 +31,7 @@
 
 
 .dropdownContent:hover{
-  background-color: rgb(236,223,177);
+  background-color: rgb(236,223,177) !important;
   cursor: pointer;
 }
 
@@ -73,6 +73,43 @@
 
 .dropdownContent .dropdown-notification-text .dropdown-text-row2{
   height: 12px;
+}
+
+
+/*-----   letter dropdowns -----*/
+.dropdownContent .dropdown-letter-text{
+  width: 185px;
+  height: 40px;
+  float: right;
+}
+
+#letterDropdown .letter-dropdown-read-0{
+   background-color: #D6DDEB;  
+}
+
+.dropdownContent .dropdown-letter-text .dropdown-text-row1{
+  height: 28px;
+  overflow: hidden;
+}
+
+.dropdownContent .dropdown-letter-text .dropdown-text-row1 .dropdown-letter-from-txt{
+  height: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.dropdownContent .dropdown-letter-text .dropdown-text-row1 .dropdown-letter-from-txt .dropdown-text-name{
+  font-size: 12px;
+  font-weight: bold;
+  padding-right: 5px;
+}
+
+.dropdownContent .dropdown-letter-text .dropdown-text-row1 .dropdown-letter-content-text{
+  height: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  
 }
 
 
