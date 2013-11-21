@@ -766,6 +766,10 @@
 	};
 	
 	UserManager.prototype.fetchLetterUsers = function(callback){
+		if (testMockObj.testMode) {
+			callback.success(testMockObj.sampleUsers);
+			return;
+		}
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("UserManager::fetchLetterUsers:: session does not exist, exit");
 			return;
