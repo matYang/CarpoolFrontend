@@ -58,12 +58,15 @@ var Letter = Backbone.Model.extend({
 		data.check_time = Utilities.castFromAPIFormat(data.check_time);
 
 		data.state = parseInt(data.state, 10);
+		data.content = decodeURI(data.content);
+		
         return data;
     },
 
     //place holder, since notification are never posted to server
     toJSON: function(){
 		var json = _.clone(this.attributes);
+		json.content = encodeURI(json.content);
 		return json;
     },
 
@@ -73,16 +76,16 @@ var Letter = Backbone.Model.extend({
     },
 
     toDropdownJSON: function(){
-		var json = this.toJSON();
+	var json = this.toJSON();
         json.send_time = Utilities.castToAPIFormat(this.get('send_time'));
 
         if (typeof this.get('from_user')._toJSON === 'function'){
-			json.from_user = this.get('from_user')._toJSON();
-		}
-		if (typeof this.get('to_user')._toJSON === 'function'){
-			json.to_user = this.get('to_user')._toJSON();
-		}
-		
+		json.from_user = this.get('from_user')._toJSON();
+	}
+	if (typeof this.get('to_user')._toJSON === 'function'){
+		json.to_user = this.get('to_user')._toJSON();
+	}
+	json.content = decodeURI(json.content);	
         return json;
     }
 
