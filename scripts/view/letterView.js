@@ -22,7 +22,7 @@ var LetterView = Backbone.View.extend({
         });
         } else {
             option.toUserId = -1;
-            option.targetType = "system";
+            option.targetType = Constants.LetterType.system;
         }
 
         this.template = _.template(tpl.get('letter/letter'));
@@ -192,7 +192,7 @@ var LetterView = Backbone.View.extend({
             app.userManager.fetchLetters({
                 "direction":2,
                 "targetUserId":data.to_userId,
-                "targetType":data.to_userId > -1 ? "user" : "system"
+                "targetType":data.to_userId > -1 ? Constants.LetterType.user : Constants.LetterType.system
             },{
                 "success":self.displayNewLetters,
                 "error":self.fetchLetterError
