@@ -1,15 +1,17 @@
 var LetterView = Backbone.View.extend({
+
     el:"",
+
     initialize:function(params){
         var self = this;
-        _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 
+        _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess',
             'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'fetchLetterUserError', 'close');
         app.viewRegistration.register("letter", this, true);
         this.isClosed = false;
         this.sessionUser = app.sessionManager.getSessionUser();
         var option = {
             "direction":2
-        }
+        };
         if (params.toUserId) {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
@@ -28,7 +30,9 @@ var LetterView = Backbone.View.extend({
         this.template = _.template(tpl.get('letter/letter'));
         this.domContainer = $('#content');
         this.domContainer.append(this.template);
-        app.userManager.fetchLetters(option, {"success":this.fillRecentHistory, 
+
+        option.targetUserId = option.toUserId;
+        app.userManager.fetchLetters(option, {"success":this.fillRecentHistory,
                                               "error":function(){}});
         //TODO: fetch letter by user-pair
         this.recentLetters = new Letters();
@@ -42,16 +46,18 @@ var LetterView = Backbone.View.extend({
             "success":this.renderContacts,
             "error":this.fetchLetterUserError
         });
-    }, 
+    },
+
     render: function(){
         this.fillRecentHistory();
         this.bindEvent();
         $("#letter_flash").hide();
     },
+
     bindEvent: function(){
         var self = this;
         $("#letter_send_button").on("click", function(e){
-            debugger;
+
             if (!$("#letter_input").val()) {
                 $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                 return;
@@ -81,6 +87,7 @@ var LetterView = Backbone.View.extend({
             }
         });
     },
+
     renderContacts: function(list){
         this.letterUserList = list;
         var buf = [], len = list.length, bufLen = 0, self = this, user, id;
@@ -96,7 +103,7 @@ var LetterView = Backbone.View.extend({
         }
         $("#letter_user_list").append(buf.join(""));
         $("#letter_user_list>.letterContactListEntry").on("click", function(e){
-            debugger;
+
             id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
             if ( id !== self.toUserId) {
                 app.navigate(self.sessionUser.id+"/letter/"+id); //do not recreate view.
@@ -104,6 +111,7 @@ var LetterView = Backbone.View.extend({
             }
         });
     },
+
     switchContact:function(id){
         var user = this.letterUserList.get(id);
         $("#letter_message_panel").empty();
@@ -134,6 +142,7 @@ var LetterView = Backbone.View.extend({
         }
         $("#letter_message_panel").append(buf.join(""));
     },
+
     buildMessageBox: function(id, message, time, sendByMe){
         this.messageBoxTemplate[1] = sendByMe ? "sendByMe" : "sendByYou";
         this.messageBoxTemplate[3] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
@@ -142,6 +151,7 @@ var LetterView = Backbone.View.extend({
         this.messageBoxTemplate[9] = time;
         return this.messageBoxTemplate.join("");
     },
+
     sendSuccess: function(letter){
 
         $( ".letterId_-1" ).each(function( index ) {
@@ -150,6 +160,7 @@ var LetterView = Backbone.View.extend({
           }
         });
     },
+
     sendError: function(letter){
         $( ".letterId_-1" ).each(function( index ) {
           if ($( this ).text() === letter.get("content")) {
@@ -160,12 +171,15 @@ var LetterView = Backbone.View.extend({
           }
         });
     },
+
     fetchLetterUserError: function(){
 
     },
+
     fetchLetterError: function(){
 
     },
+
     onNewLetter: function(data){
         var self = this;
         if (data.to_userId == this.toUserId) {
@@ -190,6 +204,7 @@ var LetterView = Backbone.View.extend({
             });
         }
     },
+
     close: function(){
         if (!this.isClosed) {
             $("#letter_send_button").off();
