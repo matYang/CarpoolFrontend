@@ -9,7 +9,6 @@ var LetterView = Backbone.View.extend({
         var option = {
             "direction":2
         };
-        debugger;
         if (params.toUserId && params.toUserId !== "-1") {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
@@ -27,7 +26,6 @@ var LetterView = Backbone.View.extend({
             }, "error":function(){}
         });
         } else {
-            app.navigate(self.sessionUser.id+"/letter/-1");
             this.toUserId = -1;
             option.targetUserId = -1;
             option.targetType = Constants.LetterType.system;
