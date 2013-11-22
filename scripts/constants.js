@@ -4,7 +4,7 @@
 
 
 var getEnvironmentServerOrigin = function(){
-	var isOnLocal = true;
+	var isOnLocal = false;
 	return {
 		'httpOrigin': isOnLocal ? 'localhost:8015' : 'www.huaixuesheng.com',
 		'socketOrigin': isOnLocal ? 'localhost:3000' : 'www.huaixuesheng.com:3000'
@@ -86,7 +86,7 @@ var Constants = {
 		/*-----------  letter -------------*/
 		"letter/letter",
 		/*-----------  top level moduels  ----------*/
-		"adv",
+		"tadv",
 		"front",
 		"main"
 	],
