@@ -11,7 +11,7 @@ var LetterView = Backbone.View.extend({
             "direction":2
         }
         debugger;
-        if (params.toUserId) {
+        if (params.toUserId && params.toUserId !== -1) {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
             option.targetType = Constants.LetterType.user;
@@ -28,6 +28,8 @@ var LetterView = Backbone.View.extend({
             }, "error":function(){}
         });
         } else {
+            app.navigate(self.sessionUser.id+"/letter/-1");
+            this.toUserId = -1;
             option.toUserId = -1;
             option.targetType = Constants.LetterType.system;
         }
@@ -35,6 +37,10 @@ var LetterView = Backbone.View.extend({
         this.template = _.template(tpl.get('letter/letter'));
         this.domContainer = $('#content');
         this.domContainer.append(this.template);
+        if (this.toUserId === -1) {
+            $("#letter_toUser_name").html("系统");
+            $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
+        }
         app.userManager.fetchLetters(option, {"success":this.fillRecentHistory, 
                                               "error":function(){}});
         //TODO: fetch letter by user-pair
@@ -107,14 +113,15 @@ var LetterView = Backbone.View.extend({
             buf[bufLen++] = this.contactListTemplate.join("");
         }
         $("#letter_user_list").append(buf.join(""));
-        $("#letter_user_list>.letterContactListEntry").on("click", function(e){
-            debugger;
+        $(".letterContactListEntry").off();
+        $(".letterContactListEntry").on("click", function(e){
             id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
             if ( id !== self.toUserId) {
                 app.navigate(self.sessionUser.id+"/letter/"+id); //do not recreate view.
                 self.switchContact(Utilities.getId(e.delegateTarget.id));
             }
         });
+        debugger;
         $("#contactList_"+this.toUserId).addClass("highlitedUser");
     },
     switchContact:function(id){

@@ -27,6 +27,7 @@ var AppRouter = Backbone.Router.extend({
 		":id/post/*postState" : "postMessageWithState",
 
 		":id/letter": "letter",
+		":id/letter/": "letter",
 		":id/letter/:targetUserId" : "letter",
 
 		"register" : "register",
