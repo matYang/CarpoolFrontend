@@ -27,6 +27,9 @@
       <div id='profilePage_userName'><%= name %></div>
       <div id='profilePage_userGender'></div>
       <div id='profilePage_userAge'><%= age %>岁</div>
+      <% if ( userId !== app.sessionManager.getUserId() ) { %>
+        <div id='profilePage_sendLetter'></div>
+      <% } %>
     </div>
     <div id='profilePage_accountInfoContent'>
       <div id='profilePage_userRealName'>

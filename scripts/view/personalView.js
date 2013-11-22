@@ -135,6 +135,9 @@ var PersonalView = Backbone.View.extend({
 
 			}
 		});
+		$("#profilePage_sendLetter").on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/letter/"+ that.curUserId, true);
+		});
 	},
 	bindWatchEvent: function(){
 		var that = this;
