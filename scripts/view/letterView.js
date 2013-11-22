@@ -133,10 +133,13 @@ var LetterView = Backbone.View.extend({
             $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
             return;
         }
-        var user = this.letterUserList.get(id);
+        var user = this.letterUserList.get(id), option={"direction":2, "targetUserId":id, "targetType":id > -1 ? Constants.LetterType.user : Constants.LetterType.system };
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
         $("#letter_toUser_pic").attr("src", user.get("imgPath"));
+
+        app.userManager.fetchLetters(option, {"success":this.fillRecentHistory, 
+                                      "error":function(){}});
     },
 
     fillRecentHistory: function(letters){
