@@ -122,8 +122,8 @@ var TopBarView = Backbone.View.extend({
 		}
 		else if (dropdownName === 'letter'){
 			this.letterContainer.find('.dropdownContent').on('click', function(e){
-				var l_id = $(this).attr("data-letterId");
-				app.navigate(app.sessionManager.getUserId() + "/letter/" + l_id, true);
+				var u_id = $(this).attr("data-userId");
+				app.navigate(app.sessionManager.getUserId() + "/letter/" + u_id, true);
 			});
 		}
 		else if (dropdownName === 'favorites'){
