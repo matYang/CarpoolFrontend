@@ -3,7 +3,7 @@ var LetterView = Backbone.View.extend({
     initialize:function(params){
         var self = this;
         _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 
-            'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'fetchLetterUserError', 'close');
+            'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'displayNewLetters', 'fetchLetterUserError', 'close');
         app.viewRegistration.register("letter", this, true);
         this.isClosed = false;
         this.sessionUser = app.sessionManager.getSessionUser();
@@ -119,6 +119,7 @@ var LetterView = Backbone.View.extend({
 
     fillRecentHistory: function(letters){
         if (!letters) return;
+        this.letterHistories = letters;
         $("#letter_message_panel").empty();
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
@@ -166,15 +167,34 @@ var LetterView = Backbone.View.extend({
     fetchLetterError: function(){
 
     },
+    displayNewLetters: function(letters){
+        //receiving only inbound letters;
+        var i = letters.length-1, letter, buf = [], j = 0;
+        for (;len>0;len--) {
+            letter = letters.at(len);
+            if (this.letterHisotries.get(letter.id)) {
+                len+=1;
+                while (len<letters.length) {
+                    letter = letters.at(len);
+                    this.letterHistories.add();
+                    buf[j]=this.buildMessageBox(letter.id, letter.get("content"), letter.get("send_time"), false);
+                    len++;
+                    j++;
+                }
+                break;
+            }
+        }
+        $("#letter_message_panel").append(buf.join(""));
+    },
     onNewLetter: function(data){
         var self = this;
         if (data.to_userId == this.toUserId) {
             app.userManager.fetchLetters({
-                "direction":1,
+                "direction":2,
                 "targetUserId":data.to_userId,
                 "targetType":data.to_userId > -1 ? "user" : "system"
             },{
-                "success":self.fillRecentHistory,
+                "success":self.displayNewLetters,
                 "error":self.fetchLetterError
             });
         } else if ( this.letterUserList.findWhere({"userId":data.to_userId})) {
