@@ -256,7 +256,7 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	letter: function(id, targetUserId){
-		var options = {"toUserId":targetUserId};
+		var options = {"toUserId": targetUserId};
 		options.type = typeof targetUserId == 'undefined' ? Constants.LetterType.system : Constants.LetterType.user;
 		this.letterView = new LetterView(options);
 	},

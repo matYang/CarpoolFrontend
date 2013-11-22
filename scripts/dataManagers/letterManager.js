@@ -20,10 +20,10 @@
 
 
 	LetterManager.prototype.sendLetter = function(targetId, content, callback) {
-		// if (testMockObj.testMode) {
-		// 	callback.err((new Letter()).set("letterId",123).set("content",content));
-		// 	return;
-		// }
+		//if (testMockObj.testMode) {
+		// callback.err((new Letter()).set("letterId",123).set("content",content));
+		// return;
+		//}
 		if (typeof targetId !== 'number'){
 			Constants.dWarn("LetterManager::sendLetter:: invalid parameter");
 			return;
