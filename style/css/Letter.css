@@ -7,6 +7,12 @@
 #letter_user_search{
     height:30px;
 }
+#search_contact_input{
+    background-image: url("../../res/icon_search.png");
+    background-repeat:no-repeat;
+    background-position:right center;
+    background-size: 10%;
+}
 #letter_main_panel{
     width:750px;
     float:left;
