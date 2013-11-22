@@ -1,7 +1,8 @@
 #letter_left_panel{
     width:190px;
     float:left;
-    margin-top:20px;
+    height:662px;
+    background-color:#DDF7FF;
 }
 #letter_user_search{
     height:30px;

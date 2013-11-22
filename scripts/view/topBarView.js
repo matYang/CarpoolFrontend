@@ -166,7 +166,7 @@ var TopBarView = Backbone.View.extend({
 	bindEvents: function(){
 		var self = this,
 			idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
-
+		var username, password;
 
 		/*  navigation events  */
 		//main nav
@@ -260,9 +260,39 @@ var TopBarView = Backbone.View.extend({
 			$('#signup_button').on('click', function(){
 				app.navigate("/register", true);
 			});
+			$("#login_password,#login_username").on("keydown", function(e){
+				if (e.which == 13) {
+					username = $("#login_username").val();
+					password = $("#login_password").val();
+					app.sessionManager.login(username, password, {
+						success: function(response){
+							Constants.dLog("server login response: ");
+							Constants.dLog(response);
+
+							//fetching session, with async flag to true
+							app.sessionManager.fetchSession(true, {
+								success: function(){
+									app.userManager.sessionUser = app.sessionManager.getSessionUser();
+									app.navigate(app.sessionManager.getUserId() + "/main", true);
+								},
+								error: function(){
+									Info.alert("登录失败");
+								}
+								
+							});
+						},
+
+						error: function(status){
+							alert("登录失败，请稍后再试");
+							$("#login_username").addClass('invalid_input');
+							$("#login_password").addClass('invalid_input');
+						}
+					});
+            	} 
+			});
 			$('#login_button').on('click', function(){
-				var username = $("#login_username").val();
-				var password = $("#login_password").val();
+				username = $("#login_username").val();
+				password = $("#login_password").val();
 				if ( username !== "" && password !== "") {
 					app.sessionManager.login(username, password, {
 						success: function(response){

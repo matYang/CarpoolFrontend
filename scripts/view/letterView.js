@@ -10,14 +10,21 @@ var LetterView = Backbone.View.extend({
         var option = {
             "direction":2
         }
+        debugger;
         if (params.toUserId) {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
-            option.targetType = "user";
+            option.targetType = Constants.LetterType.user;
             app.userManager.fetchUser(this.toUserId, {"success":function(user){
                 self.toUser = user;
                 $("#letter_toUser_name").html(user.get("name"));
                 $("#letter_toUser_pic").attr("src", user.get("imgPath"));
+                debugger;
+                if (!self.letterUserList) {
+                    self.letterUserList = new Letters();
+                }
+                self.letterUserList.add(user);
+                self.renderContacts(self.letterUserList);
             }, "error":function(){}
         });
         } else {
@@ -82,13 +89,18 @@ var LetterView = Backbone.View.extend({
         });
     },
     renderContacts: function(list){
-        this.letterUserList = list;
-        var buf = [], len = list.length, bufLen = 0, self = this, user, id;
-        if (this.toUser && !this.letterUserList.findWhere({"userId":this.toUserId}) ){
-            this.letterUserList.unshift(this.toUser);
+        var i;
+        $("#letter_user_list").empty();
+        if (!this.letterUserList) {
+            this.letterUserList = list;
+        } else if (list && this.letterUserList !== list) {
+            for (i=0; i<list.length; i++) {
+                this.letterUserList.add(list.at(i));
+            }
         }
+        var buf = [], len = this.letterUserList.length, bufLen = 0, self = this, user, id;
         for ( i = 0; i < len; i++ ) {
-            user = list.at(i);
+            user = this.letterUserList.at(i);
             this.contactListTemplate[1] = user.get("userId");
             this.contactListTemplate[3] = user.get("imgPath");
             this.contactListTemplate[5] = user.get("name");
@@ -103,6 +115,7 @@ var LetterView = Backbone.View.extend({
                 self.switchContact(Utilities.getId(e.delegateTarget.id));
             }
         });
+        $("#contactList_"+this.toUserId).addClass("highlitedUser");
     },
     switchContact:function(id){
         var user = this.letterUserList.get(id);

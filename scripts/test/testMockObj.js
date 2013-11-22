@@ -85,6 +85,7 @@ var testMockObj = {
 	"sampleNotificationF": (new Notification()).set
 	("notificationId", 6).set("messageSummary", "sample message"),
 
+	
 	"sampleLocationSZ": new UserLocation().set("province", "江苏").set("city","苏州"),
 	"sampleLocationNJ": new UserLocation().set("province", "江苏").set("city","南京"),
 };
