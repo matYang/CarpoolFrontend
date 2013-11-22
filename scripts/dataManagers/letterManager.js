@@ -43,7 +43,7 @@
 		letter.set('content', content);
 
 		/*optional, this will be inforced by server API logic,leaving here for reference*/
-		letter.set('type', Constants.LetterType.user);
+		letter.set('type', targetId > 0 ? Constants.LetterType.user : Constants.LetterType.system);
 		letter.set('send_time', new Date());
 		letter.set('state', Constants.LetterState.unread);
 
