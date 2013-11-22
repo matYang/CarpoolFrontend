@@ -9,7 +9,8 @@ var LetterView = Backbone.View.extend({
         var option = {
             "direction":2
         };
-        if (params.toUserId && params.toUserId !== -1) {
+        debugger;
+        if (params.toUserId && params.toUserId !== "-1") {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
             option.targetType = Constants.LetterType.user;
@@ -227,14 +228,18 @@ var LetterView = Backbone.View.extend({
         } else if ( this.letterUserList.findWhere({"userId":data.to_userId})) {
             $("#contactList_"+data.to_userId).addClass("userNewMessage");
         } else {
-            app.userManager.fetchUser(to_userId, {"success":function(user){
-                    self.contactListTemplate[1] = user.get("userId");
-                    self.contactListTemplate[3] = user.get("imgPath");
-                    self.contactListTemplate[5] = user.get("name");
-                    $("#letter_user_list").prepend(self.contactListTemplate.join(""));
-                    $("#contactList_"+user.get("userId")).addClass("userNewMessage");
-                }, "error":function(){}
-            });
+            if (to_userId !== -1) {
+                app.userManager.fetchUser(to_userId, {"success":function(user){
+                        self.contactListTemplate[1] = user.get("userId");
+                        self.contactListTemplate[3] = user.get("imgPath");
+                        self.contactListTemplate[5] = user.get("name");
+                        $("#letter_user_list").prepend(self.contactListTemplate.join(""));
+                        $("#contactList_"+user.get("userId")).addClass("userNewMessage");
+                    }, "error":function(){}
+                });
+            } else {
+                $("#contactList_-1").addClass("userNewMessage");
+            }
         }
     },
     close: function(){
