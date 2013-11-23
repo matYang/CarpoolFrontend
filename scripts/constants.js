@@ -88,7 +88,8 @@ var Constants = {
 		/*-----------  top level moduels  ----------*/
 		"tadv",
 		"front",
-		"main"
+		"main",
+		"userSearch"
 	],
 
 	messageType: {

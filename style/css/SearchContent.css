@@ -19,6 +19,7 @@
 #notifications {
 
 }
+
 #searchForm{
   position:relative;
   width:750px;
@@ -381,7 +382,7 @@
   margin-left:10px;
   margin-top:15px;
 }
-#oneWay, #round{
+#oneWay, #round, #all, #male, #female{
   text-align:center;
   float:left;
   width:120px;
@@ -403,6 +404,12 @@
   width:480px;
   float:left;
 }
+#findUserLocation, #findUserName{
+  height:50px;
+  width:480px;
+  float:left;
+}
+
 
 #dateInputs {
   height:140px;
@@ -419,7 +426,7 @@
   width:130px;
 }
 
-#locationInputs>.searchInputLabel{
+#locationInputs>.searchInputLabel,#findUserLocation>.searchInputLabel, #findUserName>.searchInputLabel{
   margin-top:25px;
   margin-left:10px;
   width:50px;

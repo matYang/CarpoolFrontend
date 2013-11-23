@@ -27,6 +27,10 @@
 				request: ['content'],
 				antiRequest: ['content']
 			},
+			'findUser':{
+				request: ['content'],
+				antiRequest: ['content']
+			},
 			'frontPage': {
 				request: ['content'],
 				antiRequest: ['content', 'advertisement']
