@@ -1,7 +1,7 @@
-var PersonalSocialView = Backbone.View.extend({
+var PersonalSocialView = MultiPageView.extend({
 	initialize: function(params) {
 		this.isClosed = false;
-		_.bindAll(this, 'render', 'bindEvents', 'entryEvent', 'error', 'close');
+		_.bindAll(this, 'render', 'entryEvent', 'error', 'close');
 		this.user = app.sessionManager.getSessionUser();
 
 		this.entryTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
@@ -13,7 +13,6 @@ var PersonalSocialView = Backbone.View.extend({
 		this.pageEntryNumber = 12;
 		this.entryClass = "socialCard";
 		this.entryContainer = "socialListContent";
-		this.domContainer = $("#socialListContent");
 		this.minHeight = 480;
 		this.startIndex = 0;
 
@@ -34,14 +33,8 @@ var PersonalSocialView = Backbone.View.extend({
 		$(".social_gender_0").html("♂");
 		$(".social_gender_1").html("♀");
 	},
-
-	bindEvents: function(){
-		var self = this;
-		$('#socialListContent>.social_card').on("click", function(e){
-			app.navigate(self.sessionUser.id+"/personal/"+Utilities.getId(e.delegateTarget.id), true);
-		});
-	},
 	entryEvent: function(id){
+		app.navigate(this.user.id+"/personal/"+id, true);
 	},
 	error: function() {
 
