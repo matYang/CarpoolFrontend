@@ -182,6 +182,9 @@ var TopBarView = Backbone.View.extend({
 		$('.navigate_feedBack').on('click', function(){
 			app.navigate(app.sessionManager.getUserId() + "/post" , true);
 		});
+		$(".navigate_usersearch").on('click', function(){
+			app.navigate(app.sessionManager.getUserId() + "/finduser" , true);
+		});
 
 		//personal nav
 		$('#notificationDropdown .dropdownTitleCheckAll').on('click', function(){

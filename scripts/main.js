@@ -30,6 +30,9 @@ var AppRouter = Backbone.Router.extend({
 		":id/letter/": "letter",
 		":id/letter/:targetUserId" : "letter",
 
+		":id/finduser" : "finduser",
+		":id/finduser/*encodedSearchkey" : "finduser",
+
 		"register" : "register",
 		"register/*registerState" : "register",
 
@@ -263,6 +266,11 @@ var AppRouter = Backbone.Router.extend({
 		var options = {"toUserId": targetUserId};
 		options.type = typeof targetUserId == 'undefined' ? Constants.LetterType.system : Constants.LetterType.user;
 		this.letterView = new LetterView(options);
+	},
+
+	finduser: function(id, encodedSearchkey){
+		debugger;
+		this.userSearchResultView = new UserSearchResultView({"encodedSearchKey":encodedSearchkey});
 	},
 
 	register: function(registrationState){
