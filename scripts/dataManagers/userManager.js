@@ -796,6 +796,39 @@
 			}
 		});
 	};
+
+	UserManager.prototype.searchUsers = function(userSearchRepresentation, callback) {
+		if (testMockObj.testMode) {
+			callback.success(testMockObj.sampleUsers);
+			return;
+		}
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("UserManager::searchUsers:: session does not exist, exit");
+			return;
+		}
+
+		var self = this,
+			users = new Users();
+
+		users.overrideUrl(this.apis.users_searchUser);
+		users.fetch({
+			data: $.param({'userSearchRepresentation': userSearchRepresentation, 'userId': self.sessionManager.getUserId()}),
+			dataType:'json',
+
+			success:function(model, response){
+				if (callback) {
+					callback.success(users);
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("UserManager::searchUsers:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error();
+				}
+			}
+		});
+	};
 	
 	
 

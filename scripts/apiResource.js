@@ -61,7 +61,7 @@ we do not give up, not this time
 					messageHistory: '/messageHistory',
 					transaction: '/transaction',
 					notification: '/notification',
-					letter: '/letter'
+					searchUser: '/searchUser'
 				},
 
 				'transaction': {
@@ -120,6 +120,7 @@ we do not give up, not this time
 				users_messageHistory : api_maker('users', 'messageHistory'),
 				users_transaction : api_maker('users', 'transaction'),
 				users_notification : api_maker('users', 'notification'),
+				users_searchUser : api_maker('users', 'searchUser'),
 
 				transaction_transaction : api_maker('transaction', 'transaction'),
 				transaction_admin : api_maker('transaction', 'admin'),
