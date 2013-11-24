@@ -20,10 +20,11 @@ var UserSearchResultView = MultiPageView.extend({
     if (params && params.userSearchRepresentation) {
       this.sr = params.userSearchRepresentation;
       app.userManager.searchUsers(this.sr, {
-        "success": this.render(userList),
+        "success": this.render,
         "error":undefined
       });
     } else {
+      this.sr =  new UserSearchRepresentation();
       this.render(new Users());
     }
   },  
@@ -42,19 +43,41 @@ var UserSearchResultView = MultiPageView.extend({
   bindEvents: function(){
     var that = this;
       $("#searchLocationInput_from").on('click', function(e){
-        that.locationPickerView = new LocationPickerView(that.sr.get("departureLocation"), that, "searchLocationInput_from");
+        that.locationPickerView = new LocationPickerView(that.sr.get("location"), that, "searchLocationInput_from");
       });
       $("#searchTypeContainer>div").on("click", function(e){
           $("#searchTypeContainer>.selected").removeClass("selected").addClass("notSelected");
           $("#"+e.target.id).removeClass("notSelected").addClass("selected");
+          if (e.target.id === "male") {
+            that.sr.set("gender", Constants.gender.male);
+          } else if (e.target.id === "female") {
+            that.sr.set("gender", Constants.gender.female);
+          } else {
+            that.sr.set("gender", Constants.gender.both);
+          }
       });
+      $("#nameInput").on("keypress", function(e){
+        if (e.which === 13) {
+          that.sr.set("name", $("#nameInput").val());
+          app.navigate(app.sessionManager.getUserId() + "/finduser/"+that.sr.toString());
+          app.userManager.searchUsers(that.sr, {
+            "success": that.render,
+            "error":undefined
+          });
+        }
+      })
       $("#searchResultButton").on("click", function(){
-
+        that.sr.set("name", $("#nameInput").val());
+        app.navigate(app.sessionManager.getUserId() + "/finduser/"+that.sr.toString());
+        app.userManager.searchUsers(that.sr, {
+          "success": that.render,
+          "error":undefined
+        });
       });
   },
   updateLocation: function () {
     var custTemp;
-    $("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
+    $("#searchLocationInput_from").val(this.searchRepresentation.get("location").get("city"));
     cust = this.searchRepresentation.get("departureLocation").get("point");
     if (cust !== "undetermined"){
       $("#customizeLocationInput_from").val(cust);

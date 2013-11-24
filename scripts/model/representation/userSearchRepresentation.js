@@ -14,6 +14,7 @@ var UserSearchRepresentation = Backbone.Model.extend({
 	},
 
 	toString: function(){
+		debugger;
 		return encodeURI(this.get("name")) + Config.urlSeperator + this.get('gender') +
 			Config.urlSeperator + this.get('location').toString();
 	},
