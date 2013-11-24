@@ -1,5 +1,5 @@
 
-var SearchRepresentation = Backbone.Model.extend({
+var UserSearchRepresentation = Backbone.Model.extend({
 
 	defaults: function(){
 		return {

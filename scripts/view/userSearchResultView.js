@@ -17,14 +17,18 @@ var UserSearchResultView = MultiPageView.extend({
     this.entryContainer = "searchResultDisplayPanel";
     this.domContainer = $("#searchResultDisplayPanel");
     this.startIndex = 0;
-    if (params.users) {
-      this.messages = params.users;
+    if (params && params.userSearchRepresentation) {
+      this.sr = params.userSearchRepresentation;
+      app.userManager.searchUsers(this.sr, {
+        "success": this.render(userList),
+        "error":undefined
+      });
+    } else {
+      this.render(new Users());
     }
-    this.sr = {};
-    this.render();
-    
   },  
-  render: function(){
+  render: function(userList){
+    this.messages = userList;
     $("#content").append(_.template(tpl.get("userSearch")));
     $("#searchResultDisplayPanel").css("width",938);
     MultiPageView.prototype.render.call(this);
@@ -41,8 +45,8 @@ var UserSearchResultView = MultiPageView.extend({
         that.locationPickerView = new LocationPickerView(that.sr.get("departureLocation"), that, "searchLocationInput_from");
       });
       $("#searchTypeContainer>div").on("click", function(e){
-          $("#searchTypeContainer>.selected").removeClass("selected");
-          $("#"+e.target.id).addClass("selected");
+          $("#searchTypeContainer>.selected").removeClass("selected").addClass("notSelected");
+          $("#"+e.target.id).removeClass("notSelected").addClass("selected");
       });
       $("#searchResultButton").on("click", function(){
 
@@ -59,7 +63,7 @@ var UserSearchResultView = MultiPageView.extend({
   close: function() {
     if (!this.isClosed){
       $("#searchTypeContainer>div").off();
-      ("#searchResultButton").off();
+      $("#searchResultButton").off();
       MultiPageView.prototype.close.call(this);
       $("#content").empty();
       this.isClosed = true;
