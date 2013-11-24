@@ -87,6 +87,7 @@ var UserSearchResultView = MultiPageView.extend({
     if (!this.isClosed){
       $("#searchTypeContainer>div").off();
       $("#searchResultButton").off();
+      $("#nameInput").off();
       MultiPageView.prototype.close.call(this);
       $("#content").empty();
       this.isClosed = true;
