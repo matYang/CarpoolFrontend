@@ -309,6 +309,45 @@
 			}
 		});
 	};
+	
+	MessageManager.prototype.autoMatch = function(messageId, callback) {
+		if(testMockObj.testMode){
+			callback.success(testMockObj.sampleMessages);
+			return;
+		}
+		var self = this;
+
+		if (typeof messageId !== 'number'){
+			Constants.dWarn("MessageManager::autoMatch:: invalid parameter, exit");
+			return;
+		}
+		if (!this.sessionManager.hasSession()){
+			Constants.dWarn("MessageManager::autoMatch:: session does not exist, exit");
+			return;
+		}
+
+
+		var messages = new Messages();
+		messages.overrideUrl(this.apis.DM_autoMatch + '/' + messageId);
+		messages.fetch({
+			data: $.param({ 'userId': self.sessionManager.getUserId()}),
+			dataType:'json',
+
+			success:function(model, response){
+				if(callback){
+					callback.success(messages);
+				}
+			},
+
+			error: function(model, response){
+				Constants.dWarn("MessageManager::autoMatch:: fetch failed with response:");
+				Constants.dLog(response);
+					if(callback){
+					callback.error();
+				}
+			}
+		});
+	};
 
 
 }).call(this);
