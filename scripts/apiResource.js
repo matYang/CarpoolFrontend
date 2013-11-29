@@ -38,7 +38,8 @@ we do not give up, not this time
 					dianming: '/dianming',
 					recent: '/recent',
 					search: '/search',
-					transaction: '/transaction'
+					transaction: '/transaction',
+					autoMatch: '/autoMatch'
 				},
 
 				'users': {
@@ -100,6 +101,7 @@ we do not give up, not this time
 				DM_recent : api_maker('DM', 'recent'),
 				DM_search : api_maker('DM', 'search'),
 				DM_transaction: api_maker('DM', 'transaction'),
+				DM_autoMatch: api_maker('DM', 'autoMatch'),
 
 
 				users_findSession : api_maker('users', 'findSession'),		//GET added to session manaegr
