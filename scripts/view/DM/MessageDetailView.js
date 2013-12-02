@@ -10,7 +10,6 @@ var MessageDetailView = Backbone.View.extend({
 
 		this.user = app.sessionManager.getSessionUser();
 		this.userId = app.sessionManager.getUserId();
-
 		var self = this;
 		this.newTransaction = new Transaction();
 		app.messageManager.fetchMessage(messageIdWrapper.messageId, {
@@ -43,25 +42,10 @@ var MessageDetailView = Backbone.View.extend({
 				Info.alert("信息读取失败");
 			}
 		});
+		this.quickmatchTemplate = ["<div class='view_matchResultEntry' id='matchResult_", null, "'><img src='", null,"'/></div>"];
 	},
 
 	render: function(){
-
-		// if (testMockObj.testMode){
-		// this.message = testMockObj.sampleMessageA;
-		// //To allow edit
-		// this.message.get("arrival_location").set("province","上海");
-		// this.message.get("arrival_location").set("city","上海");
-		// this.message.get("arrival_location").set("point","浦东机场");
-		// this.message.set("roundTrip", true);
-		// this.message.set("departure_seatsNumber", 5);
-		// this.message.set("departure_seatsBooked", 1);
-		// this.message.set("arrival_seatsNumber", 5);
-		// this.message.set("arrival_seatsBooked", 3);
-		// this.transactions = testMockObj.sampleTransactions;
-		// this.message.set("note", "火车站出发，谢绝大行李");
-		// this.message.set("departure_priceList", [20,18,15]);
-		// }
 		this.domContainer.append(this.template(this.parsedMessage));
 		this.map = new MapView({
 			div:"view_map",
@@ -116,12 +100,47 @@ var MessageDetailView = Backbone.View.extend({
 	loadError: function(){
 
 	},
-
+	renderAutoMatch: function(result){
+		var i, buf = [], len = result.length;
+		len = len < 15 ? len : 15;
+		for ( i = 0; i < len; i++) {
+			this.quickmatchTemplate[1] = result.at(i).get("messageId").get("imgPath");
+			this.quickmatchTemplate[3] = result.at(i).get("owner").get("imgPath");
+			buf[i] = this.quickmatchTemplate.join("");
+		}
+		buf[len] = "<div id='view_matchMore'>查看更多结果</div>"
+		$("#view_automatch").append(buf.join(""));
+		$(".view_matchResultEntry").on('click', function(e){
+			var id = Utilities.getId(e.delegateTarget.id);
+			app.navigate(that.userId + "/message/"+id, true);
+		});
+		$("#view_matchMore").on("click", function(e){
+			app.navigate(that.userId+"/main/"+this.msr.toString(), true);
+		});
+		$("#view_event_info_right").css("height", 115+Math.ceil(len/5)*50);
+	},
 	bindEvents: function () {
 		var that = this;
 		if ( this.ownerId === this.userId){
 			$("#view_edit").on("click", function(){
 				app.navigate(that.userId + "/message/"+that.messageId+"/edit", true);
+			});
+			$("#view_automatchButton").on("click", function(){
+				var msr = new SearchRepresentation();
+				msr.set("isRoundTrip", that.message.get("isRoundTrip"));
+				msr.set("departure_location", that.message.get("departure_location"));
+				msr.set("arrival_location", that.message.get("arrival_location"));
+				msr.set("departureDate", that.message.get("departure_time"));
+				msr.set("arrivalDate", that.message.get("arrival_time"));
+				msr.set("departureTimeSlot",  that.message.get("departure_timeSlot"));
+				msr.set("arrivalTimeSlot",  that.message.get("arrival_timeSlot"));
+				if ( that.message.get("type") == Constants.messageType.ask ) {
+					msr.set("targetType", Constants.messageType.help);
+				} else {
+					msr.set("targetType", Constants.messageType.ask);
+				}
+				that.msr = msr;
+				app.messageManager.searchMessage(msr, {"success":that.renderAutoMatch});
 			});
 		}
 
