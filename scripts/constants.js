@@ -4,7 +4,7 @@
 
 
 var getEnvironmentServerOrigin = function(){
-	var isOnLocal = true;
+	var isOnLocal = C_ENV_VAR !== 'REMOTE';
 	return {
 		'httpOrigin': isOnLocal ? 'localhost:8015' : 'www.huaixuesheng.com',
 		'socketOrigin': isOnLocal ? 'localhost:3000' : 'www.huaixuesheng.com:3000'
