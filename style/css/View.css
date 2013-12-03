@@ -36,7 +36,7 @@
 }
 
 
-#view_edit, #view_contact{
+#view_edit,#view_contact{
 	color:#ffffff;
 	background-color: rgb(20,188,222);
 	width:270px;
@@ -47,6 +47,9 @@
 	text-align: center;
 	margin: 10px;
 	font-size:40px;
+}
+#view_edit{
+	width:180px;
 }
 #view_headerUser{
 	height:20px;
@@ -97,6 +100,7 @@
 	border:1px solid #424242;
 	border-radius: 5px;
 	margin-top: 15px;
+	display:block;
 }
 #departureInfo, #returnInfo{
 	height:80px;
@@ -546,3 +550,40 @@ div.editContent.genderEditWindow{
 	height:230px;
 }
 */
+
+#view_automatchButton{
+    height:40px;
+    width:80px;
+    background-color: #0099ff;
+    border: 1px solid black;
+    text-align:center;
+    color:#ffffff;
+    padding-top: 20px;
+    margin-top: 10px;
+    float:left;
+    font-size:20px;
+}
+
+#view_automatch {
+	display:block;
+	width:100%;
+	float:left;
+}
+
+.view_matchResultEntry {
+	width:60px;
+	height:60px;
+	float:left;
+	margin:5px;
+}
+
+#view_matchMore{
+    width:270px;
+    float:left;
+    height:20px;
+    border:1px solid #cee1ee;
+    background-color:#f0f5f8;
+    margin-left:10px;
+    padding-top:2px;
+    text-align: center;
+}
