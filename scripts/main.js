@@ -78,18 +78,6 @@ var AppRouter = Backbone.Router.extend({
 		this.userLocation = new UserLocation();
 		this.curDate = new Date();
 		this.searchResult = new Messages();
-
-
-		//this.topBarView = new TopBarView();
-		// //test login API, must obtain login status before proceeding
-		// //here is just testing
-		// this.isLogin = true;
-		// this.topBarUser = new User();
-
-		// var tempUniversityArray = ["滑铁卢大学", "傻逼多大", "lol"];
-		// this.topBarUser.set({'universityGroup': tempUniversityArray});
-
-		//always on page, using topBarView as a mean of global control
 	},
 
 	defaultRoute: function(){
@@ -271,7 +259,7 @@ var AppRouter = Backbone.Router.extend({
 	finduser: function(id, encodedSearchkey){
 		var sr = new UserSearchRepresentation();
 		if (encodedSearchkey) {
-			sr.castFromString(encodedSearchkey)
+			sr.castFromString(encodedSearchkey);
 			this.userSearchResultView = new UserSearchResultView({"encodedSearchKey":sr});
 		} else {
 			this.userSearchResultView = new UserSearchResultView();
