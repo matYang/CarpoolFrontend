@@ -151,7 +151,4 @@ var FrontPageView = Backbone.View.extend({
 			this.isClosed = true;
 		}
     }
-
-
-
 });

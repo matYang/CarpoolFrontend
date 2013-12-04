@@ -18,9 +18,8 @@ var Config = {
 	},
 
 	validatePersonalViewState: function(personalViewState){
-		var possibleStates = this.getPossiblePersonalViewStates();
-
-		for (var i = 0; i < possibleStates.length; i++){
+		var possibleStates = this.getPossiblePersonalViewStates(), i;
+		for ( i = 0; i < possibleStates.length; i++){
 			if (possibleStates[i] === personalViewState){
 				return true;
 			}
@@ -38,9 +37,9 @@ var Config = {
 	},
 
 	validateDMPostState: function(postState){
-		var possibleStates = this.getPossibleDMPostStates();
+		var possibleStates = this.getPossibleDMPostStates(), i;
 
-		for (var i = 0; i < possibleStates.length; i++){
+		for (i = 0; i < possibleStates.length; i++){
 			if (possibleStates[i] === postState){
 				return true;
 			}
@@ -49,9 +48,9 @@ var Config = {
 	},
 
 	getPostStateStepIndex: function(postState){
-		var possibleStates = this.getPossibleDMPostStates();
+		var possibleStates = this.getPossibleDMPostStates(), i;
 
-		for (var i = 0; i < possibleStates.length; i++){
+		for (i = 0; i < possibleStates.length; i++){
 			if (possibleStates[i] === postState){
 				return i+1;
 			}
@@ -71,9 +70,9 @@ var Config = {
 	},
 
 	validateRegistrationState: function(registrationState){
-		var possibleStates = this.getPossibleRegistrationStates();
+		var possibleStates = this.getPossibleRegistrationStates(), i;
 
-		for (var i = 0; i < possibleStates.length; i++){
+		for (i = 0; i < possibleStates.length; i++){
 			if (possibleStates[i] === registrationState){
 				return true;
 			}
@@ -82,9 +81,9 @@ var Config = {
 	},
 
 	getRegistrationStateStepIndex: function(registrationState){
-		var possibleStates = this.getPossibleRegistrationStates();
+		var possibleStates = this.getPossibleRegistrationStates(), i;
 
-		for (var i = 0; i < possibleStates.length; i++){
+		for ( i = 0; i < possibleStates.length; i++){
 			if (possibleStates[i] === registrationState){
 				return i+1;
 			}
