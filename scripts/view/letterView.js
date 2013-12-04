@@ -269,4 +269,4 @@ var LetterView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-}); 
+});

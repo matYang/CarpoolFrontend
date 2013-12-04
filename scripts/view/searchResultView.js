@@ -38,4 +38,4 @@ var SearchResultView = MultiPageView.extend({
     close: function () {
         this.domContainer.empty();
     }
-}); 
+});

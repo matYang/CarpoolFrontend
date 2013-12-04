@@ -89,4 +89,4 @@ var MultiPageView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-}); 
+});

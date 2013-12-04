@@ -91,4 +91,4 @@ var MapView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-}); 
+});

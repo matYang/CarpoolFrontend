@@ -1,8 +1,7 @@
 var NotificationHistoryView = MultiPageView.extend({
 
-
-    initialize: function(messageList){
-        _.bindAll(this, 'render', 'bindNotificationEvent','fetchMessageError', 'close');
+    initialize: function (messageList) {
+        _.bindAll(this, 'render', 'bindNotificationEvent', 'fetchMessageError', 'close');
         this.messages = messageList;
         this.entryTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
         this.pageNumberClass = "searchResultPageNumber";
@@ -19,28 +18,25 @@ var NotificationHistoryView = MultiPageView.extend({
         MultiPageView.prototype.render.call(this);
     },
 
-    render: function(start){
-        
+    render: function (start) {
+
     },
-    bindNotificationEvent: function(messageId){
+    bindNotificationEvent: function (messageId) {
         var currentNotification = this.messages.get(messageId);
         var n_evt = currentNotification.get('notificationEvent');
         app.notificationManager.checkNotification(messageId);
-        if (n_evt === Constants.notificationEvent.watched){
+        if (n_evt === Constants.notificationEvent.watched) {
             app.navigate(app.sessionManager.getUserId() + "/personal/" + currentNotification.get('initUserId'), true);
-        }
-        else if (n_evt < Constants.notificationEvent.watched){
+        } else if (n_evt < Constants.notificationEvent.watched) {
             app.navigate(app.sessionManager.getUserId() + "/message/" + messageId, true);
         }
     },
 
-    fetchMessageError:function(){
+    fetchMessageError: function () {
 
     },
 
-    close: function(){
+    close: function () {
         this.domContainer.empty();
     }
-
-
-});
+}); 

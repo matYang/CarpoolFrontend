@@ -92,4 +92,4 @@ var UserSearchResultView = MultiPageView.extend({
             this.isClosed = true;
         }
     }
-}); 
+});

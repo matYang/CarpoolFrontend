@@ -1,52 +1,49 @@
 var TransactionHistoryView = MultiPageView.extend({
 
+    initialize: function (messageList) {
+        _.bindAll(this, 'render', 'openTransactionDetail', 'fetchMessageSuccess', 'fetchMessageError', 'close');
+        this.messages = messageList;
+        this.entryTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
+        this.pageNumberClass = "searchResultPageNumber";
+        this.pageNumberId = "transactionPageNumber";
+        this.entryEvent = this.openTransactionDetail;
+        this.pageNavigator = "transactionHistoryNavigator";
+        this.user = app.sessionManager.getSessionUser();
+        this.entryHeight = 61;
+        this.pageEntryNumber = 7;
+        this.entryClass = "personal_transactionHistory_message";
+        this.entryContainer = "transactionHistoryContent";
+        this.domContainer = $("#transactionHistoryContent");
+        this.minHeight = 427;
+        MultiPageView.prototype.render.call(this);
+    },
 
-	initialize: function(messageList){
-		_.bindAll(this, 'render', 'openTransactionDetail','fetchMessageSuccess','fetchMessageError', 'close');
-		this.messages = messageList;
-		this.entryTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
-		this.pageNumberClass = "searchResultPageNumber";
-		this.pageNumberId = "transactionPageNumber";
-		this.entryEvent = this.openTransactionDetail;
-		this.pageNavigator = "transactionHistoryNavigator";
-		this.user = app.sessionManager.getSessionUser();
-		this.entryHeight = 61;
-		this.pageEntryNumber = 7;
-		this.entryClass = "personal_transactionHistory_message";
-		this.entryContainer = "transactionHistoryContent";
-		this.domContainer = $("#transactionHistoryContent");
-		this.minHeight = 427;
-		MultiPageView.prototype.render.call(this);
-	},
+    render: function (start) {
 
-	render: function(start){
-		
-	},
-	openTransactionDetail: function(messageId){
-		var currentTransaction = this.messages.get(messageId);
-		app.messageManager.fetchMessage(currentTransaction.get("messageId"), {
-			"success":this.fetchMessageSuccess,
-			"error":this.fetchMessageError,
-			"transaction":currentTransaction
-		});
+    },
+    openTransactionDetail: function (messageId) {
+        var currentTransaction = this.messages.get(messageId);
+        app.messageManager.fetchMessage(currentTransaction.get("messageId"), {
+            "success": this.fetchMessageSuccess,
+            "error": this.fetchMessageError,
+            "transaction": currentTransaction
+        });
 
-	},
-	fetchMessageSuccess:function(message, transaction){
-		if (app.sessionManager.hasSession()){
-			this.transactionDetail = new TransactionDetailView(transaction, {
-				"departure_seatsNumber":message.get("departure_seatsNumber") - message.get("departure_seatsBooked"),
-				"arrival_seatsNumber":message.get("arrival_seatsBookedtsNumber") - message.get("arrival_seatsBooked"),
-				"status":"r"
-			});
-		}
-	},
-	fetchMessageError:function(){
+    },
+    fetchMessageSuccess: function (message, transaction) {
+        if (app.sessionManager.hasSession()) {
+            this.transactionDetail = new TransactionDetailView (transaction, {
+                "departure_seatsNumber": message.get("departure_seatsNumber") - message.get("departure_seatsBooked"),
+                "arrival_seatsNumber": message.get("arrival_seatsBookedtsNumber") - message.get("arrival_seatsBooked"),
+                "status": "r"
+            });
+        }
+    },
+    fetchMessageError: function () {
 
-	},
+    },
 
-	close: function(){
-		this.domContainer.empty();
-	}
-
-
-});
+    close: function () {
+        this.domContainer.empty();
+    }
+}); 

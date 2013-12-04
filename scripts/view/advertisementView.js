@@ -19,4 +19,4 @@ var AdvertisementView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-}); 
+});

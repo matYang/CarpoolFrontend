@@ -1,96 +1,91 @@
-
 var Config = {
 
-	urlSeperator: '+',
+    urlSeperator: '+',
 
-	locationSeperator: '_',
+    locationSeperator: '_',
 
-	defaultCustomDepthIndex: 3,
+    defaultCustomDepthIndex: 3,
 
+    //-------------- PersonalView state transfer -------------
+    getDefaultPersonalViewState: function () {
+        return "history";
+    },
 
-	//-------------- PersonalView state transfer -------------
-	getDefaultPersonalViewState: function(){
-		return "history";
-	},
+    getPossiblePersonalViewStates: function () {
+        return ['social', 'message', 'history', 'utility'];
+    },
 
-	getPossiblePersonalViewStates: function(){
-		return ['social', 'message', 'history', 'utility'];
-	},
+    validatePersonalViewState: function (personalViewState) {
+        var possibleStates = this.getPossiblePersonalViewStates(), i;
+        for ( i = 0; i < possibleStates.length; i++) {
+            if (possibleStates[i] === personalViewState) {
+                return true;
+            }
+        }
+        return false;
+    },
 
-	validatePersonalViewState: function(personalViewState){
-		var possibleStates = this.getPossiblePersonalViewStates(), i;
-		for ( i = 0; i < possibleStates.length; i++){
-			if (possibleStates[i] === personalViewState){
-				return true;
-			}
-		}
-		return false;
-	},
+    //-------------- DMPost state transfer --------------
+    getDefaultDMPostState: function () {
+        return "step1";
+    },
 
-	//-------------- DMPost state transfer --------------
-	getDefaultDMPostState: function(){
-		return "step1";
-	},
+    getPossibleDMPostStates: function () {
+        return ['step1', 'step2', 'step3'];
+    },
 
-	getPossibleDMPostStates: function(){
-		return ['step1', 'step2', 'step3'];
-	},
+    validateDMPostState: function (postState) {
+        var possibleStates = this.getPossibleDMPostStates(), i;
 
-	validateDMPostState: function(postState){
-		var possibleStates = this.getPossibleDMPostStates(), i;
+        for ( i = 0; i < possibleStates.length; i++) {
+            if (possibleStates[i] === postState) {
+                return true;
+            }
+        }
+        return false;
+    },
 
-		for (i = 0; i < possibleStates.length; i++){
-			if (possibleStates[i] === postState){
-				return true;
-			}
-		}
-		return false;
-	},
+    getPostStateStepIndex: function (postState) {
+        var possibleStates = this.getPossibleDMPostStates(), i;
 
-	getPostStateStepIndex: function(postState){
-		var possibleStates = this.getPossibleDMPostStates(), i;
+        for ( i = 0; i < possibleStates.length; i++) {
+            if (possibleStates[i] === postState) {
+                return i + 1;
+            }
+        }
+        Info.warn("Config::getPostStepIndex:: invalid postState, using the default step 1");
+        return 1;
+    },
 
-		for (i = 0; i < possibleStates.length; i++){
-			if (possibleStates[i] === postState){
-				return i+1;
-			}
-		}
-		Info.warn("Config::getPostStepIndex:: invalid postState, using the default step 1");
-		return 1;
-	},
+    //-------------- Registration state transfer --------------
+    getDefaultRegistrationState: function () {
+        return "step1";
+    },
 
+    getPossibleRegistrationStates: function () {
+        return ['step1', 'step2', 'step3', 'step4'];
+    },
 
-	//-------------- Registration state transfer --------------
-	getDefaultRegistrationState: function(){
-		return "step1";
-	},
+    validateRegistrationState: function (registrationState) {
+        var possibleStates = this.getPossibleRegistrationStates(), i;
 
-	getPossibleRegistrationStates: function(){
-		return ['step1', 'step2', 'step3', 'step4'];
-	},
+        for ( i = 0; i < possibleStates.length; i++) {
+            if (possibleStates[i] === registrationState) {
+                return true;
+            }
+        }
+        return false;
+    },
 
-	validateRegistrationState: function(registrationState){
-		var possibleStates = this.getPossibleRegistrationStates(), i;
+    getRegistrationStateStepIndex: function (registrationState) {
+        var possibleStates = this.getPossibleRegistrationStates(), i;
 
-		for (i = 0; i < possibleStates.length; i++){
-			if (possibleStates[i] === registrationState){
-				return true;
-			}
-		}
-		return false;
-	},
-
-	getRegistrationStateStepIndex: function(registrationState){
-		var possibleStates = this.getPossibleRegistrationStates(), i;
-
-		for ( i = 0; i < possibleStates.length; i++){
-			if (possibleStates[i] === registrationState){
-				return i+1;
-			}
-		}
-		Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
-		return 1;
-	}
-
-
-};
+        for ( i = 0; i < possibleStates.length; i++) {
+            if (possibleStates[i] === registrationState) {
+                return i + 1;
+            }
+        }
+        Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
+        return 1;
+    }
+}; 

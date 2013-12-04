@@ -204,4 +204,4 @@ var PersonalView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-}); 
+});
