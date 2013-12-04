@@ -25,10 +25,10 @@ var MultiPageView = Backbone.View.extend({
             length = (length < this.pageEntryNumber) ? length : this.pageEntryNumber;
             for ( i = 0; i < length; i++) {
                 var message;
-                if (this.messages instanceof Backbone.Collection){
-                    message = this.messages.at(i+this.startIndex);
+                if (this.messages instanceof Backbone.Collection) {
+                    message = this.messages.at(i + this.startIndex);
                 } else {
-                    message = this.messages[i+this.startIndex];
+                    message = this.messages[i + this.startIndex];
                 }
                 buf[i] = this.entryTemplate(message._toJSON());
             }
@@ -40,15 +40,15 @@ var MultiPageView = Backbone.View.extend({
         } else {
             $("#" + this.entryContainer).append("<div id = 'mainPageNoMessage'>暂无消息</div>");
         }
-        var height =  Math.ceil(length/this.entryRowNum) * this.entryHeight;
+        var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;
         height = (height > this.minHeight) ? height : this.minHeight;
         $("#" + this.entryContainer).css("height", height + "px");
-        if (this.messages.length > this.pageEntryNumber){
+        if (this.messages.length > this.pageEntryNumber) {
             this.setPageNavigator();
         }
     },
     toPage: function (page) {
-        this.startIndex = this.pageEntryNumber * (page-1);
+        this.startIndex = this.pageEntryNumber * (page - 1);
         this.render();
     },
     bindEntryEvent: function () {
@@ -63,14 +63,14 @@ var MultiPageView = Backbone.View.extend({
         $("#" + this.pageNavigator).remove();
         $("#" + this.entryContainer).after($("<div>").attr("id", this.pageNavigator));
         var length = this.messages ? this.messages.length : 0;
-        var pages =  Math.floor(length / this.pageEntryNumber) + 1;
+        var pages = Math.floor(length / this.pageEntryNumber) + 1;
         this.pages = pages;
         var buf = [];
         var divBuf = ["<a id='", this.pageNumberId, "_", 0, "' class='", this.pageNumberClass, "'> ", 0, "</a>"];
         for (var i = 1; i <= pages; i++) {
             divBuf[3] = i;
             divBuf[7] = i;
-            buf[i-1] = divBuf.join("");
+            buf[i - 1] = divBuf.join("");
         }
         var html = buf.join("");
         $("#" + this.pageNavigator).empty();
@@ -82,11 +82,11 @@ var MultiPageView = Backbone.View.extend({
         });
     },
     close: function () {
-        if (!this.isClosed){
+        if (!this.isClosed) {
             $("#" + this.entryContainer + ">." + this.entryClass).off();
             $("." + this.pageNumberClass).off();
             $("#" + this.entryContainer).empty();
             this.isClosed = true;
         }
     }
-});
+}); 

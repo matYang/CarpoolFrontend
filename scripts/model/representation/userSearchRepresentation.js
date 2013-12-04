@@ -1,46 +1,44 @@
-
 var UserSearchRepresentation = Backbone.Model.extend({
 
-	defaults: function(){
-		return {
-			'location': Constants.getDefaultUserLocation(),
-			'gender': Constants.gender.both,
-			'name': ""
-		};
-	},
+    defaults: function () {
+        return {
+            'location': Constants.getDefaultUserLocation(),
+            'gender': Constants.gender.both,
+            'name': ""
+        };
+    },
 
-	initialize: function(){
-		_.bindAll(this, 'toString', 'castFromString', 'parse', 'toJSON');
-	},
+    initialize: function () {
+        _.bindAll(this, 'toString', 'castFromString', 'parse', 'toJSON');
+    },
 
-	toString: function(){
-		debugger;
-		return encodeURI(this.get("name")) + Config.urlSeperator + this.get('gender') +
-			Config.urlSeperator + this.get('location').toString();
-	},
+    toString: function () { debugger;
+        return encodeURI(this.get("name")) + Config.urlSeperator + this.get('gender') + Config.urlSeperator + this.get('location').toString();
+    },
 
-	castFromString: function(str){
-		var strArray = str.split(Config.urlSeperator);
-		
-		this.set('name', decodeURI(strArray[0]));
-		this.set('gender', parseInt(strArray[1], 10));
-		var loc = new UserLocation();
-		loc.castFromString(strArray[2]);
-		this.set('location', loc);
-		
-	},
+    castFromString: function (str) {
+        var strArray = str.split(Config.urlSeperator);
 
-	parse: function(data){
-		data.location = new UserLocation(data.location, {parse: true});
-		data.gender = parseInt(data.gender, 10);
-		return data;
-	},
+        this.set('name', decodeURI(strArray[0]));
+        this.set('gender', parseInt(strArray[1], 10));
+        var loc = new UserLocation ();
+        loc.castFromString(strArray[2]);
+        this.set('location', loc);
 
-	toJSON: function(){
-		var json = _.clone(this.attributes);
-		if (this.get('location') instanceof Backbone.Model) {
-			json.location = this.get('location').toJSON();
-		}
-	}
+    },
 
-});
+    parse: function (data) {
+        data.location = new UserLocation (data.location, {
+            parse: true
+        });
+        data.gender = parseInt(data.gender, 10);
+        return data;
+    },
+
+    toJSON: function () {
+        var json = _.clone(this.attributes);
+        if (this.get('location') instanceof Backbone.Model) {
+            json.location = this.get('location').toJSON();
+        }
+    }
+}); 

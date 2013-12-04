@@ -7,9 +7,7 @@ var TopBarView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown',
-            'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close',
-            'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
+        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
@@ -24,7 +22,6 @@ var TopBarView = Backbone.View.extend({
         this.render();
 
     },
-
 
     render: function () {
         this.listenTo(this.sessionUser, 'change:userId', this.reRender);
@@ -42,7 +39,6 @@ var TopBarView = Backbone.View.extend({
             this.listenTo(this.letters, 'reset', this.renderLetterDropdown);
             this.favorites = app.sessionManager.getCurUserFavorites();
             this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
-
 
             this.notificationContainer = $('#notificationDropdownContentContainer');
             this.letterContainer = $('#letterDropdownContentContainer');
@@ -63,12 +59,10 @@ var TopBarView = Backbone.View.extend({
         this.render();
     },
 
-
     renderNotificationDropdown: function (notifications) {
-        var i = 0,
-            htmlContext = '';
+        var i = 0, htmlContext = '';
 
-        for (i = 0; i < this.notifications.length; i++) {
+        for ( i = 0; i < this.notifications.length; i++) {
             htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
         }
 
@@ -79,7 +73,7 @@ var TopBarView = Backbone.View.extend({
     renderLetterDropdown: function () {
         var i = 0, htmlContext = '';
 
-        for (i = 0; i < this.letters.length; i++) {
+        for ( i = 0; i < this.letters.length; i++) {
             htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
         }
 
@@ -88,10 +82,9 @@ var TopBarView = Backbone.View.extend({
     },
 
     renderFavoriteDropdown: function () {
-        var i = 0,
-            htmlContext = '';
+        var i = 0, htmlContext = '';
 
-        for (i = 0; i < this.favorites.length; i++) {
+        for ( i = 0; i < this.favorites.length; i++) {
             htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
         }
 
@@ -103,7 +96,7 @@ var TopBarView = Backbone.View.extend({
         var self = this;
         this._unbindDropdownEvents(dropdownName);
         if (dropdownName === 'notifications') {
-            this.notificationContainer.find('.dropdownContent').on('click', function(e) {
+            this.notificationContainer.find('.dropdownContent').on('click', function (e) {
                 var n_id = parseInt($(this).attr("data-notificationId"), 10);
                 var n_model = self.notifications.get(n_id);
                 var n_evt = n_model.get('notificationEvent');
@@ -119,15 +112,13 @@ var TopBarView = Backbone.View.extend({
                     app.navigate(app.sessionManager.getUserId() + "/message/" + n_model.get('messageId'), true);
                 }
             });
-        }
-        else if (dropdownName === 'letter') {
-            this.letterContainer.find('.dropdownContent').on('click', function(e) {
+        } else if (dropdownName === 'letter') {
+            this.letterContainer.find('.dropdownContent').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
                 app.navigate(app.sessionManager.getUserId() + "/letter/" + u_id, true);
             });
-        }
-        else if (dropdownName === 'favorites') {
-            this.favoriteContainer.find('.dropdownContent').on('click', function(e) {
+        } else if (dropdownName === 'favorites') {
+            this.favoriteContainer.find('.dropdownContent').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
                 app.navigate(app.sessionManager.getUserId() + "/personal/" + u_id, true);
             });
@@ -137,14 +128,11 @@ var TopBarView = Backbone.View.extend({
     _unbindDropdownEvents: function (dropdownName) {
         if (dropdownName === 'notifications' && this.notificationContainer) {
             this.notificationContainer.find('.dropdownContent').off();
-        }
-        else if (dropdownName === 'letter' && this.letterContainer) {
+        } else if (dropdownName === 'letter' && this.letterContainer) {
             this.letterContainer.find('.dropdownContent').off();
-        }
-        else if (dropdownName ===  'favorites' && this.favoriteContainer) {
+        } else if (dropdownName === 'favorites' && this.favoriteContainer) {
             this.favoriteContainer.find('.dropdownContent').off();
-        }
-        else {
+        } else {
             //unbind all
             if (this.notificationContainer) {
                 this.notificationContainer.find('.dropdownContent').off();
@@ -164,39 +152,37 @@ var TopBarView = Backbone.View.extend({
     },
 
     bindEvents: function () {
-        var self = this,
-            idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
+        var self = this, idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
         var username, password;
 
         /*  navigation events  */
         //main nav
         $('#logo').on('click', function () {
-            app.navigate(idString  + "/front" , true);
+            app.navigate(idString + "/front", true);
         });
         $('.navigate_main').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/main/" + self.sessionUser.get('searchRepresentation') , true);
+            app.navigate(app.sessionManager.getUserId() + "/main/" + self.sessionUser.get('searchRepresentation'), true);
         });
         $('.navigate_personal').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() , true);
+            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId(), true);
         });
         $('.navigate_feedBack').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/post" , true);
+            app.navigate(app.sessionManager.getUserId() + "/post", true);
         });
         $(".navigate_usersearch").on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/finduser" , true);
+            app.navigate(app.sessionManager.getUserId() + "/finduser", true);
         });
 
         //personal nav
         $('#notificationDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history" , true);
+            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history", true);
         });
         $('#letterDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/letter" , true);
+            app.navigate(app.sessionManager.getUserId() + "/letter", true);
         });
         $('#favoriteDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/social" , true);
+            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/social", true);
         });
-
 
         /*  UI events  */
         $('#notifications').on('mouseenter', function () {
@@ -249,7 +235,7 @@ var TopBarView = Backbone.View.extend({
                 self.hideLetterDropdown();
             }
         });
-        $('#profileDropdown').on('mouseleave', function(e) {
+        $('#profileDropdown').on('mouseleave', function (e) {
             if (e.toElement === null || e.toElement.id !== "profilePicture") {
                 self.hideProfileDropdown();
             }
@@ -263,7 +249,7 @@ var TopBarView = Backbone.View.extend({
             $('#signup_button').on('click', function () {
                 app.navigate("/register", true);
             });
-            $("#login_password,#login_username").on("keydown", function(e) {
+            $("#login_password,#login_username").on("keydown", function (e) {
                 if (e.which == 13) {
                     username = $("#login_username").val();
                     password = $("#login_password").val();
@@ -281,7 +267,6 @@ var TopBarView = Backbone.View.extend({
                                 error: function () {
                                     Info.alert("登录失败");
                                 }
-
                             });
                         },
 
@@ -296,7 +281,7 @@ var TopBarView = Backbone.View.extend({
             $('#login_button').on('click', function () {
                 username = $("#login_username").val();
                 password = $("#login_password").val();
-                if ( username !== "" && password !== "") {
+                if (username !== "" && password !== "") {
                     app.sessionManager.login(username, password, {
                         success: function (response) {
                             Constants.dLog("server login response: ");
@@ -311,7 +296,6 @@ var TopBarView = Backbone.View.extend({
                                 error: function () {
                                     Info.alert("登录失败");
                                 }
-
                             });
                         },
 
@@ -328,8 +312,7 @@ var TopBarView = Backbone.View.extend({
                     $("#login_password").addClass('invalid_input');
                 }
             });
-        }
-        else {
+        } else {
             $('#logout').on('click', function () {
                 self.logout();
             });
@@ -370,7 +353,7 @@ var TopBarView = Backbone.View.extend({
         $("li").removeClass("whiteBackground");
         $("#notificationDropdown").show();
     },
-    hideNotificationDropdown:function () {
+    hideNotificationDropdown: function () {
         $("li").removeClass("whiteBackground");
         $("#notificationDropdown").hide();
     },
@@ -430,6 +413,4 @@ var TopBarView = Backbone.View.extend({
             this.isClosed = true;
         }
     }
-
-
 });

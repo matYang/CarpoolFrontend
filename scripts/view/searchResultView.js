@@ -28,7 +28,7 @@ var SearchResultView = MultiPageView.extend({
 
     },
     transferURL: function (messageId) {
-        if (app.sessionManager.hasSession()){
+        if (app.sessionManager.hasSession()) {
             app.navigate(this.user.id + "/message/" + messageId, true);
         } else {
             alert("请先登陆");
@@ -38,4 +38,4 @@ var SearchResultView = MultiPageView.extend({
     close: function () {
         this.domContainer.empty();
     }
-});
+}); 
