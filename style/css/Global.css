@@ -273,3 +273,9 @@ font-weight: bold;
     background-color: #666;
     -webkit-border-radius: 3px;
 }
+
+.markerButton{
+  margin-left:20px;
+  margin-right:20px;
+  color: #0000ff;
+}

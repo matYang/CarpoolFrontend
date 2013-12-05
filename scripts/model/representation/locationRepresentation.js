@@ -69,6 +69,12 @@ var UserLocation = Backbone.Model.extend({
             return this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex') - 1] + ", " + this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex') - 2];
     },
     equals: function (val) {
+        if (this.get('hierarchyNameList').length == 0) {
+            this.reverseFill();
+        }
+        if (val.get('hierarchyNameList').length == 0) {
+            val.reverseFill();
+        }
         if ( val instanceof Backbone.Model) {
             return this.get('hierarchyNameList').compare(val.get('hierarchyNameList')) && this.get('customDepthIndex') === val.get('customDepthIndex');
         }
@@ -107,6 +113,32 @@ var UserLocation = Backbone.Model.extend({
         json.point = json.hierarchyNameList[3];
 
         return json;
+    },
+    parseGoogleJson: function (json) {
+        var address = json.results[0].address_components, len = address.length, i,
+            street_address, buf = [], city, province, contry, reachedFlag = false;
+
+        for (i = 0; i < len; i++) {
+            if (!reachedFlag) {
+                buf.push(address[i].short_name);
+            }
+            if (address[i].types[0] === "locality") {
+                reachedFlag = true;
+                city = address[i].long_name;
+            } else if (address[i].types[0] === "administrative_area_level_1") {
+                province = address[i].long_name;
+            } else if (address[i].types[0] === "country") {
+                contry = address[i].long_name;
+            } else {
+
+            }
+        }
+        street_address = buf.join(" ");
+        this.get('hierarchyNameList')[0] = contry;
+        this.get('hierarchyNameList')[1] = province;
+        this.get('hierarchyNameList')[2] = city;
+        this.get('hierarchyNameList')[3] = street_address;
+        this.autoFill();
     }
 });
 

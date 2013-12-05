@@ -80,9 +80,19 @@ var MessagePostView = Backbone.View.extend({
             mapConfig.div = "publish_map";
             mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
             mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
-
+            mapConfig.init = this;
             this.map = new MapView (mapConfig);
         }
+    },
+    updateByMapMarker: function (type, json) {
+        if (type === "origin") {
+            $('#publish_originInput').val(json.results[0].formatted_address);
+            this.toSubmit.origin.parseGoogleJson(json);
+        } else {
+            $('#publish_destInput').val(json.results[0].formatted_address);
+            this.toSubmit.dest.parseGoogleJson(json);
+        }
+
     },
     updateLocation: function (flag, id) {
         $('#publish_originInput').val(this.toSubmit.origin.toUiString());

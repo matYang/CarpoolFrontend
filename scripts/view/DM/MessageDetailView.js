@@ -312,7 +312,7 @@ var MessageDetailView = Backbone.View.extend({
             }
         }
         $("#pricelist").append(appender.join(""));
-        if (appender.length > 12) { debugger;
+        if (appender.length > 12) {
             $("#view_event_info_right").css("height", 120 + Math.ceil(appender.length / 2) * 20);
         }
     },
