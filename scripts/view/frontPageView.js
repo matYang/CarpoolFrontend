@@ -129,7 +129,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     loginAlert: function () {
-        Info.alert("请先登录。若是已经登陆，请刷新页面。");
+        Info.displayNotice("请先登录。若是已经登陆，请刷新页面。");
     },
 
     close: function () {

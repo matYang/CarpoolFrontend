@@ -57,7 +57,7 @@ var PersonalMessageView = Backbone.View.extend({
         });
     },
     error: function () {
-        Info.alert("Message History fetch failed");
+        Info.displayErrorPage("profilePage_content", "Message History fetch failed");
     },
     close: function () {
         if (!this.isClosed) {

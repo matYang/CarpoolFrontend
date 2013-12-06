@@ -62,7 +62,7 @@ var PersonalView = Backbone.View.extend({
         this.domContainer.append(this.template(userJson));
     },
     renderError: function () {
-        Info.alert("Unable to fetch User data");
+        Info.displayErrorPage("content", "个人页面加载失败，请稍后再试");
     },
     switchChildView: function (viewState) {
 

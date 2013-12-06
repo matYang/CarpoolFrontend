@@ -72,7 +72,7 @@ var MessagePublishView = MessagePostView.extend({
         });
     },
     success: function (message) {
-        alert("Message Post successful");
+        Info.displayNotice("信息发布成功");
         app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
     },
     error: function () {

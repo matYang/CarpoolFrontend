@@ -147,7 +147,6 @@ var TopBarView = Backbone.View.extend({
     },
 
     updateProfileImg: function (sessionUser) {
-        Info.alert("ahhhh, time to change profile image");
         $('#profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
     },
 
@@ -265,13 +264,13 @@ var TopBarView = Backbone.View.extend({
                                     app.navigate(app.sessionManager.getUserId() + "/main", true);
                                 },
                                 error: function () {
-                                    Info.alert("登录失败");
+                                    Info.displayNotice("登录失败，请稍后再试");
                                 }
                             });
                         },
 
                         error: function (status) {
-                            alert("登录失败，请稍后再试");
+                            Info.displayNotice("登录失败，请稍后再试");
                             $("#login_username").addClass('invalid_input');
                             $("#login_password").addClass('invalid_input');
                         }
@@ -294,20 +293,20 @@ var TopBarView = Backbone.View.extend({
                                     app.navigate(app.sessionManager.getUserId() + "/main", true);
                                 },
                                 error: function () {
-                                    Info.alert("登录失败");
+                                    Info.displayNotice("登录失败，请稍后再试");
                                 }
                             });
                         },
 
                         error: function (status) {
-                            alert("登录失败，请稍后再试");
+                            Info.displayNotice("登录失败，请稍后再试");
                             $("#login_username").addClass('invalid_input');
                             $("#login_password").addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
-                    alert("用户名和密码不能为空");
+                    Info.displayNotice("用户名和密码不能为空");
                     $("#login_username").addClass('invalid_input');
                     $("#login_password").addClass('invalid_input');
                 }
@@ -343,7 +342,7 @@ var TopBarView = Backbone.View.extend({
             },
 
             error: function (status) {
-                alert("登出失败，请稍后再试");
+                Info.displayNotice("登出失败，请稍后再试");
             }
         });
     },

@@ -129,6 +129,7 @@
 	      </div>
 	   </div>
 	</div>
+	<div id='topNoticeBar'></div>
 </script>
 
 
@@ -142,4 +143,5 @@
 			<div id='signup_button' class='button'>注册</div>
 		</form>
 	</div>
+	<div id='topNoticeBar'></div>
 </script>

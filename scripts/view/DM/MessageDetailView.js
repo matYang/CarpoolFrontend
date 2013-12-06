@@ -38,7 +38,7 @@ var MessageDetailView = Backbone.View.extend({
                 self.createNewTransaction();
             },
             error: function () {
-                Info.alert("信息读取失败");
+                Info.displayErrorPage("content", "信息读取失败, 请刷新页面");
             }
         });
         this.quickmatchTemplate = ["<div class='view_matchResultEntry' id='matchResult_", null, "'><img src='", null, "'/></div>"];

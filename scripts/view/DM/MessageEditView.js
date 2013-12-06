@@ -4,18 +4,6 @@ var MessageEditView = MessagePostView.extend({
     initialize: function (messageIdObj) {
         _.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'reverseMessage', 'close');
         app.viewRegistration.register("MessageEdit", this, true);
-        //if (testMockObj.testMode){
-        //this.message = testMockObj.sampleMessageA;
-        ////To allow edit
-        //this.message.get("arrival_location").set("city","苏州");
-        //this.message.get("arrival_location").set("region","苏州市区");
-        //this.message.get("arrival_location").set("university","苏州大学");
-        //this.message.set("isRoundTrip", true);
-        //this.message.set("arrival_seatsNumber", 1);
-        //this.transactions = testMockObj.sampleTransactions;
-        //this.message.set("note", "火车站出发，谢绝大行李");
-        //this.message.set("departure_priceList", [20,18,15]);
-        //}
         var self = this;
         app.messageManager.fetchMessage(messageIdObj.messageId, {
             success: function (message) {
@@ -27,7 +15,7 @@ var MessageEditView = MessagePostView.extend({
                 self.renderFirstPage();
             },
             error: function () {
-                Info.alert("消息读取失败");
+                Info.displayErrorPage("content", "消息读取失败, 请刷新页面");
             }
         });
 
@@ -98,11 +86,12 @@ var MessageEditView = MessagePostView.extend({
         }
     },
     success: function (message) {
-        Info.alert("Message update successful");
-        app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
-    },
+        Info.displayNotice("信息更新成功", function(){
+            app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
+        });
+    },  
     error: function () {
-        Info.alert("Message update failed");
+        Info.displayNotice("信息更新失败，请稍后重试");
     },
     reverseMessage: function (message) {
         var toSubmit = MessagePostView.prototype.toSubmit;

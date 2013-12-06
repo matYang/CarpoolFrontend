@@ -31,7 +31,7 @@ var SearchResultView = MultiPageView.extend({
         if (app.sessionManager.hasSession()) {
             app.navigate(this.user.id + "/message/" + messageId, true);
         } else {
-            alert("请先登陆");
+            Info.displayNotice("请先登陆");
         }
     },
 

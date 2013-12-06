@@ -112,7 +112,7 @@ var PersonalUtilityView = Backbone.View.extend({
         formElem.parentNode.appendChild(iframe);
 
         $(iframe).one("load", function () {
-            Info.alert("done");
+            Info.displayNotice("照片上传成功");
             app.sessionManager.fetchSession(true);
             app.navigate('/temp', {
                 replace: true
@@ -263,7 +263,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
 
     saveSuccess: function () {
-        alert("user contactInfo update successful");
+        Info.displayNotice("成功更新用户信息");
         app.navigate('/temp', {
             replace: true
         });
@@ -291,7 +291,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
     },
     passwordSuccess: function () {
-        alert("Password changed");
+        Info.displayNotice("密码修改成功");
         app.navigate('/temp', {
             replace: true
         });
@@ -300,7 +300,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
     },
     passwordError: function () {
-        Info.warn("password change failed");
+        Info.displayNotice("密码修改失败，请重试");
     },
     toggleNotificationMethods: function (value) {
         var shouldEmail = true, shouldPhone = true;
@@ -335,7 +335,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
     },
     noticeError: function () {
-        Info.warn("notice setting change failed");
+        Info.displayNotice("提示方式修改失败，请稍后再试");
     },
 
     updateLocation: function () {

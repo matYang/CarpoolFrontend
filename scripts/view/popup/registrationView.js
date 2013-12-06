@@ -183,7 +183,7 @@ var RegistrationView = Backbone.View.extend({
 		}
 	},
 	finish: function(){
-		Info.alert("should POST");
+		Info.displayNotice("注册成功");
 	},
 
 	close: function(){

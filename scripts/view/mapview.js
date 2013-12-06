@@ -113,7 +113,7 @@ var MapView = Backbone.View.extend({
                 latlng = geocodeResults[0].geometry.location.lat();
                 latlng = geocodeResults[0].geometry.location.lng();
             } else {
-                alert('Geocode was not successful for the following reason: ' + status);
+                Info.warn('Geocode was not successful for the following reason: ' + status);
             }
         });
     },
