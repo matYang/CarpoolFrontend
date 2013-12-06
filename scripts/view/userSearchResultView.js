@@ -4,7 +4,7 @@ var UserSearchResultView = MultiPageView.extend({
         _.bindAll(this, "render", "entryEvent", "bindEvents", "updateLocation", "close");
         app.viewRegistration.register("findUser", this, true);
         this.user = app.sessionManager.getSessionUser();
-        this.entryTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
+        this.entryTemplate = _.template(tpl.get('personalSocialCard'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "searchResultPageNumber";
         this.pageNavigator = "pageNavigator";

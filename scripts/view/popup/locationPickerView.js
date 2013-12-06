@@ -30,7 +30,7 @@ var LocationPickerView = Backbone.View.extend({
 
     render: function () {
 
-        $('#popup').append(_.template(tpl.get('modal/locationPicker')));
+        $('#popup').append(_.template(tpl.get('locationPicker')));
 
         $('#location-modal-closeButton').bind('click', this.close);
 

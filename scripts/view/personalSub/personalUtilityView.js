@@ -4,7 +4,7 @@ var PersonalUtilityView = Backbone.View.extend({
         _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError', 'updateLocation');
         this.isClosed = false;
         this.domContainer = $("#profilePage_content");
-        this.template = _.template(tpl.get('personalPage/personalUtility'));
+        this.template = _.template(tpl.get('personalUtility'));
         this.sessionUser = app.sessionManager.getSessionUser();
         this.curUserId = params.intendedUserId;
         if (this.curUserId !== this.sessionUser.get("userId")) {

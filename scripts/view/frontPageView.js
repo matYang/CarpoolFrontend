@@ -8,7 +8,7 @@ var FrontPageView = Backbone.View.extend({
         this.isClosed = false;
 
         this.template = _.template(tpl.get('front'));
-        this.messageTemplate = _.template(tpl.get('Module/Front'));
+        this.messageTemplate = _.template(tpl.get('Front'));
 
         this.user = app.sessionManager.getSessionUser();
 

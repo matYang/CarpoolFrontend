@@ -3,7 +3,7 @@ var NotificationHistoryView = MultiPageView.extend({
     initialize: function (messageList) {
         _.bindAll(this, 'render', 'bindNotificationEvent', 'fetchMessageError', 'close');
         this.messages = messageList;
-        this.entryTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
+        this.entryTemplate = _.template(tpl.get('personalNotificationHistory'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "notificationPageNumber";
         this.entryEvent = this.bindNotificationEvent;

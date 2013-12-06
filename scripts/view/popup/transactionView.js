@@ -31,7 +31,7 @@ var TransactionDetailView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
         this.editable = transaction.get("transactionId") === -1;
         this.userId = this.user.get("userId");
-        this.template = _.template(tpl.get('modal/transactionDetail'));
+        this.template = _.template(tpl.get('transactionDetail'));
         this.domContainer = $('#popup');
         this.render();
         this.load();

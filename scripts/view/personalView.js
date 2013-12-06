@@ -4,7 +4,7 @@ var PersonalView = Backbone.View.extend({
         app.viewRegistration.register("personal", this, true);
         this.isClosed = false;
 
-        this.template = _.template(tpl.get('personalPage/personal'));
+        this.template = _.template(tpl.get('personal'));
         //this curUserId is used to record the id of the user the personalPage is currently displaying
         this.curUserId = Utilities.toInt(params.intendedUserId);
         this.activeViewState = params.viewState;

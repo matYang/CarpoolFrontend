@@ -34,7 +34,7 @@ var LetterView = Backbone.View.extend({
             option.targetType = Constants.LetterType.system;
         }
 
-        this.template = _.template(tpl.get('letter/letter'));
+        this.template = _.template(tpl.get('letter'));
         this.domContainer = $('#content');
         this.domContainer.append(this.template);
         if (this.toUserId === -1) {

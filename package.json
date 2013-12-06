@@ -1,5 +1,5 @@
 {
-  "name": "Ivy",
+  "name": "Vanilla",
   "version": "1.0.0",
   "description": "Carpool frontend",
   "devDependencies": {
@@ -12,6 +12,5 @@
     "type": "git",
     "url": "https://github.com/matYang/CarpoolFrontend"
   },
-  "readmeFilename": "README.md",
-  "gitHead": "a0714e2181ef835bc2dcb680af6c74deacae0726"
+  "readmeFilename": "README.md"
 }

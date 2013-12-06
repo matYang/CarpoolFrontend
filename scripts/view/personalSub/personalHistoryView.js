@@ -5,10 +5,10 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.isClosed = false;
 		this.domContainer = $("#profilePage_content");
 
-		this.wrapperTemplate = _.template(tpl.get('personalPage/personalHistory'));
-		this.transactionTemplate = _.template(tpl.get('personalPage/personalTransactionHistory'));
+		this.wrapperTemplate = _.template(tpl.get('personalHistory'));
+		this.transactionTemplate = _.template(tpl.get('personalTransactionHistory'));
 		//this is reserved for notification construction
-		this.notificationTemplate = _.template(tpl.get('personalPage/personalNotificationHistory'));
+		this.notificationTemplate = _.template(tpl.get('personalNotificationHistory'));
 
 		this.curUserId = params.intendedUserId;
 		this.user = app.sessionManager.getSessionUser();

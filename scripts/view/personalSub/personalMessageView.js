@@ -5,8 +5,8 @@ var PersonalMessageView = Backbone.View.extend({
         this.isClosed = false;
 
         this.domContainer = $("#profilePage_content");
-        this.wrapperTemplate = _.template(tpl.get('personalPage/personalMessage'));
-        this.messageTemplate = _.template(tpl.get('personalPage/personalDetailMessage'));
+        this.wrapperTemplate = _.template(tpl.get('personalMessage'));
+        this.messageTemplate = _.template(tpl.get('personalDetailMessage'));
 
         this.curUserId = params.intendedUserId;
         this.user = app.sessionManager.getSessionUser();

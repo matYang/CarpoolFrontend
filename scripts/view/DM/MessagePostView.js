@@ -29,11 +29,11 @@ var MessagePostView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents', 'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'close');
         this.isClosed = false;
-        this.baseTemplate = _.template(tpl.get('Module/Publish_base'));
-        this.step1Template = _.template(tpl.get('Module/Publish_step1'));
-        this.step2Template = _.template(tpl.get('Module/Publish_step2'));
-        this.step3Template = _.template(tpl.get('Module/Publish_step3'));
-        this.askSlotTemplate = _.template(tpl.get('Module/Publish_singleSlotAsk'));
+        this.baseTemplate = _.template(tpl.get('Publish_base'));
+        this.step1Template = _.template(tpl.get('Publish_step1'));
+        this.step2Template = _.template(tpl.get('Publish_step2'));
+        this.step3Template = _.template(tpl.get('Publish_step3'));
+        this.askSlotTemplate = _.template(tpl.get('Publish_singleSlotAsk'));
 
         this.user = app.sessionManager.getSessionUser();
         this.userId = this.user.get("userId");

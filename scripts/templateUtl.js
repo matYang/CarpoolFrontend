@@ -10,52 +10,57 @@ tpl = {
 
         if (names.length > 0){
 
-            var that = this,
-                i = 0,
-                tplCount = 0;
+            //previous async recursion to load all html files
+            // var that = this,
+            //     i = 0,
+            //     tplCount = 0;
 
-            /* well this is the recursive function we used in V0.9, it is synchronous to ensure safety, ok for 4 templates in v0.9, unacceptable for 25+ templates in v1.0
-            var loadTemplate = function (index) {
-                var name = names[index];
+            // var loopingLoadTemplate = function(index){
+            //     var name = names[index];
 
-                Constants.dLog("loading " + names[index]);
+            //     $.get('templates/' + name + '.html', function (data) {
+            //         that.templates[name] = data;
+            //         tplCount++;
+            //         //safety lock
+            //         if (tplCount === names.length){
+            //             callback();
+            //         }
+            //     });
+            // };
 
-                $.get('templates/' + name + '.html', function (data) {
-                    that.templates[name] = data;
-                    index++;
-                    if (index < names.length) {
-                        loadTemplate(index);
-                        Constants.dLog("trying another load");
-                    } else {
-                        callback();
-                        Constants.dLog("trying callback");
+            // for (i = 0; i < names.length; i++){
+            //     loopingLoadTemplate(i);
+            // }
+            
+            var i = 0,
+                name, tplContainer,
+                tplContent = null,
+                self = this;
+
+            $.get('targets/templates.min.js', function (data) {
+                tplContainer = $('#tpl_main_invisible_placeholder_v1');
+                tplContainer.append(data);
+                for (i = 0; i < names.length; i++){
+                    name = names[i];
+                    tplContent = tplContainer.find('#tpl_' + name).html();
+                    if (tplContent === undefined || tplContent === null){
+                        alert("FATAL ERROR: Template with name: " + name + " not found, if you see this, please contact us");
+                        throw new Error();
                     }
-                });
-            };
-            loadTemplate(0);
-            */
+                    self.templates[name] = tplContent;
+                }
 
-            var loopingLoadTemplate = function(index){
-                var name = names[index];
-
-                $.get('templates/' + name + '.html', function (data) {
-                    that.templates[name] = data;
-                    tplCount++;
-                    //safety lock
-                    if (tplCount === names.length){
-                        callback();
-                    }
-                });
-            };
-
-            for (i = 0; i < names.length; i++){
-                loopingLoadTemplate(i);
-            }
+                callback();
+            });
         }
     },
 
     // Get template by name from hash of preloaded templates
     get:function (name) {
+        if (this.templates[name] === undefined || this.templates[name] === null){
+            alert("FATAL ERROR: Retrived template data is not loaded");
+            throw new Error();
+        }
         return this.templates[name];
     }
 

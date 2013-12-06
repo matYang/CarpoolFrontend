@@ -3,7 +3,7 @@ var SearchResultView = MultiPageView.extend({
         _.bindAll(this, 'render', 'transferURL', 'close');
         this.messages = messageList;
         this.isSearchResult = isSearchResult;
-        this.entryTemplate = _.template(tpl.get('Module/SimpleMessage'));
+        this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "searchResultPageNumber";
         this.entryEvent = this.transferURL;

@@ -9,11 +9,11 @@ var RegistrationView = Backbone.View.extend({
 		app.viewRegistration.register("registration", this, true);
 		this.isClosed = false;
 
-		this.baseTemplate = _.template(tpl.get('registration/registration_base'));
-		this.step1Template = _.template(tpl.get('registration/registration_step1'));
-		this.step2Template = _.template(tpl.get('registration/registration_step2'));
-		this.step3Template = _.template(tpl.get('registration/registration_step3'));
-		this.step4Template = _.template(tpl.get('registration/registration_step4'));
+		this.baseTemplate = _.template(tpl.get('registration_base'));
+		this.step1Template = _.template(tpl.get('registration_step1'));
+		this.step2Template = _.template(tpl.get('registration_step2'));
+		this.step3Template = _.template(tpl.get('registration_step3'));
+		this.step4Template = _.template(tpl.get('registration_step4'));
 		this.domContainer = $('#overlay');
 		this.domContainer.append(this.baseTemplate);
 		this.domContainer.show();

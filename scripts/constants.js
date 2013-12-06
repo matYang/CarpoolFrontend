@@ -28,25 +28,27 @@ var Constants = {
     miliSecInDay: 86400000,
 
     templateResources: [
-    /* ---------  DM Modules  ----------*/"Module/DetailMessage", "Module/Publish_singleSlotAsk", "Module/Publish_base", "Module/Publish_step1", "Module/Publish_step2", "Module/Publish_step3", "Module/SimpleMessage", "Module/Edit", "Module/Transaction", "Module/Front",
+    /* ---------  DM Modules  ----------*/
+    "DetailMessage", "Publish_singleSlotAsk", "Publish_base", "Publish_step1", "Publish_step2", "Publish_step3", "SimpleMessage", "Edit", "Transaction", "Front",
 
     /*----------- dropdowns  ----------*/
-    "dropdown/notificationDropdown", "dropdown/letterDropdown", "dropdown/favoriteDropdown",
+    "notificationDropdown", "letterDropdown", "favoriteDropdown",
 
     /*-----------  modals  ---------*/
-    "modal/genderEditWindow", "modal/hourRateEditWindow", "modal/locationEditWindow", "modal/timeDateEditWindow", "modal/transactionDetail", "modal/locationPicker",
+    "genderEditWindow", "hourRateEditWindow", "locationEditWindow", "timeDateEditWindow", "transactionDetail", "locationPicker",
 
     /*-----------  person pages  -----------*/
-    "personalPage/personal", "personalPage/personalWatch", "personalPage/personalMessage", "personalPage/personalHistory", "personalPage/personalUtility", "personalPage/personalSocial", "personalPage/personalSocialCard", "personalPage/personalSimpleMessage", "personalPage/personalDetailMessage", "personalPage/personalSimpleUser", "personalPage/personalTransactionHistory", "personalPage/personalNotificationHistory",
+    "personal", "personalWatch", "personalMessage", "personalHistory", "personalUtility", "personalSocial", "personalSocialCard", "personalSimpleMessage", "personalDetailMessage", "personalSimpleUser", "personalTransactionHistory", "personalNotificationHistory",
 
     /*-----------  Registration  -----------*/
-    "registration/registration_base", "registration/registration_step1", "registration/registration_step2", "registration/registration_step3", "registration/registration_step4",
+    "registration_base", "registration_step1", "registration_step2", "registration_step3", "registration_step4",
 
     /*-----------  topBar  ------------*/
-    "topBar/topBar-loggedIn", "topBar/topBar-notLoggedIn",
+    "topBar-loggedIn", "topBar-notLoggedIn",
 
     /*-----------  letter -------------*/
-    "letter/letter",
+    "letter",
+    
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
 

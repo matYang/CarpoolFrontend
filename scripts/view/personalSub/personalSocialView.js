@@ -4,7 +4,7 @@ var PersonalSocialView = MultiPageView.extend({
         _.bindAll(this, 'render', 'entryEvent', 'error', 'close');
         this.user = app.sessionManager.getSessionUser();
 
-        this.entryTemplate = _.template(tpl.get('personalPage/personalSocialCard'));
+        this.entryTemplate = _.template(tpl.get('personalSocialCard'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "searchResultPageNumber";
         this.entryEvent = this.entryEvent;
@@ -17,7 +17,7 @@ var PersonalSocialView = MultiPageView.extend({
         this.startIndex = 0;
 
         this.domContainer = $("#profilePage_content");
-        this.wrapperTemplate = _.template(tpl.get('personalPage/personalSocial'));
+        this.wrapperTemplate = _.template(tpl.get('personalSocial'));
         this.domContainer.append(this.wrapperTemplate);
 
         this.curUserId = params.intendedUserId;

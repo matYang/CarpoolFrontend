@@ -11,11 +11,11 @@ var TopBarView = Backbone.View.extend({
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
-        this.loggedInTemplate = _.template(tpl.get('topBar/topBar-loggedIn'));
-        this.notLoggedInTemplate = _.template(tpl.get('topBar/topBar-notLoggedIn'));
-        this.dropdown_notifiationTemplate = _.template(tpl.get('dropdown/notificationDropdown'));
-        this.dropdown_letterTemplate = _.template(tpl.get('dropdown/letterDropdown'));
-        this.dropdown_favoriteTemplate = _.template(tpl.get('dropdown/favoriteDropdown'));
+        this.loggedInTemplate = _.template(tpl.get('topBar-loggedIn'));
+        this.notLoggedInTemplate = _.template(tpl.get('topBar-notLoggedIn'));
+        this.dropdown_notifiationTemplate = _.template(tpl.get('notificationDropdown'));
+        this.dropdown_letterTemplate = _.template(tpl.get('letterDropdown'));
+        this.dropdown_favoriteTemplate = _.template(tpl.get('favoriteDropdown'));
 
         this.sessionUser = app.sessionManager.getSessionUser();
 
