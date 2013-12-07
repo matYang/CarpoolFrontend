@@ -127,30 +127,30 @@ var PersonalView = Backbone.View.extend({
     bindEvents: function () {
         var that = this;
         $('#profilePage_socialTab').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + that.curUserId + "/social");
+            app.navigate("personal/" + that.curUserId + "/social");
             that.switchChildView("social");
         });
 
         $('#profilePage_messageTab').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + that.curUserId + "/message");
+            app.navigate("personal/" + that.curUserId + "/message");
             that.switchChildView("message");
         });
 
         $('#profilePage_historyTab').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + that.curUserId + "/history");
+            app.navigate("personal/" + that.curUserId + "/history");
             that.switchChildView("history");
         });
 
         $('#profilePage_utilityTab').on('click', function () {
             if (app.sessionManager.getUserId() === that.curUserId) {
-                app.navigate(app.sessionManager.getUserId() + "/personal/" + that.curUserId + "/utility");
+                app.navigate("personal/" + that.curUserId + "/utility");
                 that.switchChildView("utility");
             } else {
 
             }
         });
         $("#profilePage_sendLetter").on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/letter/" + that.curUserId, true);
+            app.navigate("letter/" + that.curUserId, true);
         });
     },
     bindWatchEvent: function () {

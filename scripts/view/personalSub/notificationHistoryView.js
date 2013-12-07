@@ -26,9 +26,9 @@ var NotificationHistoryView = MultiPageView.extend({
         var n_evt = currentNotification.get('notificationEvent');
         app.notificationManager.checkNotification(messageId);
         if (n_evt === Constants.notificationEvent.watched) {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + currentNotification.get('initUserId'), true);
+            app.navigate("personal/" + currentNotification.get('initUserId'), true);
         } else if (n_evt < Constants.notificationEvent.watched) {
-            app.navigate(app.sessionManager.getUserId() + "/message/" + messageId, true);
+            app.navigate("message/" + messageId, true);
         }
     },
 

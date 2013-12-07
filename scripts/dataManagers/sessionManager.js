@@ -95,7 +95,7 @@
                 Constants.dLog(response);
 
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -203,7 +203,7 @@
 				Constants.dWarn("SessionManager::fetchNotificationList:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -238,7 +238,7 @@
 				Constants.dWarn("SessionManager::fetchCurUserLetters:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -268,7 +268,7 @@
 				Constants.dWarn("SessionManager::fetchSocialList:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});

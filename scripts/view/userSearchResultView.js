@@ -37,7 +37,7 @@ var UserSearchResultView = MultiPageView.extend({
         this.bindEvents();
     },
     entryEvent: function (userId) {
-        app.navigate(this.user.id + "/personal/" + userId, true);
+        app.navigate("personal/" + userId, true);
     },
     bindEvents: function () {
         var that = this;
@@ -58,7 +58,7 @@ var UserSearchResultView = MultiPageView.extend({
         $("#nameInput").on("keypress", function (e) {
             if (e.which === 13) {
                 that.sr.set("name", $("#nameInput").val());
-                app.navigate(app.sessionManager.getUserId() + "/finduser/" + that.sr.toString());
+                app.navigate("finduser/" + that.sr.toString());
                 app.userManager.searchUsers(that.sr, {
                     "success": that.render,
                     "error": undefined
@@ -67,7 +67,7 @@ var UserSearchResultView = MultiPageView.extend({
         });
         $("#searchResultButton").on("click", function () {
             that.sr.set("name", $("#nameInput").val());
-            app.navigate(app.sessionManager.getUserId() + "/finduser/" + that.sr.toString());
+            app.navigate("finduser/" + that.sr.toString());
             app.userManager.searchUsers(that.sr, {
                 "success": that.render,
                 "error": undefined

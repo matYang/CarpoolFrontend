@@ -37,7 +37,7 @@ var PersonalSocialView = MultiPageView.extend({
         $(".social_gender_1").html("♀");
     },
     entryEvent: function (id) {
-        app.navigate(this.user.id + "/personal/" + id, true);
+        app.navigate("personal/" + id, true);
     },
     error: function () {
 

@@ -117,7 +117,7 @@ var PersonalUtilityView = Backbone.View.extend({
             app.navigate('/temp', {
                 replace: true
             });
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility", {
+            app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
                 trigger: true
             });
         });
@@ -267,7 +267,7 @@ var PersonalUtilityView = Backbone.View.extend({
         app.navigate('/temp', {
             replace: true
         });
-        app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility", {
+        app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
     },
@@ -295,7 +295,7 @@ var PersonalUtilityView = Backbone.View.extend({
         app.navigate('/temp', {
             replace: true
         });
-        app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility", {
+        app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
     },
@@ -330,7 +330,7 @@ var PersonalUtilityView = Backbone.View.extend({
         app.navigate('/temp', {
             replace: true
         });
-        app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/utility", {
+        app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
     },

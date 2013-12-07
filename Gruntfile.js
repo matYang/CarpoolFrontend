@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     concat: {
      dist: {
         src: ['scripts/**/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        dest: 'targets/main.js'
       }
     },
     uglify: {
@@ -14,12 +14,18 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js':['<%= concat.dist.dest %>'],
+          'targets/main.min.js':['<%= concat.dist.dest %>']
         }
       }
+    },
+    cssmin: {
+        files: {
+          'targets/style-min.css': ['style/**/*.css']
+        }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.registerTask('default', ['concat', 'uglify']);
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
 };

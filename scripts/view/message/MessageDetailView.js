@@ -99,7 +99,7 @@ var MessageDetailView = Backbone.View.extend({
 
     },
     renderAutoMatch: function (result) {
-        var i, buf = [], len = result.length;
+        var i, buf = [], len = result.length, that = this;
         len = len < 15 ? len : 15;
         for ( i = 0; i < len; i++) {
             this.quickmatchTemplate[1] = result.at(i).get("messageId").get("imgPath");
@@ -110,10 +110,10 @@ var MessageDetailView = Backbone.View.extend({
         $("#view_automatch").append(buf.join(""));
         $(".view_matchResultEntry").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
-            app.navigate(that.userId + "/message/" + id, true);
+            app.navigate("message/" + id, true);
         });
         $("#view_matchMore").on("click", function (e) {
-            app.navigate(that.userId + "/main/" + this.msr.toString(), true);
+            app.navigate("main/" + that.msr.toString(), true);
         });
         $("#view_event_info_right").css("height", 115 + Math.ceil(len / 5) * 50);
     },
@@ -121,7 +121,7 @@ var MessageDetailView = Backbone.View.extend({
         var that = this;
         if (this.ownerId === this.userId) {
             $("#view_edit").on("click", function () {
-                app.navigate(that.userId + "/message/" + that.messageId + "/edit", true);
+                app.navigate("message/" + that.messageId + "/edit", true);
             });
             $("#view_automatchButton").on("click", function () {
                 var msr = new SearchRepresentation ();
@@ -247,7 +247,7 @@ var MessageDetailView = Backbone.View.extend({
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             $("#view_contact").on('click', function () {
-                app.navigate(that.userId + "/letter/" + that.ownerId, true);
+                app.navigate("letter/" + that.ownerId, true);
             });
         }
         this.calculateTotal();

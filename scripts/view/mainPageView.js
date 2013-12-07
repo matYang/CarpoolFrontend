@@ -158,12 +158,7 @@ var MainPageView = Backbone.View.extend({
     },
 
     submitSearch: function () {
-
-        if (app.sessionManager.hasSession()) {
-            app.navigate(app.sessionManager.getUserId() + "/main/" + this.searchRepresentation.toString());
-        } else {
-            app.navigate("main/" + this.searchRepresentation.toString());
-        }
+        app.navigate("main/" + this.searchRepresentation.toString());
         app.messageManager.searchMessage(this.searchRepresentation, {
             "success": this.renderSearchResults,
             "error": this.renderError

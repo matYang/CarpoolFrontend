@@ -29,7 +29,7 @@ var SearchResultView = MultiPageView.extend({
     },
     transferURL: function (messageId) {
         if (app.sessionManager.hasSession()) {
-            app.navigate(this.user.id + "/message/" + messageId, true);
+            app.navigate("message/" + messageId, true);
         } else {
             Info.displayNotice("请先登陆");
         }
