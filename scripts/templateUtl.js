@@ -37,27 +37,20 @@ tpl = {
                 tplContent = null,
                 self = this;
 
-            $.get('targets/templates.min.js', {
-                dataType: "text",
-                success: function (data) {
-                    tplContainer = $('#tpl_main_invisible_placeholder_v1');
-                    tplContainer.append(data);
-                    for (i = 0; i < names.length; i++){
-                        name = names[i];
-                        tplContent = tplContainer.find('#tpl_' + name).html();
-                        if (tplContent === undefined || tplContent === null){
-                            alert("FATAL ERROR: Template with name: " + name + " not found, if you see this, please contact us");
-                            throw new Error();
-                        }
-                        self.templates[name] = tplContent;
+            $.get('/targets/templates.min.js', function (data) {
+                tplContainer = $('#tpl_main_invisible_placeholder_v1');
+                tplContainer.append(data);
+                for (i = 0; i < names.length; i++){
+                    name = names[i];
+                    tplContent = tplContainer.find('#tpl_' + name).html();
+                    if (tplContent === undefined || tplContent === null){
+                        alert("FATAL ERROR: Template with name: " + name + " not found, if you see this, please contact us");
+                        throw new Error();
                     }
-
-                    callback();
-                },
-                error: function(){
-                    alert("FATAL ERROR: Failed to load template file");
-                    throw new Error();
+                    self.templates[name] = tplContent;
                 }
+
+                callback();
             });
         }
     },
