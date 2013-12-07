@@ -7,12 +7,8 @@ var AppRouter = Backbone.Router.extend({
         "": "defaultRoute",
 
         "front": "front",
-        "front": "sessionFront",
-
         "main": "main",
         "main/*encodedSearchkey": "encodedMain",
-        "main": "sessionMain",
-        "main/*encodedSearchkey": "encodedSessionMain",
 
         "personal/:intendedUserId": "personal",
         "personal/:intendedUserId/": "personal",
@@ -91,64 +87,18 @@ var AppRouter = Backbone.Router.extend({
     },
 
     front: function () {
-        if (this.sessionManager.hasSession()) {
-            this.navigate("front", true);
-            //return here to prevent further execution of following logic
-            return;
-        }
-        this.frontPageVew = new FrontPageView ();
-    },
-
-    sessionFront: function () {
-        if (!this.sessionManager.hasSession()) {
-            this.navigate("front", true);
-            return;
-        }
         this.frontPageVew = new FrontPageView ();
     },
 
     main: function () {
-        if (this.sessionManager.hasSession()) {
-            this.navigate("main", true);
-            return;
-        }
-
         this.mainPageVew = new MainPageView ();
     },
 
     encodedMain: function (encodedSearchKey) {
-        if (this.sessionManager.hasSession()) {
-            this.navigate("main/" + encodedSearchKey, true);
-            return;
-        }
-
         this.mainPageVew = new MainPageView ({
             "searchKey": encodedSearchKey
         });
-        this.advertisementView = new AdvertisementView ();
-    },
-
-    sessionMain: function () {
-        if (!this.sessionManager.hasSession()) {
-            this.navigate("main", true);
-            return;
-        }
-
-        this.mainPageVew = new MainPageView ();
-        this.advertisementView = new AdvertisementView ();
-    },
-
-    encodedSessionMain: function (encodedSearchKey) {
-        if (!this.sessionManager.hasSession()) {
-            this.navigate("main/" + encodedSearchKey, true);
-            return;
-        }
-
-        this.mainPageVew = new MainPageView ({
-            "searchKey": encodedSearchKey
-        });
-        this.advertisementView = new AdvertisementView ();
-
+        // this.advertisementView = new AdvertisementView ();
     },
 
     personal: function (intendedUserId) {
@@ -302,7 +252,7 @@ var AppRouter = Backbone.Router.extend({
 
 //warning: tpl is the global object for templating services, do not name any variable "tpl" in any context in any files
 tpl.loadTemplates(Constants.templateResources, function () {
-    app = new AppRouter ();
+    app = new AppRouter (); 
     app.topBarView = new TopBarView ();
     Backbone.history.start();
 });
