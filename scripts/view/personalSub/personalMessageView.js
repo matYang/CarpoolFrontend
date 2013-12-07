@@ -21,7 +21,6 @@ var PersonalMessageView = Backbone.View.extend({
         this.myActiveContainer = $("#profilePage_messagePublishedContent");
         this.myFinishedContainer = $("#profilePage_messageParticipatedContent");
         this.loadMessage(messages);
-        this.bindEventsForParticipated();
     },
 
     loadMessage: function (messages) {
