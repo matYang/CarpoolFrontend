@@ -37,8 +37,10 @@ tpl = {
                 tplContent = null,
                 self = this;
 
-            $.get('targets/templates.min.js', {
-                dataType: "text",
+            $.ajax({
+                url: 'targets/templates.min.js', 
+                dataType: "html",
+                cache: false,
                 success: function (data) {
                     tplContainer = $('#tpl_main_invisible_placeholder_v1');
                     tplContainer.append(data);
@@ -51,7 +53,6 @@ tpl = {
                         }
                         self.templates[name] = tplContent;
                     }
-
                     callback();
                 },
                 error: function(){
