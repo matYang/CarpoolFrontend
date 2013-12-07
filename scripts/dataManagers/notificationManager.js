@@ -49,7 +49,7 @@
 				Constants.dWarn("NotificationManager::checkNotification:: save failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -81,7 +81,7 @@
 				Constants.dWarn("NotificationManager::deleteNotification:: delete failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});

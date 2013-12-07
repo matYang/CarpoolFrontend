@@ -22,7 +22,7 @@ var MessageHistoryView = MultiPageView.extend({
 
     },
     openDetailMessage: function (messageId) {
-        app.navigate(app.sessionManager.getUserId() + "/message/" + messageId, true);
+        app.navigate("message/" + messageId, true);
     },
 
     close: function () {

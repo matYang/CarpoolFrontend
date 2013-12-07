@@ -119,7 +119,7 @@ var LetterView = Backbone.View.extend({
         $(".letterContactListEntry").on("click", function (e) {
             id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
             if (id !== self.toUserId) {
-                app.navigate(self.sessionUser.id + "/letter/" + id);
+                app.navigate("letter/" + id);
                 //do not recreate view.
                 self.switchContact(id);
             }

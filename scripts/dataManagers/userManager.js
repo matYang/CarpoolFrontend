@@ -79,7 +79,7 @@
             error: function(model, response){
 				Constants.dWarn("UserManager::register:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -114,7 +114,7 @@
                 Constants.dWarn("UserManager::getUser:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -195,7 +195,7 @@
                 alert("请稍后再试");
 				Constants.dWarn("UserManager::changeContactInfo:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -233,7 +233,7 @@
                 alert("请稍后再试");
 				Constants.dWarn("UserManager::changeLocation:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -266,7 +266,7 @@
                 alert("请稍后再试");
 				Constants.dWarn("UserManager::toggleNotices:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -308,7 +308,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::changePassword:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -344,7 +344,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::activateAccount:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -374,7 +374,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::resendActivationEmail:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -406,7 +406,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::forgetPassword:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -444,7 +444,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::findPassword:: action failed");
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -481,7 +481,7 @@
                 Constants.dWarn("UserManager::watchUser:: update failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -517,7 +517,7 @@
                 Constants.dWarn("UserManager::deWatchUser:: delete failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -592,7 +592,7 @@
                 Constants.dWarn("UserManager::fetchWatchedUsers:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -636,7 +636,7 @@
                 Constants.dWarn("UserManager::fetchMessageHistory:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -677,7 +677,7 @@
                 Constants.dWarn("UserManager::fetchTransactionList:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -716,7 +716,7 @@
 				Constants.dWarn("UserManager::fetchNotification:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -759,7 +759,7 @@
 				Constants.dWarn("UserManager::fetchLetter:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -791,7 +791,7 @@
 				Constants.dWarn("UserManager::fetchLetterUsers:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -824,7 +824,7 @@
 				Constants.dWarn("UserManager::searchUsers:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});

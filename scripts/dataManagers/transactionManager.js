@@ -52,7 +52,7 @@
 				Constants.dWarn("TransactionManager::fetchTransaction:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -89,7 +89,7 @@
 				Constants.dWarn("TransactionManager::initTransaction:: save failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -132,7 +132,7 @@
 				Constants.dWarn("TransactionManager::changeTransactionState:: save failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -170,7 +170,7 @@
 	//			Constants.dWarn("TransactionManager::deleteTransaction:: delete failed with response:");
 	//			Constants.dLog(response);
 	//			if(callback){
-	//				callback.error();
+	//				callback.error(response);
 	//			}
 	//		}
 	//	});
@@ -206,7 +206,7 @@
 	//			Constants.dWarn("TransactionManager::changeTransactionState_admin:: save failed with response:");
 	//			Constants.dLog(response);
 	//			if(callback){
-	//				callback.error();
+	//				callback.error(response);
 	//			}
 	//		}
 	//	});

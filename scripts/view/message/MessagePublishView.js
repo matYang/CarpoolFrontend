@@ -28,7 +28,7 @@ var MessagePublishView = MessagePostView.extend({
         $('#publish_nextStep').off();
         $('#publish_nextStep').on('click', function () {
             if (MessagePostView.prototype.validate(1)) {
-                app.navigate(that.user.id + "/post/step2");
+                app.navigate("post/step2");
                 that.renderSecondPage();
             }
         });
@@ -41,12 +41,12 @@ var MessagePublishView = MessagePostView.extend({
         $("#publish_finish").off();
         $('#publish_nextStep').on('click', function () {
             if (MessagePostView.prototype.validate(2)) {
-                app.navigate(that.user.id + "/post/step3");
+                app.navigate("post/step3");
                 that.renderThirdPage(3);
             }
         });
         $('#publish_back').on('click', function () {
-            app.navigate(that.user.id + "/post/step1");
+            app.navigate("post/step1");
             that.renderFirstPage(1);
         });
     },
@@ -56,7 +56,7 @@ var MessagePublishView = MessagePostView.extend({
         $('#publish_nextStep').off();
         $('#publish_back').off();
         $('#publish_back').on('click', function () {
-            app.navigate(that.user.id + "/post/step2");
+            app.navigate("post/step2");
             that.renderSecondPage();
         });
         $("#publish_finish").on("click", function (e) {
@@ -72,8 +72,8 @@ var MessagePublishView = MessagePostView.extend({
         });
     },
     success: function (message) {
-        alert("Message Post successful");
-        app.navigate(app.sessionManager.getUserId() + "/message/" + message.id, true);
+        Info.displayNotice("信息发布成功");
+        app.navigate("message/" + message.id, true);
     },
     error: function () {
 

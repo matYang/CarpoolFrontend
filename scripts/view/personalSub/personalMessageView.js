@@ -1,7 +1,7 @@
 var PersonalMessageView = Backbone.View.extend({
 
     initialize: function (params) {
-        _.bindAll(this, 'render', 'loadMessage', 'bindEventsForParticipated', 'close');
+        _.bindAll(this, 'render', 'loadMessage', 'close');
         this.isClosed = false;
 
         this.domContainer = $("#profilePage_content");
@@ -21,7 +21,6 @@ var PersonalMessageView = Backbone.View.extend({
         this.myActiveContainer = $("#profilePage_messagePublishedContent");
         this.myFinishedContainer = $("#profilePage_messageParticipatedContent");
         this.loadMessage(messages);
-        this.bindEventsForParticipated();
     },
 
     loadMessage: function (messages) {
@@ -38,26 +37,8 @@ var PersonalMessageView = Backbone.View.extend({
         this.pMessageHistoryView = new MessageHistoryView (pMessages, "my", "profilePage_messageParticipatedContent");
 
     },
-
-    bindEventsForParticipated: function () {
-        var that = this;
-        $("#profilePage_activeMessageParticipated>.profilePage_eventBox").off();
-        $("#profilePage_finishedMessageParticipated>.profilePage_eventBox").off();
-        $("#profilePage_activeMessageParticipated>.profilePage_eventBox").on("click", function (e) {
-            app.navigate(that.user.get("userId") + /Message/ + Utilities.getId(e.delegateTarget.id), true);
-        });
-    },
-
-    bindEventsForPublished: function () {
-        var that = this;
-        $("#profilePage_activeMessagePublished>.profilePage_eventBox").off();
-        $("#profilePage_finishedMessagePublished>.profilePage_eventBox").off();
-        $("#profilePage_activeMessagePublished>.profilePage_eventBox").on("click", function (e) {
-            app.navigate(that.user.get("userId") + /Message/ + Utilities.getId(e.delegateTarget.id), true);
-        });
-    },
     error: function () {
-        Info.alert("Message History fetch failed");
+        Info.displayErrorPage("profilePage_content", "Message History fetch failed");
     },
     close: function () {
         if (!this.isClosed) {

@@ -83,21 +83,11 @@ var FrontPageView = Backbone.View.extend({
             }
         });
         $("#quickStartButton1").on("click", function () {
-            if (app.sessionManager.hasSession()) {
-                var id = app;
-                app.navigate(app.sessionManager.getUserId() + "/main/" + self.searchRepresentation.toString(), true);
-            } else {
-                app.navigate("main/" + self.searchRepresentation.toString(), true);
-            }
+            app.navigate("main/" + self.searchRepresentation.toString(), true);
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         });
         $("#quickStartButton2").on("click", function () {
-            if (app.sessionManager.hasSession()) {
-                var id = app;
-                app.navigate(app.sessionManager.getUserId() + "/main/" + self.searchRepresentation.toString(), true);
-            } else {
-                app.navigate("main/" + self.searchRepresentation.toString(), true);
-            }
+            app.navigate("main/" + self.searchRepresentation.toString(), true);
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         });
     },
@@ -108,7 +98,7 @@ var FrontPageView = Backbone.View.extend({
         // patterns
         var callback_link = function (e) {
             if (app.sessionManager.hasSession()) {
-                app.navigate(app.sessionManager.getUserId() + "/Message/" + Utilities.getId(e.delegateTarget.id), true);
+                app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
                 self.loginAlert();
             }
@@ -129,7 +119,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     loginAlert: function () {
-        Info.alert("请先登录。若是已经登陆，请刷新页面。");
+        Info.displayNotice("请先登录。若是已经登陆，请刷新页面。");
     },
 
     close: function () {

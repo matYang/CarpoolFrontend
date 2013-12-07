@@ -28,6 +28,7 @@
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
 		var message = new Message();
 		if (testMockObj.testMode){
+			callback.error();
 			message = testMockObj.sampleMessageA;
 			if(callback && callback.transaction){
 				callback.success(message, callback.transaction);
@@ -65,7 +66,7 @@
 				Constants.dWarn("MessageManager::fetchMessage:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -112,7 +113,7 @@
 				firstSuccessMessage = null;
 			}
 			else{
-				callback.error();
+				callback.error(response);
 			}
 		}
 	};
@@ -166,7 +167,7 @@
                 Constants.dWarn("MessageManager::updateMessage:: update failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -199,7 +200,7 @@
                 Constants.dWarn("MessageManager::deleteMessage:: delete failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -236,7 +237,7 @@
                 Constants.dWarn("MessageManager::fetchSearchResult:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -263,7 +264,7 @@
                 Constants.dWarn("MessageManager::fetchRecents:: fetch failed with response:");
                 Constants.dLog(response);
                 if(callback){
-					callback.error();
+					callback.error(response);
 				}
             }
         });
@@ -304,7 +305,7 @@
 				Constants.dWarn("MessageManager::fetchTransactionList:: fetch failed with response:");
 				Constants.dLog(response);
 					if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});
@@ -343,7 +344,7 @@
 				Constants.dWarn("MessageManager::autoMatch:: fetch failed with response:");
 				Constants.dLog(response);
 					if(callback){
-					callback.error();
+					callback.error(response);
 				}
 			}
 		});

@@ -1,4 +1,3 @@
-
 var testMockObj = {
 	"testMode": false,
 	"sampleMessages": new Messages(),

@@ -105,22 +105,22 @@ var TopBarView = Backbone.View.extend({
                 app.notificationManager.checkNotification(n_id);
 
                 if (n_evt === Constants.notificationEvent.watched) {
-                    app.navigate(app.sessionManager.getUserId() + "/personal/" + n_model.get('initUserId'), true);
+                    app.navigate("personal/" + n_model.get('initUserId'), true);
                 }
                 //transaction related
                 else if (n_evt < Constants.notificationEvent.watched) {
-                    app.navigate(app.sessionManager.getUserId() + "/message/" + n_model.get('messageId'), true);
+                    app.navigate("message/" + n_model.get('messageId'), true);
                 }
             });
         } else if (dropdownName === 'letter') {
             this.letterContainer.find('.dropdownContent').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
-                app.navigate(app.sessionManager.getUserId() + "/letter/" + u_id, true);
+                app.navigate("letter/" + u_id, true);
             });
         } else if (dropdownName === 'favorites') {
             this.favoriteContainer.find('.dropdownContent').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
-                app.navigate(app.sessionManager.getUserId() + "/personal/" + u_id, true);
+                app.navigate("personal/" + u_id, true);
             });
         }
     },
@@ -147,41 +147,40 @@ var TopBarView = Backbone.View.extend({
     },
 
     updateProfileImg: function (sessionUser) {
-        Info.alert("ahhhh, time to change profile image");
         $('#profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
     },
 
     bindEvents: function () {
-        var self = this, idString = app.sessionManager.hasSession() ? app.sessionManager.getUserId() : "";
+        var self = this;
         var username, password;
 
         /*  navigation events  */
         //main nav
         $('#logo').on('click', function () {
-            app.navigate(idString + "/front", true);
+            app.navigate("front", true);
         });
         $('.navigate_main').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/main/" + self.sessionUser.get('searchRepresentation'), true);
+            app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
         $('.navigate_personal').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId(), true);
+            app.navigate("personal/" + app.sessionManager.getUserId(), true);
         });
         $('.navigate_feedBack').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/post", true);
+            app.navigate("post", true);
         });
-        $(".navigate_usersearch").on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/finduser", true);
+    $(".navigate_usersearch").on('click', function () {
+            app.navigate("finduser", true);
         });
 
         //personal nav
         $('#notificationDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/history", true);
+            app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
         });
         $('#letterDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/letter", true);
+            app.navigate("letter", true);
         });
         $('#favoriteDropdown .dropdownTitleCheckAll').on('click', function () {
-            app.navigate(app.sessionManager.getUserId() + "/personal/" + app.sessionManager.getUserId() + "/social", true);
+            app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
         });
 
         /*  UI events  */
@@ -262,16 +261,16 @@ var TopBarView = Backbone.View.extend({
                             app.sessionManager.fetchSession(true, {
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.navigate(app.sessionManager.getUserId() + "/main", true);
+                                    app.navigate("main", true);
                                 },
                                 error: function () {
-                                    Info.alert("登录失败");
+                                    Info.displayNotice("登录失败，请稍后再试");
                                 }
                             });
                         },
 
                         error: function (status) {
-                            alert("登录失败，请稍后再试");
+                            Info.displayNotice("登录失败，请稍后再试");
                             $("#login_username").addClass('invalid_input');
                             $("#login_password").addClass('invalid_input');
                         }
@@ -291,23 +290,23 @@ var TopBarView = Backbone.View.extend({
                             app.sessionManager.fetchSession(true, {
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.navigate(app.sessionManager.getUserId() + "/main", true);
+                                    app.navigate("main", true);
                                 },
                                 error: function () {
-                                    Info.alert("登录失败");
+                                    Info.displayNotice("登录失败，请稍后再试");
                                 }
                             });
                         },
 
                         error: function (status) {
-                            alert("登录失败，请稍后再试");
+                            Info.displayNotice("登录失败，请稍后再试");
                             $("#login_username").addClass('invalid_input');
                             $("#login_password").addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
-                    alert("用户名和密码不能为空");
+                    Info.displayNotice("用户名和密码不能为空");
                     $("#login_username").addClass('invalid_input');
                     $("#login_password").addClass('invalid_input');
                 }
@@ -343,7 +342,7 @@ var TopBarView = Backbone.View.extend({
             },
 
             error: function (status) {
-                alert("登出失败，请稍后再试");
+                Info.displayNotice("登出失败，请稍后再试");
             }
         });
     },
