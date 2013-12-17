@@ -243,7 +243,7 @@ var AppRouter = Backbone.Router.extend({
                 });
                 app.navigate(app.sessionManager.getUserId() + "/main", true);
             },
-            error: function () {
+            error: function (response) {
                 Info.alert('Email验证失败');
             }
         });

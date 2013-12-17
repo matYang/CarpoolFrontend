@@ -50,6 +50,9 @@ var FrontPageView = Backbone.View.extend({
         $("#quickStart_to>.quickStart_value").html(this.searchRepresentation.get("arrivalLocation").get("city"));
         $("#quickStart_cityInDescription").html(this.searchRepresentation.get("departureLocation").get("city"));
         $("#quickStart_schoolInDescription").html(this.searchRepresentation.get("arrivalLocation").get("city"));
+         $('#s3slider').s3Slider({
+            timeOut: 4000
+         });
     },
 
     renderError: function () {
