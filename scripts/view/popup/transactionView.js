@@ -43,15 +43,16 @@ var TransactionDetailView = Backbone.View.extend({
         var that = this;
         this.domContainer.append(this.template(this.json));
         this.domContainer.show();
+        var mapparam = {
+            "div": "transaction_map",
+            "originLocation": this.transaction.get("departure_location"),
+            "destLocation": this.transaction.get("arrival_location"),
+        };
 
         $("#transaction_close, #closeButton").on("click", function () {
             that.close();
         });
-        this.mapView = new MapView ({
-            "div": "transaction_map",
-            "originLocation": this.transaction.get("departure_location"),
-            "destLocation": this.transaction.get("arrival_location"),
-        });
+        this.mapView = app.storage.getViewCache("MapView", mapparam);
         if (!this.editable) {
             $("#transaction_number").prop("disabled", true);
             $("#startButton").remove();
@@ -239,6 +240,7 @@ var TransactionDetailView = Backbone.View.extend({
 
     close: function () {
         if (!this.isClosed) {
+            this.mapView.close();
             $("#transaction_close").off();
             $("#startButton").off();
             $("#transaction_go, #transaction_back").off();

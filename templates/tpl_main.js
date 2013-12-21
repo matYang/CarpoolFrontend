@@ -72,6 +72,7 @@
               <div id = 'refreshButton' class = 'searchResultButton button'>应用</div>
             </div>
       </div>
+      <div id = 'mainMap'></div>
     </div>
   </div>
 </script>

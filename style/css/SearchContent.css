@@ -80,6 +80,16 @@
   padding-top:15px;
   float:left;
 }
+
+#mainMap {
+  position:relative;
+  height:210px;
+  width:280px;
+  margin-left:10px;
+  margin-top:15px;
+  float:left;
+}
+
 #filterBox > div{
   display:inline-blcok;
 }

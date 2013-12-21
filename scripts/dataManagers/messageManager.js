@@ -28,7 +28,7 @@
 	MessageManager.prototype.fetchMessage = function(messageId, callback){
 		var message = new Message();
 		if (testMockObj.testMode){
-			callback.error();
+			// callback.error();
 			message = testMockObj.sampleMessageA;
 			if(callback && callback.transaction){
 				callback.success(message, callback.transaction);
@@ -113,7 +113,7 @@
 				firstSuccessMessage = null;
 			}
 			else{
-				callback.error(response);
+				callback.error();
 			}
 		}
 	};

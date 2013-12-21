@@ -24,7 +24,6 @@
 		// callback.err((new Letter()).set("letterId",123).set("content",content));
 		// return;
 		//}
-		debugger;
 		if (typeof targetId !== 'number'){
 			Constants.dWarn("LetterManager::sendLetter:: invalid parameter");
 			return;

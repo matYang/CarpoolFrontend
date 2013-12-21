@@ -3,10 +3,10 @@ var MapView = Backbone.View.extend({
 
     initialize: function (config) {
         _.bindAll(this, 'render', 'mapInitialize', 'bindClickEvent', 'setLocation', 'drawCircle', 'getLatLng');
-        this.isClosed = false;
         this.div = config.div;
         this.origin = config.originLocation || app.sessionManager.getSessionUser();
         this.dest = config.destLocation || app.sessionManager.getSessionUser();
+        this.clickable = config.clickable;
         this.oLatLng = {};
         this.dLatLng = {};
         this.init = config.init;
@@ -15,24 +15,44 @@ var MapView = Backbone.View.extend({
         this.geocoder = new google.maps.Geocoder ();
         this.mapInitialize();
     },
-
+    cacheConfig: function(config) {
+        this.div = config.div;
+        this.origin = config.originLocation || app.sessionManager.getSessionUser();
+        this.dest = config.destLocation || app.sessionManager.getSessionUser();
+        this.clickable = config.clickable;
+        $("#"+this.div).after($("#mapcache").attr("id","newMap"));
+        $("#mapcache").remove();
+        $("#"+this.div).remove();
+        $("#newMap").attr("id", this.div);
+        this.mapInitialize();
+    },
     mapInitialize: function () {
+        this.isClosed = false;
         this.getLatLng(this.origin, this.oLatLng);
         this.getLatLng(this.dest, this.dLatLng);
         var center = new google.maps.LatLng (this.oLatLng.lat, this.oLatLng.lng);
         var myOptions = {
             center: center,
+            minZoom: 8,
+            maxZoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        this.map = new google.maps.Map (document.getElementById(this.div), myOptions);
+        if (!this.map) {
+            this.map = new google.maps.Map (document.getElementById(this.div), myOptions);  //this should never expire
+            this.directionDisplay.setMap(this.map);
+        }
         this.marker = undefined;
         this.oMarker = undefined;
         this.dMarker = undefined;
-        this.directionDisplay.setMap(this.map);
         var that = this;
-        if (this.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)) {
-            that.getDirection(that.origin, that.dest);
-        }
+        google.maps.event.addListenerOnce(this.map, 'idle', function(){
+            if (that.oLatLng.lat && that.dLatLng.lat) {
+                 that.getDirection(that.oLatLng, that.dLatLng);
+            }
+            if (that.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)) {
+                that.getDirection(that.origin, that.dest);
+            }
+        });
         this.bindClickEvent();
     },
     bindClickEvent: function () {
@@ -57,7 +77,6 @@ var MapView = Backbone.View.extend({
                   url: "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + e.latLng.lat() + "," + e.latLng.lng() + "&sensor=false",
                   context: document.body
             }).done(function(json) {
-                debugger;
                 $("#markerButton").off();
                 if (that.init){
                     contentString = "<div>" + json.results[0].formatted_address + "</div>" + divSetOD;
@@ -110,8 +129,8 @@ var MapView = Backbone.View.extend({
             if (status == google.maps.GeocoderStatus.OK) {
                 me.map.setCenter(geocodeResults[0].geometry.location);
                 me.map.setZoom(13);
-                latlng = geocodeResults[0].geometry.location.lat();
-                latlng = geocodeResults[0].geometry.location.lng();
+                latlng.lat = geocodeResults[0].geometry.location.lat();
+                latlng.lng = geocodeResults[0].geometry.location.lng();
             } else {
                 Info.warn('Geocode was not successful for the following reason: ' + status);
             }
@@ -140,20 +159,24 @@ var MapView = Backbone.View.extend({
         //add a marker at the center of the circle
         var userMarker = new google.maps.Marker ({
             position: center,
-            map: this.map,
+            map: this.map
         });
     },
     getDirection: function (origin, dest) {
         var request = {}, that = this;
         if (origin instanceof UserLocation) {
             request.origin = origin.get("point") + " " + origin.get("city") + " " + origin.get("province");
+        } else if (origin instanceof google.maps.LatLng ){
+            request.origin = origin.lat() + "," + origin.lng();
         } else {
-            request.origin = origin.lat()+","+origin.lng();
+            request.origin = origin.lat+ "," + origin.lng;
         }
         if (dest instanceof UserLocation) {
             request.destination = dest.get("point") + " " + dest.get("city") + " " + dest.get("province");
+        } else if (origin instanceof google.maps.LatLng ) {
+            request.destination = dest.lat() +","+dest.lng();
         } else {
-            request.destination = dest.lat()+","+dest.lng();
+            request.destination = dest.lat +","+dest.lng;
         }
         request.travelMode = google.maps.TravelMode.DRIVING;
         request.unitSystem = google.maps.UnitSystem.METRIC;
@@ -165,7 +188,7 @@ var MapView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            $("#" + this.div).empty();
+            $("#cache").append($("#"+this.div).attr("id","mapcache"));
             this.isClosed = true;
         }
     }

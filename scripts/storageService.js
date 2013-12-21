@@ -25,7 +25,7 @@
                 "max": 999
             }
         };
-
+        this.views = {};
         //detect once upon initialization
         this.isSupported = isStorageSupported();
         //if local storage supported, reinitialize the storage variables from local storage, now control hands over to
@@ -103,5 +103,16 @@
             this.sr = sr;
         }
     };
-
+    StorageService.prototype.setViewCache = function (type, view) {
+        this.views[type] = view;
+    };
+    StorageService.prototype.getViewCache = function (type, params) {
+        this.views[type] = this.views[type];
+        if (!this.views[type]){
+            this.views[type] = new window[type](params); //create view with dynamic class name
+        } else {
+            this.views[type].cacheConfig(params);
+        }
+        return this.views[type];
+    }
 }).call(this); 

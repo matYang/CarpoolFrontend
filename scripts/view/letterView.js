@@ -1,5 +1,8 @@
 var LetterView = Backbone.View.extend({
     el: "",
+    messageBoxTemplate: ["<div class='letterBoxContainer ", null, "'><img src='", null, "'/><div class='letterBoxMessage'><div class='letterBoxText letterId_", null, "'>", null, "</div><div class='letterBoxTime'>", null, "</div></div></div>"],
+    dateSplitTemplate: ["<div class='letterDateSplit'>", null, "</div>"],
+    contactListTemplate: ["<div class='letterContactListEntry' id='contactList_", null, "'><img src='", null, "'><span>", null, "</span></div>"],
     initialize: function (params) {
         var self = this;
         _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'displayNewLetters', 'fetchLetterUserError', 'close');
@@ -48,9 +51,6 @@ var LetterView = Backbone.View.extend({
         });
         //TODO: fetch letter by user-pair
         this.recentLetters = new Letters ();
-        this.messageBoxTemplate = ["<div class='letterBoxContainer ", null, "'><img src='", null, "'/><div class='letterBoxMessage'><div class='letterBoxText letterId_", null, "'>", null, "</div><div class='letterBoxTime'>", null, "</div></div></div>"];
-        this.dateSplitTemplate = ["<div class='letterDateSplit'>", null, "</div>"];
-        this.contactListTemplate = ["<div class='letterContactListEntry' id='contactList_", null, "'><img src='", null, "'><span>", null, "</span></div>"];
         this.render();
         app.userManager.fetchLetterUsers({
             "success": this.renderContacts,

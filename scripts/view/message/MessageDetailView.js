@@ -45,12 +45,13 @@ var MessageDetailView = Backbone.View.extend({
     },
 
     render: function () {
-        this.domContainer.append(this.template(this.parsedMessage));
-        this.map = new MapView ({
+        var mapParams = {
             div: "view_map",
             originLocation: this.message.get("departure_location"),
             destLocation: this.message.get("arrival_location"),
-        });
+        };
+        this.domContainer.append(this.template(this.parsedMessage));
+        this.map = app.storage.getViewCache("MapView", mapParams);
         this.renderPriceList();
         if (this.message.get("isRoundTrip")) {
             $("#directionArrow").html("<->");
@@ -318,6 +319,7 @@ var MessageDetailView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
+            this.map.close();
             $("#view_edit").off();
             $("#view_transactions_button").off();
             $("#chooseSeatNumber").off();

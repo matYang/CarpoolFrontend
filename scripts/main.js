@@ -152,9 +152,13 @@ var AppRouter = Backbone.Router.extend({
             delete this.MessagePostView;
             this.MessagePostView = null;
         }
-        this.MessageEditView = new MessageEditView ({
-            'messageId': messageId
-        });
+        if (!this.MessageEditView) { 
+            this.MessageEditView = new MessageEditView ({
+                'messageId': messageId
+            });
+        } else {
+            this.MessageEditView.prototype.isColsed = false;
+        }
     },
 
     postMessage: function (postState) {
@@ -173,8 +177,8 @@ var AppRouter = Backbone.Router.extend({
             //if the post session not valid, start new session, creat brand new view
             if (!this.MessagePostView || this.MessagePostView.isClosed) {
                 if (this.MessageEditView) {
+                    delete this.MessagePostView;
                     this.MessageEditView.close();
-                    delete this.MessageEditView;
                     this.MessageEditView = null;
                 }
                 this.MessagePostView = new MessagePublishView ({
@@ -184,6 +188,7 @@ var AppRouter = Backbone.Router.extend({
             //if the post session did not end, keep using the same post session
             else {
                 this.MessagePostView.render(Config.getPostStateStepIndex(postState));
+                this.MessagePostView.prototype.isColsed = false;
             }
         }
     },

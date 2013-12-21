@@ -49,10 +49,15 @@ var MainPageView = Backbone.View.extend({
     },
 
     render: function () {
-        var me = this;
+        var me = this, mapParams = {
+            div: "mainMap",
+            originLocation: this.searchRepresentation.get("departureLocation"),
+            destLocation: this.searchRepresentation.get("arrivalLocation"),
+            clickable: false
+        }
         //injecting the template
         $(this.el).append(this.template);
-
+        this.map = app.storage.getViewCache("MapView", mapParams);
         $("#searchDateInput_depart").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
@@ -279,6 +284,7 @@ var MainPageView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             //removing all event handlers
+            this.map.close();
             $("#genderSelections>.button").off();
             $("#timeSelections1>.button").off();
             $("#timeSelections2>.button").off();

@@ -75,13 +75,15 @@ var MessagePostView = Backbone.View.extend({
             that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
         });
         this.restoreState(1);
+        var mapConfig = {};
+        mapConfig.div = "publish_map";
+        mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
+        mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
+        mapConfig.init = this;
         if (!this.map) {
-            var mapConfig = {};
-            mapConfig.div = "publish_map";
-            mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
-            mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
-            mapConfig.init = this;
-            this.map = new MapView (mapConfig);
+            this.map = app.storage.getViewCache("MapView", mapConfig);
+        } else if ($("#mapcache").length){
+            this.map.cacheConfig(mapConfig);
         }
     },
     updateByMapMarker: function (type, json) {
@@ -637,7 +639,7 @@ var MessagePostView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            delete this.map;
+            this.map.close();
             this.unbindStepEvents(this.stepIndex);
             this.domContainer.empty();
             this.isClosed = true;
