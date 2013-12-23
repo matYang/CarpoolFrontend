@@ -33,13 +33,13 @@ var FrontPageView = Backbone.View.extend({
     renderRecents: function (recents) {
         this.displayMessages = recents;
         var buf = [];
-        debugger;
         while (this.displayIndex< 3 ) {
             buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
         $("#quickStart_resultPanel").append(buf.join(""));
         $("#quickStart_resultPanel>div").addClass("frontBoxContainer");
         this.bindRecentsEvents();
+        this.rollInterval = setInterval(this.scroll, 5000);
     },
 
     render: function () {
@@ -93,7 +93,6 @@ var FrontPageView = Backbone.View.extend({
             app.navigate("main/" + self.searchRepresentation.toString(), true);
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         });
-        this.rollInterval = setInterval(this.scroll, 5000);
     },
 
     bindRecentsEvents: function () {
