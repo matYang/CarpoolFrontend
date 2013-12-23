@@ -1,20 +1,18 @@
 var FrontPageView = Backbone.View.extend({
 
     el: $('#content'),
-
+    displayIndex: 0,
     initialize: function () {
-        _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'close');
+        _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'close');
         app.viewRegistration.register("frontPage", this, true);
         this.isClosed = false;
-
+        this.bottomRecentId = 0;
         this.template = _.template(tpl.get('front'));
-        this.messageTemplate = _.template(tpl.get('Front'));
+        this.messageTemplate = _.template(tpl.get('SimpleMessage'));
 
         this.user = app.sessionManager.getSessionUser();
 
         this.searchRepresentation = app.storage.getSearchRepresentationCache();
-
-        this.displayMessages = new Messages ();
         this.render();
         //fire async API call befire entering the time consuming events binding stage
         this.getRecents();
@@ -33,12 +31,14 @@ var FrontPageView = Backbone.View.extend({
     },
 
     renderRecents: function (recents) {
-        recentMessages = recents;
-        for (var i = 0; i < 3 && i < recentMessages.length; i++) {
-            this.displayMessages.add(recentMessages.at(i));
+        this.displayMessages = recents;
+        var buf = [];
+        debugger;
+        while (this.displayIndex< 3 ) {
+            buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
-        this.searchResultView = new SearchResultView (this.displayMessages, false);
-
+        $("#quickStart_resultPanel").append(buf.join(""));
+        $("#quickStart_resultPanel>div").addClass("frontBoxContainer");
         this.bindRecentsEvents();
     },
 
@@ -93,24 +93,18 @@ var FrontPageView = Backbone.View.extend({
             app.navigate("main/" + self.searchRepresentation.toString(), true);
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         });
+        this.rollInterval = setInterval(this.scroll, 5000);
     },
 
     bindRecentsEvents: function () {
         var self = this;
-        //define scope functions separately, do not make functions inside loops, use scope functions or function maker
-        // patterns
-        var callback_link = function (e) {
+        $("#quickStart_resultPanel>.frontBoxContainer").on('click', function(e){
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
                 self.loginAlert();
             }
-        };
-
-        for (var i = 0; i < this.displayMessages.length; i++) {
-            var messageId = this.displayMessages.at(i).get("messageId");
-            $("#frontBox_" + messageId).on("click", callback_link);
-        }
+        })
     },
 
     updateLocation: function (id) {
@@ -124,7 +118,24 @@ var FrontPageView = Backbone.View.extend({
     loginAlert: function () {
         Info.displayNotice("请先登录。若是已经登陆，请刷新页面。");
     },
-
+    scroll: function () {
+        var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), that = this;
+        $("#quickStart_resultPanel").prepend(buf);
+        $("#quickStart_resultPanel>div").first().addClass("frontBoxContainer").css("margin-top",-100);
+        $("#quickStart_resultPanel>div").first().animate({"margin-top":0}, 600);
+        if ($("#quickStart_resultPanel>div").length > 4) {
+            $("#quickStart_resultPanel>div").last().remove();
+        }
+        if (this.displayIndex === this.displayMessages.length) {
+            this.displayIndex = 0;
+            app.messageManager.fetchRecents({
+                "success": function(recents){
+                    that.displayMessages = recents;
+                },
+                "error": this.renderError
+            });
+        }
+    },
     close: function () {
         if (!this.isClosed) {
             $("#quickStartButton1").off();
@@ -141,6 +152,7 @@ var FrontPageView = Backbone.View.extend({
 
             $(this.el).empty();
             this.isClosed = true;
+            clearInterval(this.rollInterval);
         }
     }
 });

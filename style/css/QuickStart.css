@@ -69,6 +69,7 @@
 	border-style: solid;
 	border-color:#aaaaaa;
 	float:left;
+	overflow:hidden;
 }
 .quickStart_searchResultBox{
 	width:100% !important;

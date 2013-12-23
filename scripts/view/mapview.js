@@ -186,9 +186,13 @@ var MapView = Backbone.View.extend({
             }
         });
     },
-    close: function () {
+    close: function (destroy) {
         if (!this.isClosed) {
-            $("#cache").append($("#"+this.div).attr("id","mapcache"));
+            if (destroy) {
+
+            } else {
+                $("#cache").append($("#"+this.div).attr("id","mapcache"));
+            }
             this.isClosed = true;
         }
     }

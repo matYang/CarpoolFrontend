@@ -52,7 +52,7 @@ var TransactionDetailView = Backbone.View.extend({
         $("#transaction_close, #closeButton").on("click", function () {
             that.close();
         });
-        this.mapView = app.storage.getViewCache("MapView", mapparam);
+        this.mapView = new MapView(mapparam);
         if (!this.editable) {
             $("#transaction_number").prop("disabled", true);
             $("#startButton").remove();
@@ -240,7 +240,7 @@ var TransactionDetailView = Backbone.View.extend({
 
     close: function () {
         if (!this.isClosed) {
-            this.mapView.close();
+            this.mapView.close(true);
             $("#transaction_close").off();
             $("#startButton").off();
             $("#transaction_go, #transaction_back").off();

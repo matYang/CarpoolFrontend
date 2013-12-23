@@ -198,7 +198,6 @@ var MessageDetailView = Backbone.View.extend({
             }
             $("#chooseSeatNumber").val(1);
             $("#view_book").on("click", function (e) {
-
                 if (that.bookInfo.go && that.bookInfo.back) {
                     that.newTransaction.set("myDirection", 0);
                     that.newTransaction.set("arrival_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
