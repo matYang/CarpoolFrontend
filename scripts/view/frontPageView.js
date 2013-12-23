@@ -97,7 +97,8 @@ var FrontPageView = Backbone.View.extend({
 
     bindRecentsEvents: function () {
         var self = this;
-        $("#quickStart_resultPanel>.frontBoxContainer").on('click', function(e){
+        $(".frontBoxContainer").off();
+        $(".frontBoxContainer").on('click', function(e){
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
@@ -134,6 +135,7 @@ var FrontPageView = Backbone.View.extend({
                 "error": this.renderError
             });
         }
+        this.bindRecentsEvents();
     },
     close: function () {
         if (!this.isClosed) {
