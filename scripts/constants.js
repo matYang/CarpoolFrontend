@@ -29,7 +29,7 @@ var Constants = {
 
     templateResources: [
     /* ---------  DM Modules  ----------*/
-    "DetailMessage", "Publish_singleSlotAsk", "Publish_base", "Publish_step1", "Publish_step2", "Publish_step3", "SimpleMessage", "Edit", "Transaction", "Front",
+    "DetailMessage", "Publish_singleSlotAsk", "Publish_base", "Publish_step1", "Publish_step2", "Publish_step3", "SimpleMessage", "Edit", "Transaction",
 
     /*----------- dropdowns  ----------*/
     "notificationDropdown", "letterDropdown", "favoriteDropdown",
