@@ -8,10 +8,11 @@ var SearchResultView = MultiPageView.extend({
         this.pageNumberId = "searchResultPageNumber";
         this.entryEvent = this.transferURL;
         this.pageNavigator = "pageNavigator";
+        this.pageNavigatorClass = "mainPage-searchResult-multiPage-pageNum";
         this.user = app.sessionManager.getSessionUser();
         if (isSearchResult) {
-            this.entryHeight = 108;
-            this.pageEntryNumber = 6;
+            this.entryHeight = 95;
+            this.pageEntryNumber = 10;
             this.entryClass = "searchResultBoxContainer";
             this.entryContainer = "searchResultDisplayPanel";
             this.domContainer = $("#searchResultDisplayPanel");
