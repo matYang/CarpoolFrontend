@@ -35,7 +35,7 @@ var SearchResultView = MultiPageView.extend({
             Info.displayNotice("请先登陆");
         }
     },
-
+    
     close: function () {
         this.domContainer.empty();
     }

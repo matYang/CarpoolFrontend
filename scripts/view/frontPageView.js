@@ -43,6 +43,7 @@ var FrontPageView = Backbone.View.extend({
 
     render: function () {
         $(this.el).append(this.template);
+        $( '.cycle-slideshow' ).cycle();
     },
 
     renderError: function () {

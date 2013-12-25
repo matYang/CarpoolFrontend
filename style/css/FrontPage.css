@@ -192,7 +192,7 @@
 .slider_container {
 	position:relative;
 	width:275px;
-	height:275px;
+	height:240px;
 	overflow:hidden;
 }
 .slider_container .left_arr, .slider_container .right_arr {
@@ -201,6 +201,7 @@
 	height:36px;
 	top:90px;
 	cursor:pointer;
+	z-index: 101;
 }
 .slider_container .left_arr {
 	left:0;
