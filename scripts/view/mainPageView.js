@@ -94,6 +94,8 @@ var MainPageView = Backbone.View.extend({
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         $("#searchTypeContainer>.active").removeClass("active");
         if (!me.filter.isRoundTrip) {
+            $("#searchDateInput_return").parent().addClass("date-return-disabled");
+            $("#searchDateInput_return").prop("disabled", true);
             $("#searchTypeContainer>span").first().addClass("active");
         } else {
             $("#searchTypeContainer>span").second().addClass("active");
@@ -101,6 +103,13 @@ var MainPageView = Backbone.View.extend({
         $("#searchTypeContainer>span").on("click", function(e){
             $("#searchTypeContainer>.active").removeClass("active");
             $(this).addClass("active");
+            if ($(this).attr("data-id") == "roundtrip") {
+                $("#searchDateInput_return").prop("disabled", false);
+                $("#searchDateInput_return").parent().removeClass("date-return-disabled");
+            } else {
+                $("#searchDateInput_return").prop("disabled", true);
+                $("#searchDateInput_return").parent().addClass("date-return-disabled");
+            }
         })
     },
 
@@ -139,6 +148,8 @@ var MainPageView = Backbone.View.extend({
         $("#typeSelections>.active").removeClass('active');
         $(e.target).addClass('active');
         this.filter.type = e.target.getAttribute("data-id");
+        debugger;
+        this.refresh();
     },
 
     submitSearch: function () {
