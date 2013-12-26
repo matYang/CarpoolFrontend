@@ -7,7 +7,7 @@ var MainPageView = Backbone.View.extend({
         "isRoundTrip": false,
         "time1": "all",
         "time2": "all",
-        "type": "all",
+        "type": Constants.messageType.both,
         "priceMin": PRICE_MIN,
         "priceMax": PRICE_MAX
     },
@@ -147,8 +147,13 @@ var MainPageView = Backbone.View.extend({
         var me = $('#' + e.target.getAttribute('id'));
         $("#typeSelections>.active").removeClass('active');
         $(e.target).addClass('active');
-        this.filter.type = e.target.getAttribute("data-id");
-        debugger;
+        if (e.target.getAttribute("data-id") === "passenger"){
+            this.filter.type = Constants.messageType.ask 
+        } else if (e.target.getAttribute("data-id") === "driver") {
+            this.filter.type = Constants.messageType.help;
+        } else {
+            this.filter.type = Constants.messageType.both;
+        }
         this.refresh();
     },
 
@@ -173,26 +178,28 @@ var MainPageView = Backbone.View.extend({
     filterMessage: function (messages) {
         var filtered = new Messages ();
         var l = messages ? messages.length : 0;
-
         for (var i = 0; i < l; i++) {
             var m = messages.at(i);
-            var dt = m.get("departure_timeSlot");
-            var rt = m.get("arrival_timeSlot");
-            if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))) {
-                if (this.filterTime(this.filter.time1, dt)) {
-                    filtered.add(m);
-                }
-                if (this.filter.isRoundTrip && this.filterTime(this.filter.time2, rt)) {
-                    filtered.add(m);
-                }
-            } else if (m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location"))) {
-                if (this.filterTime(this.filter.time2, dt)) {
-                    filtered.add(m);
-                }
-                if (this.filter.isRoundTrip && this.filterTime(this.filter.time1, rt)) {
-                    filtered.add(m);
-                }
+            // var dt = m.get("departure_timeSlot");
+            // var rt = m.get("arrival_timeSlot");
+            // if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))) {
+            //     if (this.filterTime(this.filter.time1, dt)) {
+            //         filtered.add(m);
+            //     }
+            //     if (this.filter.isRoundTrip && this.filterTime(this.filter.time2, rt)) {
+            //         filtered.add(m);
+            //     }
+            // } else if (m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location"))) {
+            //     if (this.filterTime(this.filter.time2, dt)) {
+            //         filtered.add(m);
+            //     }
+            //     if (this.filter.isRoundTrip && this.filterTime(this.filter.time1, rt)) {
+            //         filtered.add(m);
+            //     }
 
+            // }
+            if (this.filter.type === Constants.messageType.both || this.filter.type === m.get("type")) {
+                filtered.add(m);
             }
         }
         return filtered;
