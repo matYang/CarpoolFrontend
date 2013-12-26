@@ -52,14 +52,13 @@ var FrontPageView = Backbone.View.extend({
     bindEvents: function () {
         var self = this;
         $("#from").on("mouseup", function (e) {
-            self.locationPicker = new LocationPickerView (self.searchRepresentation.get("departureLocation"), self);
+            $("#from>input").val("");
         });
         $("#to").on("mouseup", function (e) {
-            self.locationPicker = new LocationPickerView (self.searchRepresentation.get("arrivalLocation"), self);
+            $("#to>input").val("");
         });
-        $(".date>input").on("click", function (e) {
-            $(".date>input").trigger("focus");
-
+        $(".date>input").on("mouseup", function (e) {
+            $(".date>input").val("");
         });
         $(".date>input").datepicker({
             buttonImageOnly: true,
@@ -76,8 +75,13 @@ var FrontPageView = Backbone.View.extend({
             }
         });
         $(".btn_search").on("click", function () {
-            app.storage.setSearchRepresentationCache(this.searchRepresentation);
-            app.navigate("main/" + self.searchRepresentation.toString(), true);
+            debugger;
+            if ($("#from>input").val() &&  $("#to>input").val() && $(".date>input").val() ) {
+                self.searchRepresentation.get("departureLocation").set("city", $("#from>input").val());
+                self.searchRepresentation.get("arrivalLocation").set("city", $("#to>input").val());
+                app.storage.setSearchRepresentationCache(self.searchRepresentation);
+                app.navigate("main/" + self.searchRepresentation.toString(), true);
+            }
         });
         $("#frontPage-userButtons>.user").on("click", function(e){
             if (!$(this).hasClass("active")) {
