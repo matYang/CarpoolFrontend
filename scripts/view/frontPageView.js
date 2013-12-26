@@ -75,9 +75,9 @@ var FrontPageView = Backbone.View.extend({
                 $(".date>input").val(Utilities.getDateString(d));
             }
         });
-        $("#btn_search").on("click", function () {
-            app.navigate("main/" + self.searchRepresentation.toString(), true);
+        $(".btn_search").on("click", function () {
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
+            app.navigate("main/" + self.searchRepresentation.toString(), true);
         });
         $("#frontPage-userButtons>.user").on("click", function(e){
             if (!$(this).hasClass("active")) {
@@ -127,7 +127,8 @@ var FrontPageView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            $("#btn_search").off();
+            $(".message_simple").off();
+            $(".btn_search").off();
             $("#from").off();
             $("#to").off();
             $("#frontPage-userButtons>.user").off();
