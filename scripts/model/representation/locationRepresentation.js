@@ -2,84 +2,60 @@ var UserLocation = Backbone.Model.extend({
 
     defaults: function () {
         return {
-            'hierarchyNameList': [],
-            'customDepthIndex': Config.defaultCustomDepthIndex,
+            //first 3 reserved for default locations only
+            'defaultId': -1,
+            'radius': -1,
+            'synonyms': '',
 
-            //@Deprecated. left here to provide compability
-            'country': 'Canada',
+            'id': -1,
+
             'province': 'Ontario',
             'city': 'Waterloo',
-            'point': "Matthew's Sweet Little Home",
+            'region': 'Waterloo',
+            'pointName': 'Waterloo',
 
-            //optional, returned by locationPicker to track default custom locations
-            'customNameList': []
+            'pointAddress':'Waterloo, On',
+            'lat': 43.479332,
+            'lng': -80.533272,
+
+            'match_Id': -1
         };
     },
 
     initialize: function () {
-        _.bindAll(this, 'toString', 'castToString', 'castFromString', 'equals', 'autoFill');
-        this.autoFill();
+        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
     },
 
-    toString: function () {
-        var str = '', index = 0;
-        if (this.get('hierarchyNameList').length === 0) {
-            var buffer = [];
-            if (this.get("contry"))
-                buffer.push(this.get("contry"));
-            if (this.get("province"))
-                buffer.push(this.get("province"));
-            if (this.get("city"))
-                buffer.push(this.get("city"));
-            if (this.get("point"))
-                buffer.push(this.get("point"));
-            return buffer.join(Config.locationSeperator);
-        }
-        for ( index = 0; index < this.get('hierarchyNameList').length; index++) {
-            str += this.get('hierarchyNameList')[index] + Config.locationSeperator;
-        }
-        str += this.get('customDepthIndex');
-        return str;
+    isNew: function(){
+        return typeof this.get('id') === 'undefined' || this.get('id') === -1;
     },
 
-    castToString: function () {
-        //@deprecated, don't use
-        return this.toString();
+    isDefault: function(){
+        return typeof this.get('defaultId') === 'number' && this.get('defaultId') > 0;
     },
 
-    castFromString: function (str) {
-
-        var strArray = [], index = 0;
-        if (str) {
-            strArray = str.split(Config.locationSeperator);
-        }
-        for ( index = 0; index < strArray.length - 1; index++) {
-            this.get('hierarchyNameList')[index] = (strArray[index]);
-        }
-        this.set('customDepthIndex', parseInt(strArray[index], 10));
-        this.autoFill();
-    },
-
-    //parse: no nested data structure, default parse is good enough
-    //toJSON: same as above
     toUiString: function () {
-        if (this.get('city') && this.get('province'))
-            return this.get('city') + ", " + this.get("province");
-        else
-            return this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex') - 1] + ", " + this.get('hierarchyNameList')[this.get('Config.defaultCustomDepthIndex') - 2];
+        return this.get('pointName');
     },
+
     equals: function (val) {
-        if (this.get('hierarchyNameList').length == 0) {
-            this.reverseFill();
-        }
-        if (val.get('hierarchyNameList').length == 0) {
-            val.reverseFill();
-        }
         if ( val instanceof Backbone.Model) {
-            return this.get('hierarchyNameList').compare(val.get('hierarchyNameList')) && this.get('customDepthIndex') === val.get('customDepthIndex');
+            if (this.isDefault() && val.isDefault()){
+                return this.get('defaultId') === val.get('defaultId');
+            }
+            else if (!this.isDefault() && !val.isDefault()){
+                return this.get('province') === val.get('province') &&
+                    this.get('city') === val.get('city') &&
+                    this.get('region') === this.get('region') &&
+                    this.get('pointName') === val.get('pointName') &&
+                    this.get('pointAddress') === val.get('pointAddress');
+            }
+            return false;
         }
         return false;
     },
+
+
     isEquivalentTo: function (val) {
         if ( val instanceof UserLocation) {
             return this.get('city') === val.get('city');
@@ -87,33 +63,29 @@ var UserLocation = Backbone.Model.extend({
         return false;
     },
 
-    autoFill: function () {
-        if (this.get('hierarchyNameList').length !== 0) {
-            this.set('country', this.get('hierarchyNameList')[0]);
-            this.set('province', this.get('hierarchyNameList')[1]);
-            this.set('city', this.get('hierarchyNameList')[2]);
-            this.set('point', this.get('hierarchyNameList')[3]);
-        }
-    },
 
-    reverseFill: function () {
-        this.get('hierarchyNameList')[0] = this.get('country');
-        this.get('hierarchyNameList')[1] = this.get('province');
-        this.get('hierarchyNameList')[2] = this.get('city');
-        this.get('hierarchyNameList')[3] = this.get('point');
-    },
-
-    //@Depracated, providing parsing support for legacy
     parse: function (json) {
-        json.customDepthIndex = parseInt(json.customDepthIndex, 10);
-
-        json.country = json.hierarchyNameList[0];
-        json.province = json.hierarchyNameList[1];
-        json.city = json.hierarchyNameList[2];
-        json.point = json.hierarchyNameList[3];
+        if (typeof json.defaultId !== 'undefined' && json.defaultId >= 0){
+            json.defaultId = parseInt(json.defaultId, 10);
+            json.radius = parseInt(json.radius, 10);
+            json.synonyms = decodeURI(json.synonyms);
+        }
+        json.id = parseInt(json.id, 10);
+        json.province = decodeURI(json.province);
+        json.city = decodeURI(json.city);
+        json.region= decodeURI(json.region);
+        json.pointName = decodeURI(json.pointName);
+        json.pointAddress = decodeURI(json.pointAddress);
+        json.lat = parseFloat(json.lat);
+        json.lng = parseFloat(json.lng);
+        json.match_Id = parseInt(json.match_Id, 10);
 
         return json;
     },
+
+
+    //TODO
+    //also need to get lat and lng
     parseGoogleJson: function (json) {
         var address = json.results[0].address_components, len = address.length, i,
             street_address, buf = [], city, province, contry, reachedFlag = false;
@@ -134,14 +106,63 @@ var UserLocation = Backbone.Model.extend({
             }
         }
         street_address = buf.join(" ");
-        this.get('hierarchyNameList')[0] = contry;
-        this.get('hierarchyNameList')[1] = province;
-        this.get('hierarchyNameList')[2] = city;
-        this.get('hierarchyNameList')[3] = street_address;
-        this.autoFill();
+        // this.get('hierarchyNameList')[0] = contry;
+        // this.get('hierarchyNameList')[1] = province;
+        // this.get('hierarchyNameList')[2] = city;
+        // this.get('hierarchyNameList')[3] = street_address;
+        
+    },
+
+    isInRange: function(loc){
+        if (this.get('radius') <= 0 && loc.get('radius') <= 0){
+            Info.alert("无效地理位置比较，确认是否在服务区内必须和默认位置比较");
+        }
+
+        var radius = this.get('radius') > 0 ? this.get("radius") : loc.get("radius");
+        var distance = _getDistanceFromLatLon(this.get('lat'), this.get('lng'), loc.get('lat'), loc.get('lng'));
+        
+        return distance <= radius;
+    },
+
+    
+    _getDistanceFromLatLon: function(lat1,lon1,lat2,lon2){
+        var R = 6371; // Radius of the earth in km
+        var dLat = _deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = _deg2rad(lon2-lon1);
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(_deg2rad(lat1)) * Math.cos(_deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+        return d;
+    },
+
+    _deg2rad: function(deg) {
+        return deg * (Math.PI/180);
     }
+
 });
 
-var UserLocations = Backbone.Collection.extend({
-    //@Deprecated
+var DefaultUserLocations = Backbone.Collection.extend({
+    model: UserLocation,
+
+    url: Constants.origin + "/api/v1.0/location/default",
+
+    initialize: function (urlOverride) {
+        _.bindAll(this, 'overrideUrl', 'findMatch');
+        if (urlOverride !== null) {
+            this.url = urlOverride;
+        }
+
+    },
+
+    overrideUrl: function (urlOverride) {
+        if (urlOverride !== null) {
+            this.url = urlOverride;
+        }
+    },
+
+    //TODO
+    findMatch: function(locKeyStr){
+        return this;
+    }
+
 });

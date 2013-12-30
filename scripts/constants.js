@@ -177,5 +177,7 @@ var Constants = {
             'hierarchyNameList': ['Canada', 'Ontario', 'Waterloo', 'undetermined'],
             'customDepthIndex': 3
         });
-    }
+    },
+
+
 };

@@ -38,9 +38,8 @@ tpl = {
                 self = this;
 
             $.ajax({
-                url: 'targets/templates.min.js', 
+                url: 'targets/templates.min.js',
                 dataType: "html",
-                cache: false,
                 success: function (data) {
                     tplContainer = $('#tpl_main_invisible_placeholder_v1');
                     tplContainer.append(data);
