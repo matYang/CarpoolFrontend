@@ -1,277 +1,114 @@
-#topBar {
-  width:100%;
-  height:40px;
-  position:absolute;
-  z-index:90;
-  background: #0099ff; /* Old browsers */
-  background: -moz-linear-gradient(top,  #0099ff 0%, #61B0FF 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0099ff), color-stop(100%,#61B0FF)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #0099ff 0%, #61B0FF 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #0099ff 0%, #61B0FF 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #0099ff 0%, #61B0FF 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #0099ff 0%, #61B0FF 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0099ff', endColorstr='#61B0FF',GradientType=0 ); /* IE6-9 */
-  cursor:default;
-}
+@charset "utf-8";
+/* CSS Document */
 
-#centerTopBar{
-  width: 950px;
-  height:100%; 
-  position:relative;
-  margin-left:auto;
-  margin-right:auto;
+.topBar {
+	width:100%;
+	height:60px;
+	background:#000;
 }
-
-#logo {
-  height:100%;
-  width:75px;
-  position:relative;
-  padding:0;
-  margin:0;
-  background-image:url("../../res/topBar/logo.png");
-  background-repeat:no-repeat;
-  /*IE 8 does not support this, ask Lucas for a logo with finalized dimensions and delete it*/
-  background-size: cover;
-  display: inline-block;
-  vertical-align:top;
-  float:left;
+.topBar-inner {
+	width:1000px;
+	margin:0 auto;
 }
-
-#logo2 {
-  height:100px;
-  width:200px;
-  position:relative;
-  padding:0;
-  margin:0;
-  background-repeat:no-repeat;
-  /*background-image: url("../../res/topBar/logo_large.png");*/
-  /*IE 8 does not support this, ask Lucas for a logo with finalized dimensions and delete it*/
-  background-size: cover;
-  display: inline-block;
-  vertical-align:top;
-  float:left;
+.topBar-logo a {
+	float:left;
+	background:url(../images/logo.png) no-repeat left center;
+	width:138px;
+	height:60px;
+	text-indent: -32768px;
 }
-
-#subTitles{
-  height:100%;
-  width:auto;
-  position:relative;
-  float:left;
-  list-style: none;
-  vertical-align:top;
-  line-height: 100%;
+.topBar-navigation {
+	float:left;
+	margin-left:55px;
 }
-
-#subTitles > li{
-  width:auto;
-  height:37px;
-  position:relative;
-  margin-left:30px;
-  /*this is resereved for possible background effects like :hover*/
-  padding-top:3px;
-  padding-left: 5px;
-  padding-right: 5px;
-  display: inline-block;
-  line-height: 40px;
-  /*line height here can not use 100% bacause beaseline is changed*/
-  vertical-align: middle;
-  color:#ffffff;
-  font-weight:bold;
-  font-size:17px;
+/*主导航*/
+.topBar-navigation li {
+	float:left;
+	height:60px;
+	line-height:60px;
+	margin-right:52px;
+	font-family:'幼圆', '微软雅黑', '黑体', '宋体';
+	font-size:18px;
+	color:#fff;
+	font-weight:bold;
+	cursor:pointer;
 }
-
-.subTitle:hover{
-  position:relative;
-  background-color:#5dccff;
+.topBar-navigation li:hover {
+	color:#b9eaff;
 }
-
-.not-loggedIn{
-  height:110px !important;  
+.topBar-navigation li.active {
+	background:url(../images/nav_spites.png) no-repeat 21px -366px;
 }
-
-.no-input-value {
-  color:#666;
-  /*This class is used for default value (or instruction) in input field,
-  need to be removed upon user input*/
+.topBar-dropdown {
+	float:left;
+	margin-left:90px;
 }
-.emptyBackground{
-  background-image:none !important;
-
+/*右侧工具*/
+.topBar-dropdown dl {
+	float:left;
+	width:70px;
+	position:relative;
 }
-
-#login_username{
-  float:left;
-  height:25px;
-  width:150px;
-  position: relative;
-  margin-left:100px;
-  margin-top:5px;
-  padding-left:30px;
-  background-image: url('../../res/topBar/username.png');
-  background-position: 8px center;
-  background-size:13px 13px;
-  background-repeat: no-repeat;
+.topBar-dropdown dl dt {
+	display:block;
+	height:60px;
+	background:url(../images/nav_spites.png) no-repeat;
+	text-indent: -32768px;
+	cursor:pointer;
 }
-
-
-#login_password{
-  float:left;
-  height:25px;
-  width:150px;
-  margin-left:10px;
-  margin-top:5px;
-  padding-left:30px;
-  background-image: url('../../res/topBar/password.png');
-  background-position: 8px center;
-  background-size:13px 13px;
-  background-repeat: no-repeat;  
+.topBar-dropdown dl.message dt {
+	background-position:0 16px;
 }
-#login_button{
-  float:left;
-  height:24px;
-  width:70px;
-  position: relative;
-  margin-left:12px;
-  margin-top:5px;
-  padding-top: 6px;
-  padding-left: 10px;
-  text-align: center;
-  letter-spacing: 10px;
-  background-color:#aaaaaa;
-  font-size: 13px;
-
+.topBar-dropdown dl.email dt {
+	background-position:0 -43px;
 }
-
-#signup_button{
-  float:left;
-  height:24px;
-  width:140px;
-  position: relative;
-  margin-left:10px;
-  margin-top:5px;
-  padding-top: 6px;
-  padding-left: 10px;
-  letter-spacing: 10px;
-  text-align: center;
-  background-color:#aaaaaa;
-  font-size: 13px;
+.topBar-dropdown dl.collection dt {
+	background-position:0 -106px;
 }
-
-#notifications, #letters, #favorites{
-  width:30px;
-  height:30px;
-  padding:5px;
-  position:relative;
-  float:left;
-  background-repeat: no-repeat;
-  background-position:center; 
+.topBar-dropdown dl.message dt:hover {
+	background-position:0 -164px;
 }
-
-#notifications{
-  background-image: url('../../res/topBar/notification.png');
+.topBar-dropdown dl.email dt:hover {
+	background-position:0 -223px;
 }
-#letters{
-  background-image: url('../../res/topBar/letter.png');
+.topBar-dropdown dl.collection dt:hover {
+	background-position:0 -286px;
 }
-#favorites{
-  background-image: url('../../res/topBar/favorites.png');
+.topBar-dropdown dd, .topBar-profileImage dd {
+	position:absolute;
+	left:-53px;
+	top:45px;
+	width:100px;
+	background:url(../images/nav_spites.png) no-repeat 64px -354px;
+	padding-top:12px;
 }
-#personalNavContainer{
-  width:205px;
-  height:40px;
-  position:relative;
-  float:left;
-  margin-left:200px;
+.topBar-dropdown ul, .topBar-profileImage ul {
+	background-color: #fff;
 }
-
-#profilePicture{
-  width:50px;
-  height:50px;
-  border:5px solid #0099ff;
-  float:right;
-  position:relative;
-  background-color: #999999;
-  background-image: url();
-  box-shadow: 2px 2px 10px #888888;
-  z-index:10;
+.topBar-dropdown ul li, .topBar-profileImage ul li {
+	line-height:32px;
+	color:#333;
+	font-size:12px;
 }
-
-#profilePicture > img{
-  width:50px;
-  height:50px;
+.topBar-dropdown ul li a, .topBar-profileImage ul li a {
+	padding:0 10px;
+	display:block;
+	text-decoration:none;
 }
-
-#profilePicture > img{
-  width:50px;
-  height:50px;
+.topBar-dropdown ul li a:hover, .topBar-profileImage ul li a:hover {
+	background:#efefef;
 }
-
-#profilePicture > img:hover{
-  cursor: pointer;
+.topBar-profileImage {
+	float:right;
+	position:relative;
+	width:50px;
 }
-
-#dropdowns{
-  position:relative;
-  float:right;
-  width:475px;
+/*头像*/
+.topBar-profileImage dt {
+	margin-top:5px;
 }
-
-.dropdownBase{
-  width:255px;
-  height:250px;
-  background-color: rgb(255,255,255);
-  border: 1px solid #000000;
-  z-index: 100;
-  overflow: scroll;
-}
-
-#notificationDropdown{
-  margin-left:85px;
-}
-
-#letterDropdown{
-  margin-left:125px;
-}
-
-#favoriteDropdown{
-  margin-left:165px;
-}
-
-
-
-#profileDropdown{
-  margin-left:350px;
-  margin-top:20px;
-  width:60px;
-  height:25px;
-  background-color: rgb(255,255,255);
-  border: 1px solid #000000;
-}
-
-#logout{
-  color:#3377ff;
-}
-#logout.dropdownContent{
-  text-align:center;
-  padding:3px 0 0 0;
-  width:60px;
-  height:20px;
-}
-.whiteBackground{
-  background-color: #ffffff;
-  border-width: 1px 1px 0 1px;
-  width:29px !important;
-  border-style:solid;
-  border-color: #000000;
-  z-index:10;
-}
-#topNoticeBar{
-  background-color:#83C5F1;
-  width: 100%;
-  height: 25px;
-  text-align: center;
-  display:none;
-  font-size:20px;
-  padding-top: 5px;
-  color:#ffffff;
+.topBar-profileImage dt img {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }

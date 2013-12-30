@@ -109,37 +109,27 @@
 
 
 <script type="text/template" id="tpl_SimpleMessage">
-	<div id = 'searchResultBox_<%= messageId %>'>
-	  <div id = 'profilePicture_<%= messageId %>' class = 'searchResultProfilePicture'><img src='<%= owner.imgPath %>' /></div>
-	  <div id = 'searchResultContainerInfo_<%= messageId %>' class = 'searchResultContainerInfo'>
-	    <div class = 'fromInfo'>
-	      <div >出发</div>
-	      <div class = 'searchResultOrigin'><%= departure_location %></div>  
-	      <div class = 'searchResultDepartDate'><%= departure_time %></div>
-	      <div class = 'searchResultDepartTime'><%= departure_timeSlot %></div>
-	      <div class = 'searchResultDepartSeat'>剩余 <%= departure_seatsNumber %> 座</div>
-	    </div>
-	    <% if (isRoundTrip === false)  { %>
-	    <div class = 'oneDirectionArrow'></div>
-	    <% } else { %>
-	    <div class = 'twoDirectionArrow'></div>
-	    <% } %>
-	    <div class = 'toInfo'>
-	      <div >到达</div>
-	      <div class = 'searchResultDest'><%= arrival_location %></div>  
-	      <% if (isRoundTrip === true)  { %>
-	        <div class = 'searchResultReturnDate'><%= arrival_time %></div>
-	        <div class = 'searchResultReturnTime'><%= departure_timeSlot %></div>
-	        <div class = 'searchResultReturnSeat'>剩余 <%= arrival_seatsNumber %> 座</div>
-	      <% } %>
-	    </div>
-
-	  </div>
-	  <div id = 'searchResultContainerPrice_<%= messageId %>' class='searchResultContainerPrice'>
-	    <div class = 'searchResultPriceLogo'>￥ <%= currentPrice %>
-	    </div>
-	  </div>
-	  <div class = 'searchResultUserName'><%= owner.name %></div>
-	  <div class = 'searchResultPublishTime'>发布于<%= creationTime %></div>
-	</div>
+    <div id = 'searchResultBox_<%= messageId %>' class="message_simple">
+    	<% if (isRoundTrip === false)  { %>
+            <dl class="clearfix back-and-forth">
+        <% } else { %>
+            <dl class='clearfix one-way'></div>
+        <% } %>
+            <dt><img src="<%= owner.imgPath %>" width="70" height="70"/><p><%= owner.name %></p></dt>
+            <dd>
+                <div class="from">
+                    <h3>出发地：<%= departure_location %></h3>
+                    <p><%= departure_time %>  <%= departure_timeSlot %></p>
+                    <p>剩余座位：<%= departure_seatsNumber %>个</p>
+                </div>
+                <div class="arrow"></div>
+                <div class="to">
+                    <h3>目的地：<%= arrival_location %></h3>
+                    <p>返程时间：<%= arrival_time %>   <%= departure_timeSlot %></p>
+                    <p>剩余座位：<%= arrival_seatsNumber %>个</p>
+                </div>
+                <div class="price"> <%= currentPrice %>元/人 </div>
+            </dd>
+        </dl>
+    </div>
 </script>

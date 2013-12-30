@@ -7,7 +7,7 @@ var MainPageView = Backbone.View.extend({
         "isRoundTrip": false,
         "time1": "all",
         "time2": "all",
-        "type": "all",
+        "type": Constants.messageType.both,
         "priceMin": PRICE_MIN,
         "priceMax": PRICE_MAX
     },
@@ -70,6 +70,7 @@ var MainPageView = Backbone.View.extend({
                 d.setYear(inst.selectedYear);
                 me.searchRepresentation.set("departureDate", d);
                 $("#searchDateInput_depart").val(Utilities.getDateString(me.searchRepresentation.get("departureDate")));
+                me.submitSearch();
             }
         });
         $("#searchDateInput_return").datepicker({
@@ -84,48 +85,38 @@ var MainPageView = Backbone.View.extend({
                 d.setYear(inst.selectedYear);
                 me.searchRepresentation.set("arrivalDate", d);
                 $("#searchDateInput_return").val(Utilities.getDateString(me.searchRepresentation.get("arrivalDate")));
+                me.submitSearch();
             }
         });
         this.updateLocation('searchLocationInput_from');
         this.updateLocation('searchLocationInput_to');
 
         $("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
-        $("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
+        $("#searchTypeContainer>.active").removeClass("active");
         if (!me.filter.isRoundTrip) {
-            $("#oneWay").attr("class", "selected button");
-            $("#round").attr("class", "notSelected button");
-            $("#searchFilterTimeContainer2").hide();
-            $("#searchDateInput_return").hide();
+            $("#searchDateInput_return").parent().addClass("date-return-disabled");
+            $("#searchDateInput_return").prop("disabled", true);
+            $("#searchTypeContainer>span").first().addClass("active");
         } else {
-            $("#oneWay").attr("class", "notSelected button");
-            $("#round").attr("class", "selected button");
-            $("#searchFilterTimeContainer2").show();
-            $("#searchDateInput_return").show();
-            $("#filterBox").css("height", "145px");
+            $("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
+            $("#searchTypeContainer>span").second().addClass("active");
         }
-        $("#oneWay").on("click", function () {
-            me.filter.isRoundTrip = false;
-            $("#oneWay").attr("class", "selected button");
-            $("#round").attr("class", "notSelected button");
-            $("#searchDateInput_return").hide();
-            $("#searchFilterTimeContainer2").slideUp(200);
-            $("#filterBox").animate({
-                height: "120px"
-            }, 200);
-            me.searchRepresentation.set("isRoundTrip", false);
-        });
-        $("#round").on("click", function () {
-            me.filter.isRoundTrip = true;
-            $("#oneWay").attr("class", "notSelected button");
-            $("#round").attr("class", "selected button");
-            $("#searchDateInput_return").show();
-            $("#searchFilterTimeContainer2").slideDown(200);
-            $("#filterBox").animate({
-                height: '146px'
-            }, 200);
-            me.searchRepresentation.set("isRoundTrip", true);
-        });
+        $("#searchTypeContainer>span").on("click", function(e){
+            $("#searchTypeContainer>.active").removeClass("active");
+            $(this).addClass("active");
+            if ($(this).attr("data-id") == "roundtrip") {
+                me.filter.isRoundTrip = true;
+                $("#searchDateInput_return").prop("disabled", false);
+                $("#searchDateInput_return").parent().removeClass("date-return-disabled");
+                me.submitSearch();
+            } else {
+                me.filter.isRoundTrip = false;
+                $("#searchDateInput_return").prop("disabled", true);
+                $("#searchDateInput_return").parent().addClass("date-return-disabled");
+                me.submitSearch();
+            }
+        })
     },
 
     renderSearchResults: function (searchResults) {
@@ -133,13 +124,12 @@ var MainPageView = Backbone.View.extend({
         if (this.searchResultView) {
             this.searchResultView.close();
         }
+        $("#originText").html($("#searchLocationInput_from").val());
+        $("#destText").html($("#searchLocationInput_to").val());
+        $("#numberText").html(searchResults.length);
         this.allMessages = searchResults;
-        if (testMockObj.testMode) {
-            this.allMessages = testMockObj.sampleMessages;
-        }
         this.filteredMessages = this.filterMessage(this.allMessages);
         this.searchResultView = new SearchResultView (this.filteredMessages, true);
-        //this.searchResultView = new SearchResultView(this.allMessages, true);
     },
 
     renderError: function () {
@@ -155,14 +145,26 @@ var MainPageView = Backbone.View.extend({
     },
 
     onClickType: function (e) {
+
         var me = $('#' + e.target.getAttribute('id'));
-        $("#typeSelections>.selected").removeClass('selected').addClass('notSelected');
-        me.removeClass('notSelected').addClass('selected');
-        var type = e.target.getAttribute("data-id");
-        this.filter.type = type;
+        $("#typeSelections>.active").removeClass('active');
+        $(e.target).addClass('active');
+        if (e.target.getAttribute("data-id") === "passenger"){
+            this.filter.type = Constants.messageType.ask 
+        } else if (e.target.getAttribute("data-id") === "driver") {
+            this.filter.type = Constants.messageType.help;
+        } else {
+            this.filter.type = Constants.messageType.both;
+        }
+        this.refresh();
     },
 
     submitSearch: function () {
+        if (!($("#searchDateInput_depart").val() && $("#searchLocationInput_from").val() && $("#searchLocationInput_to").val())) {
+            return;
+        } else if (!$("#searchDateInput_return").val() && this.filter.isRoundTrip) {
+            return;
+        }
         app.navigate("main/" + this.searchRepresentation.toString());
         app.messageManager.searchMessage(this.searchRepresentation, {
             "success": this.renderSearchResults,
@@ -183,26 +185,28 @@ var MainPageView = Backbone.View.extend({
     filterMessage: function (messages) {
         var filtered = new Messages ();
         var l = messages ? messages.length : 0;
-
         for (var i = 0; i < l; i++) {
             var m = messages.at(i);
-            var dt = m.get("departure_timeSlot");
-            var rt = m.get("arrival_timeSlot");
-            if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))) {
-                if (this.filterTime(this.filter.time1, dt)) {
-                    filtered.add(m);
-                }
-                if (this.filter.isRoundTrip && this.filterTime(this.filter.time2, rt)) {
-                    filtered.add(m);
-                }
-            } else if (m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location"))) {
-                if (this.filterTime(this.filter.time2, dt)) {
-                    filtered.add(m);
-                }
-                if (this.filter.isRoundTrip && this.filterTime(this.filter.time1, rt)) {
-                    filtered.add(m);
-                }
+            // var dt = m.get("departure_timeSlot");
+            // var rt = m.get("arrival_timeSlot");
+            // if (this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("departure_location"))) {
+            //     if (this.filterTime(this.filter.time1, dt)) {
+            //         filtered.add(m);
+            //     }
+            //     if (this.filter.isRoundTrip && this.filterTime(this.filter.time2, rt)) {
+            //         filtered.add(m);
+            //     }
+            // } else if (m.get("isRoundTrip") && this.searchRepresentation.get("departureLocation").isEquivalentTo(m.get("arrival_location"))) {
+            //     if (this.filterTime(this.filter.time2, dt)) {
+            //         filtered.add(m);
+            //     }
+            //     if (this.filter.isRoundTrip && this.filterTime(this.filter.time1, rt)) {
+            //         filtered.add(m);
+            //     }
 
+            // }
+            if (this.filter.type === Constants.messageType.both || this.filter.type === m.get("type")) {
+                filtered.add(m);
             }
         }
         return filtered;
@@ -250,20 +254,16 @@ var MainPageView = Backbone.View.extend({
             that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("arrivalLocation"), that, "searchLocationInput_to");
         });
 
-        $("#timeSelections1>.button").on('click', function (e) {
-            that.onClickTime(e, "timeSelections1");
-        });
+        // $("#timeSelections1>.button").on('click', function (e) {
+        //     that.onClickTime(e, "timeSelections1");
+        // });
 
-        $("#timeSelections2>.button").on('click', function (e) {
-            that.onClickTime(e, "timeSelections2");
-        });
+        // $("#timeSelections2>.button").on('click', function (e) {
+        //     that.onClickTime(e, "timeSelections2");
+        // });
 
-        $("#typeSelections>.button").on('click', function (e) {
+        $("#typeSelections>span").on('click', function (e) {
             that.onClickType(e);
-        });
-
-        $("#searchResultButton").on('click', function (e) {
-            that.submitSearch(e);
         });
 
         $("#refreshButton").on('click', function (e) {

@@ -23,7 +23,7 @@ var FrontPageView = Backbone.View.extend({
 
     getRecents: function () {
         //passing renderRecents as the callback to be executed upon successful fetch
-        $("#quickStart_resultPanel").empty();
+        $("#frontPage-resultPanel").empty();
         app.messageManager.fetchRecents({
             "success": this.renderRecents,
             "error": this.renderError
@@ -36,41 +36,31 @@ var FrontPageView = Backbone.View.extend({
         while (this.displayIndex< 3 ) {
             buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
-        $("#quickStart_resultPanel").append(buf.join(""));
-        $("#quickStart_resultPanel>div").addClass("frontBoxContainer");
+        $("#frontPage-resultPanel").append(buf.join(""));
         this.bindRecentsEvents();
         this.rollInterval = setInterval(this.scroll, 5000);
     },
 
     render: function () {
         $(this.el).append(this.template);
-        $("#quickStart_day>.quickStart_value").html(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
-        $("#quickStart_selectedDate").html(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
-        $("#quickStart_from>.quickStart_value").html(this.searchRepresentation.get("departureLocation").get("city"));
-        $("#quickStart_to>.quickStart_value").html(this.searchRepresentation.get("arrivalLocation").get("city"));
-        $("#quickStart_cityInDescription").html(this.searchRepresentation.get("departureLocation").get("city"));
-        $("#quickStart_schoolInDescription").html(this.searchRepresentation.get("arrivalLocation").get("city"));
-         $('#s3slider').s3Slider({
-            timeOut: 4000
-         });
+        $( '.cycle-slideshow' ).cycle();
     },
 
     renderError: function () {
-        $("#quickStart_resultPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+        $("#frontPage-resultPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
     },
     bindEvents: function () {
         var self = this;
-        $("#quickStart_from>.quickStart_value").on("mouseup", function (e) {
-            self.locationPicker = new LocationPickerView (self.searchRepresentation.get("departureLocation"), self);
+        $("#from").on("mouseup", function (e) {
+            $("#from>input").val("");
         });
-        $("#quickStart_to>.quickStart_value").on("mouseup", function (e) {
-            self.locationPicker = new LocationPickerView (self.searchRepresentation.get("arrivalLocation"), self);
+        $("#to").on("mouseup", function (e) {
+            $("#to>input").val("");
         });
-        $("#quickStart_day>.quickStart_value").on("mouseup", function (e) {
-            $("#quickStart_dateinput").trigger("focus");
-
+        $(".date>input").on("mouseup", function (e) {
+            $(".date>input").val("");
         });
-        $("#quickStart_dateinput").datepicker({
+        $(".date>input").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -81,24 +71,30 @@ var FrontPageView = Backbone.View.extend({
                 d.setMonth(inst.selectedMonth);
                 d.setYear(inst.selectedYear);
                 self.searchRepresentation.set("departureDate", d);
-                $("#quickStart_day>.quickStart_value").html(Utilities.getDateString(d));
-                $("#quickStart_selectedDate").html(Utilities.getDateString(d));
+                $(".date>input").val(Utilities.getDateString(d));
             }
         });
-        $("#quickStartButton1").on("click", function () {
-            app.navigate("main/" + self.searchRepresentation.toString(), true);
-            app.storage.setSearchRepresentationCache(this.searchRepresentation);
+        $(".btn_search").on("click", function () {
+            debugger;
+            if ($("#from>input").val() &&  $("#to>input").val() && $(".date>input").val() ) {
+                self.searchRepresentation.get("departureLocation").set("city", $("#from>input").val());
+                self.searchRepresentation.get("arrivalLocation").set("city", $("#to>input").val());
+                app.storage.setSearchRepresentationCache(self.searchRepresentation);
+                app.navigate("main/" + self.searchRepresentation.toString(), true);
+            }
         });
-        $("#quickStartButton2").on("click", function () {
-            app.navigate("main/" + self.searchRepresentation.toString(), true);
-            app.storage.setSearchRepresentationCache(this.searchRepresentation);
-        });
+        $("#frontPage-userButtons>.user").on("click", function(e){
+            if (!$(this).hasClass("active")) {
+                $(".active").removeClass("active").addClass("f-gray");
+                $(this).removeClass("f-gray").addClass("active");
+            }
+        })
     },
 
     bindRecentsEvents: function () {
         var self = this;
-        $(".frontBoxContainer").off();
-        $(".frontBoxContainer").on('click', function(e){
+        $(".message_simple").off();
+        $(".message_simple").on('click', function(e){
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
@@ -108,10 +104,6 @@ var FrontPageView = Backbone.View.extend({
     },
 
     updateLocation: function (id) {
-        $("#quickStart_from>.quickStart_value").html(this.searchRepresentation.get("departureLocation").get("city"));
-        $("#quickStart_to>.quickStart_value").html(this.searchRepresentation.get("arrivalLocation").get("city"));
-        $("#quickStart_cityInDescription").html(this.searchRepresentation.get("departureLocation").get("city"));
-        $("#quickStart_schoolInDescription").html(this.searchRepresentation.get("arrivalLocation").get("city"));
         this.getRecents();
     },
 
@@ -120,11 +112,11 @@ var FrontPageView = Backbone.View.extend({
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), that = this;
-        $("#quickStart_resultPanel").prepend(buf);
-        $("#quickStart_resultPanel>div").first().addClass("frontBoxContainer").css("margin-top",-100);
-        $("#quickStart_resultPanel>div").first().animate({"margin-top":0}, 600);
-        if ($("#quickStart_resultPanel>div").length > 4) {
-            $("#quickStart_resultPanel>div").last().remove();
+        $("#frontPage-resultPanel").prepend(buf);
+        $("#frontPage-resultPanel>div").first().css("margin-top",-100);
+        $("#frontPage-resultPanel>div").first().animate({"margin-top":0}, 600);
+        if ($("#frontPage-resultPanel>div").length > 4) {
+            $("#frontPage-resultPanel>div").last().remove();
         }
         if (this.displayIndex === this.displayMessages.length) {
             this.displayIndex = 0;
@@ -139,17 +131,13 @@ var FrontPageView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            $("#quickStartButton1").off();
-            $("#quickStartButton2").off();
-            for (var i = 0; i < this.displayMessages.length; i++) {
-                var messageId = this.displayMessages.at(i).get("messageId");
-                $("#frontBox_" + messageId).off();
-            }
-
+            $(".message_simple").off();
+            $(".btn_search").off();
+            $("#from").off();
+            $("#to").off();
+            $("#frontPage-userButtons>.user").off();
             this.unbind();
-            $("#quickStart_from>.quickStart_value").off();
-            $("#quickStart_to>.quickStart_value").off();
-            $("#quickStart_date>.quickStart_value").off();
+            $(".date>input").off();
 
             $(this.el).empty();
             this.isClosed = true;
