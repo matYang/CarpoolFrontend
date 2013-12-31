@@ -131,7 +131,7 @@
 
                 general_feedBack: api_maker('general', 'feedBack'),
 
-                location_location: api_maker('location', 'location')
+                location_location: api_maker('location', 'default')
             };
         };
 

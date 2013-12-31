@@ -9,7 +9,7 @@
           
         <!--watch out for IE-->
         
-        <title>Vanilla</title>
+        <title>Carpool</title>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=zh-CN"></script>
 
         <link rel="shortcut icon" type="image/x-icon" href="/res/favicon.ico" />
@@ -34,7 +34,7 @@
         <link href="style/css2/Letter.css" rel="stylesheet" type="text/css" />
 
 
-        <script src="scripts/info.js" type="text/javascript"></script>
+        <script src="scripts/service/info.js" type="text/javascript"></script>
         <script src="scripts/lib/jquery-1.9.1.min.js" type="text/javascript"></script>
         <script src="scripts/lib/jquery.cycle2.min.js"></script>
         <script src="scripts/lib/underscore-1.5.2-min.js" type="text/javascript"></script>  
@@ -46,6 +46,7 @@
         <script src="scripts/lib/json2.js" type="text/javascript"></script>
         <script src="scripts/lib/socket.io.js" type="text/javascript"></script>
         <script src="scripts/lib/custom.js" type="text/javascript"></script>
+        <script src="scripts/lib/DD_belatedPNG_0.0.8a.js" type="text/javascript"></script>
 
 
         <!-- Google Analytics -->
@@ -92,14 +93,17 @@
         <!-- under all circumstances, constants/prototypes/info must be loaded first-->
         <script src="scripts/EnvConfig.js" type="text/javascript"></script>
         <script src="scripts/prototypes.js" type="text/javascript"></script>
-        <script src="scripts/constants.js" type="text/javascript"></script>
-        <script src="scripts/apiResource.js" type="text/javascript"></script>
-        <script src="scripts/storageService.js" type="text/javascript"></script>
-        <script src="scripts/status.js" type="text/javascript"></script>
-        <script src="scripts/config.js" type="text/javascript"></script>
-        <script src="scripts/utilities.js" type="text/javascript"></script>
-        <script src="scripts/templateUtl.js" type="text/javascript"></script>
-        <script src="scripts/viewRegistrationService.js" type="text/javascript"></script>
+
+        <script src="scripts/staticResource/constants.js" type="text/javascript"></script>
+        <script src="scripts/staticResource/apiResource.js" type="text/javascript"></script>
+        <script src="scripts/staticResource/status.js" type="text/javascript"></script>
+        <script src="scripts/staticResource/config.js" type="text/javascript"></script>
+
+        <script src="scripts/service/storageService.js" type="text/javascript"></script>
+        <script src="scripts/service/utilities.js" type="text/javascript"></script>
+        <script src="scripts/service/templateUtl.js" type="text/javascript"></script>
+        <script src="scripts/service/viewRegistrationService.js" type="text/javascript"></script>
+        
         <script src="scripts/model/representation/locationRepresentation.js" type="text/javascript"></script>
         <script src="scripts/model/representation/searchRepresentation.js" type="text/javascript"></script>
         <script src="scripts/model/representation/userSearchRepresentation.js" type="text/javascript"></script>
@@ -140,7 +144,6 @@
         <script src="scripts/view/personalSub/personalUtilityView.js" type="text/javascript"></script>
         <script src="scripts/view/personalView.js" type="text/javascript"></script>
         <script src="scripts/view/popup/registrationView.js" type="text/javascript"></script>
-        <script src="scripts/view/popup/locationPickerView.js" type="text/javascript"></script>
         <script src="scripts/view/popup/transactionView.js" type="text/javascript"></script>
         <script src="scripts/view/topBarView.js" type="text/javascript"></script>
 

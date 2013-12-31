@@ -3,8 +3,8 @@ var SearchRepresentation = Backbone.Model.extend({
     defaults: function () {
         return {
             'isRoundTrip': false,
-            'departureMatch_Id': -1,
-            'arrivalMatch_Id': -1,
+            'departureLocation': Constants.getDefaultUserLocation(),
+            'arrivalLocation': Constants.getDefaultUserLocation(),
             'departureDate': new Date (),
             'arrivalDate': new Date (),
             'targetType': 2,
@@ -18,15 +18,19 @@ var SearchRepresentation = Backbone.Model.extend({
     },
 
     toString: function () {
-        return this.get('isRoundTrip') + Config.urlSeperator + this.get('departureMatch_Id') + Config.urlSeperator + this.get('arrivalMatch_Id') + Config.urlSeperator + Utilities.castToAPIFormat(this.get('departureDate')) + Config.urlSeperator + Utilities.castToAPIFormat(this.get('arrivalDate')) + Config.urlSeperator + this.get('targetType') + Config.urlSeperator + this.get('departureTimeSlot') + Config.urlSeperator + this.get('arrivalTimeSlot');
+        return this.get('isRoundTrip') + Config.urlSeperator + this.get('departureLocation').toString() + Config.urlSeperator + this.get('arrivalLocation').toString() + Config.urlSeperator + Utilities.castToAPIFormat(this.get('departureDate')) + Config.urlSeperator + Utilities.castToAPIFormat(this.get('arrivalDate')) + Config.urlSeperator + this.get('targetType') + Config.urlSeperator + this.get('departureTimeSlot') + Config.urlSeperator + this.get('arrivalTimeSlot');
     },
 
     castFromString: function (str) {
         var strArray = str.split(Config.urlSeperator);
         this.set('isRoundTrip', strArray[0] === 'true');
 
-        this.set('departureMatch_Id', parseInt(strArray[1], 10));
-        this.set('arrivalMatch_Id', parseInt(strArray[2], 10));
+        var d_l = new UserLocation ();
+        d_l.castFromString(strArray[1]);
+        var a_l = new UserLocation ();
+        a_l.castFromString(strArray[2]);
+        this.set('departureLocation', d_l);
+        this.set('arrivalLocation', a_l);
 
         this.set('departureDate', Utilities.castFromAPIFormat(strArray[3]));
         this.set('arrivalDate', Utilities.castFromAPIFormat(strArray[4]));
@@ -37,8 +41,12 @@ var SearchRepresentation = Backbone.Model.extend({
     },
 
     parse: function (data) {
-        data.departureMatch_Id = parseInt(data.departureMatch_Id, 10);
-        data.arrivalMatch_Id = parseInt(data.arrivalMatch_Id, 10);
+        data.departureLocation = new UserLocation (data.departureLocation, {
+            parse: true
+        });
+        data.arrivalLocation = new UserLocation (data.arrivalLocation, {
+            parse: true
+        });
         data.departureDate = Utilities.castFromAPIFormat(data.departureDate);
         data.arrivalDate = Utilities.castFromAPIFormat(data.arrivalDate);
         return data;
@@ -46,6 +54,12 @@ var SearchRepresentation = Backbone.Model.extend({
 
     toJSON: function () {
         var json = _.clone(this.attributes);
+        if (this.get('departureLocation') instanceof Backbone.Model) {
+            json.departureLocation = this.get('departureLocation').toJSON();
+        }
+        if (this.get('arrivalLocation') instanceof Backbone.Model) {
+            json.arrivalLocation = this.get('arrivalLocation').toJSON();
+        }
         if (this.get('departureDate')) {
             json.departureDate = Utilities.castToAPIFormat(this.get('departureDate'));
         }
@@ -54,5 +68,4 @@ var SearchRepresentation = Backbone.Model.extend({
         }
         return json;
     }
-
-});
+}); 

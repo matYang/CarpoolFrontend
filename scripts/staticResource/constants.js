@@ -173,10 +173,7 @@ var Constants = {
     },
 
     getDefaultUserLocation: function () {
-        return new UserLocation ({
-            'hierarchyNameList': ['Canada', 'Ontario', 'Waterloo', 'undetermined'],
-            'customDepthIndex': 3
-        });
+        return new UserLocation();
     },
 
 
