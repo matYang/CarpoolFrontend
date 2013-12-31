@@ -162,4 +162,4 @@ var Users = Backbone.Collection.extend({
             this.url = urlOverride;
         }
     }
-}); 
+});
