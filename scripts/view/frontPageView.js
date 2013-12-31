@@ -31,9 +31,12 @@ var FrontPageView = Backbone.View.extend({
     },
 
     renderRecents: function (recents) {
+        if (recents.length === 0) {
+            this.renderError();
+        }
         this.displayMessages = recents;
         var buf = [];
-        while (this.displayIndex< 3 ) {
+        while (this.displayIndex < 3 && this.displayIndex < recents.length) {
             buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
         $("#frontPage-resultPanel").append(buf.join(""));
