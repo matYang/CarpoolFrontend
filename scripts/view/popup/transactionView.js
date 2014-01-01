@@ -19,7 +19,7 @@ var TransactionDetailView = Backbone.View.extend({
         }
         this.priceList = this.transaction.get("departure_priceList");
         for ( i = 0; i < this.priceList.length; i++) {
-            if (this.priceList[i] === 0) {
+            if (this.priceList[i] === 0 && i > 0) {
                 this.priceList[i] = this.priceList[i - 1];
             }
         }
@@ -222,6 +222,10 @@ var TransactionDetailView = Backbone.View.extend({
                 this.bookInfo.total = 0;
             }
             total = this.bookInfo.total;
+            if ( total === 0 ) {
+                // should not occur
+
+            }
         } else {
             temp = this.priceList.length < this.transaction.get("departure_seatsBooked") ? this.priceList.length : this.transaction.get("departure_seatsBooked");
             total = this.transaction.get("departure_seatsBooked") * this.priceList[temp - 1];

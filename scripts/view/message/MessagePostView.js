@@ -283,7 +283,7 @@ var MessagePostView = Backbone.View.extend({
         $("#priceList_add").on("click", function (e) {
             if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
                 var seatId = ++that.toSubmit.priceListEntries;
-                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数 <input id = 'seatsNumber_" + seatId + "' type = 'text' class='seat_price' pattern='[0-9]*' />" + " 每人<input id = 'seats_" + seatId + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数" + seatId + "  每人<input id = 'seats_" + seatId + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
                 that.toSubmit.priceList[seatId - 1] = 0;
                 $("#publish_priceList, #publish_pricelist_container").animate({
                     height: "+=30"
@@ -363,14 +363,11 @@ var MessagePostView = Backbone.View.extend({
                 $("#publish_priceList").show();
                 var entryNum = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
-
-                    if (this.toSubmit.priceList[i] > 0) {
-                        var id = Utilities.toInt(i) + 1;
-                        entryNum++;
-                        $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数 <input id = 'seatsNumber_" + id + "' type = 'text' class='seat_price' pattern='[0-9]*' />" + " 每人<input id = 'seats_" + id + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
-                        $("#seatsNumber_" + id).val(entryNum);
-                        $("#seats_" + id).val(this.toSubmit.priceList[i]);
-                    }
+                    debugger;
+                    var id = i + 1;
+                    entryNum++;
+                    $("#priceList_add").before("<div class='publish_priceEntry'>人数"+ id + "  每人<input id = 'seats_" + id + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                    $("#seats_" + id).val(this.toSubmit.priceList[i]);
                 }
                 this.toSubmit.priceListEntries = entryNum;
                 var height = 70 + (entryNum - 1 ) * 30;
@@ -380,7 +377,7 @@ var MessagePostView = Backbone.View.extend({
                     $("#priceList_minus").show();
                 }
             } else {
-                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数 <input id = 'seatsNumber_1' type = 'text' class='seat_price' pattern='[0-9]*' />" + " 每人<input id = 'seats_1' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数1  每人<input id = 'seats_1' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
                 $("#seatsNumber_1").val(1);
                 $("#seats_1").val(this.toSubmit.priceList[0]);
                 $("#conditionalPriceSwitch").removeClass("publish_selected");
@@ -586,6 +583,8 @@ var MessagePostView = Backbone.View.extend({
                     return false;
                 }
             }
+        } else {
+
         }
         if (counter > 0)
             return true;
