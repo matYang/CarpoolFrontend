@@ -6,6 +6,7 @@ var FrontPageView = Backbone.View.extend({
         _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'close');
         app.viewRegistration.register("frontPage", this, true);
         this.isClosed = false;
+        this.temp = {};
         this.bottomRecentId = 0;
         this.template = _.template(tpl.get('front'));
         this.messageTemplate = _.template(tpl.get('SimpleMessage'));
@@ -46,6 +47,8 @@ var FrontPageView = Backbone.View.extend({
 
     render: function () {
         $(this.el).append(this.template);
+        $("#frontPage-exp>dt").hide();
+        $("#exp1").show();
         $( '.cycle-slideshow' ).cycle();
     },
 
@@ -55,11 +58,21 @@ var FrontPageView = Backbone.View.extend({
     bindEvents: function () {
         var self = this;
         $("#from").on("mouseup", function (e) {
+            self.temp.from = $("#from>input").val(); 
             $("#from>input").val("");
         });
         $("#to").on("mouseup", function (e) {
+            self.temp.to = $("#to>input").val();
             $("#to>input").val("");
         });
+        $("#from>input").on("blur", function(){
+            if (!$("#from>input").val())
+            $("#from>input").val(self.temp.from);
+        })
+        $("#to>input").on("blur", function(){
+            if (!$("#to>input").val())
+            $("#to>input").val(self.temp.to);
+        })
         $(".date>input").on("mouseup", function (e) {
             $(".date>input").val("");
         });
@@ -88,8 +101,10 @@ var FrontPageView = Backbone.View.extend({
         });
         $("#frontPage-userButtons>.user").on("click", function(e){
             if (!$(this).hasClass("active")) {
+                $("#frontPage-exp>dt").hide();
                 $(".active").removeClass("active").addClass("f-gray");
                 $(this).removeClass("f-gray").addClass("active");
+                $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
         })
     },

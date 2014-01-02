@@ -74,8 +74,8 @@
             <form id='login'>
                 <input id='login_username' class = 'no-input-value' type = 'text' />
                 <input id='login_password' class = 'no-input-value' type = 'password' />
-                <div id='login_button' class='button'>登陆</div>
-                <div id='signup_button' class='button'>注册</div>
+                <div id='login_button' class='button' style='background-color: #ffffff; float:left;'>登陆</div>
+                <div id='signup_button' class='button' style='background-color: #ffffff; float:left;'>注册</div>
             </form>
         </div>
     </div>
