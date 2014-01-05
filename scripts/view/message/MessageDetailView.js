@@ -49,6 +49,7 @@ var MessageDetailView = Backbone.View.extend({
             div: "view_map",
             originLocation: this.message.get("departure_location"),
             destLocation: this.message.get("arrival_location"),
+            clickable: false
         };
         this.domContainer.append(this.template(this.parsedMessage));
         this.map = app.storage.getViewCache("MapView", mapParams);
@@ -83,7 +84,6 @@ var MessageDetailView = Backbone.View.extend({
         var temp = this.pricelist.length < this.bookInfo.number ? this.pricelist.length : this.bookInfo.number;
         var trips = 0;
         if (this.bookInfo.number > 0) {
-
             if (this.bookInfo.go) {
                 trips += 1;
             }

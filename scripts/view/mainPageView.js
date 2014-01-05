@@ -19,6 +19,7 @@ var MainPageView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
         //define the template
         this.template = _.template(tpl.get('main'));
+        this.temp = {};
         this.searchRepresentation = new SearchRepresentation ();
         // this.searchRepresentation.set("departureLocation", new UserLocation());
         // this.searchRepresentation.set("arrivalLocation", new UserLocation());
@@ -227,31 +228,44 @@ var MainPageView = Backbone.View.extend({
     },
 
     updateLocation: function (id) {
-        var custTemp;
-        if (id === "searchLocationInput_from") {
-            $("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
-            cust = this.searchRepresentation.get("departureLocation").get("point");
-            if (cust !== "undetermined") {
-                $("#customizeLocationInput_from").val(cust);
-            }
-        } else {
-            $("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
-            cust = this.searchRepresentation.get("arrivalLocation").get("point");
-            if (cust !== "undetermined") {
-                $("#customizeLocationInput_to").val(cust);
-            }
-        }
+        // var custTemp;
+        // if (id === "searchLocationInput_from") {
+        //     $("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
+        //     cust = this.searchRepresentation.get("departureLocation").get("point");
+        //     if (cust !== "undetermined") {
+        //         $("#customizeLocationInput_from").val(cust);
+        //     }
+        // } else {
+        //     $("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
+        //     cust = this.searchRepresentation.get("arrivalLocation").get("point");
+        //     if (cust !== "undetermined") {
+        //         $("#customizeLocationInput_to").val(cust);
+        //     }
+        // }
     },
 
     bindEvents: function () {
         var that = this;
 
         $("#searchLocationInput_from").on('click', function (e) {
-            that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
+            that.temp.from = $("#searchLocationInput_from").val();
+            $("#searchLocationInput_from").val("");
+            // that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
         });
 
         $("#searchLocationInput_to").on('click', function (e) {
-            that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("arrivalLocation"), that, "searchLocationInput_to");
+            that.temp.to = $("#searchLocationInput_to").val();
+            $("#searchLocationInput_to").val("");
+        });
+        $("#searchLocationInput_from").on('blur', function (e) {
+            if (!$("#searchLocationInput_from").val())
+                $("#searchLocationInput_from").val(that.temp.from);
+            // that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
+        });
+
+        $("#searchLocationInput_to").on('blur', function (e) {
+            if (!$("#searchLocationInput_to").val())
+                $("#searchLocationInput_to").val(that.temp.to);
         });
 
         // $("#timeSelections1>.button").on('click', function (e) {
