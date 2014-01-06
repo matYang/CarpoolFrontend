@@ -300,7 +300,7 @@ var MessagePostView = Backbone.View.extend({
         this.adjustContainerHeight();
         $(".input_date").on("keypress", function (e) {
             e.preventDefault();
-        })
+        });
         $('#publish_time_add').on('click', function () {
             that.onAddClick();
         });
@@ -445,8 +445,7 @@ var MessagePostView = Backbone.View.extend({
             $('#publish_type>div').off();
         } else if (previousStepIndex === 2) {
             $('#publish_time_add').off();
-            $('input').off();
-            $('publish_delete').off();
+            $('.publish_delete').off();
             $('.select_item').off();
             var id;
             for ( id = 0; id < this.toSubmit.requests.length; id++) {
@@ -487,9 +486,6 @@ var MessagePostView = Backbone.View.extend({
         $('#publish_delete_' + id).on('click', function (e) {
             that.deleteSlot(e);
         });
-        $("input[name=publish_rate_" + id + "]").on('blur', function (e) {
-            that.updateValue(e);
-        });
         $("#depart_time_" + id).on("click", function(e) {
             $(".publish_time_menu").hide();
             if (e.target.tagName === "LI") {
@@ -510,7 +506,6 @@ var MessagePostView = Backbone.View.extend({
         });
 
         $('div[name=publish_round_' + id + ']').on('click', function (e) {
-            debugger;
             if ($(this).hasClass("checked")) {
                 $(this).removeClass("checked");
             } else {
@@ -592,7 +587,7 @@ var MessagePostView = Backbone.View.extend({
             id = this.getId(e.name);
             if (e.name.indexOf("publish_departDate_") === 0) {
                 this.toSubmit.requests[Utilities.toInt(id) - 1].departDate = d;
-                var round = $("div[name=publish_round_" + id + "]").attr("checked") === "checked";
+                var round = $("div[name=publish_round_" + id + "]").hasClass("checked");
                 this.toSubmit.requests[Utilities.toInt(id) - 1].round = round;
 
             } else if (e.name.indexOf("publish_returnDate_") === 0) {
