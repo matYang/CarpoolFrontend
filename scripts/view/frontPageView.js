@@ -49,7 +49,7 @@ var FrontPageView = Backbone.View.extend({
         $(this.el).append(this.template);
         $("#frontPage-exp>dt").hide();
         $("#exp1").show();
-        $( '.cycle-slideshow' ).cycle();
+        $( '.cycle-slideshow' ).cycle({"slideCount":3});
     },
 
     renderError: function () {

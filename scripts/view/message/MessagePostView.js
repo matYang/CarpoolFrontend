@@ -63,16 +63,18 @@ var MessagePostView = Backbone.View.extend({
 
     renderFirstPage: function () {
         $('#publish_requirement').append(this.step1Template());
-        $("#publish_progress").attr("class", "publish_progress_step1");
+        $("#publish_progress").attr("class", "publish publish_step_1");
         var that = this;
         $('#publish_type>div').on('click', function (e) {
-            that.onTypeSelect(e.delegateTarget.id);
+            that.onTypeSelect(e);
         });
         $('#publish_originInput').on("click", function (e) {
-            that.locationPicker = new LocationPickerView (that.toSubmit.origin, that, "publish_originInput");
+            $(".wrong").remove();
+            // that.locationPicker = new LocationPickerView (that.toSubmit.origin, that, "publish_originInput");
         });
         $('#publish_destInput').on("click", function (e) {
-            that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
+            $(".wrong").remove();
+            // that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
         });
         this.restoreState(1);
         var mapConfig = {};
@@ -88,13 +90,12 @@ var MessagePostView = Backbone.View.extend({
     },
     updateByMapMarker: function (type, json) {
         if (type === "origin") {
-            $('#publish_originInput').val(json.results[0].formatted_address);
+            $('#publish_originAddress').val(json.results[0].formatted_address);
             this.toSubmit.origin.parseGoogleJson(json);
         } else {
-            $('#publish_destInput').val(json.results[0].formatted_address);
+            $('#publish_destAddress').val(json.results[0].formatted_address);
             this.toSubmit.dest.parseGoogleJson(json);
         }
-
     },
     updateLocation: function (flag, id) {
         $('#publish_originInput').val(this.toSubmit.origin.toUiString());
@@ -121,7 +122,7 @@ var MessagePostView = Backbone.View.extend({
     },
     renderSecondPage: function () {
         $('#publish_requirement').append(this.step2Template());
-        $("#publish_progress").attr("class", "publish_progress_step2");
+        $("#publish_progress").attr("class", "publish publish_step_2");
         var that = this;
         this.currentTemplate = this.askSlotTemplate;
         this.refactorRequests();
@@ -185,10 +186,46 @@ var MessagePostView = Backbone.View.extend({
                     $("input[name=publish_departDate_1]").datepicker("option", "maxDate", d);
                 }
             });
+            $("#depart_time_1").on("click", function (e) {
+                $(".publish_time_menu").hide();
+                if (e.target.tagName === "LI") {
+                    debugger;
+                    $(this).children().first().val(e.target.textContent);
+                    that.updateValue(e);
+                    return;
+                }
+                $(this).children().last().toggle();
+            });
+            $("#return_time_1").on("click", function (e) {
+                $(".publish_time_menu").hide();
+                if (e.target.tagName === "LI") {
+                    $(this).children().first().val(e.target.textContent);
+                    that.updateValue(e);
+                    return;
+                }
+                $(this).children().last().toggle();
+            });
+            $("div[name=publish_round_1]").on("click", function (e) {
+                if ($(this).hasClass("checked")) {
+                    $(this).removeClass("checked");
+                } else {
+                    $(this).addClass("checked");
+                }
+                var maximumDate = $("input[name=publish_returnDate_1]").datepicker("getDate");
+                if ($(this).hasClass("checked")) {
+                   that.toSubmit.requests[0].round = true;
+                    $("input[name=publish_departDate_1]").datepicker("option", "maxDate", maximumDate);
+                    that.toggleDateVisibility(1, false);
+                } else {
+                    that.toSubmit.requests[0].round = false;
+                    $("input[name=publish_departDate_1]").datepicker("option", "maxDate", null);
+                    that.toggleDateVisibility(1, true);
+                }
+            });
         } else {
             for (var request = 0; request < this.toSubmit.requests.length; request++) {
                 if (this.toSubmit.requests[request]) {
-                    var index = Utilities.toInt(request) + 1;
+                    var index = request + 1;
                     $('#publish_time_slots').append(this.currentTemplate({
                         id: index
                     }));
@@ -221,32 +258,48 @@ var MessagePostView = Backbone.View.extend({
                             $("input[name=publish_returnDate_" + index + "]").datepicker("option", "minDate", d);
                         }
                     });
+                    $("#depart_time_"+ index).on("click", function (e) {
+                        $(".publish_time_menu").hide();
+                        if (e.target.tagName === "LI") {
+                            $(this).children().first().val(e.target.textContent);
+                            that.updateValue(e);
+                            return;
+                        }
+                        $(this).children().last().toggle();
+                    });
+                    $("#return_time_"+ index).on("click", function (e) {
+                        $(".publish_time_menu").hide();
+                        if (e.target.tagName === "LI") {
+                            $(this).children().first().val(e.target.textContent);
+                            that.updateValue(e);
+                            return;
+                        }
+                        $(this).children().last().toggle();
+                    });
+                    $("div[name=publish_round_"+ index + "]").on("click", function (e) {
+                        if ($(this).hasClass("checked")) {
+                            $(this).removeClass("checked");
+                        } else {
+                            $(this).addClass("checked");
+                        }
+                        var maximumDate = $("input[name=publish_returnDate_1]").datepicker("getDate");
+                        if ($(this).hasClass("checked")) {
+                            that.toSubmit.requests[request].round = true;
+                            $("input[name=publish_departDate_"+index+"]").datepicker("option", "maxDate", maximumDate);
+                            that.toggleDateVisibility(index, false);
+                        } else {
+                            that.toSubmit.requests[request].round = false;
+                            $("input[name=publish_departDate_"+index+"]").datepicker("option", "maxDate", null);
+                            that.toggleDateVisibility(index, true);
+                        }
+                    });
                 }
             }
-            $('#publish_info').on('change', 'input[value=round]', function (e) {
-                var id = Utilities.toInt(Utilities.getId(e.target.name));
-                if (this.checked) {
-                    that.toggleDateVisibility(e, false);
-                    that.toSubmit.requests[id - 1].round = true;
-                } else {
-                    that.toggleDateVisibility(e, true);
-                    that.toSubmit.requests[id - 1].round = false;
-                }
-                var maximumDate = $("input[name=publish_returnDate_" + id + "]").datepicker("getDate");
-                if (e.target.checked) {
-                    $("input[name=publish_departDate_" + id + "]").datepicker("option", "maxDate", maximumDate);
-                } else {
-                    $("input[name=publish_departDate_" + id + "]").datepicker("option", "maxDate", null);
-                }
-            });
             this.restoreState(2);
         }
         this.adjustContainerHeight();
         $(".input_date").on("keypress", function (e) {
             e.preventDefault();
-        })
-        $("input").on('blur', function (e) {
-            that.updateValue(e);
         });
         $('#publish_time_add').on('click', function () {
             that.onAddClick();
@@ -254,16 +307,13 @@ var MessagePostView = Backbone.View.extend({
         $('.publish_delete').on('click', function (e) {
             that.deleteSlot(e);
         });
-        $('select').on('change', function (e) {
-            that.updateValue(e);
-        });
     },
     renderThirdPage: function () {
         var that = this;
         $('#publish_requirement').append(this.step3Template);
         $("#publish_priceList").hide();
         $("#priceList_minus").hide();
-        $("#publish_progress").attr("class", "publish_progress_step3");
+        $("#publish_progress").attr("class", "publish publish_step_3");
         this.restoreState(3);
         $("#seats").on("keypress", function (e) {
             if (e.keyCode < 48 || e.keyCode > 57) {
@@ -324,15 +374,19 @@ var MessagePostView = Backbone.View.extend({
     },
     restoreState: function (page) {
         if (page === 1) {
-            $('.selectBox_selected').removeClass('selectBox_selected');
-            $('#publish_' + this.toSubmit.type).addClass('selectBox_selected');
+            $('#publish_type>.active').removeClass('active');
+            $('#publish_' + this.toSubmit.type).addClass('active');
             this.updateLocation(1);
         } else if (page === 2) {
             var r = this.toSubmit.requests;
             for (var request = 0; request < r.length; request++) {
                 if (r[request]) {
                     var id = Utilities.toInt(request) + 1;
-                    $('input[name=publish_round_' + id + ']').attr("checked", r[request].round);
+                    if (r[request.round]) {
+                        $('div[name=publish_round_' + id + ']').attr("class", "checkbox checked");
+                    } else {
+                        $('div[name=publish_round_' + id + ']').attr("class", "checkbox");
+                    }
                     if (r[request].departDate) {
                         var date = r[request].departDate;
                         $('input[name=publish_departDate_' + id + ']').val((1 + date.getMonth()) + "/" + date.getDate() + "/" + date.getFullYear());
@@ -344,10 +398,10 @@ var MessagePostView = Backbone.View.extend({
                         $('input[name=publish_returnDate_' + id + ']').val((1 + date.getMonth()) + "/" + date.getDate() + "/" + date.getFullYear());
                     } else {
                         $('input[name=publish_returnDate_' + id + ']').prop("disabled", true);
-                        $('select[name=return_time_' + id + ']').prop("disabled", true);
+                        $('#return_time_' + id).prop("disabled", true);
                     }
-                    $('select[name=depart_time_' + id + ']').val(r[request].departTime);
-                    $('select[name=return_time_' + id + ']').val(r[request].returnTime);
+                    $('#depart_time_' + id).val(r[request].departTime);
+                    $('#return_time_' + id).val(r[request].returnTime);
                 }
             }
         } else if (page === 3) {
@@ -363,7 +417,6 @@ var MessagePostView = Backbone.View.extend({
                 $("#publish_priceList").show();
                 var entryNum = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
-                    debugger;
                     var id = i + 1;
                     entryNum++;
                     $("#priceList_add").before("<div class='publish_priceEntry'>人数"+ id + "  每人<input id = 'seats_" + id + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
@@ -392,16 +445,15 @@ var MessagePostView = Backbone.View.extend({
             $('#publish_type>div').off();
         } else if (previousStepIndex === 2) {
             $('#publish_time_add').off();
-            $('input').off();
-            $('publish_delete').off();
-            $('select').off();
+            $('.publish_delete').off();
+            $('.select_item').off();
             var id;
             for ( id = 0; id < this.toSubmit.requests.length; id++) {
-                $("select[name=depart_time_" + id + "]").off();
-                $("select[name=return_time_" + id + "]").off();
+                $("#depart_time_" + id).off();
+                $("#return_time_" + id).off();
                 $("input[name=publish_departDate_" + id + "]").off();
                 $("input[name=publish_returnDate_" + id + "]").off();
-                $("input[name=publish_round_" + id + "]").off();
+                $("div[name=publish_round_" + id + "]").off();
             }
         } else if (previousStepIndex === 3) {
             $("#seats").off();
@@ -414,18 +466,10 @@ var MessagePostView = Backbone.View.extend({
         }
     },
 
-    onTypeSelect: function (id) {
-        if (id.indexOf('publish_0') > -1) {
-            $('.selectBox_selected').removeClass('selectBox_selected');
-            $('#publish_0').addClass('selectBox_selected');
-            //passenger
-            this.toSubmit.type = Constants.messageType.ask;
-        } else if (id.indexOf('publish_1') > -1) {
-            $('.selectBox_selected').removeClass('selectBox_selected');
-            $('#publish_1').addClass('selectBox_selected');
-            //driver
-            this.toSubmit.type = Constants.messageType.help;
-        }
+    onTypeSelect: function (e) {
+        $('#publish_type>.active').removeClass('active');
+        $(e.delegateTarget).addClass('active');
+        this.toSubmit.type = e.delegateTarget.id === "publish_0" ? Constants.messageType.ask : Constants.messageType.help;
     },
     onAddClick: function () {
         var index = this.toSubmit.requests.length;
@@ -442,27 +486,40 @@ var MessagePostView = Backbone.View.extend({
         $('#publish_delete_' + id).on('click', function (e) {
             that.deleteSlot(e);
         });
-        $("input[name=publish_rate_" + id + "]").on('blur', function (e) {
-            that.updateValue(e);
+        $("#depart_time_" + id).on("click", function(e) {
+            $(".publish_time_menu").hide();
+            if (e.target.tagName === "LI") {
+                $(this).children().first().val(e.target.textContent);
+                that.updateValue(e);
+                return;
+            }
+            $(this).children().last().toggle();
         });
-        $("select[name=depart_time_" + id + "]").on('click', function (e) {
-            that.updateValue(e);
-        });
-        $("select[name=return_time_" + id + "]").on('click', function (e) {
-            that.updateValue(e);
+        $("#return_time_" + id).on("click", function(e) {
+            $(".publish_time_menu").hide();
+            if (e.target.tagName === "LI") {
+                $(this).children().first().val(e.target.textContent);
+                that.updateValue(e);
+                return;
+            }
+            $(this).children().last().toggle();
         });
 
-        $('input[name=publish_round_' + id + ']').on('change', function (e) {
-            var id = Utilities.toInt(Utilities.getId(e.target.name));
+        $('div[name=publish_round_' + id + ']').on('click', function (e) {
+            if ($(this).hasClass("checked")) {
+                $(this).removeClass("checked");
+            } else {
+                $(this).addClass("checked");
+            }
             var maximumDate = $("input[name=publish_returnDate_" + id + "]").datepicker("getDate");
-            if (this.checked) {
+            if ($(this).hasClass("checked")) {
                 that.toSubmit.requests[index].round = true;
                 $("input[name=publish_departDate_" + id + "]").datepicker("option", "maxDate", maximumDate);
-                that.toggleDateVisibility(e, false);
+                that.toggleDateVisibility(id, false);
             } else {
                 that.toSubmit.requests[index].round = false;
                 $("input[name=publish_departDate_" + id + "]").datepicker("option", "maxDate", null);
-                that.toggleDateVisibility(e, true);
+                that.toggleDateVisibility(id, true);
             }
         });
         $("input[name=publish_departDate_" + id + "]").datepicker({
@@ -506,25 +563,31 @@ var MessagePostView = Backbone.View.extend({
         $('#publish_time_container').css('height', height);
         $('#publish_requirement').css('height', height + 100);
     },
-    toggleDateVisibility: function (e, state) {
-        var id = this.getId(e.target.name);
+    toggleDateVisibility: function (id, state) {
+        if (state) {
+            $("#publish_time_"+id+">dl").last().addClass("disabled");
+        } else {
+            $("#publish_time_"+id+">dl").last().removeClass("disabled");
+        }
         $('input[name=publish_returnDate_' + id + ']').prop('disabled', state);
-        $('select[name=return_time_' + id + ']').prop('disabled', state);
+        $('#return_time_' + id).prop('disabled', state);
     },
     updateValue: function (e, d) {
         var id;
         if (e.target && e.target.value !== "") {
-            id = this.getId(e.target.name);
-            if (e.target.name.indexOf("depart_time") > -1) {
+            debugger;   
+            var name = $(e.delegateTarget).attr("id");
+            id = this.getId(name);
+            if (name.indexOf("depart_time") > -1) {
                 this.toSubmit.requests[Utilities.toInt(id) - 1].departTime = e.target.value;
-            } else if (e.target.name.indexOf("return_time") > -1) {
+            } else if (name.indexOf("return_time") > -1) {
                 this.toSubmit.requests[Utilities.toInt(id) - 1].returnTime = e.target.value;
             }
         } else if (e.name && d) {
             id = this.getId(e.name);
             if (e.name.indexOf("publish_departDate_") === 0) {
                 this.toSubmit.requests[Utilities.toInt(id) - 1].departDate = d;
-                var round = $("input[name=publish_round_" + id + "]").attr("checked") === "checked";
+                var round = $("div[name=publish_round_" + id + "]").hasClass("checked");
                 this.toSubmit.requests[Utilities.toInt(id) - 1].round = round;
 
             } else if (e.name.indexOf("publish_returnDate_") === 0) {
@@ -540,10 +603,10 @@ var MessagePostView = Backbone.View.extend({
         this.toSubmit.requests[Utilities.toInt(id) - 1] = null;
         this.adjustContainerHeight();
         $('#publish_delete_' + id).off();
-        $("select[name=depart_time_" + id + "]").off();
-        $("select[name=return_time_" + id + "]").off();
+        $("#depart_time_" + id).off();
+        $("#return_time_" + id).off();
 
-        $('input[name=publish_round_' + id + ']').off();
+        $('div[name=publish_round_' + id + ']').off();
         $("input[name=publish_returnDate_" + id + "]").off();
         $("input[name=publish_departDate_" + id + "]").off();
 
@@ -554,12 +617,15 @@ var MessagePostView = Backbone.View.extend({
         return list[list.length - 1];
     },
     validate: function (page) {
+
         var counter = 0;
 
         if (page === 1) {
             if (Utilities.isEmpty($("#publish_originInput").val())) {
+                $("#publish_origin>dd").after('<dd class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
                 return false;
             } else if (Utilities.isEmpty($("#publish_destInput").val())) {
+                $("#publish_origin>dd").after('<dd class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
                 return false;
             } else {
                 return true;
