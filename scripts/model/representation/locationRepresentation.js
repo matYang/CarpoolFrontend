@@ -1,5 +1,5 @@
 var UserLocation = Backbone.Model.extend({
-
+    urlRoot: Constants.origin + "/api/v1.0/location/default",
     defaults: function () {
         return {
             //first 3 reserved for default locations only
@@ -140,14 +140,14 @@ var DefaultUserLocations = Backbone.Collection.extend({
 
     initialize: function (urlOverride) {
         _.bindAll(this, 'overrideUrl', 'findMatch');
-        if (urlOverride !== null) {
+        if ( typeof urlOverride !== 'undefined') {
             this.url = urlOverride;
         }
 
     },
 
     overrideUrl: function (urlOverride) {
-        if (urlOverride !== null) {
+        if ( typeof urlOverride !== 'undefined') {
             this.url = urlOverride;
         }
     },

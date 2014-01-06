@@ -60,13 +60,13 @@ var User = Backbone.Model.extend({
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl', 'isNew', 'parse', '_toJSON', 'toJSON', 'toDropdownJSON');
 
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
     },
 
     overrideUrl: function (urlRootOverride) {
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
     },
@@ -151,14 +151,13 @@ var Users = Backbone.Collection.extend({
 
     initialize: function (urlOverride) {
         _.bindAll(this, 'overrideUrl');
-        if (urlOverride !== null) {
+        if ( typeof urlOverride !== 'undefined') {
             this.url = urlOverride;
         }
-
     },
 
     overrideUrl: function (urlOverride) {
-        if (urlOverride !== null) {
+        if ( typeof urlOverride !== 'undefined') {
             this.url = urlOverride;
         }
     }

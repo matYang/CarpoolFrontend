@@ -24,14 +24,14 @@ var Letter = Backbone.Model.extend({
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON', '_toJSON', 'toDropdownJSON');
 
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
 
     },
 
     overrideUrl: function (urlRootOverride) {
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
     },

@@ -41,6 +41,8 @@ var AppRouter = Backbone.Router.extend({
         //initializing the storage services, some resuable user information will be persisted by local storage
         this.storage = new StorageService ();
 
+        this.locationService = new LocationService();
+
         //initializing all the data managers
         this.sessionManager = new SessionManager ();
         this.userManager = new UserManager (this.sessionManager);
@@ -152,7 +154,7 @@ var AppRouter = Backbone.Router.extend({
             delete this.MessagePostView;
             this.MessagePostView = null;
         }
-        if (!this.MessageEditView) { 
+        if (!this.MessageEditView) {
             this.MessageEditView = new MessageEditView ({
                 'messageId': messageId
             });
@@ -257,7 +259,7 @@ var AppRouter = Backbone.Router.extend({
 
 //warning: tpl is the global object for templating services, do not name any variable "tpl" in any context in any files
 tpl.loadTemplates(Constants.templateResources, function () {
-    app = new AppRouter (); 
+    app = new AppRouter ();
     app.topBarView = new TopBarView ();
     Backbone.history.start();
 });

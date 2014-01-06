@@ -25,14 +25,14 @@ var Notification = Backbone.Model.extend({
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl');
 
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
 
     },
 
     overrideUrl: function (urlRootOverride) {
-        if (urlRootOverride !== null) {
+        if (typeof urlRootOverride !== 'undefined') {
             this.urlRoot = urlRootOverride;
         }
     },
@@ -153,4 +153,4 @@ var Notifications = Backbone.Collection.extend({
             this.url = urlOverride;
         }
     }
-}); 
+});
