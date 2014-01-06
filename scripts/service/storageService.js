@@ -1,4 +1,5 @@
-(function () {'use strict';
+(function () {
+    'use strict';
     //wooooooola, no more global objects, globals are bad, very bad
 
     //note this is not a global helper function, it is encapsulated inside this modular function scope
@@ -106,6 +107,7 @@
     StorageService.prototype.setViewCache = function (type, view) {
         this.views[type] = view;
     };
+
     StorageService.prototype.getViewCache = function (type, params) {
         this.views[type] = this.views[type];
         if (!this.views[type]){
@@ -114,5 +116,6 @@
             this.views[type].cacheConfig(params);
         }
         return this.views[type];
-    }
-}).call(this); 
+    };
+
+}).call(this);
