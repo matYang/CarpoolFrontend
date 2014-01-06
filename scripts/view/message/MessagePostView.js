@@ -319,10 +319,35 @@ var MessagePostView = Backbone.View.extend({
             if (e.keyCode < 48 || e.keyCode > 57) {
                 e.preventDefault();
             }
-        });
-        $("#seats").on("blur", function (e) {
             that.toSubmit.departureSeats = Utilities.toInt(e.target.value);
             that.toSubmit.returnSeats = Utilities.toInt(e.target.value);
+            if (that.toSubmit.departureSeats>1) {
+                if ($(".plus_disabled").length) {
+                    $(".plus_disabled").attr("class","plus");
+                }
+            }
+        });
+        $(".add").on("click", function (e) {
+            that.toSubmit.departureSeats++;
+            that.toSubmit.returnSeats++;
+            $("#seats").val(that.toSubmit.departureSeats);
+            if (that.toSubmit.departureSeats>1) {
+                if ($(".plus_disabled").length) {
+                    $(".plus_disabled").attr("class","plus");
+                }
+            }
+        });
+        $(".plus,.plus_disabled").on("click", function (e) {
+            debugger;
+            if ($(e.target).hasClass("plus_disabled")) {
+                return;
+            }
+            that.toSubmit.departureSeats--;
+            that.toSubmit.returnSeats--;
+            $("#seats").val(that.toSubmit.departureSeats);
+            if (that.toSubmit.departureSeats<=1) {
+                $(this).attr("class", "plus_disabled");
+            }
         });
         $("#seats_1").on("blur", function (e) {
             that.toSubmit.priceList[0] = Utilities.toInt(e.target.value);
