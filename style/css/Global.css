@@ -68,3 +68,23 @@ body {
 	font-family:'微软雅黑', '黑体', '宋体';
 	src:url(fonts/MSYH.TTF);
 }
+#popup {
+	z-index: 2000;
+	position:absolute;
+  display: none;
+  top:0;
+  bottom:0;
+  float:left;
+  width:100%;
+}
+#overlay{
+	position:absolute;
+  display: none;
+  top:0;
+  bottom:0;
+  float:left;
+  width:100%;
+  z-index: 1999;
+  background-color: rgba(0,0,0,0.7);
+  zoom: 1;
+}
