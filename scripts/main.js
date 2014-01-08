@@ -190,7 +190,7 @@ var AppRouter = Backbone.Router.extend({
             //if the post session did not end, keep using the same post session
             else {
                 this.MessagePostView.render(Config.getPostStateStepIndex(postState));
-                this.MessagePostView.prototype.isColsed = false;
+                this.MessagePostView.isColsed = false;
             }
         }
     },

@@ -21,10 +21,10 @@ var RegistrationView = Backbone.View.extend({
 		this.contentContainer = $('#registerContent');
 		this.registerInfo = {};
 		var self = this;
-		$("#register-modal-closeButton").on("click",function(){
+		$("#register-modal-closeButton").on("click", function(){
+			debugger;
 			self.close();
 		});
-
 		this.registerPopup = true;
 		this.render(1);
 

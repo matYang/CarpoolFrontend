@@ -6,6 +6,10 @@
 body, dl, dd, h1, h2, h3, h4, h5, h6, p, form {
 	margin:0;
 }
+textarea {
+    resize:none;
+}
+
 input[type="text"] {
 	padding:0px;
 }
@@ -19,6 +23,12 @@ img {
 ul {
 	list-style:none;
 }
+
+.content{
+    min-height: 600px;
+    overflow: hidden;
+}
+
 .fleft {
 	float:left;
 }
@@ -87,4 +97,4 @@ body {
   z-index: 1999;
   background-color: rgba(0,0,0,0.7);
   zoom: 1;
-}
+}n

@@ -4,9 +4,10 @@ var MapView = Backbone.View.extend({
     initialize: function (config) {
         _.bindAll(this, 'render', 'mapInitialize', 'bindClickEvent', 'setLocation', 'drawCircle', 'getLatLng');
         this.div = config.div;
-        this.origin = config.originLocation || new UserLocation();;
-        this.dest = config.destLocation || new UserLocation();;
+        this.origin = config.originLocation || new UserLocation();
+        this.dest = config.destLocation || new UserLocation();
         this.clickable = config.clickable;
+        this.class = config.class;
         this.oLatLng = {};
         this.dLatLng = {};
         this.init = config.init;
@@ -20,10 +21,14 @@ var MapView = Backbone.View.extend({
         this.origin = config.originLocation || new UserLocation();
         this.dest = config.destLocation || new UserLocation();
         this.clickable = config.clickable;
+        this.class = config.class;
         $("#"+this.div).after($("#mapcache").attr("id","newMap"));
         $("#mapcache").remove();
         $("#"+this.div).remove();
         $("#newMap").attr("id", this.div);
+        if (this.class) {
+            $("#newMap").attr("class", this.class);
+        }
         this.mapInitialize();
     },
     mapInitialize: function () {

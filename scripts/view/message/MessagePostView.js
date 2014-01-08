@@ -27,13 +27,14 @@ var MessagePostView = Backbone.View.extend({
      }
      */
     initialize: function () {
-        _.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents', 'onTypeSelect', 'onAddClick', 'adjustContainerHeight', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'close');
+        _.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents', 'onTypeSelect', 'onAddClick', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'close');
         this.isClosed = false;
         this.baseTemplate = _.template(tpl.get('Publish_base'));
         this.step1Template = _.template(tpl.get('Publish_step1'));
         this.step2Template = _.template(tpl.get('Publish_step2'));
         this.step3Template = _.template(tpl.get('Publish_step3'));
         this.askSlotTemplate = _.template(tpl.get('Publish_singleSlotAsk'));
+        this.priceEntryTemplate = ['<div class="publish_price_list_entry"><label>人数：', -1, '</label><input id = "seats_', -1, '" type="text" value=""/><label>元/人</label></div>'];
 
         this.user = app.sessionManager.getSessionUser();
         this.userId = this.user.get("userId");
@@ -79,6 +80,7 @@ var MessagePostView = Backbone.View.extend({
         this.restoreState(1);
         var mapConfig = {};
         mapConfig.div = "publish_map";
+        mapConfig.class = "publish_map";
         mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
         mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
         mapConfig.init = this;
@@ -189,7 +191,6 @@ var MessagePostView = Backbone.View.extend({
             $("#depart_time_1").on("click", function (e) {
                 $(".publish_time_menu").hide();
                 if (e.target.tagName === "LI") {
-                    debugger;
                     $(this).children().first().val(e.target.textContent);
                     that.updateValue(e);
                     return;
@@ -297,7 +298,6 @@ var MessagePostView = Backbone.View.extend({
             }
             this.restoreState(2);
         }
-        this.adjustContainerHeight();
         $(".input_date").on("keypress", function (e) {
             e.preventDefault();
         });
@@ -311,8 +311,8 @@ var MessagePostView = Backbone.View.extend({
     renderThirdPage: function () {
         var that = this;
         $('#publish_requirement').append(this.step3Template);
-        $("#publish_priceList").hide();
-        $("#priceList_minus").hide();
+        $("#publish_pricelist_container").hide();
+        $("#publish_entry_close").hide();
         $("#publish_progress").attr("class", "publish publish_step_3");
         this.restoreState(3);
         $("#seats").on("keypress", function (e) {
@@ -336,9 +336,9 @@ var MessagePostView = Backbone.View.extend({
                     $(".plus_disabled").attr("class","plus");
                 }
             }
+            $("#publish_seats_full").remove();
         });
         $(".plus,.plus_disabled").on("click", function (e) {
-            debugger;
             if ($(e.target).hasClass("plus_disabled")) {
                 return;
             }
@@ -355,43 +355,44 @@ var MessagePostView = Backbone.View.extend({
         $('#publish_description_input').on('blur', function (e) {
             that.toSubmit.description = e.target.value;
         });
-        $("#priceList_add").on("click", function (e) {
+        $("#publish_price_add").on("click", function (e) {
             if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
                 var seatId = ++that.toSubmit.priceListEntries;
-                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数" + seatId + "  每人<input id = 'seats_" + seatId + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                that.priceEntryTemplate[1] = seatId;
+                that.priceEntryTemplate[3] = seatId;
+                $("#publish_priceList").append(that.priceEntryTemplate.join(""));
                 that.toSubmit.priceList[seatId - 1] = 0;
-                $("#publish_priceList, #publish_pricelist_container").animate({
-                    height: "+=30"
-                }, 200);
-
                 $("#seats_" + seatId).on("blur", function (e) {
                     that.toSubmit.priceList[seatId - 1] = Utilities.toInt(e.target.value);
                 });
-                $("#priceList_minus").show();
+                $("#publish_entry_close").show();
+
+                $("#publish_entry_close").appendTo($(".publish_price_list_entry").last());
+            } else {
+                if ($("#publish_seats_full").length === 0) {
+                    $("#publish_pricelist_container").append('<div id="publish_seats_full" class="publish_price_notice" style="float:left">请添加更多座位</div>');
+                }
             }
         });
-        $("#priceList_minus").on("click", function (e) {
-            $(".publish_priceEntry").last().remove();
+        $("#publish_entry_close").on("click", function (e) {
+            $("#publish_entry_close").appendTo($(".publish_price_list_entry:nth-last-child(2)").last());
+            $(".publish_price_list_entry").last().remove();
             var seatId = that.toSubmit.priceListEntries--;
-            if (seatId == 2) {
-                $("#priceList_minus").hide();
+            if (seatId <= 2) {
+                $("#publish_entry_close").hide();
             }
             that.toSubmit.priceList[seatId - 1] = null;
-            $("#publish_priceList, #publish_pricelist_container").animate({
-                height: "-=30"
-            }, 200);
-
         });
         $("#conditionalPriceSwitch").on("click", function (e) {
-            if ($("#conditionalPriceSwitch").hasClass("publish_selected")) {
-                $("#conditionalPriceSwitch").removeClass("publish_selected");
+            if ($("#conditionalPriceSwitch").hasClass("checked")) {
+                $("#conditionalPriceSwitch").removeClass("checked");
                 $("#publish_singlePrice").fadeIn();
-                $("#publish_priceList").hide();
+                $("#publish_pricelist_container").hide();
                 that.toSubmit.conditionalPrice = false;
             } else {
-                $("#conditionalPriceSwitch").addClass("publish_selected");
+                $("#conditionalPriceSwitch").addClass("checked");
                 $("#publish_singlePrice").hide();
-                $("#publish_priceList").fadeIn();
+                $("#publish_pricelist_container").fadeIn();
                 that.toSubmit.conditionalPrice = true;
             }
 
@@ -432,35 +433,40 @@ var MessagePostView = Backbone.View.extend({
         } else if (page === 3) {
             $("#publish_description_input").val(this.toSubmit.description);
             $("#seats").val(this.toSubmit.departureSeats);
-            $(".publish_priceEntry").remove();
+            $(".publish_price_list_entry").remove();
             if (this.toSubmit.type === Constants.messageType.ask) {
-                $("#publish_pricelist_container").remove();
+                $(".publish_price_container").remove();
             }
             if (this.toSubmit.conditionalPrice) {
+                debugger;
                 $("#conditionalPriceSwitch").addClass("publish_selected");
                 $("#publish_singlePrice").hide();
-                $("#publish_priceList").show();
+                $("#publish_pricelist_container").show();
                 var entryNum = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
                     var id = i + 1;
                     entryNum++;
-                    $("#priceList_add").before("<div class='publish_priceEntry'>人数"+ id + "  每人<input id = 'seats_" + id + "' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                    this.priceEntryTemplate[1] = id;
+                    this.priceEntryTemplate[3] = id;
+                    $("#publish_priceList").append(this.priceEntryTemplate.join(""));
                     $("#seats_" + id).val(this.toSubmit.priceList[i]);
                 }
                 this.toSubmit.priceListEntries = entryNum;
-                var height = 70 + (entryNum - 1 ) * 30;
-                $("#publish_priceList, #publish_pricelist_container").css("height", height);
-
-                if (entryNum > 1) {
-                    $("#priceList_minus").show();
+                $(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
+                if (entryNum === 1) {
+                    $("#publish_entry_close").hide();
                 }
             } else {
-                $("#priceList_add").before("<div class='publish_priceEntry'>" + "人数1  每人<input id = 'seats_1' type = 'text' class='seat_price' pattern='[0-9]*' />元</div>");
+                this.priceEntryTemplate[1] = 1;
+                this.priceEntryTemplate[3] = 1;
+                $("#publish_priceList").append(this.priceEntryTemplate.join(""));
+                $(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
+                $("#publish_entry_close").hide();
                 $("#seatsNumber_1").val(1);
                 $("#seats_1").val(this.toSubmit.priceList[0]);
                 $("#conditionalPriceSwitch").removeClass("publish_selected");
                 $("#publish_singlePrice").show();
-                $("#publish_priceList").hide();
+                $("#publish_pricelist_container").hide();
             }
         }
     },
@@ -484,7 +490,7 @@ var MessagePostView = Backbone.View.extend({
             $("#seats").off();
             $("#seats_1").off();
             $('#publish_finish').off();
-            $("#priceList_add").off();
+            $("#publish_price_add").off();
             $("#priceList_minus").off();
             $("#conditionalPriceSwitch").off();
             $('#publish_description_input').off();
@@ -581,12 +587,6 @@ var MessagePostView = Backbone.View.extend({
         $("input[name=publish_departDate_" + id + "]").on("keypress", function (e) {
             e.preventDefault();
         });
-        this.adjustContainerHeight();
-    },
-    adjustContainerHeight: function () {
-        var height = this.toSubmit.numberRequests * 204 + 20;
-        $('#publish_time_container').css('height', height);
-        $('#publish_requirement').css('height', height + 100);
     },
     toggleDateVisibility: function (id, state) {
         if (state) {
@@ -600,7 +600,6 @@ var MessagePostView = Backbone.View.extend({
     updateValue: function (e, d) {
         var id;
         if (e.target && e.target.value !== "") {
-            debugger;   
             var name = $(e.delegateTarget).attr("id");
             id = this.getId(name);
             if (name.indexOf("depart_time") > -1) {
@@ -626,7 +625,6 @@ var MessagePostView = Backbone.View.extend({
         $('#publish_time_' + id).remove();
         this.toSubmit.numberRequests--;
         this.toSubmit.requests[Utilities.toInt(id) - 1] = null;
-        this.adjustContainerHeight();
         $('#publish_delete_' + id).off();
         $("#depart_time_" + id).off();
         $("#return_time_" + id).off();
