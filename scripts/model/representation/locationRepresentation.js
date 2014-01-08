@@ -92,17 +92,22 @@ var UserLocation = Backbone.Model.extend({
 
         for (i = 0; i < len; i++) {
             if (address[i].types[0] === "locality") {
+                this.set('region', address[i].short_name);
+                continue;
+            }
+            if (address[i].types[0] === "administrative_area_level_2") {
+                this.set('city', address[i].short_name);
+                continue;
+            }
+            if (address[i].types[0] === "administrative_area_level_1") {
+                this.set('province', address[i].short_name);
                 break;
             }
-            buf.push(address[i].short_name);
         }
-        street_address = buf.join(" ");
-        return street_address;
-        // this.get('hierarchyNameList')[0] = contry;
-        // this.get('hierarchyNameList')[1] = province;
-        // this.get('hierarchyNameList')[2] = city;
-        // this.get('hierarchyNameList')[3] = street_address;
-        
+        this.set('pointAddress', json.results[0].formatted_address.split(",")[0]);
+        this.set('lat', json.results[0].geometry.location.lat);
+        this.set('lng', json.results[0].geometry.location.lng);
+        return this.get('pointAddress');
     },
 
     isInRange: function(loc){

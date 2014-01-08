@@ -92,10 +92,10 @@ var MessagePostView = Backbone.View.extend({
     },
     updateByMapMarker: function (type, json) {
         if (type === "origin") {
-            $('#publish_originAddress').val(json.results[0].formatted_address);
+            $('#publish_originAddress').val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.origin.parseGoogleJson(json);
         } else {
-            $('#publish_destAddress').val(json.results[0].formatted_address);
+            $('#publish_destAddress').val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.dest.parseGoogleJson(json);
         }
     },
@@ -698,8 +698,6 @@ var MessagePostView = Backbone.View.extend({
                 }
             }
         }
-        this.toSubmit.origin.reverseFill();
-        this.toSubmit.dest.reverseFill();
         for (var r = 0; r < this.toSubmit.requests.length; r++) {
             if (this.toSubmit.requests[r]) {
                 var t = new Transaction ();

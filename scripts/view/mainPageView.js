@@ -285,12 +285,10 @@ var MainPageView = Backbone.View.extend({
         });
 
         $("#customizeLocationInput_from").on("blur", function (e) {
-            that.searchRepresentation.get("departureLocation").set("point", this.value);
-            that.searchRepresentation.get("departureLocation").reverseFill();
+            that.searchRepresentation.get("departureLocation").set("pointAddress", this.value);
         });
         $("#customizeLocationInput_to").on("blur", function (e) {
-            that.searchRepresentation.get("arrivalLocation").set("point", this.value);
-            that.searchRepresentation.get("arrivalLocation").reverseFill();
+            that.searchRepresentation.get("arrivalLocation").set("pointAddress", this.value);
         });
 
     },
