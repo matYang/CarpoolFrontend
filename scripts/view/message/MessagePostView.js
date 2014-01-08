@@ -382,6 +382,7 @@ var MessagePostView = Backbone.View.extend({
                 $("#publish_entry_close").hide();
             }
             that.toSubmit.priceList[seatId - 1] = null;
+            $("#publish_pricelist_container").remove();
         });
         $("#conditionalPriceSwitch").on("click", function (e) {
             if ($("#conditionalPriceSwitch").hasClass("checked")) {
