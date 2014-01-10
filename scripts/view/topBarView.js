@@ -2,7 +2,7 @@ var TopBarView = Backbone.View.extend({
 
     el: $('#topBar'),
 
-    events: {
+    events: {	
 
     },
 
@@ -20,15 +20,13 @@ var TopBarView = Backbone.View.extend({
         this.sessionUser = app.sessionManager.getSessionUser();
 
         this.render();
-
     },
 
     render: function () {
-        this.listenTo(this.sessionUser, 'change:userId', this.reRender);
-
+        this.listenTo(this.sessionUser, 'chan	ge:userId', this.reRender);
         if (app.sessionManager.hasSession()) {
             $(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
-            $("#dropdowns>div").hide();
+	    this.$alldropdowns = $("#dropdowns>div").hide();
             this.bindEvents();
 
             //dropdown specific data binding
@@ -156,86 +154,85 @@ var TopBarView = Backbone.View.extend({
 
         /*  navigation events  */
         //main nav
-        $('#logo').on('click', function () {
+        this.$logo = $('#logo').on('click', function () {
             app.navigate("front", true);
         });
-        $('.navigate_main').on('click', function () {
+        this.$nmain = $('#navigate_main').on('click', function () {
             app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
-        $('.navigate_personal').on('click', function () {
+        this.$npersonal = $('#navigate_personal').on('click', function () {
             app.navigate("personal/" + app.sessionManager.getUserId(), true);
         });
-        $('.navigate_feedBack').on('click', function () {
+        this.$nfeedback = $('#navigate_feedBack').on('click', function () {
             app.navigate("post", true);
         });
-    $(".navigate_usersearch").on('click', function () {
+        this.$nusersearch = $("#navigate_usersearch").on('click', function () {
             app.navigate("finduser", true);
         });
-
+	this.$ndropdown = $('#notificationDropdown');
+	this.$ldropdown = $('#letterDropdown');
+	this.$fdropdown = $('#favoriteDropdown');
         //personal nav
-        $('#notificationDropdown .dropdownTitleCheckAll').on('click', function () {
+        this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
             app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
         });
-        $('#letterDropdown .dropdownTitleCheckAll').on('click', function () {
+        this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
             app.navigate("letter", true);
         });
-        $('#favoriteDropdown .dropdownTitleCheckAll').on('click', function () {
+        this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
             app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
         });
 
         /*  UI events  */
-        $('#notifications').on('mouseenter', function () {
+        this.$notifications = $('#notifications').on('mouseenter', function () {
             self.showNotificationDropdown();
-            $("#notifications").addClass("whiteBackground");
         });
-        $('#letters').on('mouseenter', function () {
+        this.$letters = $('#letters').on('mouseenter', function () {
             self.showLetterDropdown();
-            $("#letters").addClass("whiteBackground");
         });
-        $('#favorites').on('mouseenter', function () {
+        this.$favorites = $('#favorites').on('mouseenter', function () {
             self.showFavoriteDropdown();
-            $("#favorites").addClass("whiteBackground");
         });
-        $('#profilePicture').on('mouseenter', function () {
+        this.$profilePicture = $('#profilePicture').on('mouseenter', function () {
             self.showProfileDropdown();
         });
-        $('#notifications').on('mouseleave', function (e) {
-            if (e.toElement === null || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
+        this.$notifications.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
                 self.hideNotificationDropdown();
             }
         });
-        $('#letters').on('mouseleave', function (e) {
-            if (e.toElement === null || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
+        this.$letters.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
                 self.hideLetterDropdown();
             }
         });
-        $('#favorites').on('mouseleave', function (e) {
-            if (e.toElement === null || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
+        this.$favorites.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
                 self.hideFavoriteDropdown();
             }
         });
-        $('#profilePicture').on('mouseleave', function (e) {
-            if (e.toElement === null || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
+        this.$profilePicture.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
                 self.hideProfileDropdown();
             }
         });
-        $('#favoriteDropdown').on('mouseleave', function (e) {
-            if (e.toElement === null || e.toElement.id !== "favorites") {
+        this.$fdropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "favorites") {
                 self.hideFavoriteDropdown();
             }
         });
-        $('#notificationDropdown').on('mouseleave', function (e) {
-            if (e.toElement === null || e.toElement.id !== "notifications") {
+        this.$ndropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "notifications") {
                 self.hideNotificationDropdown();
             }
         });
-        $('#letterDropdown').on('mouseleave', function (e) {
-            if (e.toElement === null || e.toElement.id !== "letters") {
+        this.$ldropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "letters") {
                 self.hideLetterDropdown();
             }
         });
-        $('#profileDropdown').on('mouseleave', function (e) {
-            if (e.toElement === null || e.toElement.id !== "profilePicture") {
+        this.$pdropdown = $('#profileDropdown').on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "profilePicture") {
                 self.hideProfileDropdown();
             }
         });
@@ -348,53 +345,45 @@ var TopBarView = Backbone.View.extend({
     },
 
     showNotificationDropdown: function () {
-        $("#dropdowns>div").hide();
-        $("li").removeClass("whiteBackground");
-        $("#notificationDropdown").show();
+        this.$alldropdowns.hide();
+        this.$ndropdown.show();
     },
     hideNotificationDropdown: function () {
-        $("li").removeClass("whiteBackground");
-        $("#notificationDropdown").hide();
+        this.$ndropdown.hide();
     },
     showFavoriteDropdown: function () {
-        $("#dropdowns>div").hide();
-        $("li").removeClass("whiteBackground");
-        $("#favoriteDropdown").show();
+        this.$alldropdowns.hide();
+        this.$fdropdown.show();
     },
     hideFavoriteDropdown: function () {
-        $("li").removeClass("whiteBackground");
-        $("#favoriteDropdown").hide();
+        this.$fdropdown.hide();
     },
     showLetterDropdown: function () {
-        $("#dropdowns>div").hide();
-        $("li").removeClass("whiteBackground");
-        $("#letterDropdown").show();
+        this.$alldropdowns.hide();
+        this.$ldropdown.show();
     },
     hideLetterDropdown: function () {
-        $("li").removeClass("whiteBackground");
-        $("#letterDropdown").hide();
+        this.$ldropdown.hide();
     },
     showProfileDropdown: function () {
-        $("#dropdowns>div").hide();
-        $("li").removeClass("whiteBackground");
-        $("#profileDropdown").show();
+        this.$alldropdowns.hide();
+        this.$pdropdown.show();
     },
     hideProfileDropdown: function () {
-        $("li").removeClass("whiteBackground");
-        $("#profileDropdown").hide();
+        this.$pdropdown.hide();
     },
 
     _clearAll: function () {
-        $('#logo').off();
-        $('.navigate_main').off();
-        $('.navigate_personal').off();
-        $('.navigate_feedBack').off();
-        $('#notifications').off();
-        $('#letters').off();
-        $('#favorites').off();
-        $('#notificationDropdown').off();
-        $('#letterDropdown').off();
-        $('#favoriteDropdown').off();
+        this.$logo.off();
+        this.$nmain.off();
+        this.$npersonal.off();
+        this.$nfeedBack.off();
+        this.$notifications.off();
+        this.$letters.off();
+        this.$favorites.off();
+        this.$ndropdown.off();
+        this.$ldropdown.off();
+        this.$fdropdown.off();
         if (!app.sessionManager.hasSession()) {
             $('#signup_button').off();
             $('#login_button').off();
