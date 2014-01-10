@@ -5,8 +5,8 @@
 var getEnvironmentServerOrigin = function () {
     var isOnLocal = C_ENV_VAR !== 'REMOTE';
     return {
-        'httpOrigin': isOnLocal ? 'localhost:8015' : 'www.huaixuesheng.com',
-        'socketOrigin': isOnLocal ? 'localhost:3000' : 'www.huaixuesheng.com:3000'
+        'httpOrigin': isOnLocal ? 'localhost:8015' : '..',
+        'socketOrigin': isOnLocal ? 'localhost:3000' : '54.201.115.56:3000'
     };
 
 };
