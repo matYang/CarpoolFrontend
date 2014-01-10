@@ -73,8 +73,8 @@ var MessageDetailView = Backbone.View.extend({
                 continue;
             buffer[i] = this.transactionTemplate(this.transactions.at(i)._toJSON());
         }
-        $("#view_transactions_content").append(buffer.join(""));
-        $("#view_transactions_content>li").on("click", function (e) {
+        var $transactions = $("#view_transactions_content").append(buffer.join(""));
+        $transactions.children("li").on("click", function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             var transaction = that.transactions.get(Utilities.toInt(id));
             that.openTransactionDetail(transaction);
@@ -90,33 +90,36 @@ var MessageDetailView = Backbone.View.extend({
         for ( i = 0; i < len; i++) {
             buf[i] = this.quickmatchTemplate(result.at(i)._toJSON());
         }
-        $(".messageDetail-middle-autoMatch-loading").remove();
-        $("#view_automatch").append(buf.join(""));
-        $(".message_simple").on('click', function (e) {
+        this.$automatch = $("#view_automatch").append(buf.join(""));
+        this.$automatch.children(".messageDetail-middle-autoMatch-loading").remove();
+        this.$messages = $automatch.children("message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
         });        
     },
     bindEvents: function () {
         var that = this;
+/*
         if (this.ownerId === this.userId) {
             $("#view_edit").on("click", function () {
                 app.navigate("message/" + that.messageId + "/edit", true);
             });
         }
+*/
         var n = this.departureSeats < this.arrivalSeats ? this.departureSeats : this.arrivalSeats;
+        this.$viewbook = $("#view_book");
+        this.$viewcontact = $("#view_contact");
         if (this.departureSeats === 0 && this.arrivalSeats === 0) {
-            $("#view_book").text("座位已满").css("background-color", "#888888").css("width", "100%");
-            $("#view_book").off();
+            this.$viewbook.text("座位已满").css("background-color", "#888888").css("width", "100%").off();
         } else if (this.parsedMessage.type === Constants.messageType.help) {
-            $("#view_book").on("click", function (e) {
+            this.$viewbook.on("click", function (e) {
                 that.transactionView = new TransactionDetailView (that.newTransaction, {
                     "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
                     "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
                 });
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
-            $("#view_contact").on('click', function () {
+            this.$viewcontact.on('click', function () {
                 app.navigate("letter/" + that.ownerId, true);
             });
         }
@@ -185,12 +188,10 @@ var MessageDetailView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.map.close();
-            $("#view_edit").off();
-            $("#view_transactions_button").off();
-            $("#chooseSeatNumber").off();
-            $("#view_book").off();
-            $("#go").off();
-            $("#back").off();
+//            $("#view_edit").off();
+            this.$viewbook.off();
+            this.$viewcontact.off();
+            this.$messages.off();
             if ( typeof this.domContainer !== 'undefined') {
                 this.domContainer.empty();
             }

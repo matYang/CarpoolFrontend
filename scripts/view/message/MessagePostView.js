@@ -375,7 +375,7 @@ var MessagePostView = Backbone.View.extend({
             }
         });
         $("#publish_entry_close").on("click", function (e) {
-            $("#publish_entry_close").appendTo($(".publish_price_list_entry:nth-last-child(2)").last());
+            $(this).appendTo($(".publish_price_list_entry:nth-last-child(2)").last());
             $(".publish_price_list_entry").last().remove();
             var seatId = that.toSubmit.priceListEntries--;
             if (seatId <= 2) {
@@ -385,13 +385,13 @@ var MessagePostView = Backbone.View.extend({
             $("#publish_pricelist_container").remove();
         });
         $("#conditionalPriceSwitch").on("click", function (e) {
-            if ($("#conditionalPriceSwitch").hasClass("checked")) {
-                $("#conditionalPriceSwitch").removeClass("checked");
+            if ($(this).hasClass("checked")) {
+                $(this).removeClass("checked");
                 $("#publish_singlePrice").fadeIn();
                 $("#publish_pricelist_container").hide();
                 that.toSubmit.conditionalPrice = false;
             } else {
-                $("#conditionalPriceSwitch").addClass("checked");
+                $(this).addClass("checked");
                 $("#publish_singlePrice").hide();
                 $("#publish_pricelist_container").fadeIn();
                 that.toSubmit.conditionalPrice = true;
