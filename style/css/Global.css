@@ -55,28 +55,39 @@ ul {
 	margin-top:15px;
 }
 .F_red {
-	color:#ff0000;
+    color:#ff0000;
+}
+.F_orange {
+    color:#ff5500;
 }
 .F_green {
-	color:#3aae36;
+    color:#3aae36;
 }
+
 a, a:visited {
 	color:#909090;
 	text-decoration: none;
+}
+.F_16 {
+    font-size:16px;
+}
+.F_18 {
+    font-size:18px;
 }
 a:hover {
 	color:#362e2b;
 	text-decoration:underline;
 }
 a.F_blue, a.F_blue:visited {
-	color:#0041d9;
+    color:#57b7e1;
 }
 a.F_green, a.F_green:visited {
-	color:#3aae36;
+    color:#3aae36;
 }
 body {
 	font-family:'微软雅黑', '黑体', '宋体';
 	src:url(fonts/MSYH.TTF);
+    font-size:14px;
 }
 #popup {
 	z-index: 2000;
@@ -97,4 +108,9 @@ body {
   z-index: 1999;
   background-color: rgba(0,0,0,0.7);
   zoom: 1;
-}n
+}
+input.text {
+    font-family:'微软雅黑';
+}
+
+font-size:14px;

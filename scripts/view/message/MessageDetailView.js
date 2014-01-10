@@ -11,6 +11,7 @@ var MessageDetailView = Backbone.View.extend({
         this.userId = app.sessionManager.getUserId();
         var self = this;
         this.newTransaction = new Transaction ();
+        this.quickmatchTemplate = _.template(tpl.get('SimpleMessage'));
         app.messageManager.fetchMessage(messageIdWrapper.messageId, {
             success: function (message) {
                 self.message = message;
@@ -41,12 +42,12 @@ var MessageDetailView = Backbone.View.extend({
                 Info.displayErrorPage("content", "信息读取失败, 请刷新页面");
             }
         });
-        this.quickmatchTemplate = ["<div class='view_matchResultEntry' id='matchResult_", null, "'><img src='", null, "'/></div>"];
     },
 
     render: function () {
         var mapParams = {
             div: "view_map",
+            class: "messageDetail-map-content",
             originLocation: this.message.get("departure_location"),
             destLocation: this.message.get("arrival_location"),
             clickable: false
@@ -55,9 +56,9 @@ var MessageDetailView = Backbone.View.extend({
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.renderPriceList();
         if (this.message.get("isRoundTrip")) {
-            $("#directionArrow").html("<->");
+            $(".messageDetail-top-location").attr("class", "messageDetail-top-location clearfix back-and-forth");
         } else {
-            $("#directionArrow").html("->");
+            $(".messageDetail-top-location").attr("class", "messageDetail-top-location clearfix one-way");
         }
         app.messageManager.fetchTransactionList(this.message.id, {
             "success": this.loadTransactions,
@@ -73,50 +74,28 @@ var MessageDetailView = Backbone.View.extend({
             buffer[i] = this.transactionTemplate(this.transactions.at(i)._toJSON());
         }
         $("#view_transactions_content").append(buffer.join(""));
-        $("#view_transactions_content>.transaction_content").on("click", function (e) {
+        $("#view_transactions_content>li").on("click", function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             var transaction = that.transactions.get(Utilities.toInt(id));
             that.openTransactionDetail(transaction);
         });
         $("#reservation_count").html(this.transactions.length);
     },
-    calculateTotal: function () {
-        var temp = this.pricelist.length < this.bookInfo.number ? this.pricelist.length : this.bookInfo.number;
-        var trips = 0;
-        if (this.bookInfo.number > 0) {
-            if (this.bookInfo.go) {
-                trips += 1;
-            }
-            if (this.bookInfo.back) {
-                trips += 1;
-            }
-            this.bookInfo.total = trips * this.bookInfo.number * (this.pricelist[temp - 1]);
-        } else {
-            this.bookInfo.total = 0;
-        }
-        $("#price_total").html("总价：" + this.bookInfo.total + "元");
-    },
     loadError: function () {
 
     },
     renderAutoMatch: function (result) {
         var i, buf = [], len = result.length, that = this;
-        len = len < 15 ? len : 15;
+        len = len < 3 ? len : 3;
         for ( i = 0; i < len; i++) {
-            this.quickmatchTemplate[1] = result.at(i).get("messageId").get("imgPath");
-            this.quickmatchTemplate[3] = result.at(i).get("owner").get("imgPath");
-            buf[i] = this.quickmatchTemplate.join("");
+            buf[i] = this.quickmatchTemplate(result.at(i)._toJSON());
         }
-        buf[len] = "<div id='view_matchMore'>查看更多结果</div>"
+        $(".messageDetail-middle-autoMatch-loading").remove();
         $("#view_automatch").append(buf.join(""));
-        $(".view_matchResultEntry").on('click', function (e) {
+        $(".message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
-        });
-        $("#view_matchMore").on("click", function (e) {
-            app.navigate("main/" + that.msr.toString(), true);
-        });
-        $("#view_event_info_right").css("height", 115 + Math.ceil(len / 5) * 50);
+        });        
     },
     bindEvents: function () {
         var that = this;
@@ -124,133 +103,23 @@ var MessageDetailView = Backbone.View.extend({
             $("#view_edit").on("click", function () {
                 app.navigate("message/" + that.messageId + "/edit", true);
             });
-            $("#view_automatchButton").on("click", function () {
-                var msr = new SearchRepresentation ();
-                msr.set("isRoundTrip", that.message.get("isRoundTrip"));
-                msr.set("departure_location", that.message.get("departure_location"));
-                msr.set("arrival_location", that.message.get("arrival_location"));
-                msr.set("departureDate", that.message.get("departure_time"));
-                msr.set("arrivalDate", that.message.get("arrival_time"));
-                msr.set("departureTimeSlot", that.message.get("departure_timeSlot"));
-                msr.set("arrivalTimeSlot", that.message.get("arrival_timeSlot"));
-                if (that.message.get("type") == Constants.messageType.ask) {
-                    msr.set("targetType", Constants.messageType.help);
-                } else {
-                    msr.set("targetType", Constants.messageType.ask);
-                }
-                that.msr = msr;
-                app.messageManager.searchMessage(msr, {
-                    "success": that.renderAutoMatch
-                });
-            });
         }
-
-        $("#view_transactions_button").on("click", function () {
-            var content = $("#view_transactions_content");
-            if (that.showTransaction) {
-                content.slideUp(100);
-            } else {
-
-                content.slideDown(100);
-            }
-            that.showTransaction = !that.showTransaction;
-        });
         var n = this.departureSeats < this.arrivalSeats ? this.departureSeats : this.arrivalSeats;
         if (this.departureSeats === 0 && this.arrivalSeats === 0) {
-            $("#view_book_option").remove();
             $("#view_book").text("座位已满").css("background-color", "#888888").css("width", "100%");
             $("#view_book").off();
         } else if (this.parsedMessage.type === Constants.messageType.help) {
-            if (this.departureSeats > 0) {
-                $("#go").on("click", function (e) {
-                    if (that.bookInfo.go) {
-                        this.classList.remove("direction_selected");
-                    } else {
-                        this.classList.add("direction_selected");
-                    }
-                    that.bookInfo.go = !that.bookInfo.go;
-                    that.calculateTotal();
-                });
-            } else {
-                $("#go").remove();
-            }
-            if (this.arrivalSeats > 0 && this.message.get("isRoundTrip")) {
-
-                $("#chooseSeatNumber").attr("max", n);
-                $("#back").on("click", function (e) {
-                    if (that.bookInfo.back) {
-                        this.classList.remove("direction_selected");
-                    } else {
-                        this.classList.add("direction_selected");
-                    }
-                    that.bookInfo.back = !that.bookInfo.back;
-                    that.calculateTotal();
-                });
-            } else {
-                $("#back, #returnTime, #returnSeats").remove();
-            }
-
-            $("#directionSelection>div").first().addClass("direction_selected");
-            if ($(".direction_selected").attr("id") === "go") {
-                this.bookInfo.go = true;
-            } else {
-                this.bookInfo.back = true;
-            }
-            $("#chooseSeatNumber").val(1);
             $("#view_book").on("click", function (e) {
-                if (that.bookInfo.go && that.bookInfo.back) {
-                    that.newTransaction.set("myDirection", 0);
-                    that.newTransaction.set("arrival_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
-                    that.newTransaction.set("departure_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
-                } else if (that.bookInfo.go) {
-                    that.newTransaction.set("departure_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
-
-                    that.newTransaction.set("myDirection", 1);
-                } else if (that.bookInfo.back) {
-                    that.newTransaction.set("arrival_seatsBooked", Utilities.toInt($("#chooseSeatNumber").val()));
-                    that.newTransaction.set("myDirection", 2);
-                } else {
-                    that.newTransaction.set("myDirection", -1);
-                }
                 that.transactionView = new TransactionDetailView (that.newTransaction, {
                     "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
                     "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
                 });
-            });
-            $("#chooseSeatNumber").on("keypress", function (e) {
-                if (e.keyCode < 48 || e.keyCode > 57) {
-                    e.preventDefault();
-                }
-            });
-            // $("#chooseSeatNumber").on("keyup", function(e) {
-
-            // });
-
-            $("#chooseSeatNumber").on("change", function () {
-                var value = this.value;
-                value = Utilities.toInt(value);
-                if (isNaN(value)) {
-                    $("#chooseSeatNumber").css("background-color", "#cc1111");
-                    return;
-                }
-                $("#chooseSeatNumber").css("background-color", "#ffffff");
-                if (value > that.parsedMessage.departureSeats && that.bookInfo.go) {
-                    $("#chooseSeatNumber").val(that.parsedMessage.departureSeats);
-                    value = that.parsedMessage.departureSeats;
-                }
-                if (value > that.parsedMessage.returnSeats && that.bookInfo.back) {
-                    $("#chooseSeatNumber").val(that.parsedMessage.returnSeats);
-                    value = that.parsedMessage.returnSeats;
-                }
-                that.bookInfo.number = value;
-                that.calculateTotal();
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             $("#view_contact").on('click', function () {
                 app.navigate("letter/" + that.ownerId, true);
             });
         }
-        this.calculateTotal();
     },
     createNewTransaction: function () {
         this.newTransaction.set("providerId", this.ownerId);
@@ -308,13 +177,10 @@ var MessageDetailView = Backbone.View.extend({
         for (var p = 0; p < pricelist.length; p++) {
             if (pricelist[p] !== 0) {
                 var num = Utilities.toInt(p) + 1;
-                appender.push("<div class = 'priceEntry'>" + num + "人：每人" + pricelist[p] + "元</div>");
+                appender.push("<li>"+ num +"人：" + pricelist[p] + "元/人 </li>");
             }
         }
         $("#pricelist").append(appender.join(""));
-        if (appender.length > 12) {
-            $("#view_event_info_right").css("height", 120 + Math.ceil(appender.length / 2) * 20);
-        }
     },
     close: function () {
         if (!this.isClosed) {
