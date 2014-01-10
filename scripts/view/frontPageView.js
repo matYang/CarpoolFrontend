@@ -24,7 +24,7 @@ var FrontPageView = Backbone.View.extend({
 
     getRecents: function () {
         //passing renderRecents as the callback to be executed upon successful fetch
-        $("#frontPage-resultPanel").empty();
+        this.$resultPanel.empty();
         app.messageManager.fetchRecents({
             "success": this.renderRecents,
             "error": this.renderError
@@ -40,43 +40,44 @@ var FrontPageView = Backbone.View.extend({
         while (this.displayIndex < 3 && this.displayIndex < recents.length) {
             buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
-        $("#frontPage-resultPanel").append(buf.join(""));
+        this.$resultPanel.append(buf.join(""));
         this.bindRecentsEvents();
         this.rollInterval = setInterval(this.scroll, 5000);
     },
 
     render: function () {
         $(this.el).append(this.template);
+        this.$resultPanel = $("#frontPage-resultPanel");
         $("#frontPage-exp>dt").hide();
         $("#exp1").show();
         $( '.cycle-slideshow' ).cycle({"slideCount":3});
     },
 
     renderError: function () {
-        $("#frontPage-resultPanel").append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+        this.$resultPanel.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
     },
     bindEvents: function () {
         var self = this;
-        $("#from").on("mouseup", function (e) {
-            self.temp.from = $("#from>input").val(); 
-            $("#from>input").val("");
+        this.$from = $("#from").children("input").on("focus", function (e) {
+            self.temp.from = $(this).val(); 
+            $(this).val("");
         });
-        $("#to").on("mouseup", function (e) {
-            self.temp.to = $("#to>input").val();
-            $("#to>input").val("");
+        this.$to = $("#to").children("input").on("focus", function (e) {
+            self.temp.to = $(this).val();
+            $(this).val("");
         });
-        $("#from>input").on("blur", function(){
-            if (!$("#from>input").val())
-            $("#from>input").val(self.temp.from);
-        })
-        $("#to>input").on("blur", function(){
-            if (!$("#to>input").val())
-            $("#to>input").val(self.temp.to);
-        })
-        $(".date>input").on("mouseup", function (e) {
-            $(".date>input").val("");
+        this.$from.on("blur", function(){
+            if (!$(this).val())
+            $(this).val(self.temp.from);
         });
-        $(".date>input").datepicker({
+        this.$to.on("blur", function(){
+            if (!$(this).val())
+            $(this).val(self.temp.to);
+        });
+        this.$date = $(".date>input").on("focus", function (e) {
+            $(this).val("");
+        });
+        this.$date.datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -87,19 +88,18 @@ var FrontPageView = Backbone.View.extend({
                 d.setMonth(inst.selectedMonth);
                 d.setYear(inst.selectedYear);
                 self.searchRepresentation.set("departureDate", d);
-                $(".date>input").val(Utilities.getDateString(d));
+                this.$date.val(Utilities.getDateString(d));
             }
         });
-        $(".btn_search").on("click", function () {
-            debugger;
-            if ($("#from>input").val() &&  $("#to>input").val() && $(".date>input").val() ) {
-                self.searchRepresentation.get("departureLocation").set("city", $("#from>input").val());
-                self.searchRepresentation.get("arrivalLocation").set("city", $("#to>input").val());
+        $("#btn_search").on("click", function () {
+            if (that.$from.val() && that.$to.val() && that.$date.val() ) {
+                self.searchRepresentation.get("departureLocation").set("city", that.$from.val());
+                self.searchRepresentation.get("arrivalLocation").set("city", that.$to.val());
                 app.storage.setSearchRepresentationCache(self.searchRepresentation);
                 app.navigate("main/" + self.searchRepresentation.toString(), true);
             }
         });
-        $("#frontPage-userButtons>.user").on("click", function(e){
+        this.$users = $("#frontPage-userButtons>.user").on("click", function (e) {
             if (!$(this).hasClass("active")) {
                 $("#frontPage-exp>dt").hide();
                 $(".active").removeClass("active").addClass("f-gray");
@@ -111,8 +111,7 @@ var FrontPageView = Backbone.View.extend({
 
     bindRecentsEvents: function () {
         var self = this;
-        $(".message_simple").off();
-        $(".message_simple").on('click', function(e){
+        this.$messages = $("#frontPage-resultPanel.message_simple").off().on('click', function (e) {
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
@@ -130,11 +129,11 @@ var FrontPageView = Backbone.View.extend({
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), that = this;
-        $("#frontPage-resultPanel").prepend(buf);
-        $("#frontPage-resultPanel>div").first().css("margin-top",-100);
-        $("#frontPage-resultPanel>div").first().animate({"margin-top":0}, 600);
-        if ($("#frontPage-resultPanel>div").length > 4) {
-            $("#frontPage-resultPanel>div").last().remove();
+        var $resp = this.$resultPanel.prepend(buf);
+        var $respdiv = $resp.children("div").first().css("margin-top",-100);
+        $respdiv.first().animate({"margin-top":0}, 600);
+        if ($respdiv.length > 4) {
+            $respdiv.last().remove();
         }
         if (this.displayIndex === this.displayMessages.length) {
             this.displayIndex = 0;
@@ -149,14 +148,17 @@ var FrontPageView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            $(".message_simple").off();
+	    if (this.$messages) {
+                this.$messages.off();
+            }
             $(".btn_search").off();
-            $("#from").off();
-            $("#to").off();
-            $("#frontPage-userButtons>.user").off();
+            this.$from.off();
+            this.$to.off();
+            this.$users.off();
+            this.$date.off();
             this.unbind();
-            $(".date>input").off();
 
+            $( '.cycle-slideshow' ).cycle('destroy');
             $(this.el).empty();
             this.isClosed = true;
             clearInterval(this.rollInterval);

@@ -40,8 +40,7 @@ var PersonalView = Backbone.View.extend({
             }
             //if user has watched this user
             if (this.watched) {
-                $("#profilePage_utilityTab").html(" + 已关注");
-                $("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
+                $("#profilePage_utilityTab").html(" + 已关注").append("<div id = 'deWatch'>取消关注</div>");
                 this.bindDeWatchEvent();
             } else {
                 $("#profilePage_utilityTab").html(" + 关注");
@@ -175,16 +174,13 @@ var PersonalView = Backbone.View.extend({
     },
 
     watchSuccess: function () {
-        $("#profilePage_utilityTab").html("已关注");
-        $("#profilePage_utilityTab").append("<div id = 'deWatch'>取消关注</div>");
-        $('#profilePage_utilityTab').off();
+        $("#profilePage_utilityTab").html("已关注").append("<div id = 'deWatch'>取消关注</div>").off();
         this.bindDeWatchEvent();
     },
     watchError: function () {
     },
     deWatchSuccess: function () {
-        $("#deWatch").off();
-        $("#deWatch").remove();
+        $("#deWatch").off().remove();
         this.bindWatchEvent();
     },
     deWatchError: function () {

@@ -21,8 +21,6 @@ var MainPageView = Backbone.View.extend({
         this.template = _.template(tpl.get('main'));
         this.temp = {};
         this.searchRepresentation = new SearchRepresentation ();
-        // this.searchRepresentation.set("departureLocation", new UserLocation());
-        // this.searchRepresentation.set("arrivalLocation", new UserLocation());
         this.currentPage = 0;
         if (params) {
             this.searchRepresentation.castFromString(params.searchKey);
@@ -56,11 +54,13 @@ var MainPageView = Backbone.View.extend({
             originLocation: this.searchRepresentation.get("departureLocation"),
             destLocation: this.searchRepresentation.get("arrivalLocation"),
             clickable: false
-        }
+        };
         //injecting the template
         $(this.el).append(this.template);
+	this.$locationFrom = $("#searchLocationInput_from");
+	this.$locationTo = $("#searchLocationInput_to");
         this.map = app.storage.getViewCache("MapView", mapParams);
-        $("#searchDateInput_depart").datepicker({
+        this.$dateDepart = $("#searchDateInput_depart").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -71,11 +71,11 @@ var MainPageView = Backbone.View.extend({
                 d.setMonth(inst.selectedMonth);
                 d.setYear(inst.selectedYear);
                 me.searchRepresentation.set("departureDate", d);
-                $("#searchDateInput_depart").val(Utilities.getDateString(me.searchRepresentation.get("departureDate")));
+                $(this).val(Utilities.getDateString(me.searchRepresentation.get("departureDate")));
                 me.submitSearch();
             }
         });
-        $("#searchDateInput_return").datepicker({
+        this.$dateReturn = $("#searchDateInput_return").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -86,36 +86,35 @@ var MainPageView = Backbone.View.extend({
                 d.setMonth(inst.selectedMonth);
                 d.setYear(inst.selectedYear);
                 me.searchRepresentation.set("arrivalDate", d);
-                $("#searchDateInput_return").val(Utilities.getDateString(me.searchRepresentation.get("arrivalDate")));
+                $(this).val(Utilities.getDateString(me.searchRepresentation.get("arrivalDate")));
                 me.submitSearch();
             }
         });
         this.updateLocation('searchLocationInput_from');
         this.updateLocation('searchLocationInput_to');
-
-        $("#searchDateInput_depart").val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
+        this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         $("#searchTypeContainer>.active").removeClass("active");
+	this.$spans = $("#searchTypeContainer>span");
         if (!me.filter.isRoundTrip) {
-            $("#searchDateInput_return").parent().addClass("date-return-disabled");
-            $("#searchDateInput_return").prop("disabled", true);
-            $("#searchTypeContainer>span").first().addClass("active");
+            this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
+            this.$spans.first().addClass("active");
         } else {
-            $("#searchDateInput_return").val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
-            $("#searchTypeContainer>span").second().addClass("active");
+            this.$dateReturn.val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
+            this.$spans.second().addClass("active");
         }
-        $("#searchTypeContainer>span").on("click", function(e){
+        this.$spans.on("click", function(e){
             $("#searchTypeContainer>.active").removeClass("active");
-            $(this).addClass("active");
-            if ($(this).attr("data-id") == "roundtrip") {
+            $(e.target).addClass("active");
+            if ($(e.target).attr("data-id") == "roundtrip") {
                 me.filter.isRoundTrip = true;
-                $("#searchDateInput_return").prop("disabled", false);
-                $("#searchDateInput_return").parent().removeClass("date-return-disabled");
+                this.$dateReturn.prop("disabled", false);
+                this.$dateReturn.parent().removeClass("date-return-disabled");
                 me.submitSearch();
             } else {
                 me.filter.isRoundTrip = false;
-                $("#searchDateInput_return").prop("disabled", true);
-                $("#searchDateInput_return").parent().addClass("date-return-disabled");
+                this.$dateReturn.prop("disabled", true);
+                this.$dateReturn.parent().addClass("date-return-disabled");
                 me.submitSearch();
             }
         })
@@ -126,8 +125,8 @@ var MainPageView = Backbone.View.extend({
         if (this.searchResultView) {
             this.searchResultView.close();
         }
-        $("#originText").html($("#searchLocationInput_from").val());
-        $("#destText").html($("#searchLocationInput_to").val());
+        $("#originText").html(this.$locationFrom.val());
+        $("#destText").html(this.$locationTo.val());
         $("#numberText").html(searchResults.length);
         this.allMessages = searchResults;
         this.filteredMessages = this.filterMessage(this.allMessages);
@@ -139,7 +138,7 @@ var MainPageView = Backbone.View.extend({
     },
 
     onClickTime: function (e, parentId) {
-        var me = $('#' + e.target.getAttribute('id'));
+        var me = $('#' + e.id);
         $("#" + parentId + ">.selected").removeClass('selected').addClass('notSelected');
         me.removeClass('notSelected').addClass('selected');
         var time = e.target.getAttribute("data-id");
@@ -148,7 +147,7 @@ var MainPageView = Backbone.View.extend({
 
     onClickType: function (e) {
 
-        var me = $('#' + e.target.getAttribute('id'));
+        var me = $('#' + e.id);
         $("#typeSelections>.active").removeClass('active');
         $(e.target).addClass('active');
         if (e.target.getAttribute("data-id") === "passenger"){
@@ -162,9 +161,9 @@ var MainPageView = Backbone.View.extend({
     },
 
     submitSearch: function () {
-        if (!($("#searchDateInput_depart").val() && $("#searchLocationInput_from").val() && $("#searchLocationInput_to").val())) {
+        if (!(this.$dateDepart.val() && this.$locationFrom.val() && this.$locationTo.val())) {
             return;
-        } else if (!$("#searchDateInput_return").val() && this.filter.isRoundTrip) {
+        } else if (!this.$daterReturn.val() && this.filter.isRoundTrip) {
             return;
         }
         app.navigate("main/" + this.searchRepresentation.toString());
@@ -231,13 +230,13 @@ var MainPageView = Backbone.View.extend({
     updateLocation: function (id) {
         // var custTemp;
         // if (id === "searchLocationInput_from") {
-        //     $("#searchLocationInput_from").val(this.searchRepresentation.get("departureLocation").get("city"));
+        //     this.$locationFrom.val(this.searchRepresentation.get("departureLocation").get("city"));
         //     cust = this.searchRepresentation.get("departureLocation").get("point");
         //     if (cust !== "undetermined") {
         //         $("#customizeLocationInput_from").val(cust);
         //     }
         // } else {
-        //     $("#searchLocationInput_to").val(this.searchRepresentation.get("arrivalLocation").get("city"));
+        //     this.$locationTo.val(this.searchRepresentation.get("arrivalLocation").get("city"));
         //     cust = this.searchRepresentation.get("arrivalLocation").get("point");
         //     if (cust !== "undetermined") {
         //         $("#customizeLocationInput_to").val(cust);
@@ -247,26 +246,26 @@ var MainPageView = Backbone.View.extend({
 
     bindEvents: function () {
         var that = this;
+        debugger;
+        this.$locationFrom.on('focus', function (e) {
+            debugger;
+            that.temp.from = $(this).val();
+            $(this).val("");
+        });
 
-        $("#searchLocationInput_from").on('click', function (e) {
-            that.temp.from = $("#searchLocationInput_from").val();
-            $("#searchLocationInput_from").val("");
+        this.$locationTo.on('focus', function (e) {
+            that.temp.to = $(this).val();
+            $(this).val("");
+        });
+        this.$locationFrom.on('blur', function (e) {
+            if (!$(this).val())
+                $(this).val(that.temp.from);
             // that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
         });
 
-        $("#searchLocationInput_to").on('click', function (e) {
-            that.temp.to = $("#searchLocationInput_to").val();
-            $("#searchLocationInput_to").val("");
-        });
-        $("#searchLocationInput_from").on('blur', function (e) {
-            if (!$("#searchLocationInput_from").val())
-                $("#searchLocationInput_from").val(that.temp.from);
-            // that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
-        });
-
-        $("#searchLocationInput_to").on('blur', function (e) {
-            if (!$("#searchLocationInput_to").val())
-                $("#searchLocationInput_to").val(that.temp.to);
+        this.$locationTo.on('blur', function (e) {
+            if (!$(this).val())
+                $(this).val(that.temp.to);
         });
 
         // $("#timeSelections1>.button").on('click', function (e) {
