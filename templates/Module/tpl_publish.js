@@ -1,170 +1,169 @@
 <script type="text/template" id="tpl_Publish_base">
-	<div id = 'publish_progress'></div>
-	<div id = 'publish_requirement'></div>
-	<div id = 'publish_map'></div>
+        <div id = "publish_progress" class="publish publish_step_1">
+            <!-- 发布页进度条-->
+            <div class="publish_progress">
+                <ul>
+                     <li class="where">什么地方</li>
+                     <li class="when">什么时候</li>
+                     <li class="else">还有啥事</li>
+                 </ul>
+            </div>
+
+            <!-- 发布页的主要内容-->
+            <div class="publish_body clearfix">
+                <div id = 'publish_requirement' class="publish_info">
+                </div>
+                
+                <!-- 发布页中的地图-->
+                <div id = 'publish_map' class="publish_map">
+                </div>
+                
+            </div>
+        </div>
 </script>
 
 
 <script type="text/template" id="tpl_Publish_singleSlotAsk">
-	<div id='publish_time_<%= id %>' class='publish_time_box'>
-	  <div id='publish_time_header_<%= id %>' class='publish_time_header'>行程<%= id %></div>
-	  <div class='publish_time_info'>
-	    <div class='publish_time'>
-	      <div class='publish_label'>出发时间</div>
-	      <input type='text' name='publish_departDate_<%= id %>' class='input_date'/>
-	      <select name='depart_time_<%= id %>'>
-	        <option value="0">随意</option>
-	        <option value="1">上午7-12点</option>
-	        <option value="2">下午1-5点</option>
-	        <option value="3">晚上6-次日凌晨</option>
-	        <option value="4">凌晨1点</option>
-	        <option value="5">凌晨2点</option>
-	        <option value="6">凌晨3点</option>
-	        <option value="7">凌晨4点</option>
-	        <option value="8">早上5点</option>
-	        <option value="9">早上6点</option>
-	        <option value="10">早上7点</option>
-	        <option value="11">早上8点</option>
-	        <option value="12">早上9点</option>
-	        <option value="13">早上10点</option>
-	        <option value="14">早上11点</option>
-	        <option value="15">中午12点</option>
-	        <option value="16">下午1点</option>
-	        <option value="17">下午2点</option>
-	        <option value="18">下午3点</option>
-	        <option value="19">下午4点</option>
-	        <option value="20">傍晚5点</option>
-	        <option value="21">傍晚6点</option>
-	        <option value="22">晚上7点</option>
-	        <option value="23">晚上8点</option>
-	        <option value="24">晚上9点</option>
-	        <option value="25">晚上10点</option>
-	        <option value="26">晚上11点</option>
-	        <option value="27">晚上12点</option>
-	      </select>
-	    </div>
-	    <div class='publish_time'>
-	      <div class='publish_label'>返回时间</div>
-	      <input type='text' name='publish_returnDate_<%= id %>' class='input_date'/>
-	      <select name='return_time_<%= id %>'>
-	        <option value="0">随意</option>
-	        <option value="1">上午7-12点</option>
-	        <option value="2">下午1-5点</option>
-	        <option value="3">晚上6-次日凌晨</option>
-	        <option value="4">凌晨1点</option>
-	        <option value="5">凌晨2点</option>
-	        <option value="6">凌晨3点</option>
-	        <option value="7">凌晨4点</option>
-	        <option value="8">早上5点</option>
-	        <option value="9">早上6点</option>
-	        <option value="10">早上7点</option>
-	        <option value="11">早上8点</option>
-	        <option value="12">早上9点</option>
-	        <option value="13">早上10点</option>
-	        <option value="14">早上11点</option>
-	        <option value="15">中午12点</option>
-	        <option value="16">下午1点</option>
-	        <option value="17">下午2点</option>
-	        <option value="18">下午3点</option>
-	        <option value="19">下午4点</option>
-	        <option value="20">傍晚5点</option>
-	        <option value="21">傍晚6点</option>
-	        <option value="22">晚上7点</option>
-	        <option value="23">晚上8点</option>
-	        <option value="24">晚上9点</option>
-	        <option value="25">晚上10点</option>
-	        <option value="26">晚上11点</option>
-	        <option value="27">晚上12点</option>
-	      </select>
-	      <input type='checkbox' name='publish_round_<%= id %>' class='input_checkbox' value='round' checked='true'/>
-	    </div>
-	    <div id='publish_delete_<%= id %>' class='publish_delete button'>
-	      删除
-	    </div>
-	  </div>
-	</div>	
+    <div id='publish_time_<%= id %>' class="publish_time_slots_entry">
+        <dl class="clearfix">
+            <dt>出发时间</dt>
+            <dd>
+                <div class="date"><label></label><input type="text" class="text date fleft" name='publish_departDate_<%= id %>'/></div>
+                <div id='depart_time_<%= id %>' class="select_item fright">
+                    <input type="text" class="text" value="请选择时间"/>
+                    <span></span> 
+                    <ul class='publish_time_menu' style="display:none">
+                        <li value="0">随意</li>                    
+                        <li value="1">上午</li>
+                        <li value="2">中午</li>
+                        <li value="3">下午</li>
+                    </ul>                                      
+                </div>
+            </dd>
+        </dl>
+        <dl class="clearfix">
+            <dt><div name='publish_round_<%= id %>' class="checkbox checked"></div>返程时间</dt>
+            <dd>
+                <div class="date"><label></label><input type="text" class="text date fleft" name='publish_returnDate_<%= id %>'/></div>
+                <div id='return_time_<%= id %>' class="select_item fright">
+                    <input type="text" class="text" value="请选择时间"/>
+                    <span></span> 
+                    <ul class='publish_time_menu' style="display:none">
+                        <li value="0">随意</li>
+                        <li value="1">上午</li>
+                        <li value="2">中午</li>
+                        <li value="3">下午</li>
+                    </ul>                                      
+                 </div>
+            </dd>
+        </dl>
+        <div id='publish_delete_<%= id %>' class="close publish_delete">关闭</div>
+    </div>
 </script>
 
 
 <script type="text/template" id="tpl_Publish_step1">
-	<form id='publish_info'>
-		<div id='publish_type'>
-			<div class = 'publish_label'>我要</div>
-			<div class = 'selectBox selectBox_selected' id = 'publish_1' >
-				<div id='publish_help_img'></div>
-				<div id='publish_help_text' class='button'>
-					开车
-				</div>
-			</div>
-		<div class = 'selectBox' id = 'publish_0' >
-			<div id='publish_ask_img'></div>
-			<div id='publish_ask_text'  class='button'>
-				找车
-			</div>
-		</div>
-		<!-- I suggest that we highlight the border instead of using radio button -->
-		</div>
-
-		<div id='publish_origin'>
-			<div class='publish_label'>出发地</div>
-			<input type='text' id='publish_originInput'/>
-		</div>
-		<div id='publish_dest'>
-			<div class='publish_label'>目的地</div>
-			<input type='text' id='publish_destInput'/>
-			<div id='publish_tip'>yoke</div>
-		</div>	      
-		<div id='publish_nextStep' class='button'>下一步</div>
-	</form>
+    <div class="publish_info">
+        <!-- 发布信息类型：司机/乘客-->
+        <dl class="publish_type clearfix">
+             <dt>我<b></b>是</dt>
+             <dd id='publish_type'>
+                 <div id = 'publish_1' class="fleft active"><span class="driver">司机</span></div>
+                 <div id = 'publish_0' class="fright"><span class="passenger">乘客</span></div>
+             </dd>
+        </dl>
+        <!-- 出发地 -->
+        <dl id='publish_origin' class="publish_origin clearfix">
+             <dt>出发地</dt>
+             <dd><input id="publish_originInput" type="text" class="fleft text" value="请输入地区"/><input id = 'publish_originAddress' type="text" class="fright text" value="请输入具体地址"/></dd>
+        </dl>
+        <!-- 目的地 -->
+        <dl id='publish_dest' class="publish_dest clearfix">
+             <dt>目的地</dt>
+             <dd><input id="publish_destInput" type="text" class="fleft text"value="请输入地区"/><input id = 'publish_destAddress' type="text" class="fright text"value="请输入具体地址"/></dd>
+        </dl>
+        <div class="publish_btn_container clearfix">
+             <input id='publish_nextStep' type="button" class="btn_B fright" value="下一步"/>
+        </div>
+    </div>
 </script>
 
 
 <script type="text/template" id="tpl_Publish_step2">
-	<form id='publish_info'>
-		<div id='publish_time_container'>
-	  		<div id='publish_time_slots'>
-	  		</div>
-	  		<div id='publish_time_add' class='button'>+ 添加一组点名</div>
-		</div>
-	</form>
-	<div id = 'publish_back' class='button'>
-	  返回修改
-	</div>
-	<div id = 'publish_nextStep' class='button'>
-	  下一步
-	</div>	
+    <div class="publish_info">
+        <!-- 拼车时间 -->
+        <div class="publish_time_container">
+            <!-- 每组时间的容器 -->
+            <div id='publish_time_slots' class="publish_time_slots">
+            </div>
+            <!-- ”+再添加一组时间“ 按钮 -->
+            <div id='publish_time_add' class="publish_time_add">
+                <input type="button" class="btn_w_long" value="+再添加一组时间"/>
+            </div>
+        </div>
+        <div class="publish_btn_container clearfix">
+        	<input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
+            <input id = 'publish_nextStep' type="button" class="btn_B fright" value="下一步"/>
+        </div>
+    </div>
 </script>
 
 
 <script type="text/template" id="tpl_Publish_step3">
-	<div class = 'publish_header'>其他信息</div>
-	<div id = 'publish_description'>
-	<textarea id='publish_description_input'></textarea>
-	</div>
 
-	<div id = 'publish_seat_container'>
-	<div class = 'publish_label' style = "margin-top:5px;">座位</div>
-	<input id = 'seats' value = '1' type = 'text' pattern="[0-9]*"/>
-	</div>
-	<div id = 'publish_pricelist_container'>
-	<div id = 'conditionalPriceSwitch' class='button'>按人数收费</div>
-	<div class = 'publish_header'>价格表</div>
-	<div id = 'publish_singlePrice'>
-	  <input id = 'seats_single' type = 'text' class='seat_price' pattern="[0-9]*" />/1人
-	 </div>
-	<div id = 'publish_priceList'>
-	  <div class = 'publish_priceEntry'>
-	      人数1  每人<input id = 'seats_1' type = 'text' class='seat_price' pattern='[0-9]*' />元
-	  </div>
-	  <div id = 'priceList_add'></div>
-	  <div id = 'priceList_minus'></div>
-	</div>
-
-	</div>
-	<div id = 'publish_back' class='button'>
-	  返回修改
-	</div>
-	<div id = 'publish_finish' class='button'>
-	  发布
-	</div>	
+    <div class="publish_info">
+        <!-- “座位“-->
+        <dl class="publish_seat clearfix">
+            <dt>需<b></b>要</dt>
+            <dd>
+                <div class="enter_data">
+                    <input id = 'seats' type="text" class="text"/>
+                    <div>
+                        <span class="add"></span>
+                        <span class="plus_disabled"></span>
+                    </div>
+                </div>
+                <label>个座位</label>
+            </dd>
+        </dl>
+        <dl class="publish_price_container clearfix">                
+            <!-- “按人数收费“的复选框以及注意事项放这里-->
+            
+            <dt>价<b></b>格</dt>
+            <dd class="publish_price_condition">
+                    <!-- 复选框放这里-->
+                    <div id = 'conditionalPriceSwitch' class="publish_price_isConditional checkbox fleft">
+                        按人数收费
+                    </div>
+                    <!-- 注意事项放这里-->
+                    <div class="publish_price_notice">注意：这里的人数指的是一起预订时的人数，而不是最终发车时的人数</div>
+             </dd>
+             
+            <dd id = 'publish_singlePrice' class='publish_price_uniformPrice'>
+                <input id = 'seats_single' type="text" class="text"/> <label>元/人</label>
+            </dd>
+            <!-- 按人数收费的输入放这里 -->
+            <dd id = 'publish_pricelist_container' class="publish_price_conditionalPrice">
+                <!-- 价格列表 -->
+                <div id = 'publish_priceList' class="publish_price_list">
+                    <div class="publish_price_list_entry">
+                        <label>人数：1</label><input id = 'seats_1' type="text" value=""/><label>元/人</label>
+                        <div id="publish_entry_close" class="close">关闭</div>
+                    </div>
+                </div>
+                <div class="publish_price_add"><input id="publish_price_add" type="button" class="btn_w_long" value="+再添加一组价格"/></div>
+            </dd>
+        </dl>
+        <!-- ”其他“, 备注-->
+        <dl class="publish_note clearfix">
+            <dt>备<b></b>注</dt>
+            <dd>
+                <textarea id='publish_description_input'>点击这里进行补充说明</textarea>
+            </dd>
+        </dl>
+        <div class="publish_btn_container clearfix">
+        	<input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
+            <input id = 'publish_finish' type="button" class="btn_B fright" value="发布"/>
+        </div>
+    </div>
 </script>

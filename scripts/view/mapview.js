@@ -25,10 +25,10 @@ var MapView = Backbone.View.extend({
         $("#"+this.div).after($("#mapcache").attr("id","newMap"));
         $("#mapcache").remove();
         $("#"+this.div).remove();
-        $("#newMap").attr("id", this.div);
         if (this.class) {
             $("#newMap").attr("class", this.class);
         }
+        $("#newMap").attr("id", this.div);
         this.mapInitialize();
     },
     mapInitialize: function () {

@@ -52,6 +52,7 @@ var MainPageView = Backbone.View.extend({
     render: function () {
         var me = this, mapParams = {
             div: "mainMap",
+            class: "mainPage-map",
             originLocation: this.searchRepresentation.get("departureLocation"),
             destLocation: this.searchRepresentation.get("arrivalLocation"),
             clickable: false
