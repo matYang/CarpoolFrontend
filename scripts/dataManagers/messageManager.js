@@ -29,7 +29,7 @@
 		var message = new Message();
 		if (testMockObj.testMode){
 			// callback.error();
-			message = testMockObj.sampleMessageA;
+			message = testMockObj.sampleMessageB;
 			if(callback && callback.transaction){
 				callback.success(message, callback.transaction);
 			} else if (callback) {

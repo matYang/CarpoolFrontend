@@ -193,6 +193,12 @@
 	margin-right:15px;
 	text-align:center;
 }
+.message_reservation .user img {
+	width:100px;
+	height:100px;
+	size: 100%;
+}
+
 .message_reservation .messageDetail-upper-info {
 	width:690px;
 }

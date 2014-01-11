@@ -132,27 +132,27 @@ var Message = Backbone.Model.extend({
         if (this.get('arrival_location') instanceof UserLocation) {
             json.arrival_location = this.get('arrival_location').toUiString();
         }
-        if (this.departure_timeSlot === Constants.DayTimeSlot.all) {
+        if (this.get("departure_timeSlot") === Constants.DayTimeSlot.all) {
             json.departure_timeSlot = "全天";
-        } else if (this.departure_timeSlot == Constants.DayTimeSlot.morning) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.morning) {
             json.departure_timeSlot = "早上";
-        } else if (this.departure_timeSlot == Constants.DayTimeSlot.afternoon) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.afternoon) {
             json.departure_timeSlot = "下午";
-        } else if (this.departure_timeSlot == Constants.DayTimeSlot.night) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.night) {
             json.departure_timeSlot = "晚上";
         } else {
-            json.departure_timeSlot += "点";
+            json.departure_timeSlot = (this.get("departure_timeSlot") - 3) + "点";
         }
-        if (this.arrival_timeSlot === 0) {
+        if (this.get("arrival_timeSlot") === Constants.DayTimeSlot.all) {
             json.arrival_timeSlot = "全天";
-        } else if (this.arrival_timeSlot == 1) {
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
             json.arrival_timeSlot = "早上";
-        } else if (this.arrival_timeSlot == 2) {
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.afternoon) {
             json.arrival_timeSlot = "下午";
-        } else if (this.arrival_timeSlot == 3) {
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
             json.arrival_timeSlot = "晚上";
-        } else if (this.arrival_timeSlot) {
-            json.arrival_timeSlot = (this.arrival_timeSlot - 3) + "点";
+        } else if (this.get("arrival_timeSlot")) {
+            json.arrival_timeSlot = (this.get("arrival_timeSlot") - 3) + "点";
         }
 
         if ( typeof this.get('owner')._toJSON === 'function') {

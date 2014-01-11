@@ -118,32 +118,32 @@ var Transaction = Backbone.Model.extend({
         var json = this.toJSON();
         json.departure_time = Utilities.getDateString(this.get('departure_time'));
         //do use Constants.DayTimeSlot, otherwise it'll be difficult to manage
-        if (json.departure_timeSlot === Constants.DayTimeSlot.all) {
+        if (this.get("departure_timeSlot") === Constants.DayTimeSlot.all) {
             json.departure_timeSlot = "全天";
-        } else if (json.departure_timeSlot == Constants.DayTimeSlot.morning) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.morning) {
             json.departure_timeSlot = "早上";
-        } else if (json.departure_timeSlot == Constants.DayTimeSlot.afternoon) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.afternoon) {
             json.departure_timeSlot = "下午";
-        } else if (json.departure_timeSlot == Constants.DayTimeSlot.night) {
+        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.night) {
             json.departure_timeSlot = "晚上";
         } else {
-            json.departure_timeSlot += (json.departure_timeSlot - 3) + "点";
+            json.departure_timeSlot = (this.get("departure_timeSlot") - 3) + "点";
+        }
+        if (this.get("arrival_timeSlot") === Constants.DayTimeSlot.all) {
+            json.arrival_timeSlot = "全天";
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
+            json.arrival_timeSlot = "早上";
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.afternoon) {
+            json.arrival_timeSlot = "下午";
+        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
+            json.arrival_timeSlot = "晚上";
+        } else if (this.get("arrival_timeSlot")) {
+            json.arrival_timeSlot = (this.get("arrival_timeSlot") - 3) + "点";
         }
 
         json.arrival_location = this.get('arrival_location').toUiString();
         if (json.arrival_time) {
             json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
-        }
-        if (json.arrival_timeSlot === 0) {
-            json.arrival_timeSlot = "全天";
-        } else if (json.arrival_timeSlot == 1) {
-            json.arrival_timeSlot = "早上";
-        } else if (json.arrival_timeSlot == 2) {
-            json.arrival_timeSlot = "下午";
-        } else if (json.arrival_timeSlot == 3) {
-            json.arrival_timeSlot = "晚上";
-        } else if (json.arrival_timeSlot) {
-            json.arrival_timeSlot = (json.arrival_timeSlot - 3) + "点";
         }
         json.creationTime = Utilities.getDateString(this.get('creationTime'));
 
