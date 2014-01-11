@@ -54,6 +54,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     renderError: function () {
+        this.$resultPanel = this.$resultPanel || $("#frontPage-resultPanel");
         this.$resultPanel.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
     },
     bindEvents: function () {
@@ -92,9 +93,9 @@ var FrontPageView = Backbone.View.extend({
             }
         });
         $("#btn_search").on("click", function () {
-            if (that.$from.val() && that.$to.val() && that.$date.val() ) {
-                self.searchRepresentation.get("departureLocation").set("city", that.$from.val());
-                self.searchRepresentation.get("arrivalLocation").set("city", that.$to.val());
+            if (self.$from.val() && self.$to.val() && self.$date.val() ) {
+                self.searchRepresentation.get("departureLocation").set("city", self.$from.val());
+                self.searchRepresentation.get("arrivalLocation").set("city", self.$to.val());
                 app.storage.setSearchRepresentationCache(self.searchRepresentation);
                 app.navigate("main/" + self.searchRepresentation.toString(), true);
             }
@@ -128,7 +129,7 @@ var FrontPageView = Backbone.View.extend({
         Info.displayNotice("请先登录。若是已经登陆，请刷新页面。");
     },
     scroll: function () {
-        var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), that = this;
+        var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
         var $resp = this.$resultPanel.prepend(buf);
         var $respdiv = $resp.children("div").first().css("margin-top",-100);
         $respdiv.first().animate({"margin-top":0}, 600);
@@ -139,7 +140,7 @@ var FrontPageView = Backbone.View.extend({
             this.displayIndex = 0;
             app.messageManager.fetchRecents({
                 "success": function(recents){
-                    that.displayMessages = recents;
+                    self.displayMessages = recents;
                 },
                 "error": this.renderError
             });

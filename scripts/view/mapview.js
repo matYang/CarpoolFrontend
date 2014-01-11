@@ -58,10 +58,10 @@ var MapView = Backbone.View.extend({
                 that.getDirection(that.origin, that.dest);
             }
         });
-        debugger;
         if (this.clickable) {
             this.bindClickEvent();
         }
+        google.maps.event.trigger(this.map, 'resize');
     },
     bindClickEvent: function () {
         var that = this,
