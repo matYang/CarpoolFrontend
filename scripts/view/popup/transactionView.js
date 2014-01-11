@@ -244,8 +244,9 @@ var TransactionDetailView = Backbone.View.extend({
             $("#startButton").off();
             $("#transaction_go, #transaction_back").off();
             $("#transaction_number").off();
-            this.domContainer.empty();
-            this.domContainer.hide();
+            this.$domContainer.empty();
+            this.$domContainer.hide();
+            this.$mask.hide();
             this.isClosed = true;
         }
     }
