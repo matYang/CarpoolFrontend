@@ -52,7 +52,7 @@ ul {
 	margin-top:10px;
 }
 .blank1 {
-	margin-top:15px;
+    margin-top:15px;
 }
 .F_red {
     color:#ff0000;
@@ -63,20 +63,19 @@ ul {
 .F_green {
     color:#3aae36;
 }
-
-a, a:visited {
-	color:#909090;
-	text-decoration: none;
-}
 .F_16 {
     font-size:16px;
 }
 .F_18 {
     font-size:18px;
 }
+a, a:visited {
+    color:#909090;
+    text-decoration: none;
+}
 a:hover {
-	color:#362e2b;
-	text-decoration:underline;
+    color:#362e2b;
+    text-decoration:underline;
 }
 a.F_blue, a.F_blue:visited {
     color:#57b7e1;
@@ -89,28 +88,175 @@ body {
 	src:url(fonts/MSYH.TTF);
     font-size:14px;
 }
-#popup {
-	z-index: 2000;
-	position:absolute;
-  display: none;
-  top:0;
-  bottom:0;
-  float:left;
-  width:100%;
-}
-#overlay{
-	position:absolute;
-  display: none;
-  top:0;
-  bottom:0;
-  float:left;
-  width:100%;
-  z-index: 1999;
-  background-color: rgba(0,0,0,0.7);
-  zoom: 1;
-}
+
 input.text {
     font-family:'微软雅黑';
 }
 
-font-size:14px;
+/*按钮*/
+.btn_b {
+    width:120px;
+    height:40px;
+    text-align:center;
+    line-height:40px;
+    color:#fff;
+    font-family:微软雅黑;
+    font-size:14px;
+    background:url(../images/btns.png) no-repeat 0 -346px;
+    cursor:pointer;
+    border:none;
+}
+.btn_b:hover {
+    background-position:-124px -346px;
+}
+.btn_w {
+    width:120px;
+    height:40px;
+    text-align:center;
+    line-height:40px;
+    color:#46b5e5;
+    font-family:微软雅黑;
+    font-size:14px;
+    background:url(../images/btns.png) no-repeat 0 -389px;
+    cursor:pointer;
+    border:none;
+}
+.btn_O_long {
+    width:275px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat 0 -138px;
+    border:none;
+    font-size:18px;
+    color:#fff;
+    font-family:微软雅黑;
+    cursor:pointer;
+}
+.btn_O_long:hover {
+    background-position:-277px -138px;
+}
+.btn_B_long {
+    width:275px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat 0 -188px;
+    border:none;
+    font-size:18px;
+    color:#fff;
+    font-family:微软雅黑;
+    cursor:pointer;
+}
+.btn_B_long:hover {
+    background-position:-277px -188px;
+}
+.btn_R_long {
+    width:275px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat 0 -238px;
+    border:none;
+    font-size:18px;
+    color:#fff;
+    font-family:微软雅黑;
+    cursor:pointer;
+}
+.btn_R_long:hover {
+    background-position:-277px -238px;
+}
+.btn_O {
+    width:177px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat 0 -288px;
+    cursor:pointer;
+    border:none;
+    font-family:微软雅黑;
+    font-size:18px;
+    color:#fff;
+}
+.btn_O:hover {
+    background-position:-184px -288px;
+}
+.btn_B {
+    width:177px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    font-family:微软雅黑;
+    font-size:18px;
+    color:#fff;
+}
+.btn_B:hover {
+    background-position:-184px 0;
+}
+.btn_W {
+    width:177px;
+    height:50px;
+    background:url(../images/btns.png) no-repeat 0 -50px;
+    cursor:pointer;
+    border:none;
+    font-family:微软雅黑;
+    font-size:18px;
+    color:#46b5e5;
+}
+.btn_w_long {
+    width:210px;
+    height:38px;
+    background:url(../images/btns.png) no-repeat 0 -100px;
+    cursor:pointer;
+    border:none;
+    font-family:微软雅黑;
+    font-size:18px;
+    color:#46b5e5;
+}
+
+/*弹出层框架*/
+.mask1 {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 2998;
+    opacity: 0.5;
+    background: #000;
+}
+.pop {
+    position: absolute;
+    top: 17%;
+    left: 50%;
+    z-index: 2999;
+    border:10px solid rgba(33, 182, 225, 0.8);
+    border:10px solid #000\9;
+}
+.pop_title {
+    height:38px;
+    line-height:38px;
+    background:red;
+    padding:0 20px;
+    color:#fff;
+}
+.pop_title h3 {
+    float:left;
+}
+.pop_title .close {
+    float:right;
+}
+.pop_content {
+    padding:20px 20px 30px;
+    background:#fff;
+}
+.pop_close {
+    position:absolute;
+    top:10px;
+    right:10px;
+    text-indent:-32768px;
+    width:25px;
+    height:25px;
+    background:url(../images/close.png) no-repeat;
+    cursor:pointer;
+}
+.pop_close:hover {
+    background-position:0 -25px;
+}
+.line {
+    border-bottom:1px dotted #ccc;
+    padding-bottom:20px;
+}

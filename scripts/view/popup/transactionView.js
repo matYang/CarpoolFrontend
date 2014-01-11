@@ -32,7 +32,8 @@ var TransactionDetailView = Backbone.View.extend({
         this.editable = transaction.get("transactionId") === -1;
         this.userId = this.user.get("userId");
         this.template = _.template(tpl.get('transactionDetail'));
-        this.domContainer = $('#popup');
+        this.$domContainer = $('#popup').addClass("message_reservation");
+        this.$mask = $('#overlay').show();
         this.render();
         this.load();
         this.textareaClicked = false;
@@ -41,18 +42,13 @@ var TransactionDetailView = Backbone.View.extend({
     },
     render: function () {
         var that = this;
-        this.domContainer.append(this.template(this.json));
-        this.domContainer.show();
-        var mapparam = {
-            "div": "transaction_map",
-            "originLocation": this.transaction.get("departure_location"),
-            "destLocation": this.transaction.get("arrival_location"),
-        };
+        this.$domContainer.append(this.template(this.json));
+        this.$domContainer.show();
+
 
         $("#transaction_close, #closeButton").on("click", function () {
             that.close();
         });
-        this.mapView = new MapView(mapparam);
         if (!this.editable) {
             $("#transaction_number").prop("disabled", true);
             $("#startButton").remove();
@@ -230,7 +226,7 @@ var TransactionDetailView = Backbone.View.extend({
             temp = this.priceList.length < this.transaction.get("departure_seatsBooked") ? this.priceList.length : this.transaction.get("departure_seatsBooked");
             total = this.transaction.get("departure_seatsBooked") * this.priceList[temp - 1];
         }
-        $("#transaction_totalPrice").html("总价：" + total + "元");
+        $("#transaction_totalPrice").html(total);
     },
     bookSuccess: function () {
         this.close();
@@ -244,7 +240,6 @@ var TransactionDetailView = Backbone.View.extend({
 
     close: function () {
         if (!this.isClosed) {
-            this.mapView.close(true);
             $("#transaction_close").off();
             $("#startButton").off();
             $("#transaction_go, #transaction_back").off();

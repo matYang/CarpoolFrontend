@@ -67,7 +67,7 @@
 		
 		this.sessionUser.overrideUrl(this.apis.users_findSession);
 		if (testMockObj.testMode) {
-			this.sessionUser.set("userId", 10001);
+			this.sessionUser = testMockObj.sampleUser;
 			if(callback){
 				callback.success();
 			}

@@ -52,6 +52,7 @@ var MessageDetailView = Backbone.View.extend({
             destLocation: this.message.get("arrival_location"),
             clickable: false
         };
+        debugger;
         this.domContainer.append(this.template(this.parsedMessage));
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.renderPriceList();
