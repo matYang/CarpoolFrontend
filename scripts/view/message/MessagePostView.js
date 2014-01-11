@@ -84,6 +84,7 @@ var MessagePostView = Backbone.View.extend({
         mapConfig.originLocation = this.toSubmit.origin || this.user.get("location");
         mapConfig.destLocation = this.toSubmit.dest || this.user.get("location");
         mapConfig.init = this;
+        mapConfig.clickable = true;
         if (!this.map) {
             this.map = app.storage.getViewCache("MapView", mapConfig);
         } else if ($("#mapcache").length){
@@ -301,7 +302,7 @@ var MessagePostView = Backbone.View.extend({
         $(".input_date").on("keypress", function (e) {
             e.preventDefault();
         });
-        $('#publish_time_add').on('click', function () {
+        $('#publish_time_add').find("input").on('click', function () {
             that.onAddClick();
         });
         $('.publish_delete').on('click', function (e) {
@@ -439,7 +440,6 @@ var MessagePostView = Backbone.View.extend({
                 $(".publish_price_container").remove();
             }
             if (this.toSubmit.conditionalPrice) {
-                debugger;
                 $("#conditionalPriceSwitch").addClass("publish_selected");
                 $("#publish_singlePrice").hide();
                 $("#publish_pricelist_container").show();

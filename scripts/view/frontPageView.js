@@ -111,7 +111,7 @@ var FrontPageView = Backbone.View.extend({
 
     bindRecentsEvents: function () {
         var self = this;
-        this.$messages = $("#frontPage-resultPanel.message_simple").off().on('click', function (e) {
+        this.$messages = $("#frontPage-resultPanel>.message_simple").off().on('click', function (e) {
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {

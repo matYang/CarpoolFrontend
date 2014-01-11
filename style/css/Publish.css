@@ -43,7 +43,7 @@ dl.publish_origin dt, dl.publish_dest dt { line-height:50px; height:50px; }
 /*第二步*/
 .publish .date { float:left; position:relative; width:180px; }
 .publish .date .text { width:145px; padding-left:35px; background:url(../images/input_bg1.png) no-repeat 0 -50px; }
-.publish .date label { position:absolute; display:block; width:20px; height:20px; top:15px; left:12px; background:url(../images/icon.png) no-repeat 0 -49px; z-index:9; }
+.publish .date label { position:absolute; display:block; width:20px; height:20px; top:15px; left:12px; background:url(../images/icon.png) no-repeat 0 -49px; z-index:1; }
 .publish .select_item { float:right; position:relative; width:180px; cursor:pointer; }
 .publish .select_item .text { width:168px; background:url(../images/input_bg1.png) no-repeat 0 -50px; }
 .publish .select_item span { position:absolute; display:block; width:35px; height:48px; top:1px; right:3px; background:url(../images/input_bg1.png) no-repeat -197px -51px; z-index:9; cursor:pointer; }

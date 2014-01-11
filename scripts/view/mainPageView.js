@@ -75,7 +75,8 @@ var MainPageView = Backbone.View.extend({
                 me.submitSearch();
             }
         });
-        this.$dateReturn = $("#searchDateInput_return").datepicker({
+        this.$dateReturn = $("#searchDateInput_return");
+        this.$dateReturn.datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -95,7 +96,7 @@ var MainPageView = Backbone.View.extend({
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         $("#searchTypeContainer>.active").removeClass("active");
-	this.$spans = $("#searchTypeContainer>span");
+	   this.$spans = $("#searchTypeContainer>span");
         if (!me.filter.isRoundTrip) {
             this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
             this.$spans.first().addClass("active");
@@ -108,13 +109,13 @@ var MainPageView = Backbone.View.extend({
             $(e.target).addClass("active");
             if ($(e.target).attr("data-id") == "roundtrip") {
                 me.filter.isRoundTrip = true;
-                this.$dateReturn.prop("disabled", false);
-                this.$dateReturn.parent().removeClass("date-return-disabled");
+                me.$dateReturn.prop("disabled", false);
+                me.$dateReturn.parent().removeClass("date-return-disabled");
                 me.submitSearch();
             } else {
                 me.filter.isRoundTrip = false;
-                this.$dateReturn.prop("disabled", true);
-                this.$dateReturn.parent().addClass("date-return-disabled");
+                me.$dateReturn.prop("disabled", true);
+                me.$dateReturn.parent().addClass("date-return-disabled");
                 me.submitSearch();
             }
         })
@@ -163,7 +164,7 @@ var MainPageView = Backbone.View.extend({
     submitSearch: function () {
         if (!(this.$dateDepart.val() && this.$locationFrom.val() && this.$locationTo.val())) {
             return;
-        } else if (!this.$daterReturn.val() && this.filter.isRoundTrip) {
+        } else if (!this.$dateReturn.val() && this.filter.isRoundTrip) {
             return;
         }
         app.navigate("main/" + this.searchRepresentation.toString());
@@ -246,9 +247,7 @@ var MainPageView = Backbone.View.extend({
 
     bindEvents: function () {
         var that = this;
-        debugger;
         this.$locationFrom.on('focus', function (e) {
-            debugger;
             that.temp.from = $(this).val();
             $(this).val("");
         });

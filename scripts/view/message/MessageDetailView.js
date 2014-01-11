@@ -74,11 +74,11 @@ var MessageDetailView = Backbone.View.extend({
             buffer[i] = this.transactionTemplate(this.transactions.at(i)._toJSON());
         }
         var $transactions = $("#view_transactions_content").append(buffer.join(""));
-        $transactions.children("li").on("click", function (e) {
-            var id = Utilities.getId(e.delegateTarget.id);
-            var transaction = that.transactions.get(Utilities.toInt(id));
-            that.openTransactionDetail(transaction);
-        });
+        // $transactions.children("li").on("click", function (e) {
+        //     var id = Utilities.getId(e.delegateTarget.id);
+        //     var transaction = that.transactions.get(Utilities.toInt(id));
+        //     that.openTransactionDetail(transaction);
+        // });
         $("#reservation_count").html(this.transactions.length);
     },
     loadError: function () {
@@ -191,7 +191,9 @@ var MessageDetailView = Backbone.View.extend({
 //            $("#view_edit").off();
             this.$viewbook.off();
             this.$viewcontact.off();
-            this.$messages.off();
+            if (this.$messages) {
+                this.$messages.off();
+            }
             if ( typeof this.domContainer !== 'undefined') {
                 this.domContainer.empty();
             }

@@ -58,6 +58,7 @@ var MapView = Backbone.View.extend({
                 that.getDirection(that.origin, that.dest);
             }
         });
+        debugger;
         if (this.clickable) {
             this.bindClickEvent();
         }
