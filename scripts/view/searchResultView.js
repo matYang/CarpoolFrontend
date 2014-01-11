@@ -15,13 +15,13 @@ var SearchResultView = MultiPageView.extend({
             this.pageEntryNumber = 10;
             this.entryClass = "searchResultBoxContainer";
             this.entryContainer = "searchResultDisplayPanel";
-            this.domContainer = $("#searchResultDisplayPanel");
+            this.$domContainer = $("#searchResultDisplayPanel");
         } else {
             this.entryHeight = 100;
             this.pageEntryNumber = 3;
             this.entryClass = "frontBoxContainer";
             this.entryContainer = "quickStart_resultPanel";
-            this.domContainer = $("#quickStart_resultPanel");
+            this.$domContainer = $("#quickStart_resultPanel");
             this.minHeight = 300;
         }
 
@@ -37,6 +37,6 @@ var SearchResultView = MultiPageView.extend({
     },
     
     close: function () {
-        this.domContainer.empty();
+        this.$domContainer.empty();
     }
 });

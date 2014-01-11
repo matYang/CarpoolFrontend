@@ -14,6 +14,7 @@ var MultiPageView = Backbone.View.extend({
     entryHeight: -1,
     entryRowNum: 1,
     minHeight: 0,
+    $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
         this.isClosed = false;
@@ -22,7 +23,8 @@ var MultiPageView = Backbone.View.extend({
     render: function () {
         if (this.messages.length > 0) {
             var buf = [], i, length = this.messages.length - this.startIndex;
-            $("#" + this.entryContainer).empty();
+            this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
+            this.$domContainer.empty();
             length = (length < this.pageEntryNumber) ? length : this.pageEntryNumber;
             for ( i = 0; i < length; i++) {
                 var message;
@@ -33,17 +35,17 @@ var MultiPageView = Backbone.View.extend({
                 }
                 buf[i] = this.entryTemplate(message._toJSON());
             }
-            $("#" + this.entryContainer).append(buf.join(""));
-            $("#" + this.entryContainer + ">div").addClass(this.entryClass);
+            this.$domContainer.append(buf.join(""));
+            this.$domContainer.children("div").addClass(this.entryClass);
             if (this.bindEntryEvent) {
                 this.bindEntryEvent();
             }
         } else {
-            $("#" + this.entryContainer).append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+            this.$domContainer.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
         }
         var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;
         height = (height > this.minHeight) ? height : this.minHeight;
-        $("#" + this.entryContainer).css("height", height + "px");
+        this.$domContainer.css("height", height + "px");
         if (this.messages.length > this.pageEntryNumber) {
             this.setPageNavigator();
         }
@@ -55,17 +57,18 @@ var MultiPageView = Backbone.View.extend({
     },
     bindEntryEvent: function () {
         var self = this;
-        $("#" + this.entryContainer + ">." + this.entryClass).on("click", function (e) {
+        this.$domContainer.find("." + this.entryClass).on("click", function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             self.entryEvent(id);
         });
     },
     setPageNavigator: function () {
-        $("#" + this.pageNavigator + ">." + this.pageNumberClass).off();
-        $("#" + this.pageNavigator + ">.pre").off();
-        $("#" + this.pageNavigator + ">.next").off();
-        $("#" + this.pageNavigator).remove();
-        $("#" + this.entryContainer).after($("<div>").attr("id", this.pageNavigator));
+        this.$pn = $("#" + this.pageNavigator);
+        this.$pn.children("." + this.pageNumberClass).off();
+        this.$pre = this.$pn.children(".pre").off();
+        this.$next = this.$pn.children(".next").off();
+        this.$pn.remove();
+        this.$domContainer.after($("<div>").attr("id", this.pageNavigator));
         var length = this.messages ? this.messages.length : 0;
         var pages = Math.floor(length / this.pageEntryNumber) + 1;
         this.pages = pages;
@@ -78,35 +81,36 @@ var MultiPageView = Backbone.View.extend({
         }
         buf.push("<a class='next'></a>");
         var html = buf.join("");
-        $("#" + this.pageNavigator).empty()
-                                   .append(html)
-                                   .addClass(this.pageNavigatorClass);
-        
+        this.$pn.empty()
+                .append(html)
+                .addClass(this.pageNavigatorClass);
         var self = this;
-        $("#" + this.pageNavigator + ">." + this.pageNumberClass).on("click", function (e) {
+        this.$pn.children("." + this.pageNumberClass).on("click", function (e) {
             var id = Utilities.toInt(Utilities.getId(e.target.id));
             self.toPage(id);
         });
         if (this.currentPage === 1) {
-            $("#" + this.pageNavigator + ">.pre").addClass("pre-disabled");
+            this.$pre.addClass("pre-disabled");
         } else {
-            $("#" + this.pageNavigator + ">.pre").on("click", function (e) {
+            this.$pre.on("click", function (e) {
                 self.toPage(self.currentPage-1);
             });
         }
         if (this.currentPage === pages) {
-            $("#" + this.pageNavigator + ">.next").addClass("next-disabled");
+            this.$next.addClass("next-disabled");
         } else {
-            $("#" + this.pageNavigator + ">.next").on("click", function (e) {
+            this.$next.on("click", function (e) {
                 self.toPage(self.currentPage + 1);
             });
         }
     },
     close: function () {
         if (!this.isClosed) {
-            $("#" + this.entryContainer + ">." + this.entryClass).off();
-            $("." + this.pageNumberClass).off();
-            $("#" + this.entryContainer).empty();
+            if (this.$pn) {
+                this.$pn.children("." + this.pageNumberClass).off();
+            }
+            this.$domContainer.find("." + this.entryClass).off();
+            this.$domContainer.empty();
             this.isClosed = true;
         }
     }

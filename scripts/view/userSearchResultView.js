@@ -14,7 +14,7 @@ var UserSearchResultView = MultiPageView.extend({
         this.entryHeight = 105;
         this.entryClass = "social_card";
         this.entryContainer = "searchResultDisplayPanel";
-        this.domContainer = $("#searchResultDisplayPanel");
+        this.$domContainer = $("#searchResultDisplayPanel");
         this.startIndex = 0;
         if (params && params.userSearchRepresentation) {
             this.sr = params.userSearchRepresentation;

@@ -57,8 +57,11 @@ var MainPageView = Backbone.View.extend({
         };
         //injecting the template
         $(this.el).append(this.template);
-	this.$locationFrom = $("#searchLocationInput_from");
-	this.$locationTo = $("#searchLocationInput_to");
+    	this.$locationFrom = $("#searchLocationInput_from");
+    	this.$locationTo = $("#searchLocationInput_to");
+        this.$custFrom = $("#customizeLocationInput_from");
+        this.$custTo = $("#customizeLocationInput_to");
+        this.$type = $("#typeSelections");
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.$dateDepart = $("#searchDateInput_depart").datepicker({
             buttonImageOnly: true,
@@ -75,8 +78,7 @@ var MainPageView = Backbone.View.extend({
                 me.submitSearch();
             }
         });
-        this.$dateReturn = $("#searchDateInput_return");
-        this.$dateReturn.datepicker({
+        this.$dateReturn = $("#searchDateInput_return").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",
             buttonText: "Calendar",
@@ -95,8 +97,9 @@ var MainPageView = Backbone.View.extend({
         this.updateLocation('searchLocationInput_to');
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
-        $("#searchTypeContainer>.active").removeClass("active");
-	   this.$spans = $("#searchTypeContainer>span");
+        var $stc = $("#searchTypeContainer");
+        $stc.children(".active").removeClass("active");
+	    this.$spans = $stc.children("span");
         if (!me.filter.isRoundTrip) {
             this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
             this.$spans.first().addClass("active");
@@ -105,7 +108,7 @@ var MainPageView = Backbone.View.extend({
             this.$spans.second().addClass("active");
         }
         this.$spans.on("click", function(e){
-            $("#searchTypeContainer>.active").removeClass("active");
+            $stc.children(".active").removeClass("active");
             $(e.target).addClass("active");
             if ($(e.target).attr("data-id") == "roundtrip") {
                 me.filter.isRoundTrip = true;
@@ -148,9 +151,7 @@ var MainPageView = Backbone.View.extend({
     },
 
     onClickType: function (e) {
-
-        var me = $('#' + e.id);
-        $("#typeSelections>.active").removeClass('active');
+        this.$type.children(".active").removeClass('active');
         $(e.target).addClass('active');
         if (e.target.getAttribute("data-id") === "passenger"){
             this.filter.type = Constants.messageType.ask 
@@ -276,7 +277,7 @@ var MainPageView = Backbone.View.extend({
         //     that.onClickTime(e, "timeSelections2");
         // });
 
-        $("#typeSelections>span").on('click', function (e) {
+        this.$type.children("span").on('click', function (e) {
             that.onClickType(e);
         });
 
@@ -284,10 +285,10 @@ var MainPageView = Backbone.View.extend({
             that.refresh(e);
         });
 
-        $("#customizeLocationInput_from").on("blur", function (e) {
+        this.$custFrom.on("blur", function (e) {
             that.searchRepresentation.get("departureLocation").set("pointAddress", this.value);
         });
-        $("#customizeLocationInput_to").on("blur", function (e) {
+        this.$custTo.on("blur", function (e) {
             that.searchRepresentation.get("arrivalLocation").set("pointAddress", this.value);
         });
 
@@ -297,21 +298,11 @@ var MainPageView = Backbone.View.extend({
         if (!this.isClosed) {
             //removing all event handlers
             this.map.close();
-            $("#genderSelections>.button").off();
-            $("#timeSelections1>.button").off();
-            $("#timeSelections2>.button").off();
-            $("#searchResultButton").off();
-            $("#refreshButton").off();
-            $("#searchFilterTimeContainer1>.button").off();
-            $("#searchFilterTimeContainer2>.button").off();
-            $("#typeSelections>.button").off();
-            $("#customizeLocationInput_from").off();
-            $("#customizeLocationInput_to").off();
-            $(".pageNumber").off();
-            $("#oneWay").off();
-            $("#round").off();
-            $("#goToSpecificPage>button").off();
-            $('#pageNumberInput').off();
+            this.$type.children("span").off();
+            this.$locationFrom.off();
+            this.$locationTo.off();
+            this.$custFrom.off();
+            this.$custTo.off();
             if (this.searchResultView) {
                 this.searchResultView.close();
             }

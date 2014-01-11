@@ -77,9 +77,10 @@
 .priceList ul li {
 	float:left;
 	line-height:30px;
-	margin:0 22px 0 20px;
+	margin:0 20px 0 18px;
 	font-size:12px;
 	color:#888888;
+	width: 81px;
 }
 /*发布者信息*/
 .messageDetail-upper-user {

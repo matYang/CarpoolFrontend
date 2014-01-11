@@ -109,6 +109,7 @@ var MessageDetailView = Backbone.View.extend({
         var n = this.departureSeats < this.arrivalSeats ? this.departureSeats : this.arrivalSeats;
         this.$viewbook = $("#view_book");
         this.$viewcontact = $("#view_contact");
+        this.$viewlink = $("#view_contactLink");
         if (this.departureSeats === 0 && this.arrivalSeats === 0) {
             this.$viewbook.text("座位已满").css("background-color", "#888888").css("width", "100%").off();
         } else if (this.parsedMessage.type === Constants.messageType.help) {
@@ -123,6 +124,10 @@ var MessageDetailView = Backbone.View.extend({
                 app.navigate("letter/" + that.ownerId, true);
             });
         }
+        this.$viewlink.on('click', function (e) {
+            e.preventDefault();
+            app.navigate("letter/" + that.ownerId, true);
+        });
     },
     createNewTransaction: function () {
         this.newTransaction.set("providerId", this.ownerId);
