@@ -2,7 +2,7 @@ var TopBarView = Backbone.View.extend({
 
     el: $('#topBar'),
 
-    events: {	
+    events: {   
 
     },
 
@@ -23,10 +23,13 @@ var TopBarView = Backbone.View.extend({
     },
 
     render: function () {
-        this.listenTo(this.sessionUser, 'chan	ge:userId', this.reRender);
+        this.listenTo(this.sessionUser, 'chan   ge:userId', this.reRender);
         if (app.sessionManager.hasSession()) {
             $(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
-	    this.$alldropdowns = $("#dropdowns>div").hide();
+            this.$alldropdowns = $("#dropdowns").find("dd").hide();
+            this.$ndropdown = $('#notifications>dd');
+            this.$ldropdown = $('#letters>dd');
+            this.$fdropdown = $('#favorites>dd');
             this.bindEvents();
 
             //dropdown specific data binding
@@ -37,10 +40,6 @@ var TopBarView = Backbone.View.extend({
             this.listenTo(this.letters, 'reset', this.renderLetterDropdown);
             this.favorites = app.sessionManager.getCurUserFavorites();
             this.listenTo(this.favorites, 'reset', this.renderFavoriteDropdown);
-
-            this.notificationContainer = $('#notificationDropdownContentContainer');
-            this.letterContainer = $('#letterDropdownContentContainer');
-            this.favoriteContainer = $('#favoriteDropdownContentContainer');
 
             this.renderNotificationDropdown();
             this.renderLetterDropdown();
@@ -58,43 +57,43 @@ var TopBarView = Backbone.View.extend({
     },
 
     renderNotificationDropdown: function (notifications) {
-        var i = 0, htmlContext = '';
+        // var i = 0, htmlContext = '';
 
-        for ( i = 0; i < this.notifications.length; i++) {
-            htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
-        }
+        // for ( i = 0; i < this.notifications.length; i++) {
+        //     htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
+        // }
 
-        this.notificationContainer.html(htmlContext);
-        this.bindDropdownEvents('notifications');
+        // this.notificationContainer.html(htmlContext);
+        // this.bindDropdownEvents('notifications');
     },
 
     renderLetterDropdown: function () {
-        var i = 0, htmlContext = '';
+        // var i = 0, htmlContext = '';
 
-        for ( i = 0; i < this.letters.length; i++) {
-            htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
-        }
+        // for ( i = 0; i < this.letters.length; i++) {
+        //     htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
+        // }
 
-        this.letterContainer.html(htmlContext);
-        this.bindDropdownEvents('letter');
+        // this.letterContainer.html(htmlContext);
+        // this.bindDropdownEvents('letter');
     },
 
     renderFavoriteDropdown: function () {
-        var i = 0, htmlContext = '';
+        // var i = 0, htmlContext = '';
 
-        for ( i = 0; i < this.favorites.length; i++) {
-            htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
-        }
+        // for ( i = 0; i < this.favorites.length; i++) {
+        //     htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
+        // }
 
-        this.favoriteContainer.html(htmlContext);
-        this.bindDropdownEvents('favorites');
+        // this.favoriteContainer.html(htmlContext);
+        // this.bindDropdownEvents('favorites');
     },
 
     bindDropdownEvents: function (dropdownName) {
         var self = this;
         this._unbindDropdownEvents(dropdownName);
         if (dropdownName === 'notifications') {
-            this.notificationContainer.find('.dropdownContent').on('click', function (e) {
+            this.$ndropdown.find('li').on('click', function (e) {
                 var n_id = parseInt($(this).attr("data-notificationId"), 10);
                 var n_model = self.notifications.get(n_id);
                 var n_evt = n_model.get('notificationEvent');
@@ -111,12 +110,12 @@ var TopBarView = Backbone.View.extend({
                 }
             });
         } else if (dropdownName === 'letter') {
-            this.letterContainer.find('.dropdownContent').on('click', function (e) {
+            this.$ldropdown.find('li').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
                 app.navigate("letter/" + u_id, true);
             });
         } else if (dropdownName === 'favorites') {
-            this.favoriteContainer.find('.dropdownContent').on('click', function (e) {
+            this.$fdropdown.find('li').on('click', function (e) {
                 var u_id = $(this).attr("data-userId");
                 app.navigate("personal/" + u_id, true);
             });
@@ -154,93 +153,8 @@ var TopBarView = Backbone.View.extend({
 
         /*  navigation events  */
         //main nav
-        this.$logo = $('#logo').on('click', function () {
-            app.navigate("front", true);
-        });
-        this.$nmain = $('#navigate_main').on('click', function () {
-            app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
-        });
-        this.$npersonal = $('#navigate_personal').on('click', function () {
-            app.navigate("personal/" + app.sessionManager.getUserId(), true);
-        });
-        this.$nfeedback = $('#navigate_feedBack').on('click', function () {
-            app.navigate("post", true);
-        });
-        this.$nusersearch = $("#navigate_usersearch").on('click', function () {
-            app.navigate("finduser", true);
-        });
-	this.$ndropdown = $('#notificationDropdown');
-	this.$ldropdown = $('#letterDropdown');
-	this.$fdropdown = $('#favoriteDropdown');
-        //personal nav
-        this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
-            app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
-        });
-        this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
-            app.navigate("letter", true);
-        });
-        this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
-            app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
-        });
+        
 
-        /*  UI events  */
-        this.$notifications = $('#notifications').on('mouseenter', function () {
-            self.showNotificationDropdown();
-        });
-        this.$letters = $('#letters').on('mouseenter', function () {
-            self.showLetterDropdown();
-        });
-        this.$favorites = $('#favorites').on('mouseenter', function () {
-            self.showFavoriteDropdown();
-        });
-        this.$profilePicture = $('#profilePicture').on('mouseenter', function () {
-            self.showProfileDropdown();
-        });
-        this.$notifications.on('mouseleave', function (e) {
-            if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
-                self.hideNotificationDropdown();
-            }
-        });
-        this.$letters.on('mouseleave', function (e) {
-            if (!e.toElement || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
-                self.hideLetterDropdown();
-            }
-        });
-        this.$favorites.on('mouseleave', function (e) {
-            if (!e.toElement || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
-                self.hideFavoriteDropdown();
-            }
-        });
-        this.$profilePicture.on('mouseleave', function (e) {
-            if (!e.toElement || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
-                self.hideProfileDropdown();
-            }
-        });
-        this.$fdropdown.on('mouseleave', function (e) {
-            if (!e.toElement || e.toElement.id !== "favorites") {
-                self.hideFavoriteDropdown();
-            }
-        });
-        this.$ndropdown.on('mouseleave', function (e) {
-            if (!e.toElement || e.toElement.id !== "notifications") {
-                self.hideNotificationDropdown();
-            }
-        });
-        this.$ldropdown.on('mouseleave', function (e) {
-            if (!e.toElement || e.toElement.id !== "letters") {
-                self.hideLetterDropdown();
-            }
-        });
-        this.$pdropdown = $('#profileDropdown').on('mouseleave', function (e) {
-            if (!e.toElement || e.toElement.id !== "profilePicture") {
-                self.hideProfileDropdown();
-            }
-        });
-        //  $('#logout').on('mouseleave', function(e)) {
-        //      if (e.toElement.id !== "profilePicture") {
-        //          self.hideLikes();
-        //      }
-        //  });
         if (!app.sessionManager.hasSession()) {
             $('#signup_button').on('click', function () {
                 app.navigate("/register", true);
@@ -309,6 +223,93 @@ var TopBarView = Backbone.View.extend({
                 }
             });
         } else {
+            this.$logo = $('#logo').on('click', function () {
+            app.navigate("front", true);
+        });
+        this.$nmain = $('#navigate_main').on('click', function () {
+            app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
+        });
+        this.$npersonal = $('#navigate_personal').on('click', function () {
+            app.navigate("personal/" + app.sessionManager.getUserId(), true);
+        });
+        this.$nfeedback = $('#navigate_feedBack').on('click', function () {
+            app.navigate("post", true);
+        });
+        this.$nusersearch = $("#navigate_usersearch").on('click', function () {
+            app.navigate("finduser", true);
+        });
+        //personal nav
+        this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
+        });
+        this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            app.navigate("letter", true);
+        });
+        this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
+        });
+
+        /*  UI events  */
+        this.$notifications = $('#notifications').on('mouseenter', function () {
+            self.showNotificationDropdown();
+        });
+        this.$letters = $('#letters').on('mouseenter', function () {
+            self.showLetterDropdown();
+        });
+        this.$favorites = $('#favorites').on('mouseenter', function () {
+            self.showFavoriteDropdown();
+        });
+        this.$profilePicture = $('#profilePicture').on('mouseenter', function () {
+            self.showProfileDropdown();
+        });
+        this.$profilePicture.on("click", function () {
+            app.navigate("personal/" + this.sessionUser.id, true);
+        });
+        this.$notifications.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
+                self.hideNotificationDropdown();
+            }
+        });
+        this.$letters.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
+                self.hideLetterDropdown();
+            }
+        });
+        this.$favorites.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
+                self.hideFavoriteDropdown();
+            }
+        });
+        this.$profilePicture.on('mouseleave', function (e) {
+            if (!e.toElement || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
+                self.hideProfileDropdown();
+            }
+        });
+        this.$fdropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "favorites" && e.toElement.parentElement.id !== "favorites") {
+                self.hideFavoriteDropdown();
+            }
+        });
+        this.$ndropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "notifications" && e.toElement.parentElement.id !== "notifications") {
+                self.hideNotificationDropdown();
+            }
+        });
+        this.$ldropdown.on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "letters" && e.toElement.parentElement.id !== "letters" ) {
+                self.hideLetterDropdown();
+            }
+        });
+        this.$pdropdown = $('#profileDropdown').on('mouseleave', function (e) {
+            if (!e.toElement || e.toElement.id !== "profilePicture" && e.toElement.parentElement.id !== "profilePicture") {
+                self.hideProfileDropdown();
+            }
+        });
+        //  $('#logout').on('mouseleave', function(e)) {
+        //      if (e.toElement.id !== "profilePicture") {
+        //          self.hideLikes();
+        //      }
+        //  });
             $('#logout').on('click', function () {
                 self.logout();
             });

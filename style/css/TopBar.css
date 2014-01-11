@@ -46,8 +46,9 @@
 /*右侧工具*/
 .topBar-dropdown dl {
 	float:left;
-	width:70px;
+	width:40px;
 	position:relative;
+	margin: 0 15px;
 }
 .topBar-dropdown dl dt {
 	display:block;
@@ -81,6 +82,7 @@
 	width:100px;
 	background:url(../images/nav_spites.png) no-repeat 64px -354px;
 	padding-top:12px;
+	z-index:10;
 }
 .topBar-dropdown ul, .topBar-profileImage ul {
 	background-color: #fff;
