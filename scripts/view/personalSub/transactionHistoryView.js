@@ -32,7 +32,7 @@ var TransactionHistoryView = MultiPageView.extend({
     },
     fetchMessageSuccess: function (message, transaction) {
         if (app.sessionManager.hasSession()) {
-            this.transactionDetail = new TransactionDetailView (transaction, {
+            this.transactionDetail = new TransactionDetailView (transaction.set("direction", 1), {
                 "departure_seatsNumber": message.get("departure_seatsNumber") - message.get("departure_seatsBooked"),
                 "arrival_seatsNumber": message.get("arrival_seatsBookedtsNumber") - message.get("arrival_seatsBooked"),
                 "status": "r"
