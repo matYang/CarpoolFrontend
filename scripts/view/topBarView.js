@@ -156,13 +156,36 @@ var TopBarView = Backbone.View.extend({
         
 
         if (!app.sessionManager.hasSession()) {
+            this.$lb = $("#loginBox");
+            this.$lbt = $("#loginBoxToggler").on("click", function (e) {
+                self.$lb.toggle();
+            });
             $('#signup_button').on('click', function () {
                 app.navigate("/register", true);
             });
-            $("#login_password,#login_username").on("keydown", function (e) {
+            this.$passwordInput = $("#login_password");
+            this.$usernameInput = $("#login_username");
+            var $wrong = $("#credentialWrong");
+            this.$usernameInput.on("click", function (e){
+                if  ($(this).val() === ("请输入用户名") ) {
+                    $(this).val("");
+                }
+                $wrong.hide();
+                this.$usernameInput.removeClass('invalid_input');
+                this.$passwordInput.removeClass('invalid_input');
+            });
+            this.$passwordInput.on("click", function (e){
+                if  ($(this).val() === ("请输入密码") ) {
+                    $(this).val("");
+                }
+                $wrong.hide();
+                this.$usernameInput.removeClass('invalid_input');
+                this.$passwordInput.removeClass('invalid_input');
+            });
+            this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
-                    username = $("#login_username").val();
-                    password = $("#login_password").val();
+                    username = this.$usernameInput.val();
+                    password = this.$passwordInput.val();
                     app.sessionManager.login(username, password, {
                         success: function (response) {
                             Constants.dLog("server login response: ");
@@ -181,16 +204,23 @@ var TopBarView = Backbone.View.extend({
                         },
 
                         error: function (status) {
-                            Info.displayNotice("登录失败，请稍后再试");
-                            $("#login_username").addClass('invalid_input');
-                            $("#login_password").addClass('invalid_input');
+                            $wrong.show();
+                            this.$usernameInput.addClass('invalid_input');
+                            this.$passwordInput.addClass('invalid_input');
                         }
                     });
                 }
             });
+            this.remember = $("#remember_password").on("click", function (e) {
+                if ($(this).hasClass("checked")){
+                    $(this).removeClass("checked");
+                } else {
+                    $(this).addClass("checked");
+                }
+            });
             $('#login_button').on('click', function () {
-                username = $("#login_username").val();
-                password = $("#login_password").val();
+                username = this.$usernameInput.val();
+                password = this.$passwordInput.val();
                 if (username !== "" && password !== "") {
                     app.sessionManager.login(username, password, {
                         success: function (response) {
@@ -204,22 +234,22 @@ var TopBarView = Backbone.View.extend({
                                     app.navigate("main", true);
                                 },
                                 error: function () {
-                                    Info.displayNotice("登录失败，请稍后再试");
+                                    $wrong.show();
                                 }
                             });
                         },
 
                         error: function (status) {
-                            Info.displayNotice("登录失败，请稍后再试");
-                            $("#login_username").addClass('invalid_input');
-                            $("#login_password").addClass('invalid_input');
+                            $wrong.show();
+                            $usernameInput.addClass('invalid_input');
+                            $passwordInput.addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
-                    Info.displayNotice("用户名和密码不能为空");
-                    $("#login_username").addClass('invalid_input');
-                    $("#login_password").addClass('invalid_input');
+                    $wrong.show();
+                    $usernameInput.addClass('invalid_input');
+                    $passwordInput.addClass('invalid_input');
                 }
             });
         } else {
@@ -386,8 +416,11 @@ var TopBarView = Backbone.View.extend({
         this.$ldropdown.off();
         this.$fdropdown.off();
         if (!app.sessionManager.hasSession()) {
+            this.$passwordInput.off();
+            this.$usernameInput.off();
             $('#signup_button').off();
             $('#login_button').off();
+            this.$lbt.off();
         }
         this._unbindDropdownEvents();
         this.stopListening();

@@ -35,7 +35,7 @@ var Constants = {
     "notificationDropdown", "letterDropdown", "favoriteDropdown",
 
     /*-----------  modals  ---------*/
-    "genderEditWindow", "hourRateEditWindow", "locationEditWindow", "timeDateEditWindow", "transactionDetail", "locationPicker",
+    "genderEditWindow", "hourRateEditWindow", "locationEditWindow", "timeDateEditWindow", "transactionDetail", "messageCancel", "locationPicker",
 
     /*-----------  person pages  -----------*/
     "personal", "personalWatch", "personalMessage", "personalHistory", "personalUtility", "personalSocial", "personalSocialCard", "personalSimpleMessage", "personalDetailMessage", "personalSimpleUser", "personalTransactionHistory", "personalNotificationHistory",

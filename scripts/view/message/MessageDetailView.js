@@ -99,13 +99,34 @@ var MessageDetailView = Backbone.View.extend({
     },
     bindEvents: function () {
         var that = this;
-/*
+
         if (this.ownerId === this.userId) {
-            $("#view_edit").on("click", function () {
-                app.navigate("message/" + that.messageId + "/edit", true);
+            this.cancelWindowTpl = _.template(tpl.get('messageCancel'));
+            var $popup = $("#popup").attr("class", "pop book_no").append(that.cancelWindowTpl());
+            var $overlay = $("#overlay");
+            this.$viewend = $("#view_end").on("click", function () {
+                $popup.show();
+                $overlay.show();
+            });
+            this.$viewendConfirm = $("#messageEndConfirm").on("click", function(){
+                $popup.hide();
+                $overlay.hide();
+                app.messageManager.deactivateMessage(that.message.id, {
+                    "success": function() {
+                        this.$viewend.html("已结束").off();
+                    },
+                    "error": function() {
+
+                    }
+
+                });
+            });
+            this.$viewendCancel = $("#messageEndClose,#messageEndCancel").on("click", function(){
+                $popup.hide();
+                $overlay.hide();
             });
         }
-*/
+
         var n = this.departureSeats < this.arrivalSeats ? this.departureSeats : this.arrivalSeats;
         this.$viewbook = $("#view_book");
         this.$viewcontact = $("#view_contact");

@@ -143,3 +143,16 @@
         </dl>
     </div>
 </script>
+
+
+<script type="text/template" id="tpl_messageCancel">
+    <div id="messageEndClose" class="pop_close">关闭</div>
+    <div class="pop_content">
+        <p>您选择了不再开放，别的用户将无法再看到该信息，也无法再发起新的预约，但是已有预约不会受影响。是否确认？</p> 
+        <div class="btns">
+            <input id="messageEndConfirm" class="btn_b" type="button" value="确 认"/>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="messageEndCancel" class="btn_w" type="button" value="取消"/>
+        </div>
+    </div>
+</script>
