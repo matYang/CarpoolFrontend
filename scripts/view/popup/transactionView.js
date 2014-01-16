@@ -8,7 +8,7 @@ var TransactionDetailView = Backbone.View.extend({
     },
     initialize: function (transaction, info) {
         var i, that = this;
-        _.bindAll(this, 'render', 'load', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'close');
+        _.bindAll(this, 'render', 'load', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'bindEvaluationEvent', 'renderStar', 'close');
         app.viewRegistration.register("transactionDetail", this, true);
         this.isClosed = false;
         this.transaction = transaction;
@@ -39,6 +39,9 @@ var TransactionDetailView = Backbone.View.extend({
         this.textareaClicked = false;
 
         this.bindEvents();
+        if (this.transaction.get("state") === 3) {
+            this.bindEvaluationEvent(); 
+        }
     },
     render: function () {
         this.$domContainer.append(this.template(this.json));
@@ -170,51 +173,46 @@ var TransactionDetailView = Backbone.View.extend({
         Info.warn("unable to connect to server");
     },
     bindEvaluationEvent: function () {
+
         this.$providerStar = $("#providerStar");
         this.$customerStar = $("#customerStar");
         var submit = {
             "transactionId":this.transaction.id,
             "stateChangeAction":Constants.transactionStateChangeAction.evaluate
-        };
-        if (this.transaction.provider.id === this.user.id) {
-            this.$customerStar.on({
-                "mouseenter", ".star", function (e) {
-                    $(this).prevAll().addClass("on");
-                    $(this).addClass("on");
-                    $(this).nextAll().removeClass("on");
+        }, that = this;
+        // if (this.transaction.provider.id === this.user.id) {
+            this.$customerStar.children(".star").on("mouseenter", function (e) {
+                $(this).prevAll().addClass("on");
+                $(this).addClass("on");
+                $(this).nextAll().removeClass("on");
+            }).on("mouseleave", function (e) {
+                if (!$(e.toElement).hasClass("star")) {
+                    that.renderStar(0);
                 }
-            }, {
-                "mouseleave", ".star", function (e) {
-                    if (!$(e.toElement).hasClass(star)) {
-                        renderStar(0);
-                    }
-                }
-            }, {
-                "click", ".star", function (e) {
-                    submit.score = that.$customerStar.children(".star").index(this);
-                    app.transactionManager.changeTransactionState(options);
-                }
+            }).on("click", function (e) {
+                submit.score = that.$customerStar.children(".star").index(this);
+                app.transactionManager.changeTransactionState(submit, {
+                    "success":that.scoreSuccess,
+                    "error":that.bookFail
+                });
             });
-        } else if (this.transaction.customer.id === this.user.id){
-            this.$providerStar.on({
-                "mouseenter", ".star", function (e) {
-                    $(this).prevAll().addClass("on");
-                    $(this).addClass("on");
-                    $(this).nextAll().removeClass("on");
+        // } else if (this.transaction.customer.id === this.user.id){
+            this.$providerStar.children(".star").on("mouseenter", function (e) {
+                $(this).prevAll().addClass("on");
+                $(this).addClass("on");
+                $(this).nextAll().removeClass("on");
+            }).on("mouseleave", function (e) {
+                if (!$(e.toElement).hasClass("star")) {
+                    that.renderStar(1);
                 }
-            }, {
-                "mouseleave", ".star", function (e) {
-                    if (!$(e.toElement).hasClass(star)) {
-                        renderStar(1);
-                    }
-                }
-            }, {
-                "click", ".star", function (e) {
-                    submit.score = that.$providerStar.children(".star").index(this);
-                    app.transactionManager.changeTransactionState(options);
-                }
+            }).on("click", function (e) {
+                submit.score = that.$providerStar.children(".star").index(this);
+                app.transactionManager.changeTransactionState(submit, {
+                    "success":that.scoreSuccess,
+                    "error":that.bookFail
+                });
             });
-        }
+        // }
     },
     renderStar: function(flag) {
         var pevaluation = this.transaction.get("providerEvaluation"),
@@ -239,8 +237,12 @@ var TransactionDetailView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.$closeButton.off();
-            this.$startButton.off();
-            this.$transactionNumber.off();
+            if (this.$startButton) {
+                this.$startButton.off();
+            }
+            if (this.$transactionNumber) {
+                this.$transactionNumber.off();
+            }
             this.$domContainer.empty();
             this.$domContainer.hide();
             this.$mask.hide();
