@@ -8,7 +8,7 @@ var TransactionDetailView = Backbone.View.extend({
     },
     initialize: function (transaction, info) {
         var i, that = this;
-        _.bindAll(this, 'render', 'load', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'bindEvaluationEvent', 'renderStar', 'close');
+        _.bindAll(this, 'render', 'load', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'scoreFail', 'bindEvaluationEvent', 'renderStar', 'close');
         app.viewRegistration.register("transactionDetail", this, true);
         this.isClosed = false;
         this.transaction = transaction;
@@ -186,7 +186,10 @@ var TransactionDetailView = Backbone.View.extend({
         this.close();
     },
     scoreSuccess: function () {
-        this.close();
+        
+    },
+    scoreFail: function () {
+        
     },
     bookFail: function () {
         Info.warn("unable to connect to server");
@@ -212,7 +215,7 @@ var TransactionDetailView = Backbone.View.extend({
                 submit.score = that.$customerStar.children(".star").index(this);
                 app.transactionManager.changeTransactionState(submit, {
                     "success":that.scoreSuccess,
-                    "error":that.bookFail
+                    "error":that.scoreFail
                 });
             });
         } else if (this.transaction.customerId === this.user.id){
@@ -228,7 +231,7 @@ var TransactionDetailView = Backbone.View.extend({
                 submit.score = that.$providerStar.children(".star").index(this);
                 app.transactionManager.changeTransactionState(submit, {
                     "success":that.scoreSuccess,
-                    "error":that.bookFail
+                    "error":that.scoreFail
                 });
             });
         }
