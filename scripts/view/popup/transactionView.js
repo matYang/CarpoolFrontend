@@ -104,19 +104,25 @@ var TransactionDetailView = Backbone.View.extend({
 
     bindEvents: function () {
         var that = this, temp;
+        this.$directionSelect = $("#transaction_direction_select");
+        this.$directionSelectBox = $("#transaction_direction_box");
         if (this.editable) {
-            $("#transaction_go, #transaction_back").on("click", function (e) {
-                if (this.classList.contains("direction_selected")) {
-                    this.classList.remove("direction_selected");
-                } else {
-                    this.classList.add("direction_selected");
+            this.$directionSelect.on("click", function (e) {
+                that.$directionSelectBox.toggle();
+                if (e.target.tagName === "LI") {
+                    $(this).children().first().val(e.target.textContent);
+                    if (e.target.id === "transaction_go") {
+                        that.bookInfo.go = 1;
+                        that.bookInfo.back = 0;
+                    } else if (e.target.id === "transaction_back"){
+                        that.bookInfo.go = 0;
+                        that.bookInfo.back = 1;
+                    } else if (e.target.id === "transaction_round"){
+                        that.bookInfo.go = 1;
+                        that.bookInfo.back = 1;
+                    } 
+                    return;
                 }
-                if (e.delegateTarget.id === "transaction_go") {
-                    that.bookInfo.go = (that.bookInfo.go + 1) % 2;
-                } else {
-                    that.bookInfo.back = (that.bookInfo.back + 1) % 2;
-                }
-
                 that.calculateTotal();
             });
 
@@ -225,6 +231,7 @@ var TransactionDetailView = Backbone.View.extend({
         } else {
             temp = this.priceList.length < this.transaction.get("departure_seatsBooked") ? this.priceList.length : this.transaction.get("departure_seatsBooked");
             total = this.transaction.get("departure_seatsBooked") * this.priceList[temp - 1];
+            $("#unitPriceValue").html(this.priceList[temp - 1]);
         }
         $("#transaction_totalPrice").html(total);
     },
