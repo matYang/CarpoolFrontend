@@ -53,8 +53,8 @@
                 antiRequest: ['content', 'advertisement']
             },
             'registration': {
-                request: ['overlay'],
-                antiRequest: ['overlay']
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
             },
             'transactionDetail': {
                 request: ['popup'],

@@ -1,7 +1,60 @@
 <script type="text/template" id="tpl_registration_base">
 	<div id = "registerContainer">
-		<div class='popUpCloseButton' id = "register-modal-closeButton"></div>
-		<div id = "registerContent"></div>
+		<div class = "registerStepTitle">请选择你的位置</div>
+		<div class = 'registerInstruction'>
+			<div id = 'registerLocationContainer'>
+				<div class = "register_label" style="color:grey; size:2em;"><b>地方</b></div>
+					<input id = 'registerLocationInput' class = 'registerInput' style=""/>
+					<input id = 'registerCustomizeInput' class = 'registerInput' style=""/>
+			</div>
+		</div>
+		<div class = 'registerInstruction'>
+			<div id = 'registerInputFemaleContainer' class = 'registerInputGenderContainer'>
+				<div id = 'registerInputFemaleLogo' class = 'registerInputGenderLogo'></div>
+				<div id = 'registerInputFemaleTitle' class = 'registerInputGenderTitle'>
+					<span><b>我是女生</b></span>
+					<div id = 'femalecheckmark'></div>
+				</div>
+
+			</div>
+			<div id = 'registerInputMaleContainer' class = 'registerInputGenderContainer'>
+				<div id = 'registerInputMaleLogo' class = 'registerInputGenderLogo'></div>
+				<div id = 'registerInputMaleTitle' class = 'registerInputGenderTitle'>
+					<span><b>我是男生</b></span>
+					<div id = 'malecheckmark'></div>
+				</div>
+
+			</div>
+		</div>
+		<div class = 'registerInstruction'>
+
+			<div id = 'registerEmailContainer'>
+				<div id = 'registerEmailInputLogo' class = 'registerInputLogo'></div>	
+
+				<div id ＝ 'registerEmailInputTagContainer' class = 'registerInputTagContainer'>
+					<input id = 'registerEmailInput' class = 'registerInput' placeholder="youraddress@email.com"/>
+				</div>
+			</div>
+
+			<div id= 'registerSeparator' class = 'registerSeparator'></div>
+			<div id = 'registerPasswordContainer'>
+				<div id = 'registerPasswordInputLogo' class = 'registerInputLogo'></div>	
+
+				<div id ＝ 'registerPasswordInputTagContainer' class = 'registerInputTagContainer'>
+					<input id = 'registerPasswordInput' type="password" class = 'registerInput'/>
+				</div>
+			</div>
+			<div id = 'registerPasswordConfirmContainer'>
+				<div id = 'registerPasswordConfirmInputLogo' class = 'registerInputLogo'></div>	
+
+				<div id ＝ 'registerPasswordConfirmInputTagContainer' class = 'registerInputTagContainer'>
+					<input id = 'registerPasswordConfirmInput' type="password" class = 'registerInput'/>
+				</div>
+			</div>
+		</div>
+			
+		<div class = 'registerNextStep'></div>
+		<div id = 'registerFloatNotice3' class = 'registerFloatNotice'>我同意服务条款！</div> 
 	</div>
 </script>
 

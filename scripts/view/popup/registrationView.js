@@ -14,11 +14,12 @@ var RegistrationView = Backbone.View.extend({
 		this.step2Template = _.template(tpl.get('registration_step2'));
 		this.step3Template = _.template(tpl.get('registration_step3'));
 		this.step4Template = _.template(tpl.get('registration_step4'));
-		this.domContainer = $('#overlay');
+		this.domContainer = $('#content');
 		this.domContainer.append(this.baseTemplate);
 		this.domContainer.show();
 		this.registerContainer = $('#registerContainer');
 		this.contentContainer = $('#registerContent');
+		$("#loginBox").hide();
 		this.registerInfo = {};
 		var self = this;
 		$("#register-modal-closeButton").on("click", function(){
@@ -56,13 +57,10 @@ var RegistrationView = Backbone.View.extend({
 	},
 
 	renderFirstPage: function(){
-		this.contentContainer.append(this.step1Template);
+		// this.contentContainer.append(this.step1Template);
 		var self = this;
 		this.registerInfo.location = new UserLocation();
 		this.registerContainer.attr("class", "registerContainer_step1");
-		$("#registerLocationInput").on("mouseup", function(){
-			self.locationPicker = new LocationPickerView(self.registerInfo.location, self);
-		});
 		$(".registerNextStep").on("click", function(){
 			app.navigate("register/step2");
 			self.previousStepIndex = 1;
