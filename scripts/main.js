@@ -32,7 +32,9 @@ var AppRouter = Backbone.Router.extend({
         "register": "register",
         "register/*registerState": "register",
 
-        "emailActivation/*authKey": "emailActivation"
+        "emailActivation/*authKey": "emailActivation",
+
+        "*default" : "front"
     },
 
     initialize: function () {

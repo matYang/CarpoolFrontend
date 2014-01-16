@@ -116,7 +116,10 @@ var TransactionDetailView = Backbone.View.extend({
                     e.target.textContent = "";
                 }
             });
-            this.$startButton = $("#startButton").on("click", function () {
+        }
+        this.$functionButton;
+        if (this.transaction.id === -1) {
+            this.$functionButton = $("#startButton").on("click", function () {
                 if (that.textareaClicked) {
                     that.transaction.set("userNote", that.$transactionNote.val());
                 }
@@ -139,6 +142,22 @@ var TransactionDetailView = Backbone.View.extend({
                 } else {
                     that.$transactionNumber.addClass("invalid_input");
                 }
+            });
+        }
+        else if (this.transaction.get("state") === Constants.transactionState.init) {
+            this.$functionButton = $("#cancelButton").on("click", function () {
+                app.transactionManager.changeTransactionState({
+                    "transactionId": that.transaction,
+                    "stateChangeAction": Constants.transactionStateChangeAction.cancel
+                }, {
+                    "success": that.bookSuccess,
+                    "error": that.bookFail
+                });
+            });
+        } else {
+            this.$functionButton = $("#contactButton").on("click", function () {
+                var targetUserId = that.user.id === that.transaction.get("provider").id ? that.transaction.get("customer").id : that.transaction.get("provider").id;
+                app.navigate("letter/"+targetUserId, true);
             });
         }
     },
@@ -237,11 +256,11 @@ var TransactionDetailView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.$closeButton.off();
-            if (this.$startButton) {
-                this.$startButton.off();
-            }
-            if (this.$transactionNumber) {
-                this.$transactionNumber.off();
+            this.$functionButton.off();
+            if (this.$providerStar) {
+                this.$providerStar.children(".star").off();
+            } else if (this.$customerStar) {
+                this.$customerStar.children(".star").off();
             }
             this.$domContainer.empty();
             this.$domContainer.hide();
