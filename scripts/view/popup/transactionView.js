@@ -199,7 +199,7 @@ var TransactionDetailView = Backbone.View.extend({
             "transactionId":this.transaction.id,
             "stateChangeAction":Constants.transactionStateChangeAction.evaluate
         }, that = this;
-        // if (this.transaction.provider.id === this.user.id) {
+        if (this.transaction.providerId === this.user.id) {
             this.$customerStar.children(".star").on("mouseenter", function (e) {
                 $(this).prevAll().addClass("on");
                 $(this).addClass("on");
@@ -215,7 +215,7 @@ var TransactionDetailView = Backbone.View.extend({
                     "error":that.bookFail
                 });
             });
-        // } else if (this.transaction.customer.id === this.user.id){
+        } else if (this.transaction.customerId === this.user.id){
             this.$providerStar.children(".star").on("mouseenter", function (e) {
                 $(this).prevAll().addClass("on");
                 $(this).addClass("on");
@@ -231,7 +231,7 @@ var TransactionDetailView = Backbone.View.extend({
                     "error":that.bookFail
                 });
             });
-        // }
+        }
     },
     renderStar: function(flag) {
         var pevaluation = this.transaction.get("providerEvaluation"),
