@@ -5,7 +5,7 @@ var RegistrationView = Backbone.View.extend({
 	el: "",
 
 	initialize: function(){
-		_.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'renderForthPage', 'unbindStepEvents', 'finish','close');
+		_.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'finish','close');
 		app.viewRegistration.register("registration", this, true);
 		this.isClosed = false;
 
@@ -22,10 +22,6 @@ var RegistrationView = Backbone.View.extend({
 		$("#loginBox").hide();
 		this.registerInfo = {};
 		var self = this;
-		$("#register-modal-closeButton").on("click", function(){
-			debugger;
-			self.close();
-		});
 		this.registerPopup = true;
 		this.render(1);
 
@@ -33,82 +29,24 @@ var RegistrationView = Backbone.View.extend({
 
 	render: function(stepIndex){
 		// --- events binding ---
-		this.unbindStepEvents();
-
-		this.contentContainer.empty();
-
-		//validity of stepIndex is guranteed on the URL level, since deep linking is applied
-		//reduncy of safety check is not necessary here because in development, we need to know where things go wrong
-
-		if (stepIndex === 1){
-			this.renderFirstPage();
-		}
-		else if (stepIndex === 2){
-			this.renderSecondPage();
-		}
-		else if (stepIndex === 3){
-			this.renderThirdPage();
-		}
-		else if (stepIndex === 4){
-			this.renderForthPage();
-		}
-
-		this.previouStepIndex = stepIndex;
+		this.bindEvents();
 	},
 
-	renderFirstPage: function(){
-		// this.contentContainer.append(this.step1Template);
-		var self = this;
-		this.registerInfo.location = new UserLocation();
-		this.registerContainer.attr("class", "registerContainer_step1");
-		$(".registerNextStep").on("click", function(){
-			app.navigate("register/step2");
-			self.previousStepIndex = 1;
-			self.render(2);
-			self.restore(2);
-
-		});
-	},
 	updateLocation: function (){
 		
 		$("#registerLocationInput").val(this.registerInfo.location.toUiString());
 		$("#registerCustomizeInput").val(this.registerInfo.location.get("point"));
 	},
-	renderSecondPage: function(){
-		var self = this;
-		this.contentContainer.append(this.step2Template);
-		this.registerContainer.attr("class", "registerContainer_step2");
-		$(".registerNextStep").on("click", function(){
-			app.navigate("register/step3");
-			self.previousStepIndex = 2;
-			self.render(3);
-			self.restore(3);
-		});
 
+	bindEvents: function(){
+		var self = this;
 		$("#registerInputMaleContainer").on("click", function(){
-			$("#femalecheckmark").hide();
-			$("#malecheckmark").show();
 			self.registerInfo.gender = Constants.gender.male;
 		});
 		$("#registerInputFemaleContainer").on("click", function(){
-			$("#malecheckmark").hide();
-			$("#femalecheckmark").show();
 			self.registerInfo.gender = Constants.gender.female;
 		});
-		$(".registerPreviousStep").on("click", function(){
-			app.navigate("register/step1");
-			self.previousStepIndex = 2;
-			self.render(1);
-			self.restore(1);
-
-		});
-	},
-
-	renderThirdPage: function(){
-		this.contentContainer.append(this.step3Template);
-		this.registerContainer.attr("class", "registerContainer_step3");
-		var self = this;
-		$(".registerNextStep").on("click", function(){
+		$("#complete").on("click", function(){
 			
 			self.registerInfo.email = $('#registerEmailInput').val();
 			self.registerInfo.password = $('#registerPasswordInput').val();
@@ -134,52 +72,8 @@ var RegistrationView = Backbone.View.extend({
 			});
 			
 		});
-		$(".registerPreviousStep").on("click", function(){
-			app.navigate("register/step2");
-			self.previousStepIndex = 3;
-			self.render(2);
-			self.restore(2);
-		});
 	},
 
-	renderForthPage: function(){
-		var self = this;
-		this.contentContainer.append(this.step4Template);
-		this.registerContainer.attr("class", "registerContainer_step4");
-		$('#registerYourEmail').html(this.emailCache);
-		$(".registerFinish").on("click", function(){
-			self.previousStepIndex = 4;
-			
-			self.close();
-		});
-	},
-
-	unbindStepEvents: function(){
-		if (this.previousStepIndex === 1){
-			$("#registerLocationInput").off();
-			$(".registerNextStep").off();
-		}
-		else if (this.previousStepIndex === 2){
-			$(".registerNextStep").off();
-		}
-		else if (this.previousStepIndex === 3){
-			$(".registerNextStep").off();
-		}
-		else if (this.previousStepIndex === 4){
-			$(".registerFinish").off();
-		}
-	},
-	restore: function(step){
-		if (step === 1) {
-			$("#registerLocationInput").val(this.registerInfo.location.get("university"));
-		} else if (step === 2) {
-			if (this.registerInfo.gender === Constants.gender.male) {
-				$("#malecheckmark").show();
-			} else if (this.registerInfo.gender === Constants.gender.female) {
-				$("#femalecheckmark").show();
-			}
-		}
-	},
 	finish: function(){
 		Info.displayNotice("注册成功");
 	},
