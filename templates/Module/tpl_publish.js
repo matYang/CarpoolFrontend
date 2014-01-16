@@ -102,7 +102,7 @@
             </div>
         </div>
         <div class="publish_btn_container clearfix">
-        	<input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
+            <input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
             <input id = 'publish_nextStep' type="button" class="btn_B fright" value="下一步"/>
         </div>
     </div>
@@ -118,7 +118,7 @@
             <dd>
                 <div class="enter_data">
                     <input id = 'seats' type="text" class="text"/>
-                    <div>
+                    <div id="seats_control">
                         <span class="add"></span>
                         <span class="plus_disabled"></span>
                     </div>
@@ -126,7 +126,7 @@
                 <label>个座位</label>
             </dd>
         </dl>
-        <dl class="publish_price_container clearfix">                
+        <dl id="publish_price_container" class="publish_price_container clearfix">                
             <!-- “按人数收费“的复选框以及注意事项放这里-->
             
             <dt>价<b></b>格</dt>
@@ -162,7 +162,7 @@
             </dd>
         </dl>
         <div class="publish_btn_container clearfix">
-        	<input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
+            <input id = 'publish_back' type="button" class="btn_W fleft" value="返回修改"/>
             <input id = 'publish_finish' type="button" class="btn_B fright" value="发布"/>
         </div>
     </div>

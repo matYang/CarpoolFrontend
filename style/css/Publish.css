@@ -12,6 +12,7 @@
 .publish_map {
     float:right;
     width:350px;
+    height:344px;
 }
 .publish_map .map {
     border:3px solid #c2c2c2;

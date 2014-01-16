@@ -41,12 +41,14 @@ var MessagePostView = Backbone.View.extend({
 
         this.domContainer = $('#content');
         this.domContainer.append(this.baseTemplate);
+        this.$publishContent = $('#publish_requirement');
+        this.$progress = $('#publish_progress');
     },
 
     render: function (stepIndex) {
         // --- events binding ---
-        this.unbindStepEvents(stepIndex);
-        $('#publish_requirement').empty();
+        this.unbindStepEvents(this.stepIndex);
+        this.$publishContent.empty();
 
         //validity of stepIndex is guranteed on the URL level, since deep linking is applied
         //reduncy of safety check is not necessary here because in development, we need to know where things go wrong
@@ -63,20 +65,24 @@ var MessagePostView = Backbone.View.extend({
     },
 
     renderFirstPage: function () {
-        $('#publish_requirement').append(this.step1Template());
-        $("#publish_progress").attr("class", "publish publish_step_1");
+        this.$publishContent.append(this.step1Template());
+        this.$progress.attr("class", "publish publish_step_1");
         var that = this;
-        $('#publish_type>div').on('click', function (e) {
+        this.$page1type = $('#publish_type>div').on('click', function (e) {
             that.onTypeSelect(e);
         });
-        $('#publish_originInput').on("click", function (e) {
-            $(".wrong").remove();
+        this.$page1origin = $('#publish_originInput').on("click", function (e) {
+            $("#originWrong").remove();
+            $("#destWrong").remove();
             // that.locationPicker = new LocationPickerView (that.toSubmit.origin, that, "publish_originInput");
         });
-        $('#publish_destInput').on("click", function (e) {
-            $(".wrong").remove();
+        this.$page1dest = $('#publish_destInput').on("click", function (e) {
+            $("#originWrong").remove();
+            $("#destWrong").remove();
             // that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
         });
+        this.$page1originAddr = $('#publish_originAddress');
+        this.$page1destAddr = $('#publish_destAddress');
         this.restoreState(1);
         var mapConfig = {};
         mapConfig.div = "publish_map";
@@ -93,16 +99,16 @@ var MessagePostView = Backbone.View.extend({
     },
     updateByMapMarker: function (type, json) {
         if (type === "origin") {
-            $('#publish_originAddress').val(json.results[0].formatted_address.split(",")[0]);
+            this.$page1originAddr.val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.origin.parseGoogleJson(json);
         } else {
-            $('#publish_destAddress').val(json.results[0].formatted_address.split(",")[0]);
+            this.$page1destAddr.val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.dest.parseGoogleJson(json);
         }
     },
     updateLocation: function (flag, id) {
-        $('#publish_originInput').val(this.toSubmit.origin.toUiString());
-        $('#publish_destInput').val(this.toSubmit.dest.toUiString());
+        this.$page1origin.val(this.toSubmit.origin.toUiString());
+        this.$page1dest.val(this.toSubmit.dest.toUiString());
         if (this.map) {
             this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
         }
@@ -124,8 +130,8 @@ var MessagePostView = Backbone.View.extend({
         this.toSubmit.numberRequests = counter;
     },
     renderSecondPage: function () {
-        $('#publish_requirement').append(this.step2Template());
-        $("#publish_progress").attr("class", "publish publish_step_2");
+        this.$publishContent.append(this.step2Template());
+        this.$progress.attr("class", "publish publish_step_2");
         var that = this;
         this.currentTemplate = this.askSlotTemplate;
         this.refactorRequests();
@@ -311,94 +317,103 @@ var MessagePostView = Backbone.View.extend({
     },
     renderThirdPage: function () {
         var that = this;
-        $('#publish_requirement').append(this.step3Template);
-        $("#publish_pricelist_container").hide();
-        $("#publish_entry_close").hide();
-        $("#publish_progress").attr("class", "publish publish_step_3");
+        this.$publishContent.append(this.step3Template);
+        this.$description = $('#publish_description_input');
+        this.$seats = $("#seats");
+        this.$upArrow = $("#seats_control>.add");
+        this.$downArrow = $("#seats_control>.plus_disabled");
+        if (this.$downArrow.length === 0) {
+            this.$downArrow = $("#seats_control>.plus");
+        }
+        
+        this.$priceListContainer = $("#publish_pricelist_container");
+        if (this.toSubmit.type === Constants.messageType.help) {
+            this.$priceList = $("#publish_priceList");
+            this.$singlePrice = $("#publish_singlePrice");
+            this.$conditionalPriceSwitch = $("#conditionalPriceSwitch");
+            this.$priceAdd = $("#publish_price_add");
+        }
+
+        this.$priceListContainer.hide();
+
+        this.$progress.attr("class", "publish publish_step_3");
         this.restoreState(3);
-        $("#seats").on("keypress", function (e) {
+        this.$seats.on("keyup", function (e) {
             if (e.keyCode < 48 || e.keyCode > 57) {
                 e.preventDefault();
             }
             that.toSubmit.departureSeats = Utilities.toInt(e.target.value);
             that.toSubmit.returnSeats = Utilities.toInt(e.target.value);
             if (that.toSubmit.departureSeats>1) {
-                if ($(".plus_disabled").length) {
-                    $(".plus_disabled").attr("class","plus");
-                }
+                that.$downArrow.attr("class","plus");
             }
         });
-        $(".add").on("click", function (e) {
+        this.$upArrow.on("click", function (e) {
             that.toSubmit.departureSeats++;
             that.toSubmit.returnSeats++;
-            $("#seats").val(that.toSubmit.departureSeats);
+            that.$seats.val(that.toSubmit.departureSeats);
             if (that.toSubmit.departureSeats>1) {
-                if ($(".plus_disabled").length) {
-                    $(".plus_disabled").attr("class","plus");
-                }
+                that.$downArrow.attr("class","plus");
             }
             $("#publish_seats_full").remove();
         });
-        $(".plus,.plus_disabled").on("click", function (e) {
-            if ($(e.target).hasClass("plus_disabled")) {
+        that.$downArrow.on("click", function (e) {
+            if ($(this).hasClass("plus_disabled")) {
                 return;
             }
             that.toSubmit.departureSeats--;
             that.toSubmit.returnSeats--;
-            $("#seats").val(that.toSubmit.departureSeats);
+            that.$seats.val(that.toSubmit.departureSeats);
             if (that.toSubmit.departureSeats<=1) {
                 $(this).attr("class", "plus_disabled");
             }
         });
-        $("#seats_1").on("blur", function (e) {
-            that.toSubmit.priceList[0] = Utilities.toInt(e.target.value);
-        });
-        $('#publish_description_input').on('blur', function (e) {
+        this.$description.on('blur', function (e) {
             that.toSubmit.description = e.target.value;
         });
-        $("#publish_price_add").on("click", function (e) {
-            if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
-                var seatId = ++that.toSubmit.priceListEntries;
-                that.priceEntryTemplate[1] = seatId;
-                that.priceEntryTemplate[3] = seatId;
-                $("#publish_priceList").append(that.priceEntryTemplate.join(""));
-                that.toSubmit.priceList[seatId - 1] = 0;
-                $("#seats_" + seatId).on("blur", function (e) {
-                    that.toSubmit.priceList[seatId - 1] = Utilities.toInt(e.target.value);
-                });
-                $("#publish_entry_close").show();
-
-                $("#publish_entry_close").appendTo($(".publish_price_list_entry").last());
-            } else {
-                if ($("#publish_seats_full").length === 0) {
-                    $("#publish_pricelist_container").append('<div id="publish_seats_full" class="publish_price_notice" style="float:left">请添加更多座位</div>');
+        if (this.toSubmit.type === Constants.messageType.help) {
+            this.$priceList.on("blur", "input", function (e) {
+                that.toSubmit.priceList[Utilities.toInt(Utilities.getId(e.target.id))] = Utilities.toInt(e.target.value);
+            });
+            this.$priceAdd.on("click", function (e) {
+                if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
+                    var seatId = ++that.toSubmit.priceListEntries;
+                    that.priceEntryTemplate[1] = seatId;
+                    that.priceEntryTemplate[3] = seatId;
+                    that.$priceList.append(that.priceEntryTemplate.join(""));
+                    that.toSubmit.priceList[seatId - 1] = 0;
+                    that.$entryClose.show();
+                    that.$entryClose.appendTo(that.$priceList.children(".publish_price_list_entry").last());
+                } else {
+                    if ($("#publish_seats_full").length === 0) {
+                        that.$priceListContainer.append('<div id="publish_seats_full" class="publish_price_notice" style="float:left">请添加更多座位</div>');
+                    }
                 }
-            }
-        });
-        $("#publish_entry_close").on("click", function (e) {
-            $(this).appendTo($(".publish_price_list_entry:nth-last-child(2)").last());
-            $(".publish_price_list_entry").last().remove();
-            var seatId = that.toSubmit.priceListEntries--;
-            if (seatId <= 2) {
-                $("#publish_entry_close").hide();
-            }
-            that.toSubmit.priceList[seatId - 1] = null;
-            $("#publish_pricelist_container").remove();
-        });
-        $("#conditionalPriceSwitch").on("click", function (e) {
-            if ($(this).hasClass("checked")) {
-                $(this).removeClass("checked");
-                $("#publish_singlePrice").fadeIn();
-                $("#publish_pricelist_container").hide();
-                that.toSubmit.conditionalPrice = false;
-            } else {
-                $(this).addClass("checked");
-                $("#publish_singlePrice").hide();
-                $("#publish_pricelist_container").fadeIn();
-                that.toSubmit.conditionalPrice = true;
-            }
+            });
+            this.$entryClose.on("click", function (e) {
+                $(this).appendTo(that.$priceList.children(".publish_price_list_entry:nth-last-child(2)").last());
+                that.$priceList.children(".publish_price_list_entry").last().remove();
+                var seatId = that.toSubmit.priceListEntries--;
+                if (seatId <= 2) {
+                    that.$entryClose.hide();
+                }
+                that.toSubmit.priceList[seatId - 1] = null;
+            });
+            this.$conditionalPriceSwitch.on("click", function (e) {
+                if ($(this).hasClass("checked")) {
+                    $(this).removeClass("checked");
+                    that.$singlePrice.fadeIn();
+                    that.$priceListContainer.hide();
+                    that.toSubmit.conditionalPrice = false;
+                } else {
+                    $(this).addClass("checked");
+                    that.$singlePrice.hide();
+                    that.$priceListContainer.fadeIn();
+                    that.toSubmit.conditionalPrice = true;
+                }
 
-        });
+            });
+        }
     },
     restoreState: function (page) {
         if (page === 1) {
@@ -433,41 +448,44 @@ var MessagePostView = Backbone.View.extend({
                 }
             }
         } else if (page === 3) {
-            $("#publish_description_input").val(this.toSubmit.description);
-            $("#seats").val(this.toSubmit.departureSeats);
-            $(".publish_price_list_entry").remove();
+            this.$description.val(this.toSubmit.description);
+            this.$seats.val(this.toSubmit.departureSeats);
             if (this.toSubmit.type === Constants.messageType.ask) {
-                $(".publish_price_container").remove();
+                $("#publish_price_container").remove();
+                return;
             }
+            this.$priceList.children(".publish_price_list_entry").remove();
             if (this.toSubmit.conditionalPrice) {
-                $("#conditionalPriceSwitch").addClass("publish_selected");
-                $("#publish_singlePrice").hide();
-                $("#publish_pricelist_container").show();
+                this.$conditionalPriceSwitch.addClass("publish_selected");
+                this.$singlePrice.hide();
+                this.$priceListContainer.show();
                 var entryNum = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
                     var id = i + 1;
                     entryNum++;
                     this.priceEntryTemplate[1] = id;
                     this.priceEntryTemplate[3] = id;
-                    $("#publish_priceList").append(this.priceEntryTemplate.join(""));
+                    this.$priceList.append(this.priceEntryTemplate.join(""));
                     $("#seats_" + id).val(this.toSubmit.priceList[i]);
                 }
                 this.toSubmit.priceListEntries = entryNum;
-                $(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
+                this.$priceList.children(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
+                this.$entryClose = $("#publish_entry_close");
                 if (entryNum === 1) {
-                    $("#publish_entry_close").hide();
+                    this.$entryClose.hide();
                 }
             } else {
                 this.priceEntryTemplate[1] = 1;
                 this.priceEntryTemplate[3] = 1;
-                $("#publish_priceList").append(this.priceEntryTemplate.join(""));
-                $(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
-                $("#publish_entry_close").hide();
+                this.$priceList.append(this.priceEntryTemplate.join(""));
+                this.$priceList.children(".publish_price_list_entry").last().append('<div id="publish_entry_close" class="close">关闭</div>');
+                this.$entryClose = $("#publish_entry_close");
+                this.$entryClose.hide();
                 $("#seatsNumber_1").val(1);
                 $("#seats_1").val(this.toSubmit.priceList[0]);
-                $("#conditionalPriceSwitch").removeClass("publish_selected");
-                $("#publish_singlePrice").show();
-                $("#publish_pricelist_container").hide();
+                this.$conditionalPriceSwitch.removeClass("publish_selected");
+                this.$singlePrice.show();
+                this.$priceListContainer.hide();
             }
         }
     },
@@ -488,13 +506,18 @@ var MessagePostView = Backbone.View.extend({
                 $("div[name=publish_round_" + id + "]").off();
             }
         } else if (previousStepIndex === 3) {
-            $("#seats").off();
-            $("#seats_1").off();
-            $('#publish_finish').off();
-            $("#publish_price_add").off();
-            $("#priceList_minus").off();
-            $("#conditionalPriceSwitch").off();
-            $('#publish_description_input').off();
+                this.$description.off();
+                this.$seats.off();
+                this.$upArrow.off();
+                this.$downArrow.off();
+            if (this.toSubmit.type === Constants.messageType.help) {
+                $("#seats_1").off();
+                $('#publish_finish').off();
+                this.$priceAdd.off();
+                this.$conditionalPriceSwitch.off();
+                this.$priceList.off();
+                this.$entryClose.off();
+            }
         }
     },
 
@@ -646,10 +669,10 @@ var MessagePostView = Backbone.View.extend({
 
         if (page === 1) {
             if (Utilities.isEmpty($("#publish_originInput").val())) {
-                $("#publish_origin>dd").after('<dd class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
+                $("#publish_origin>dd").after('<dd id="originWrong" class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
                 return false;
             } else if (Utilities.isEmpty($("#publish_destInput").val())) {
-                $("#publish_origin>dd").after('<dd class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
+                $("#publish_dest>dd").after('<dd id="destWrong" class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
                 return false;
             } else {
                 return true;
