@@ -41,42 +41,10 @@ var TransactionDetailView = Backbone.View.extend({
         this.bindEvents();
     },
     render: function () {
-        var that = this;
         this.$domContainer.append(this.template(this.json));
+        this.$unitPrice = $("#unitPriceValue");
+        this.$totalPrice = $("#transaction_totalPrice");
         this.$domContainer.show();
-
-
-        $("#transaction_close, #closeButton").on("click", function () {
-            that.close();
-        });
-        if (!this.editable) {
-            $("#transaction_number").prop("disabled", true);
-            $("#startButton").remove();
-            $("#transaction_userNote").html(this.transaction.get("customerNote"));
-        }
-
-        if (this.userId === this.transaction.get("providerId")) {
-            $("#transaction_number").prop("disabled", true);
-            $("#transaction_userNote").prop("disabled", true);
-            $("#reportButton").remove();
-            $("#evaluateButton").remove();
-            $("#startButton").remove();
-        } else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") === Constants.transactionState.finished) {
-            $("#startButton").remove();
-            $("#reportButton").on("click", app.transactionManager.changeTransactionState({
-                "transactionId": this.transaction.get("transactionId"),
-                "stateChangeAction": Constants.transactionStateChangeAction.report
-            }));
-        } else if (this.userId === this.transaction.get("customerId") && this.transaction.get("state") !== Constants.transactionState.finished) {
-            $("#reportButton").remove();
-            $("#evaluateButton").remove();
-        } else {
-            $("#transaction_number").prop("disabled", true);
-            $("#transaction_userNote").prop("disabled", true)
-            $("#reportButton").remove();
-            $("#evaluateButton").remove();
-            $("#startButton").remove();
-        }
     },
     load: function () {
         if (this.transaction.get("arrival_seatsBooked")) {
@@ -106,6 +74,9 @@ var TransactionDetailView = Backbone.View.extend({
         var that = this, temp;
         this.$directionSelect = $("#transaction_direction_select");
         this.$directionSelectBox = $("#transaction_direction_box");
+        this.$closeButton = $("#closeButton").on("click", function () {
+            that.close();
+        });
         if (this.editable) {
             this.$directionSelect.on("click", function (e) {
                 that.$directionSelectBox.toggle();
@@ -125,8 +96,7 @@ var TransactionDetailView = Backbone.View.extend({
                 }
                 that.calculateTotal();
             });
-
-            $("#transaction_number").on("change", function (e) {
+            this.$transactionNumber = $("#transaction_book_number").on("change", function (e) {
                 that.bookInfo.number = Utilities.toInt(e.target.value);
                 if (that.bookInfo.go) {
                     that.transaction.set("departure_seatsBooked", that.bookInfo.number);
@@ -134,12 +104,18 @@ var TransactionDetailView = Backbone.View.extend({
                 if (that.bookInfo.back) {
                     that.transaction.set("arrival_seatsBooked", that.bookInfo.number);
                 }
-                $("#transaction_number").removeClass("invalid_input");
+                $(this).removeClass("invalid_input");
                 that.calculateTotal();
             });
-            $("#startButton").on("click", function () {
+            this.$transactionNote = $("#transaction_userNote").on("focus", function (e) {
+                if (!that.textareaClicked) {
+                    that.textareaClicked = true;
+                    e.target.textContent = "";
+                }
+            });
+            this.$startButton = $("#startButton").on("click", function () {
                 if (that.textareaClicked) {
-                    that.transaction.set("userNote", $("#transaction_userNote").val());
+                    that.transaction.set("userNote", that.$transactionNote.val());
                 }
                 if ((that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.bookInfo.go) || (that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked") && that.bookInfo.back)) {
                     if (that.bookInfo.go === 1) {
@@ -158,60 +134,9 @@ var TransactionDetailView = Backbone.View.extend({
                         });
                     }
                 } else {
-                    $("#transaction_number").addClass("invalid_input");
+                    that.$transactionNumber.addClass("invalid_input");
                 }
             });
-        }
-        $("#transaction_userNote").on("focus", function (e) {
-            if (!that.textareaClicked) {
-                that.textareaClicked = true;
-                e.target.textContent = "";
-            }
-        });
-        if (this.userId === this.transaction.get("customerId")) {
-            $("#evaluation_container").hide();
-            if (this.transaction.get("state") === Constants.transactionState.finished) {
-                $("#evaluateButton").on("click", function () {
-                    $("#evaluation_container").show();
-                });
-                $("#confirm_score").on("click", function () {
-                    app.transactionManager.changeTransactionState({
-                        "transactionId": that.transaction.id,
-                        "stateChangeAction": Constants.transactionStateChangeAction.evaluate,
-                        "score": Utilities.toInt($("#score_select").val())
-                    }, {
-                        "success": that.scoreSuccess,
-                        "error": that.bookFail
-                    });
-                });
-            }
-        } else if (this.userId === this.transaction.get("providerId")) {
-            if (this.transaction.get("state") === Constants.transactionState.finished) {
-                $("#evaluateButton").on("click", function () {
-                    $("#evaluation_container").show();
-                });
-                $("#confirm_score").on("click", function () {
-                    app.transactionManager.changeTransactionState({
-                        "transactionId": that.transaction.id,
-                        "stateChangeAction": Constants.transactionStateChangeAction.evaluate,
-                        "score": Utilities.toInt($("#score_select").val())
-                    }, {
-                        "success": that.scoreSuccess,
-                        "error": that.bookFail
-                    });
-                });
-            }
-            $("#reportButton").remove();
-            $("#startButton").remove();
-        } else {
-            $("#reportButton").remove();
-            $("#evaluateButton").remove();
-            $("#startButton").remove();
-        }
-
-        if (this.transaction.id !== -1) {
-            $("#transaction_number").prop("disabled", true);
-            $("#transaction_userNote").prop("disabled", true);
         }
     },
     calculateTotal: function () {
@@ -231,9 +156,9 @@ var TransactionDetailView = Backbone.View.extend({
         } else {
             temp = this.priceList.length < this.transaction.get("departure_seatsBooked") ? this.priceList.length : this.transaction.get("departure_seatsBooked");
             total = this.transaction.get("departure_seatsBooked") * this.priceList[temp - 1];
-            $("#unitPriceValue").html(this.priceList[temp - 1]);
+            this.$unitPrice.html(this.priceList[temp - 1]);
         }
-        $("#transaction_totalPrice").html(total);
+        this.$totalPrice.html(total);
     },
     bookSuccess: function () {
         this.close();
@@ -244,13 +169,78 @@ var TransactionDetailView = Backbone.View.extend({
     bookFail: function () {
         Info.warn("unable to connect to server");
     },
+    bindEvaluationEvent: function () {
+        this.$providerStar = $("#providerStar");
+        this.$customerStar = $("#customerStar");
+        var submit = {
+            "transactionId":this.transaction.id,
+            "stateChangeAction":Constants.transactionStateChangeAction.evaluate
+        };
+        if (this.transaction.provider.id === this.user.id) {
+            this.$customerStar.on({
+                "mouseenter", ".star", function (e) {
+                    $(this).prevAll().addClass("on");
+                    $(this).addClass("on");
+                    $(this).nextAll().removeClass("on");
+                }
+            }, {
+                "mouseleave", ".star", function (e) {
+                    if (!$(e.toElement).hasClass(star)) {
+                        renderStar(0);
+                    }
+                }
+            }, {
+                "click", ".star", function (e) {
+                    submit.score = that.$customerStar.children(".star").index(this);
+                    app.transactionManager.changeTransactionState(options);
+                }
+            });
+        } else if (this.transaction.customer.id === this.user.id){
+            this.$providerStar.on({
+                "mouseenter", ".star", function (e) {
+                    $(this).prevAll().addClass("on");
+                    $(this).addClass("on");
+                    $(this).nextAll().removeClass("on");
+                }
+            }, {
+                "mouseleave", ".star", function (e) {
+                    if (!$(e.toElement).hasClass(star)) {
+                        renderStar(1);
+                    }
+                }
+            }, {
+                "click", ".star", function (e) {
+                    submit.score = that.$providerStar.children(".star").index(this);
+                    app.transactionManager.changeTransactionState(options);
+                }
+            });
+        }
+    },
+    renderStar: function(flag) {
+        var pevaluation = this.transaction.get("providerEvaluation"),
+            cevaluation = this.transaction.get("customerEvaluation"),
+            pstars = this.$providerStar.children(".star"), 
+            cstars = this.$customerStar.children(".star"),
+            i;
+        if (flag === 0) {
+            if ( cevaluation > 0) {
+                cstars.slice( 0, cevaluation-1).addClass("on");
+                cstars.slice( cevaluation-1, 5).removeClass("on");
+            }
+        } else if (flag === 1) {
+            if ( pevaluation > 0) {
+                pstars.slice( 0, pevaluation-1).addClass("on");
+                pstars.slice( pevaluation-1, 5).removeClass("on");
+            }
+        } else {
 
+        }
+    },
     close: function () {
         if (!this.isClosed) {
-            $("#transaction_close").off();
-            $("#startButton").off();
-            $("#transaction_go, #transaction_back").off();
-            $("#transaction_number").off();
+            this.$closeButton.off();
+            this.$startButton.off();
+            this.$transactionNumber.off();
             this.$domContainer.empty();
             this.$domContainer.hide();
             this.$mask.hide();
