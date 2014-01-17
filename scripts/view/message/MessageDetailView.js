@@ -3,7 +3,7 @@ var MessageDetailView = Backbone.View.extend({
     el: "",
 
     initialize: function (messageIdWrapper) {
-        _.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'cancelSuccess', 'cancelError', 'close');
         app.viewRegistration.register("MessageDetail", this, true);
         this.isClosed = false;
 
@@ -109,16 +109,10 @@ var MessageDetailView = Backbone.View.extend({
                 $overlay.show();
             });
             this.$viewendConfirm = $("#messageEndConfirm").on("click", function(){
-                $popup.hide();
-                $overlay.hide();
+                $(this).val("取 消 中 ...").prop("disabled", true);
                 app.messageManager.deactivateMessage(that.message.id, {
-                    "success": function() {
-                        this.$viewend.html("已结束").off();
-                    },
-                    "error": function() {
-
-                    }
-
+                    "success": that.cancelSuccess,
+                    "error": that.cancelError
                 });
             });
             this.$viewendCancel = $("#messageEndClose,#messageEndCancel").on("click", function(){
@@ -210,6 +204,14 @@ var MessageDetailView = Backbone.View.extend({
             }
         }
         $("#pricelist").append(appender.join(""));
+    },
+    cancelSuccess: function(){
+        this.$viewendConfirm.val("取消成功, 关闭").off();
+        this.$viewend.off();
+    },
+    cancelError: function(){
+        this.$viewendConfirm.val("取消失败,请重试");
+        $(this).prop("disabled", false);
     },
     close: function () {
         if (!this.isClosed) {
