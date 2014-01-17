@@ -101,6 +101,9 @@ var TransactionDetailView = Backbone.View.extend({
             });
             this.$transactionNumber = $("#transaction_book_number").on("blur", function (e) {
                 that.bookInfo.number = Utilities.toInt(e.target.value);
+                if ( isNaN(that.bookInfo.number) ){
+                    that.bookInfo.number = 0;
+                }
                 if (that.bookInfo.number > 1) {
                     that.$downarrow.attr("class", "plus");
                 }
@@ -152,12 +155,14 @@ var TransactionDetailView = Backbone.View.extend({
                 that.transaction.set("departure_seatsBooked" , that.bookInfo.number);
                 if ((that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.bookInfo.go) || (that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked") && that.bookInfo.back)) {
                     if (that.bookInfo.go === 1) {
+                        $(this).val("预 约 中...").prop("disabled", true);
                         app.transactionManager.initTransaction(that.transaction, {
                             "success": that.bookSuccess,
                             "error": that.bookFail
                         });
                     }
                     if (that.bookInfo.back === 1) {
+                        $(this).val("预 约 中...").prop("disabled", true);
                         var temp = that.transaction.get("arrival_location");
                         that.transaction.set("arrival_location", that.transaction.get("departure_location"));
                         that.transaction.set("departure_location", temp);
@@ -220,7 +225,7 @@ var TransactionDetailView = Backbone.View.extend({
         
     },
     bookFail: function () {
-        this.$functionButton.html("预约失败, 重试");
+        this.$functionButton.val("预约失败, 重试").prop("disabled", false);
     },
     bindEvaluationEvent: function () {
 

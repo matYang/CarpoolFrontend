@@ -294,6 +294,8 @@ var MessagePostView = Backbone.View.extend({
             that.toSubmit.returnSeats = Utilities.toInt(e.target.value);
             if (that.toSubmit.departureSeats>1) {
                 that.$downArrow.attr("class","plus");
+            } else {
+                that.$downArrow.attr("class","plus_disabled");
             }
         });
         this.$upArrow.on("click", function (e) {
