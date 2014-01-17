@@ -64,40 +64,43 @@ var LetterView = Backbone.View.extend({
     },
     bindEvent: function () {
         var self = this;
+        this.$userList = $("#letter_user_list");
+        this.$messagePanel = $("#letter_message_panel");
+        this.$letterInput = $("#letter_input");
         $("#letter_send_button").on("click", function (e) {
 
-            if (!$("#letter_input").val()) {
+            if (!self.$letterInput.val()) {
                 $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                 return;
             }
-            app.letterManager.sendLetter(self.toUserId, $("#letter_input").val(), {
+            app.letterManager.sendLetter(self.toUserId, self.$letterInput.val(), {
                 "success": self.sendSuccess,
                 "error": self.sendError
             });
-            $("#letter_message_panel").append(self.buildMessageBox(-1, $("#letter_input").val(), new Date (), true));
-            $("#letter_message_panel").scrollTop($('#letter_message_panel')[0].scrollHeight);
-            $("#letter_input").val("");
+            self.$messagePanel.append(self.buildMessageBox(-1, self.$letterInput.val(), new Date (), true));
+            self.$messagePanel.scrollTop($('#letter_message_panel')[0].scrollHeight);
+            self.$letterInput.val("");
         });
-        $("#letter_input").on("keydown", function (e) {
+        this.$letterInput.on("keydown", function (e) {
             if (e.which == 13) {
                 e.preventDefault();
-                if (!$("#letter_input").val()) {
+                if (!self.$letterInput.val()) {
                     $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                     return;
                 }
-                $("#letter_message_panel").append(self.buildMessageBox(-1, $("#letter_input").val(), new Date (), true));
-                app.letterManager.sendLetter(self.toUserId, $("#letter_input").val(), {
+                self.$messagePanel.append(self.buildMessageBox(-1, self.$letterInput.val(), new Date (), true));
+                app.letterManager.sendLetter(self.toUserId, self.$letterInput.val(), {
                     "success": self.sendSuccess,
                     "error": self.sendError
                 });
-                $("#letter_message_panel").scrollTop($('#letter_message_panel')[0].scrollHeight);
-                $("#letter_input").val("");
+                self.$messagePanel.scrollTop($('#letter_message_panel')[0].scrollHeight);
+                self.$letterInput.val("");
             }
         });
     },
     renderContacts: function (list) {
         var i;
-        $("#letter_user_list").empty();
+        this.$userList.empty();
         if (!this.letterUserList) {
             this.letterUserList = list;
         } else if (list && this.letterUserList !== list) {
@@ -114,9 +117,8 @@ var LetterView = Backbone.View.extend({
 
             buf[bufLen++] = this.contactListTemplate.join("");
         }
-        $("#letter_user_list").append(buf.join(""));
-        $(".letterContactListEntry").off();
-        $(".letterContactListEntry").on("click", function (e) {
+        this.$userList.append(buf.join(""));
+        $(".letterContactListEntry").off().on("click", function (e) {
             id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
             if (id !== self.toUserId) {
                 app.navigate("letter/" + id);
@@ -127,8 +129,8 @@ var LetterView = Backbone.View.extend({
         $("#contactList_" + this.toUserId).addClass("highlitedUser");
     },
     switchContact: function (id) {
-        $("#letter_message_panel").empty();
-        $("#letter_input").val("");
+        this.$messagePanel.empty();
+        this.$letterInput.val("");
         $(".highlitedUser.userNewMessage").removeClass("userNewMessage");
         $(".highlitedUser").removeClass("highlitedUser");
         $("#contactList_" + id).addClass("highlitedUser");
@@ -158,7 +160,7 @@ var LetterView = Backbone.View.extend({
         if (!letters)
             return;
         this.letterHistories = letters;
-        $("#letter_message_panel").empty();
+        this.$messagePanel.empty();
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
         for ( i = 0; i < len; i++) {
@@ -175,7 +177,7 @@ var LetterView = Backbone.View.extend({
             }
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
-        $("#letter_message_panel").append(buf.join(""));
+        this.$messagePanel.append(buf.join(""));
     },
     buildMessageBox: function (id, message, time, sendByMe) {
         this.messageBoxTemplate[1] = sendByMe ? "sendByMe" : "sendByYou";
@@ -226,7 +228,7 @@ var LetterView = Backbone.View.extend({
                 break;
             }
         }
-        $("#letter_message_panel").append(buf.join(""));
+        this.$messagePanel.append(buf.join(""));
     },
     onNewLetter: function (data) {
         var self = this;
@@ -250,7 +252,7 @@ var LetterView = Backbone.View.extend({
                         self.contactListTemplate[1] = user.get("userId");
                         self.contactListTemplate[3] = user.get("imgPath");
                         self.contactListTemplate[5] = user.get("name");
-                        $("#letter_user_list").prepend(self.contactListTemplate.join(""));
+                        self.$userList.prepend(self.contactListTemplate.join(""));
                         $("#contactList_" + user.get("userId")).addClass("userNewMessage");
                     },
                     "error": function () {
@@ -264,7 +266,7 @@ var LetterView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             $("#letter_send_button").off();
-            $("#letter_input").off();
+            this.$letterInput.off();
             this.domContainer.empty();
             this.isClosed = true;
         }

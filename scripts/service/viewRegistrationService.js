@@ -121,6 +121,7 @@
                         if (viewRegistrationTable.hasOwnProperty(registrationTarget.request[i]) && viewRegistrationTable[registrationTarget.request[i]].viewName === viewName) {
                             if ( typeof viewRegistrationTable[registrationTarget.request[i]].viewObject.close === 'function') {
                                 viewRegistrationTable[registrationTarget.request[i]].viewObject.close();
+                                viewRegistrationTable[registrationTarget.request[i]].viewObject.remove();
                                 delete viewRegistrationTable[registrationTarget.request[i]];
                             } else {
                                 alert("fatal error: viewRegistrationService:: unregister:: alert, member " + registrationTarget.request[i] + " does not contain close function");

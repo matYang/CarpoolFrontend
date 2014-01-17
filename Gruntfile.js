@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     concat: {
      dist: {
         src: ['scripts/**/*.js'],
-        dest: 'targets/main.js'
+        dest: 'build/main.js'
       }
     },
     uglify: {
@@ -14,13 +14,13 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'targets/main.min.js':['<%= concat.dist.dest %>']
+          'build/main.min.js':['<%= concat.dist.dest %>']
         }
       }
     },
     cssmin: {
         files: {
-          'targets/style-min.css': ['style/**/*.css']
+          'build/style-min.css': ['style/css/*.css']
         }
     }
   });
