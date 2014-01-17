@@ -95,19 +95,18 @@ var TransactionDetailView = Backbone.View.extend({
                         that.bookInfo.go = 1;
                         that.bookInfo.back = 1;
                     } 
+                    that.calculateTotal();
                     return;
                 }
-                that.calculateTotal();
             });
-            this.$transactionNumber = $("#transaction_book_number").on("change", function (e) {
+            this.$transactionNumber = $("#transaction_book_number").on("blur", function (e) {
                 that.bookInfo.number = Utilities.toInt(e.target.value);
-                if (that.bookInfo.go) {
-                    that.transaction.set("departure_seatsBooked", that.bookInfo.number);
+                if (that.bookInfo.number > 1) {
+                    that.$downarrow.attr("class", "plus");
                 }
-                if (that.bookInfo.back) {
-                    that.transaction.set("arrival_seatsBooked", that.bookInfo.number);
+                if (that.bookInfo.number == 1) {
+                    that.$downarrow.attr("class", "plus_disabled");
                 }
-                $(this).removeClass("invalid_input");
                 that.calculateTotal();
             });
             this.$transactionNote = $("#transaction_userNote").on("focus", function (e) {
@@ -116,6 +115,33 @@ var TransactionDetailView = Backbone.View.extend({
                     e.target.textContent = "";
                 }
             });
+            this.$controller = $("#transaction_control");
+            this.$uparrow = this.$controller.find(".add");
+            this.$downarrow = this.$controller.find(".plus_disabled");
+            if (this.$downarrow.length === 0) {
+                this.$downarrow = this.$controller.find(".plus");
+            }
+
+            this.$uparrow.on("click", function() {
+                that.bookInfo.number++;
+                if (that.bookInfo.number > 1) {
+                    that.$downarrow.attr("class", "plus");
+                }
+                that.$transactionNumber.val(that.bookInfo.number);
+                that.calculateTotal();
+            });
+
+            this.$downarrow.on("click", function() {
+                if ($(this).hasClass("plus_disabled")) {
+                    return;
+                }
+                that.bookInfo.number--;
+                if (that.bookInfo.number == 1) {
+                    that.$downarrow.attr("class", "plus_disabled");
+                }
+                that.$transactionNumber.val(that.bookInfo.number);
+                that.calculateTotal();
+            });
         }
         this.$functionButton;
         if (this.transaction.id === -1) {
@@ -123,6 +149,7 @@ var TransactionDetailView = Backbone.View.extend({
                 if (that.textareaClicked) {
                     that.transaction.set("userNote", that.$transactionNote.val());
                 }
+                that.transaction.set("departure_seatsBooked" , that.bookInfo.number);
                 if ((that.info.departure_seatsNumber >= that.transaction.get("departure_seatsBooked") && that.bookInfo.go) || (that.info.arrival_seatsNumber >= that.transaction.get("arrival_seatsBooked") && that.bookInfo.back)) {
                     if (that.bookInfo.go === 1) {
                         app.transactionManager.initTransaction(that.transaction, {
@@ -183,7 +210,8 @@ var TransactionDetailView = Backbone.View.extend({
         this.$totalPrice.html(total);
     },
     bookSuccess: function () {
-        this.close();
+        $("#bookedStatus").show();
+        this.$functionButton.off().html("预 约 成 功");
     },
     scoreSuccess: function () {
         
@@ -192,7 +220,7 @@ var TransactionDetailView = Backbone.View.extend({
         
     },
     bookFail: function () {
-        Info.warn("unable to connect to server");
+        this.$functionButton.html("预约失败, 重试");
     },
     bindEvaluationEvent: function () {
 
