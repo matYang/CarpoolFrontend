@@ -4,11 +4,11 @@ var TransactionDetailView = Backbone.View.extend({
     bookInfo: {
         "go": 0,
         "back": 0,
-        "number": 0
+        "number": 1
     },
     initialize: function (transaction, info) {
         var i, that = this;
-        _.bindAll(this, 'render', 'load', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'scoreFail', 'bindEvaluationEvent', 'renderStar', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'bookSuccess', 'scoreSuccess', 'calculateTotal', 'bookFail', 'scoreFail', 'bindEvaluationEvent', 'renderStar', 'close');
         app.viewRegistration.register("transactionDetail", this, true);
         this.isClosed = false;
         this.transaction = transaction;
@@ -35,7 +35,6 @@ var TransactionDetailView = Backbone.View.extend({
         this.$domContainer = $('#popup').addClass("message_reservation");
         this.$mask = $('#overlay').show();
         this.render();
-        this.load();
         this.textareaClicked = false;
 
         this.bindEvents();
@@ -48,31 +47,8 @@ var TransactionDetailView = Backbone.View.extend({
         this.$unitPrice = $("#unitPriceValue");
         this.$totalPrice = $("#transaction_totalPrice");
         this.$domContainer.show();
-    },
-    load: function () {
-        if (this.transaction.get("arrival_seatsBooked")) {
-            this.bookInfo.number = this.transaction.get("departure_seatsBooked") > this.transaction.get("arrival_seatsBooked") ? this.transaction.get("departure_seatsBooked") : this.transaction.get("arrival_seatsBooked");
-        } else {
-            this.bookInfo.number = this.transaction.get("departure_seatsBooked");
-        }
-        $("#transaction_number").val(this.bookInfo.number);
-        if (this.transaction.get("myDirection") === 0) {
-            this.bookInfo.go = 1;
-            this.bookInfo.back = 1;
-        } else if (this.transaction.get("myDirection") === 1) {
-            this.bookInfo.go = 1;
-        } else if (this.transaction.get("myDirection") === 2) {
-            this.bookInfo.back = 1;
-        }
-        if (this.bookInfo.go === 1) {
-            $("#transaction_go").addClass("direction_selected");
-        }
-        if (this.bookInfo.back === 1) {
-            $("#transaction_back").addClass("direction_selected");
-        }
         this.calculateTotal();
     },
-
     bindEvents: function () {
         var that = this, temp;
         this.$directionSelect = $("#transaction_direction_select");
@@ -101,8 +77,8 @@ var TransactionDetailView = Backbone.View.extend({
             });
             this.$transactionNumber = $("#transaction_book_number").on("blur", function (e) {
                 that.bookInfo.number = Utilities.toInt(e.target.value);
-                if ( isNaN(that.bookInfo.number) ){
-                    that.bookInfo.number = 0;
+                if ( isNaN(that.bookInfo.number) || that.bookInfo.number < 0) {
+                    that.bookInfo.number = 1;
                 }
                 if (that.bookInfo.number > 1) {
                     that.$downarrow.attr("class", "plus");
@@ -126,6 +102,7 @@ var TransactionDetailView = Backbone.View.extend({
             }
 
             this.$uparrow.on("click", function() {
+                if (that.info.departure_seatsNumber <= that.bookInfo.number && that.info.arrival_seatsNumber <= that.bookInfo.number ) return;
                 that.bookInfo.number++;
                 if (that.bookInfo.number > 1) {
                     that.$downarrow.attr("class", "plus");
