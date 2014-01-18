@@ -9,8 +9,8 @@ ol, ul { margin:0; padding:0; }
 img { border:none; }
 ul { list-style:none; }
 textarea{resize:none;}
-.content{
-    min-height: 600px;
+#content{
+    min-height: 855px;
     overflow: hidden;
 }
 
