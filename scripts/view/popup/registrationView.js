@@ -80,12 +80,11 @@ var RegistrationView = Backbone.View.extend({
 
 	close: function(){
 		if (!this.isClosed){
-			this.unbindStepEvents();
 			$("#register-modal-closeButton").off();
 			this.domContainer.empty();
 			this.domContainer.hide();
 			this.isClosed = true;
-			app.navigate("front",true);
+			app.navigate("front", true);
 		}
 	}
 
