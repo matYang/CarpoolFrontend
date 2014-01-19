@@ -21,6 +21,7 @@ var MapView = Backbone.View.extend({
         this.origin = config.originLocation || new UserLocation();
         this.dest = config.destLocation || new UserLocation();
         this.clickable = config.clickable;
+        this.init = config.init;
         this.class = config.class;
         $("#"+this.div).after($("#mapcache").attr("id","newMap"));
         $("#mapcache").remove();
@@ -86,6 +87,7 @@ var MapView = Backbone.View.extend({
                   context: document.body
             }).done(function(json) {
                 $("#markerButton").off();
+                debugger;
                 if (that.init){
                     contentString = "<div>" + json.results[0].formatted_address + "</div>" + divSetOD;
                 } else {
@@ -195,6 +197,16 @@ var MapView = Backbone.View.extend({
         });
     },
     close: function (destroy) {
+        if (this.marker) {
+            this.marker.setMap(null);
+        }
+        if (this.oMarker) {
+            this.oMarker.setMap(null);
+        }
+        if (this.dMarker) {
+            this.dMarker.setMap(null);
+        }
+        google.maps.event.clearListeners(this.map, 'click');
         if (!this.isClosed) {
             if (destroy) {
 

@@ -83,6 +83,31 @@ var MessagePostView = Backbone.View.extend({
         });
         this.$page1originAddr = $('#publish_originAddress');
         this.$page1destAddr = $('#publish_destAddress');
+
+        this.$page1originAddr.on("focus", function() {
+            if ($(this).val() === "请输入具体地址") {
+                $(this).val("");
+            }
+        }).on("blur", function () {
+            if ($(this).val() === "") {
+                $(this).val("请输入具体地址");
+            } else {
+                that.toSubmit.origin.set("pointAddress", $(this).val());
+                that.buildGeocodeRequest(that.toSubmit.origin, "origin");
+            }
+        });
+        this.$page1destAddr.on("focus", function() {
+            if ($(this).val() === "请输入具体地址") {
+                $(this).val("");
+            }
+        }).on("blur", function () {
+            if ($(this).val() === "") {
+                $(this).val("请输入具体地址");
+            } else {
+                that.toSubmit.dest.set("pointAddress", $(this).val());
+                that.buildGeocodeRequest(that.toSubmit.dest, "dest");
+            }
+        });
         this.restoreState(1);
         var mapConfig = {};
         mapConfig.div = "publish_map";
@@ -96,6 +121,37 @@ var MessagePostView = Backbone.View.extend({
         } else if ($("#mapcache").length){
             this.map.cacheConfig(mapConfig);
         }
+    },
+    buildGeocodeRequest: function (location, point) {
+        var url = "http://maps.googleapis.com/maps/api/geocode/json?address="
+         + location.get("pointAddress") + "," + location.get("city") + "&sensor=false";
+        $.ajax({
+              url: url,
+              context: document.body
+        }).done(function(json) {
+            $("#markerButton").off();
+            if (that.init){
+                contentString = "<div>" + json.results[0].formatted_address + "</div>" + divSetOD;
+            } else {
+                contentString = "<div>" + json.results[0].formatted_address + "</div>";
+            }
+            that.infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                width: 250,
+                height: 80
+            });
+            that.infowindow.open(that.map, that.marker);
+            if (that.init) {
+                google.maps.event.addListener(that.infowindow, 'domready', function() {
+                    $(".markerButton").on('click', function(e){ 
+                        if (e.delegateTarget.id === 'markerSetOrigin') 
+                            that.setLocation("origin", json);
+                        else if (e.delegateTarget.id === 'markerSetDest') 
+                            that.setLocation("dest", json);
+                    });
+                });
+            }
+        });
     },
     updateByMapMarker: function (type, json) {
         if (type === "origin") {
@@ -443,7 +499,9 @@ var MessagePostView = Backbone.View.extend({
 
     unbindStepEvents: function (previousStepIndex) {
         if (previousStepIndex === 1) {
-            $('#publish_type>div').off();
+            this.$page1type.off();
+            this.$page1originAddr.off();
+            this.$page1destAddr.off();
         } else if (previousStepIndex === 2) {
             this.$timeSlots.off();
             $('#publish_time_add').off();
