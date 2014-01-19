@@ -89,7 +89,7 @@ var FrontPageView = Backbone.View.extend({
                 d.setMonth(inst.selectedMonth);
                 d.setYear(inst.selectedYear);
                 self.searchRepresentation.set("departureDate", d);
-                this.$date.val(Utilities.getDateString(d));
+                self.$date.val(Utilities.getDateString(d));
             }
         });
         $("#btn_search").on("click", function () {

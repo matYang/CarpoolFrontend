@@ -203,7 +203,7 @@ dl.publish_origin dt, dl.publish_dest dt {
 .publish .select_item ul li {
     padding-left:15px;
     font-size:14px;
-    line-height:50px;
+    line-height:25px;
     border-bottom:1px dotted #ccc;
 }
 .publish .select_item ul li:hover {

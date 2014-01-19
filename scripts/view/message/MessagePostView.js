@@ -135,6 +135,7 @@ var MessagePostView = Backbone.View.extend({
         var that = this;
         this.currentTemplate = this.askSlotTemplate;
         this.refactorRequests();
+        this.$timeSlots = $('#publish_time_slots');
         if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
             this.toSubmit.requests = [];
             this.toSubmit.requests[0] = {};
@@ -144,7 +145,7 @@ var MessagePostView = Backbone.View.extend({
             this.toSubmit.requests[0].type = this.toSubmit.type;
             this.toSubmit.requests[0].round = true;
             this.toSubmit.numberRequests = 1;
-            this.$timeSlots = $('#publish_time_slots');
+
             this.$timeSlots.append(this.currentTemplate({
                 id: 1
             }));
@@ -180,7 +181,7 @@ var MessagePostView = Backbone.View.extend({
             for (var request = 0; request < this.toSubmit.requests.length; request++) {
                 if (this.toSubmit.requests[request]) {
                     var index = request + 1;
-                    $('#publish_time_slots').append(this.currentTemplate({
+                    this.$timeSlots.append(this.currentTemplate({
                         id: index
                     }));
                     $("input[name=publish_returnDate_" + index + "]").datepicker({
@@ -475,7 +476,7 @@ var MessagePostView = Backbone.View.extend({
         this.toSubmit.requests[index] = {};
         this.toSubmit.requests[index].type = this.toSubmit.type;
         this.toSubmit.requests[index].id = id;
-        $('#publish_time_slots').append(this.currentTemplate({
+        this.$timeSlots.append(this.currentTemplate({
             id: id
         }));
         $("input[name=publish_departDate_" + id + "]").datepicker({
