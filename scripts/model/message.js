@@ -132,28 +132,10 @@ var Message = Backbone.Model.extend({
         if (this.get('arrival_location') instanceof UserLocation) {
             json.arrival_location = this.get('arrival_location').toUiString();
         }
-        if (this.get("departure_timeSlot") === Constants.DayTimeSlot.all) {
-            json.departure_timeSlot = "全天";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.departure_timeSlot = "早上";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.afternoon) {
-            json.departure_timeSlot = "下午";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.night) {
-            json.departure_timeSlot = "晚上";
-        } else {
-            json.departure_timeSlot = (this.get("departure_timeSlot") - 3) + "点";
-        }
-        if (this.get("arrival_timeSlot") === Constants.DayTimeSlot.all) {
-            json.arrival_timeSlot = "全天";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.arrival_timeSlot = "早上";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.afternoon) {
-            json.arrival_timeSlot = "下午";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.arrival_timeSlot = "晚上";
-        } else if (this.get("arrival_timeSlot")) {
-            json.arrival_timeSlot = (this.get("arrival_timeSlot") - 3) + "点";
-        }
+        
+        json.departure_timeSlot = Utilities.getDayTimeSlotText(this.get("departure_timeSlot"));
+        json.arrival_timeSlot = Utilities.getDayTimeSlotText(this.get("arrival_timeSlot"));
+
 
         if ( typeof this.get('owner')._toJSON === 'function') {
             json.owner = this.get('owner')._toJSON();

@@ -99,7 +99,7 @@ var MainPageView = Backbone.View.extend({
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
         $stc.children(".active").removeClass("active");
-	    this.$spans = $stc.children("span");
+            this.$spans = $stc.children("span");
         if (!me.filter.isRoundTrip) {
             this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
             this.$spans.first().addClass("active");
@@ -121,7 +121,7 @@ var MainPageView = Backbone.View.extend({
                 me.$dateReturn.parent().addClass("date-return-disabled");
                 me.submitSearch();
             }
-        })
+        });
     },
 
     renderSearchResults: function (searchResults) {
@@ -154,7 +154,7 @@ var MainPageView = Backbone.View.extend({
         this.$type.children(".active").removeClass('active');
         $(e.target).addClass('active');
         if (e.target.getAttribute("data-id") === "passenger"){
-            this.filter.type = Constants.messageType.ask 
+            this.filter.type = Constants.messageType.ask;
         } else if (e.target.getAttribute("data-id") === "driver") {
             this.filter.type = Constants.messageType.help;
         } else {
@@ -217,13 +217,13 @@ var MainPageView = Backbone.View.extend({
     },
 
     filterTime: function (time, timeslot) {
-        if (time === 'all' || timeslot === Constants.DayTimeSlot.all) {
+        if (time === 'all') {
             return true;
-        } else if (time === "morning" && (timeslot === Constants.DayTimeSlot.morning || (timeslot >= 8 && timeslot < 15 ))) {
+        } else if (time === "morning" && timeslot < Utilities.getDayTimeSlot_afternoonStart()) {
             return true;
-        } else if (time === "afternoon" && (timeslot === Constants.DayTimeSlot.afternoon || (timeslot >= 15 && timeslot < 22 ))) {
+        } else if (time === "afternoon" && (timeslot >= Utilities.getDayTimeSlot_afternoonStart() && timeslot < Utilities.getDayTimeSlot_nightStart())) {
             return true;
-        } else if (time === "night" && (timeslot === Constants.DayTimeSlot.night || (timeslot >= 22 || (timeslot < 8 && timeslot > 3)))) {
+        } else if (time === "night" && (timeslot >= Utilities.getDayTimeSlot_nightStart())) {
             return true;
         } else {
             return false;

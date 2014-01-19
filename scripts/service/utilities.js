@@ -222,5 +222,35 @@ var Utilities = {
     castToAPIFormat: function (date) {
         var d = date, str = [d.getFullYear(), (d.getMonth() + 1).padLeft(), d.getDate().padLeft()].join('-') + ' ' + [d.getHours().padLeft(), d.getMinutes().padLeft(), d.getSeconds().padLeft()].join(':');
         return str;
+    },
+
+    getDayTimeSlotText: function(timeSlot){
+        var prefixText = '',
+            actualStartHour = 0;
+        if (timeSlot < Constants.DayTimeSlot.n12){
+            prefixText = '上午';
+            actualStartHour = timeSlot;
+        }
+        else if (timeSlot < Constants.DayTimeSlot.n18){
+            prefixText = '下午';
+            actualStartHour = timeSlot - 12;
+        }
+        else{
+            prefixText = '晚上';
+            actualStartHour = timeSlot - 12;
+        }
+
+        return prefixText+actualStartHour+'点';
+    },
+    getDayTimeSlot_morningStart: function(){
+        return Constants.DayTimeSlot.n0;
+    },
+    getDayTimeSlot_afternoonStart: function(){
+        return Constants.DayTimeSlot.n12;
+    },
+    getDayTimeSlot_nightStart: function(){
+        return Constants.DayTimeSlot.n18;
     }
-}; 
+
+
+};
