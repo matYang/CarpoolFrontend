@@ -14,7 +14,7 @@
             success: function(model, response){
                 self.timeStamp = new Date();
                 self.isLoading = false;
-                Info.log("Defualt Location successfully loaded");
+                Info.log("Defualt Location Successfully Loaded");
             },
 
             error: function(model, response){
