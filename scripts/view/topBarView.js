@@ -161,7 +161,7 @@ var TopBarView = Backbone.View.extend({
                 self.$lb.toggle();
             });
             $('#signup_button').on('click', function () {
-                app.navigate("/register", true);
+                app.navigate("/register", {trigger: true, replace: true});
             });
             this.$passwordInput = $("#login_password");
             this.$usernameInput = $("#login_username");
