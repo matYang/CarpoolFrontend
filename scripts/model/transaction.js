@@ -117,29 +117,9 @@ var Transaction = Backbone.Model.extend({
     _toJSON: function () {
         var json = this.toJSON();
         json.departure_time = Utilities.getDateString(this.get('departure_time'));
-        //do use Constants.DayTimeSlot, otherwise it'll be difficult to manage
-        if (this.get("departure_timeSlot") === Constants.DayTimeSlot.all) {
-            json.departure_timeSlot = "全天";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.departure_timeSlot = "早上";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.afternoon) {
-            json.departure_timeSlot = "下午";
-        } else if (this.get("departure_timeSlot") == Constants.DayTimeSlot.night) {
-            json.departure_timeSlot = "晚上";
-        } else {
-            json.departure_timeSlot = (this.get("departure_timeSlot") - 3) + "点";
-        }
-        if (this.get("arrival_timeSlot") === Constants.DayTimeSlot.all) {
-            json.arrival_timeSlot = "全天";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.arrival_timeSlot = "早上";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.afternoon) {
-            json.arrival_timeSlot = "下午";
-        } else if (this.get("arrival_timeSlot") == Constants.DayTimeSlot.morning) {
-            json.arrival_timeSlot = "晚上";
-        } else if (this.get("arrival_timeSlot")) {
-            json.arrival_timeSlot = (this.get("arrival_timeSlot") - 3) + "点";
-        }
+        
+        json.departure_timeSlot = Utilities.getDayTimeSlotText(this.get("departure_timeSlot"));
+        json.arrival_timeSlot = Utilities.getDayTimeSlotText(this.get("arrival_timeSlot"));
 
         json.arrival_location = this.get('arrival_location').toUiString();
         if (json.arrival_time) {
