@@ -60,7 +60,7 @@ var FrontPageView = Backbone.View.extend({
     bindEvents: function () {
         var self = this;
         this.$from = $("#from").children("input").on("focus", function (e) {
-            self.temp.from = $(this).val(); 
+            self.temp.from = $(this).val();
             $(this).val("");
         });
         this.$to = $("#to").children("input").on("focus", function (e) {
