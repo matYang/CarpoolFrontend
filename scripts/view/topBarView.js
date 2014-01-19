@@ -161,7 +161,7 @@ var TopBarView = Backbone.View.extend({
                 self.$lb.toggle();
             });
             $('#signup_button').on('click', function () {
-                app.navigate("/register", true);
+                app.navigate("/register", {trigger: true, replace: true});
             });
             this.$passwordInput = $("#login_password");
             this.$usernameInput = $("#login_username");
@@ -171,16 +171,26 @@ var TopBarView = Backbone.View.extend({
                     $(this).val("");
                 }
                 $wrong.hide();
-                this.$usernameInput.removeClass('invalid_input');
-                this.$passwordInput.removeClass('invalid_input');
+                self.$usernameInput.removeClass('invalid_input');
+                self.$passwordInput.removeClass('invalid_input');
+            });
+            this.$usernameInput.on("blur", function (e){
+                if  ($(this).val() === ("") ) {
+                    $(this).val("请输入用户名");
+                }
             });
             this.$passwordInput.on("click", function (e){
                 if  ($(this).val() === ("请输入密码") ) {
                     $(this).val("");
                 }
                 $wrong.hide();
-                this.$usernameInput.removeClass('invalid_input');
-                this.$passwordInput.removeClass('invalid_input');
+                self.$usernameInput.removeClass('invalid_input');
+                self.$passwordInput.removeClass('invalid_input');
+            });
+            this.$passwordInput.on("blur", function (e){
+                if  ($(this).val() === ("") ) {
+                    $(this).val("请输入密码");
+                }
             });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {

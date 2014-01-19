@@ -67,3 +67,12 @@ input.text { font-family:'微软雅黑'; }
 .pop_close { position:absolute; top:10px; right:10px; text-indent:-32768px; width:25px; height:25px; background:url(../images/close.png) no-repeat; cursor:pointer; }
 .pop_close:hover { background-position:0 -25px; }
 .line { border-bottom:1px dotted #ccc; padding-bottom:20px; }
+
+.disable_select{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

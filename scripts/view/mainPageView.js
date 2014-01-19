@@ -57,8 +57,8 @@ var MainPageView = Backbone.View.extend({
         };
         //injecting the template
         $(this.el).append(this.template);
-    	this.$locationFrom = $("#searchLocationInput_from");
-    	this.$locationTo = $("#searchLocationInput_to");
+        this.$locationFrom = $("#searchLocationInput_from");
+        this.$locationTo = $("#searchLocationInput_to");
         this.$custFrom = $("#customizeLocationInput_from");
         this.$custTo = $("#customizeLocationInput_to");
         this.$type = $("#typeSelections");
