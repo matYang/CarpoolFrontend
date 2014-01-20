@@ -14,6 +14,8 @@ var FrontPageView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
 
         this.searchRepresentation = app.storage.getSearchRepresentationCache();
+        this.departLocation = new UserLocation();
+        this.arrivalLocation = new UserLocation();
         this.render();
         //fire async API call befire entering the time consuming events binding stage
         this.getRecents();
@@ -94,8 +96,10 @@ var FrontPageView = Backbone.View.extend({
         });
         $("#btn_search").on("click", function () {
             if (self.$from.val() && self.$to.val() && self.$date.val() ) {
-                self.searchRepresentation.get("departureLocation").set("city", self.$from.val());
-                self.searchRepresentation.get("arrivalLocation").set("city", self.$to.val());
+                self.departLocation.set("city", self.$from.val());
+                self.arrivalLocation.set("city", self.$to.val());
+                self.searchRepresentation.set("departureMatch_Id", self.departLocation.get("defaultId"));
+                self.searchRepresentation.set("arrivalMatch_Id", self.arrivalLocation.get("defaultId"));
                 app.storage.setSearchRepresentationCache(self.searchRepresentation);
                 app.navigate("main/" + self.searchRepresentation.toString(), true);
             }

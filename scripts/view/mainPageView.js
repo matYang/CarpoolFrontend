@@ -261,12 +261,17 @@ var MainPageView = Backbone.View.extend({
         this.$locationFrom.on('blur', function (e) {
             if (!$(this).val())
                 $(this).val(that.temp.from);
-            // that.locationPickerView = new LocationPickerView (that.searchRepresentation.get("departureLocation"), that, "searchLocationInput_from");
+            if ($(this).val() && that.$locationTo.val() ) {
+                that.submitSearch();
+            }
         });
 
         this.$locationTo.on('blur', function (e) {
             if (!$(this).val())
                 $(this).val(that.temp.to);
+            if ($(this).val() && that.$locationTo.val() ) {
+                that.submitSearch();
+            }
         });
 
         // $("#timeSelections1>.button").on('click', function (e) {
