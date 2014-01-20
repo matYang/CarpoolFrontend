@@ -106,18 +106,18 @@ var AppRouter = Backbone.Router.extend({
     },
 
     personal: function (intendedUserId) {
-        this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), true);
+        this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
 
     },
 
     personalWithState: function (intendedUserId, personalViewState) {
         if (!this.sessionManager.hasSession()) {
-            this.navigate("front", true);
+            this.navigate("front", {trigger: true, replace: true});
             return;
         }
 
         if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
-            this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), true);
+            this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
         } else {
             if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
                 if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
@@ -166,7 +166,7 @@ var AppRouter = Backbone.Router.extend({
     },
 
     postMessage: function (postState) {
-        app.navigate("post/" + Config.getDefaultDMPostState(), true);
+        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
     },
 
     postMessageWithState: function (postState) {
@@ -176,7 +176,7 @@ var AppRouter = Backbone.Router.extend({
         }
 
         if (!postState || !Config.validateDMPostState(postState)) {
-            app.navigate("post/" + Config.getDefaultDMPostState(), true);
+            app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
         } else {
             //if the post session not valid, start new session, creat brand new view
             if (!this.MessagePostView || this.MessagePostView.isClosed) {
