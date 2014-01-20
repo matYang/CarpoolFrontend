@@ -197,7 +197,7 @@ var MapView = Backbone.View.extend({
     },
     setMarker:function (json, point) {
         var contentString = "<div>" + json.results[0].formatted_address + "</div>";
-        this.infowindow = new google.maps.InfoWindow({
+        this.infowindow = this.infowindo || new google.maps.InfoWindow({
             content: contentString,
             width: 250,
             height: 80
@@ -223,6 +223,8 @@ var MapView = Backbone.View.extend({
         }
         if (this.oMarker && this.dMarker) {
             this.getDirection(this.oMarker.getPosition(), this.dMarker.getPosition());
+            this.oMarker.setMap(null);
+            this.dMarker.setMap(null);
         }
     },
     close: function (destroy) {
