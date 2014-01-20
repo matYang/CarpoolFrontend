@@ -195,15 +195,48 @@ var MapView = Backbone.View.extend({
             }
         });
     },
+    setMarker:function (json, point) {
+        var contentString = "<div>" + json.results[0].formatted_address + "</div>";
+        this.infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            width: 250,
+            height: 80
+        });
+        if (point == "origin") {
+            if (this.oMarker) {
+                this.oMarker.setMap(null);
+            }
+            this.oMarker = new google.maps.Marker ({
+                position: json.results[0].geometry.location,
+                map: this.map
+            });
+            this.infowindow.open(this.map, this.oMarker);
+        } else {
+            if (this.dMarker) {
+                this.dMarker.setMap(null);
+            }
+            this.dMarker = new google.maps.Marker ({
+                position: json.results[0].geometry.location,
+                map: this.map
+            });
+            this.infowindow.open(this.map, this.dMarker);
+        }
+        if (this.oMarker && this.dMarker) {
+            this.getDirection(this.oMarker.getPosition(), this.dMarker.getPosition());
+        }
+    },
     close: function (destroy) {
         if (this.marker) {
             this.marker.setMap(null);
+            this.marker = null;
         }
         if (this.oMarker) {
             this.oMarker.setMap(null);
+            this.oMarker = null;
         }
         if (this.dMarker) {
             this.dMarker.setMap(null);
+            this.dMarker = null;
         }
         google.maps.event.clearListeners(this.map, 'click');
         if (!this.isClosed) {

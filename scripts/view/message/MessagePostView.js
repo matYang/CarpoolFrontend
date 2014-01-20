@@ -124,33 +124,12 @@ var MessagePostView = Backbone.View.extend({
     },
     buildGeocodeRequest: function (location, point) {
         var url = "http://maps.googleapis.com/maps/api/geocode/json?address="
-         + location.get("pointAddress") + "," + location.get("city") + "&sensor=false";
+         + location.get("pointAddress") + "," + location.get("city") + "&sensor=false", that = this;
         $.ajax({
               url: url,
               context: document.body
         }).done(function(json) {
-            $("#markerButton").off();
-            if (that.init){
-                contentString = "<div>" + json.results[0].formatted_address + "</div>" + divSetOD;
-            } else {
-                contentString = "<div>" + json.results[0].formatted_address + "</div>";
-            }
-            that.infowindow = new google.maps.InfoWindow({
-                content: contentString,
-                width: 250,
-                height: 80
-            });
-            that.infowindow.open(that.map, that.marker);
-            if (that.init) {
-                google.maps.event.addListener(that.infowindow, 'domready', function() {
-                    $(".markerButton").on('click', function(e){ 
-                        if (e.delegateTarget.id === 'markerSetOrigin') 
-                            that.setLocation("origin", json);
-                        else if (e.delegateTarget.id === 'markerSetDest') 
-                            that.setLocation("dest", json);
-                    });
-                });
-            }
+            that.map.setMarker(json, point);
         });
     },
     updateByMapMarker: function (type, json) {
