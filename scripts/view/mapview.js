@@ -66,7 +66,7 @@ var MapView = Backbone.View.extend({
     },
     bindClickEvent: function () {
         var that = this,
-            divSetOD = "<span class='markerButton' id='markerSetOrigin'><a>设为起点</a></span><span class='markerButton' id='markerSetDest'><a>设为终点</a></span>",
+            divSetOD = "<span class='markerButton' id='markerSetOrigin'><a>设为起点</a></span>&nbsp;&nbsp;&nbsp;<span class='markerButton' id='markerSetDest'><a>设为终点</a></span>",
             contentString;
         google.maps.event.addListener(this.map, 'click', function (e) {
             if (that.infowindow) {
@@ -86,8 +86,7 @@ var MapView = Backbone.View.extend({
                   url: "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + e.latLng.lat() + "," + e.latLng.lng() + "&sensor=false",
                   context: document.body
             }).done(function(json) {
-                $("#markerButton").off();
-                debugger;
+                $(".markerButton").off();
                 if (that.init){
                     contentString = "<div>" + json.results[0].formatted_address + "</div>" + divSetOD;
                 } else {
