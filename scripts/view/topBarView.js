@@ -166,7 +166,7 @@ var TopBarView = Backbone.View.extend({
             this.$passwordInput = $("#login_password");
             this.$usernameInput = $("#login_username");
             var $wrong = $("#credentialWrong");
-            this.$usernameInput.on("click", function (e){
+            this.$usernameInput.on("focus", function (e){
                 if  ($(this).val() === ("请输入用户名") ) {
                     $(this).val("");
                 }
@@ -179,23 +179,18 @@ var TopBarView = Backbone.View.extend({
                     $(this).val("请输入用户名");
                 }
             });
-            this.$passwordInput.on("click", function (e){
+            this.$passwordInput.on("focus", function (e){
                 if  ($(this).val() === ("请输入密码") ) {
-                    $(this).val("");
+                    $(this).attr("type", "password").val("");
                 }
                 $wrong.hide();
                 self.$usernameInput.removeClass('invalid_input');
                 self.$passwordInput.removeClass('invalid_input');
             });
-            this.$passwordInput.on("blur", function (e){
-                if  ($(this).val() === ("") ) {
-                    $(this).val("请输入密码");
-                }
-            });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
-                    username = this.$usernameInput.val();
-                    password = this.$passwordInput.val();
+                    username = self.$usernameInput.val();
+                    password = self.$passwordInput.val();
                     app.sessionManager.login(username, password, {
                         success: function (response) {
                             Constants.dLog("server login response: ");
@@ -215,8 +210,8 @@ var TopBarView = Backbone.View.extend({
 
                         error: function (status) {
                             $wrong.show();
-                            this.$usernameInput.addClass('invalid_input');
-                            this.$passwordInput.addClass('invalid_input');
+                            self.$usernameInput.addClass('invalid_input');
+                            self.$passwordInput.addClass('invalid_input');
                         }
                     });
                 }
@@ -229,8 +224,8 @@ var TopBarView = Backbone.View.extend({
                 }
             });
             $('#login_button').on('click', function () {
-                username = this.$usernameInput.val();
-                password = this.$passwordInput.val();
+                username = self.$usernameInput.val();
+                password = self.$passwordInput.val();
                 if (username !== "" && password !== "") {
                     app.sessionManager.login(username, password, {
                         success: function (response) {
@@ -251,15 +246,15 @@ var TopBarView = Backbone.View.extend({
 
                         error: function (status) {
                             $wrong.show();
-                            $usernameInput.addClass('invalid_input');
-                            $passwordInput.addClass('invalid_input');
+                            self.$usernameInput.addClass('invalid_input');
+                            self.$passwordInput.addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
                     $wrong.show();
-                    $usernameInput.addClass('invalid_input');
-                    $passwordInput.addClass('invalid_input');
+                    self.$usernameInput.addClass('invalid_input');
+                    self.$passwordInput.addClass('invalid_input');
                 }
             });
         } else {

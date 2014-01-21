@@ -34,6 +34,7 @@ var FrontPageView = Backbone.View.extend({
     renderRecents: function (recents) {
         if (recents.length === 0) {
             this.renderError();
+            return;
         }
         this.displayMessages = recents;
         var buf = [];
