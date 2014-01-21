@@ -9,7 +9,8 @@ var SearchRepresentation = Backbone.Model.extend({
             'arrivalDate': new Date (),
             'targetType': 2,
             'departureTimeSlot': 0,
-            'arrivalTimeSlot': 0
+            'arrivalTimeSlot': 0,
+            'timeStamp': new Date()
         };
     },
 
@@ -18,7 +19,7 @@ var SearchRepresentation = Backbone.Model.extend({
     },
 
     toString: function () {
-        return this.get('isRoundTrip') + Config.urlSeperator + this.get('departureMatch_Id') + Config.urlSeperator + this.get('arrivalMatch_Id') + Config.urlSeperator + Utilities.castToAPIFormat(this.get('departureDate')) + Config.urlSeperator + Utilities.castToAPIFormat(this.get('arrivalDate')) + Config.urlSeperator + this.get('targetType') + Config.urlSeperator + this.get('departureTimeSlot') + Config.urlSeperator + this.get('arrivalTimeSlot');
+        return this.get('isRoundTrip') + Config.urlSeperator + this.get('departureMatch_Id') + Config.urlSeperator + this.get('arrivalMatch_Id') + Config.urlSeperator + Utilities.castToAPIFormat(this.get('departureDate')) + Config.urlSeperator + Utilities.castToAPIFormat(this.get('arrivalDate')) + Config.urlSeperator + this.get('targetType') + Config.urlSeperator + this.get('departureTimeSlot') + Config.urlSeperator + this.get('arrivalTimeSlot') + Config.urlSeperator + Utilities.castToAPIFormat(new Date());
     },
 
     castFromString: function (str) {

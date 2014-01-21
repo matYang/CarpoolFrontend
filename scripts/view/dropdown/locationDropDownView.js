@@ -18,11 +18,6 @@ var LocationDropDownView = Backbone.View.extend({
         this.defaultLocations.each(function(defaultLocation){
               self.htmlContent += '<li class="default-location-dropdown-li" data-defaultLocationId="' + defaultLocation.get('defaultId') + '">' + defaultLocation.toUiString() + '</li>';
         });
-        // below for testing
-        // for (var i = 0; i < 8; i++){
-        //     self.htmlContent += '<li class="default-location-dropdown-li" data-defaultLocationId="' + "1" + '">' + 'blablabla' + '</li>';
-        // }
-
 
         this.htmlContent = '<ul id="default-location-dropdown">' + this.htmlContent + '</ul>';
         return this.htmlContent;
@@ -41,7 +36,6 @@ var LocationDropDownView = Backbone.View.extend({
     },
 
     notifyParent: function(defaultId){
-        //TODO add parental listener
         Info.log("User selected default location: " + this.defaultLocations.where({'defaultId': defaultId})[0].toUiString());
         this.parentView.acceptDefaultLocation(this.defaultLocations.where({'defaultId': defaultId})[0]);
         this.close();
@@ -53,7 +47,6 @@ var LocationDropDownView = Backbone.View.extend({
     },
 
     close: function () {
-        Info.log("Location Dropdown view close called");
         this._clearAll();
         Backbone.View.prototype.remove.call(this);
     }

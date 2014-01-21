@@ -190,6 +190,7 @@ var FrontPageView = Backbone.View.extend({
             this.$date.off();
             this.unbind();
 
+            this.closeLocationDropDown();
             $( '.cycle-slideshow' ).cycle('destroy');
             $(this.el).empty();
             this.isClosed = true;
