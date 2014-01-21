@@ -84,7 +84,7 @@ var PersonalView = Backbone.View.extend({
             this.activeChildView.close();
         }
         var create = true;
-        $('.active').removeClass('active');
+        $('#myPage_tabControl>.active').removeClass('active');
         switch (this.activeViewState) {
             case "social":
                 $('#profilePage_socialTab').addClass('active');
@@ -193,6 +193,8 @@ var PersonalView = Backbone.View.extend({
             }
             $('#profilePage_messageTab').off();
             $('#profilePage_historyTab').off();
+            $('#profilePage_socialTab').off();
+            $('#profilePage_notificationTab').off();
             $('#profilePage_utilityTab').off();
 
             this.unbind();

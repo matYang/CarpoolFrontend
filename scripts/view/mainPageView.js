@@ -30,7 +30,9 @@ var MainPageView = Backbone.View.extend({
         } else {
             this.searchRepresentation = app.storage.getSearchRepresentationCache();
         }
-
+        this.defaultLocation = app.locationService.getDefaultLocations();
+        this.originLocation = this.defaultLocation.where({"defaultId":this.searchRepresentation.get("departureMatch_Id")});
+        this.destLocation = this.defaultLocation.where({"defaultId":this.searchRepresentation.get("arrivalMatch_Id")});
         //TODO force target type to be all
         this.searchRepresentation.set('targetType', Constants.messageType.both);
 
@@ -46,13 +48,29 @@ var MainPageView = Backbone.View.extend({
             "error": this.renderError
         });
     },
+    closeLocationDropDown: function(){
+        if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
+            this.locationDropDownView.close();
+        }
+    },
+    acceptDefaultLocation: function(defaultLocation){
+        if (this.locationDirection === Constants.LocationDirection.from){
+            this.toSubmit.origin = defaultLocation;
+            this.$page1origin.val(this.toSubmit.origin.toUiString());
+            this.toSubmit.origin.set("pointAddress", this.$page1originAddr.val());
+        }
+        else if (this.locationDirection === Constants.LocationDirection.to){
+            this.toSubmit.dest = defaultLocation;
+            this.toSubmit.origin.set("pointAddress", this.$page1destAddr.val());
+        }
+    },
 
     render: function () {
         var me = this, mapParams = {
             div: "mainMap",
             class: "mainPage-map",
-            originLocation: this.searchRepresentation.get("departureLocation"),
-            destLocation: this.searchRepresentation.get("arrivalLocation"),
+            originLocation: this.originLocation,
+            destLocation: this.destLocation,
             clickable: false
         };
         //injecting the template
@@ -93,8 +111,6 @@ var MainPageView = Backbone.View.extend({
                 me.submitSearch();
             }
         });
-        this.updateLocation('searchLocationInput_from');
-        this.updateLocation('searchLocationInput_to');
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
@@ -170,6 +186,8 @@ var MainPageView = Backbone.View.extend({
             return;
         }
         app.navigate("main/" + this.searchRepresentation.toString());
+        this.searchRepresentation.set("departureMatch_Id", this.originLocation.get("defaultId"));
+        this.searchRepresentation.set("arrivalMatch_Id", this.destLocation.get("defaultId"));
         app.messageManager.searchMessage(this.searchRepresentation, {
             "success": this.renderSearchResults,
             "error": this.renderError
@@ -291,10 +309,12 @@ var MainPageView = Backbone.View.extend({
         });
 
         this.$custFrom.on("blur", function (e) {
-            that.searchRepresentation.get("departureLocation").set("pointAddress", this.value);
+            that.originLocation.set("pointAddress", this.value);
+            that.submitSearch();
         });
         this.$custTo.on("blur", function (e) {
-            that.searchRepresentation.get("arrivalLocation").set("pointAddress", this.value);
+            that.destLocation.set("pointAddress", this.value);
+            that.submitSearch();
         });
 
     },

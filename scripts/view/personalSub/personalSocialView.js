@@ -1,7 +1,7 @@
 var PersonalSocialView = MultiPageView.extend({
     initialize: function (params) {
         this.isClosed = false;
-        _.bindAll(this, 'render', 'entryEvent', 'error', 'close', 'dewatchSuccess', 'dewatchFail');
+        _.bindAll(this, 'render', 'entryEvent', 'error', 'close');
         this.user = app.sessionManager.getSessionUser();
 
         this.entryTemplate = _.template(tpl.get('personalSocialCard'));
@@ -9,11 +9,11 @@ var PersonalSocialView = MultiPageView.extend({
         this.pageNumberId = "searchResultPageNumber";
         this.entryEvent = this.entryEvent;
         this.pageNavigator = "pageNavigator";
-        this.entryHeight = 117;
-        this.pageEntryNumber = 12;
+        this.entryHeight = 88;
+        this.pageEntryNumber = 15;
         this.entryClass = "name";
         this.entryContainer = "socialListContent";
-        this.minHeight = 480;
+        this.minHeight = 460;
         this.startIndex = 0;
 
         this.domContainer = $("#profilePage_content");
@@ -26,7 +26,7 @@ var PersonalSocialView = MultiPageView.extend({
         var that = this;
         app.userManager.fetchWatchedUsers(this.curUserId, {
             "success": this.render,
-            "error": this.error
+            "error": this.error 
         });
     },
 
@@ -38,16 +38,15 @@ var PersonalSocialView = MultiPageView.extend({
         MultiPageView.prototype.render.call(this);
         $("#socialListContent").on("click", ".cancel", function (e) {
             app.userManager.deWatchUser(Utilities.toInt(Utilities.getId(e.target.id)), {
-                "success":that.dewatchSuccess,
-                "error":that.dewatchFail
+                "success": function (user) {
+                    $("#socialCard_" + Utilities.getId(e.target.id)).remove();
+                    $("#social_following").html("关注（" + (socialList.length - 1) + "）");
+                },
+                "error": function () {
+                    $(this).html("取消失败 重试");
+                }
             });
         });
-    },
-    dewatchSuccess: function () {
-
-    },
-    dewatchFail: function () {
-
     },
     entryEvent: function (id) {
         app.navigate("personal/" + id, true);
