@@ -1,4 +1,5 @@
 var SearchResultView = MultiPageView.extend({
+    
     initialize: function (messageList, isSearchResult) {
         _.bindAll(this, 'render', 'transferURL', 'close');
         this.messages = messageList;

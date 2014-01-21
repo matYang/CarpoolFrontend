@@ -2,7 +2,7 @@ var TopBarView = Backbone.View.extend({
 
     el: $('#topBar'),
 
-    events: {   
+    events: {
 
     },
 
@@ -166,8 +166,8 @@ var TopBarView = Backbone.View.extend({
             this.$passwordInput = $("#login_password");
             this.$usernameInput = $("#login_username");
             var $wrong = $("#credentialWrong");
-            this.$usernameInput.on("focus", function (e){
-                if  ($(this).val() === ("请输入用户名") ) {
+            this.$usernameInput.on("click", function (e){
+                if  ($(this).val() === ("请输入邮箱") ) {
                     $(this).val("");
                 }
                 $wrong.hide();
@@ -176,7 +176,7 @@ var TopBarView = Backbone.View.extend({
             });
             this.$usernameInput.on("blur", function (e){
                 if  ($(this).val() === ("") ) {
-                    $(this).val("请输入用户名");
+                    $(this).val("请输入邮箱");
                 }
             });
             this.$passwordInput.on("focus", function (e){

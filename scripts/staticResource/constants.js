@@ -125,17 +125,11 @@ var Constants = {
     },
 
     messageState: {
-        "normal": 0,
-        "expired": -1,
-        "deleted": -2
+        "open": 2,
+        "closed": 1,
+        "deleted": 0
     },
-
-    timeSlot: {
-        "morning": 0,
-        "afternoon": 1,
-        "night": 2,
-        "unspecified": 3
-    },
+    
 
     DayTimeSlot: {
         'n0': 0,
