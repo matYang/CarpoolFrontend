@@ -3,7 +3,7 @@ var FrontPageView = Backbone.View.extend({
     el: $('#content'),
     displayIndex: 0,
     initialize: function () {
-        _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'close');
+        _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
         app.viewRegistration.register("frontPage", this, true);
         this.isClosed = false;
         this.temp = {};
@@ -16,6 +16,7 @@ var FrontPageView = Backbone.View.extend({
         this.searchRepresentation = app.storage.getSearchRepresentationCache();
         this.departLocation = new UserLocation();
         this.arrivalLocation = new UserLocation();
+        this.locationDirection = Constants.LocationDirection.from;
         this.render();
         //fire async API call befire entering the time consuming events binding stage
         this.getRecents();
@@ -46,6 +47,7 @@ var FrontPageView = Backbone.View.extend({
         this.$resultPanel.append(buf.join(""));
         this.bindRecentsEvents();
         this.rollInterval = setInterval(this.scroll, 5000);
+
     },
 
     render: function () {
@@ -65,18 +67,24 @@ var FrontPageView = Backbone.View.extend({
         this.$from = $("#from").children("input").on("focus", function (e) {
             self.temp.from = $(this).val();
             $(this).val("");
+            self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.from;
+            self.locationDropDownView = new LocationDropDownView($("#from"), self);
         });
         this.$to = $("#to").children("input").on("focus", function (e) {
             self.temp.to = $(this).val();
             $(this).val("");
+            self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.to;
+            self.locationDropDownView = new LocationDropDownView($("#to"), self);
         });
         this.$from.on("blur", function(){
-            if (!$(this).val())
-            $(this).val(self.temp.from);
+            if ($(this).val() === '')
+                $(this).val(self.temp.from);
         });
         this.$to.on("blur", function(){
-            if (!$(this).val())
-            $(this).val(self.temp.to);
+            if ($(this).val() === '')
+                $(this).val(self.temp.to);
         });
         this.$date = $(".date>input").on("focus", function (e) {
             $(this).val("");
@@ -112,7 +120,7 @@ var FrontPageView = Backbone.View.extend({
                 $(this).removeClass("f-gray").addClass("active");
                 $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
-        })
+        });
     },
 
     bindRecentsEvents: function () {
@@ -123,7 +131,7 @@ var FrontPageView = Backbone.View.extend({
             } else {
                 self.loginAlert();
             }
-        })
+        });
     },
 
     updateLocation: function (id) {
@@ -152,9 +160,27 @@ var FrontPageView = Backbone.View.extend({
         }
         this.bindRecentsEvents();
     },
+
+    acceptDefaultLocation: function(defaultLocation){
+        if (this.locationDirection === Constants.LocationDirection.from){
+            this.departLocation = defaultLocation;
+            this.$from.val(this.departLocation.toUiString());
+        }
+        else if (this.locationDirection === Constants.LocationDirection.to){
+            this.arrivalLocation = defaultLocation;
+            this.$to.val(this.arrivalLocation.toUiString());
+        }
+    },
+
+    closeLocationDropDown: function(){
+        if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
+            this.locationDropDownView.close();
+        }
+    },
+
     close: function () {
         if (!this.isClosed) {
-	    if (this.$messages) {
+            if (this.$messages) {
                 this.$messages.off();
             }
             $(".btn_search").off();

@@ -88,4 +88,5 @@ var Config = {
         Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
         return 1;
     }
-}; 
+
+};

@@ -1,0 +1,26 @@
+/*defined for locations*/
+#default-location-dropdown{
+	position: absolute;
+	top: 50px;
+	left: 25px;
+	color: black;
+	z-index: 1000;
+	background-color: white;
+	width: 250px;
+}
+
+#default-location-dropdown > li{
+	height: 20px;
+	border-bottom: 1px solid #000000;
+	width: 235px;
+	padding-left: 15px;
+	padding-top: 5px;
+}
+
+#default-location-dropdown > li:last-child{
+	border-bottom: none;
+}
+
+#default-location-dropdown > li:hover{
+	background-color: #9ee1f7;
+}

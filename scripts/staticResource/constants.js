@@ -129,7 +129,6 @@ var Constants = {
         "closed": 1,
         "deleted": 0
     },
-    
 
     DayTimeSlot: {
         'n0': 0,
@@ -173,6 +172,11 @@ var Constants = {
         'inbound': 0,
         'outbound': 1,
         'both': 2
+    },
+
+    LocationDirection: {
+        'from': 0,
+        'to': 1
     },
 
     weekDayArray: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
