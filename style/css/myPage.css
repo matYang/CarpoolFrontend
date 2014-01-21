@@ -1,0 +1,63 @@
+@charset "utf-8";
+/* CSS Document */
+.myPage{width:1000px; margin:0 auto;}
+
+/*左侧个人信息*/
+.left_bar{width:250px; float:left;}
+.left_bar_inner{ border-left:1px solid #ccc;border-right:1px solid #ccc; padding:35px 15px;}
+.profile div.fleft{float:left; margin-right:10px;}
+.profile p{ margin-bottom:7px;}
+.profile p.name{color:#57b7e1;}
+.follow{ color:#57b7e1; font-size:13px; margin:10px 0;}
+.follow span{ margin-right:10px; padding-left:10px; background:url(../images/icon.png) no-repeat 0 -569px; cursor:pointer;}
+.follow span.first{ padding-left:0; background:none}
+.left_bar dl{ margin-bottom:15px; font-size:12px;}
+.left_bar dl dt{ border-bottom:1px solid #66bce2; padding:10px 0 5px; color:#57b7e1; margin-bottom:5px;}
+.left_bar dl dt span.fright{ cursor:pointer;}
+.left_bar dl dd{ line-height:24px;}
+.verification .verified{ padding-left:20px; background:url(../images/icon.png) no-repeat 0 -600px; color:#2fba46;}
+
+/*右侧内容*/
+.myPage_content{width:730px; float:right; padding-top:30px;}
+.tab { height:42px; border-bottom:2px solid #57b7e1;}
+.tab li{float:left; height:42px; line-height:42px; padding:0 30px; background:#e8e8e8; margin-right:10px; cursor:pointer;}
+.tab li.active{ background:#57b7e1; color:#fff;}
+.sub_tab { position:relative; padding-left:20px; border-bottom:1px solid #ccc;}
+.sub_tab li{float:left; height:49px; line-height:48px; margin:0 20px;}
+.sub_tab li.active{ position:relative; top:1px; background:url(../images/arrow1.png) no-repeat bottom center; color:#57b7e1;}
+.sub_tab .notice_set{ position:absolute; right:10px; top:15px;}
+.sub_tab .notice_set a{ color:#57b7e1;}
+/*关注*/
+.follows {float:left; margin-right:10px; width:208px; height:58px; border:1px solid #dddddd; padding:10px; margin-top:20px;}
+.follows dt{float:left; margin-right:10px;}
+.follows dd .name{ margin-bottom:10px;}
+.follows dd .name a,.follows dd .name a:visited{color:#57b7e1;}
+.follows dd p span.cancel{ padding-left:10px; background:url(../images/icon.png) no-repeat 0 -630px; margin-left:10px; cursor:pointer;}
+.follows dd p span.follow_two{ padding-left:20px; color:#2fba46; background:url(../images/icon.png) no-repeat 0 -650px;}
+.follows dd p span.add_follow{ padding-left:20px; color:#2fba46; background:url(../images/icon.png) no-repeat 0 -673px;}
+.follows dd p span.followed{ padding-left:20px; color:#2fba46; background:url(../images/icon.png) no-repeat 0 -597px;}
+
+/*通知*/
+.notice { margin-top:10px;}
+.notice table td{ padding:15px 0; border-bottom:1px dotted #ccc;}
+.notice table td a,.notice table td a:visited{ color:#57b7e1;}
+.notice table .user{ font-size:13px;}
+.notice table .user dt{float:left; margin-right:10px;}
+.notice table .user dd.name{ margin-bottom:8px;}
+.notice table .notice_content div{ margin-bottom:20px;}
+.notice table .delete{ text-align:right;}
+
+.notice_bar{ margin-top:20px; line-height:30px;}
+.notice_bar a{color:#57b7e1; margin:0 10px;}
+.notice_bar { font-size:13px;}
+
+
+
+
+
+
+
+
+
+
+

@@ -84,29 +84,29 @@ var PersonalView = Backbone.View.extend({
             this.activeChildView.close();
         }
         var create = true;
-        $('.selectedTabButton').removeClass('selectedTabButton').addClass('nonSelectedTabButton');
+        $('.active').removeClass('active');
         switch (this.activeViewState) {
             case "social":
-                $('#profilePage_socialTab').addClass('selectedTabButton');
+                $('#profilePage_socialTab').addClass('active');
                 this.activeChildView = new PersonalSocialView ({
                     'intendedUserId': this.curUserId
                 });
                 break;
             case "message":
-                $('#profilePage_messageTab').addClass('selectedTabButton');
+                $('#profilePage_messageTab').addClass('active');
                 this.activeChildView = new PersonalMessageView ({
                     'intendedUserId': this.curUserId
                 });
                 break;
             case "history":
-                $('#profilePage_historyTab').addClass('selectedTabButton');
+                $('#profilePage_historyTab').addClass('active');
                 this.activeChildView = new PersonalHistoryView ({
                     'intendedUserId': this.curUserId
                 });
                 break;
             case "utility":
                 if (this.sessionUser.get("userId") === this.curUserId) {
-                    $('#profilePage_utilityTab').addClass('selectedTabButton');
+                    $('#profilePage_utilityTab').addClass('active');
                     this.activeChildView = new PersonalUtilityView ({
                         'intendedUserId': this.curUserId
                     });

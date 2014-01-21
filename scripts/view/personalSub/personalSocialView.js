@@ -31,7 +31,9 @@ var PersonalSocialView = MultiPageView.extend({
     },
 
     render: function (socialList) {
+
         this.messages = socialList;
+        this.sessionUser.set("socialList", socialList);
         MultiPageView.prototype.render.call(this);
         $(".social_gender_0").html("♂");
         $(".social_gender_1").html("♀");
