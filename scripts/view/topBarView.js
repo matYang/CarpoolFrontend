@@ -179,23 +179,15 @@ var TopBarView = Backbone.View.extend({
                     $(this).val("请输入邮箱");
                 }
             });
-            this.$passwordInput.on("click", function (e){
-                if  ($(this).val() === ("请输入密码") ) {
-                    $(this).val("");
-                }
+            this.$passwordInput.on("focus", function (e){
                 $wrong.hide();
                 self.$usernameInput.removeClass('invalid_input');
                 self.$passwordInput.removeClass('invalid_input');
             });
-            this.$passwordInput.on("blur", function (e){
-                if  ($(this).val() === ("") ) {
-                    $(this).val("");
-                }
-            });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
-                    username = this.$usernameInput.val();
-                    password = this.$passwordInput.val();
+                    username = self.$usernameInput.val();
+                    password = self.$passwordInput.val();
                     app.sessionManager.login(username, password, {
                         success: function (response) {
                             Constants.dLog("server login response: ");

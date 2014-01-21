@@ -129,7 +129,7 @@
 .checked { background-position:0 -25px; }
 .login .bd ul li { margin-bottom:10px;}
 .wrong{ text-align:left; line-height:26px; padding-left:20px; background:url(../images/icon_wrong.png) no-repeat 0 -22px; font-size:12px;}
-.login .bd ul li input.text{width:210px; height:38px; border:1px solid #cccccc; padding-left:10px; color:#ccc;}
+.login .bd ul li input.text{width:210px; height:38px; border:1px solid #cccccc; padding-left:10px; color:#ccc; padding:0px;}
 .login .bd ul li .checkbox{float:left;}
 .forget_password{float:right;}
 .btn_topnav_login{width:220px; height:40px; background:url(../images/btns.png) no-repeat 0 -492px; border:none; font-family: 微软雅黑; font-size:16px; color:#fff; cursor:pointer;}
