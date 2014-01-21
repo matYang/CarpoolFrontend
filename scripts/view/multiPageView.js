@@ -21,9 +21,9 @@ var MultiPageView = Backbone.View.extend({
     },
 
     render: function () {
+        this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
         if (this.messages.length > 0) {
             var buf = [], i, length = this.messages.length - this.startIndex;
-            this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
             this.$domContainer.empty();
             length = (length < this.pageEntryNumber) ? length : this.pageEntryNumber;
             for ( i = 0; i < length; i++) {
