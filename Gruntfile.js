@@ -4,7 +4,14 @@ module.exports = function(grunt) {
 
     concat: {
      dist: {
-        src: ['scripts/**/*.js'],
+        src: ['scripts/service/info.js', 
+              'scripts/lib/*.js',
+              'scripts/staticResource/*.js',
+              'scripts/service/*.js',
+              'scripts/model/representation/*.js',
+              'scripts/model/*.js',
+              'scripts/dataManagers/*.js',
+              'scripts/view/**/*.js'],
         dest: 'build/main.js'
       }
     },
