@@ -345,6 +345,11 @@ var TopBarView = Backbone.View.extend({
             $('#logout').on('click', function () {
                 self.logout();
             });
+            $("#topBar-avatar").on('click', function (e) {
+                e.preventDefault();
+                app.navigate("personal/" + self.sessionUser.id + "/message", true);
+            });
+
         }
 
         $("#login_username,#login_password").on('focus', function () {

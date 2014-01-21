@@ -20,7 +20,7 @@ var RegistrationView = Backbone.View.extend({
 		this.registerContainer = $('#registerContainer');
 		this.contentContainer = $('#registerContent');
 		$("#loginBox").hide();
-		this.registerInfo = {};
+		this.registerInfo = {"location":new UserLocation()};
 		var self = this;
 		this.registerPopup = true;
 		this.render(1);
@@ -33,9 +33,7 @@ var RegistrationView = Backbone.View.extend({
 	},
 
 	updateLocation: function (){
-		
-		$("#registerLocationInput").val(this.registerInfo.location.toUiString());
-		$("#registerCustomizeInput").val(this.registerInfo.location.get("point"));
+
 	},
 
 	bindEvents: function(){
