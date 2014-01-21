@@ -1,7 +1,7 @@
 var PersonalSocialView = MultiPageView.extend({
     initialize: function (params) {
         this.isClosed = false;
-        _.bindAll(this, 'render', 'entryEvent', 'error', 'close');
+        _.bindAll(this, 'render', 'entryEvent', 'error', 'close', 'dewatchSuccess', 'dewatchFail');
         this.user = app.sessionManager.getSessionUser();
 
         this.entryTemplate = _.template(tpl.get('personalSocialCard'));
@@ -11,7 +11,7 @@ var PersonalSocialView = MultiPageView.extend({
         this.pageNavigator = "pageNavigator";
         this.entryHeight = 117;
         this.pageEntryNumber = 12;
-        this.entryClass = "social_card";
+        this.entryClass = "name";
         this.entryContainer = "socialListContent";
         this.minHeight = 480;
         this.startIndex = 0;
@@ -31,12 +31,23 @@ var PersonalSocialView = MultiPageView.extend({
     },
 
     render: function (socialList) {
-
+        var that = this;
         this.messages = socialList;
+        $("#social_following").html("关注（" + socialList.length + "）");
         this.sessionUser.set("socialList", socialList);
         MultiPageView.prototype.render.call(this);
-        $(".social_gender_0").html("♂");
-        $(".social_gender_1").html("♀");
+        $("#socialListContent").on("click", ".cancel", function (e) {
+            app.userManager.deWatchUser(Utilities.toInt(Utilities.getId(e.target.id)), {
+                "success":that.dewatchSuccess,
+                "error":that.dewatchFail
+            });
+        });
+    },
+    dewatchSuccess: function () {
+
+    },
+    dewatchFail: function () {
+
     },
     entryEvent: function (id) {
         app.navigate("personal/" + id, true);

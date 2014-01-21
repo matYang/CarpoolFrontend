@@ -58,6 +58,7 @@ var MultiPageView = Backbone.View.extend({
     bindEntryEvent: function () {
         var self = this;
         this.$domContainer.find("." + this.entryClass).on("click", function (e) {
+            e.preventDefault();
             var id = Utilities.getId(e.delegateTarget.id);
             self.entryEvent(id);
         });
