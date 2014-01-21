@@ -2,7 +2,7 @@ var TopBarView = Backbone.View.extend({
 
     el: $('#topBar'),
 
-    events: {   
+    events: {
 
     },
 
