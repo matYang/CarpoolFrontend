@@ -180,9 +180,6 @@ var TopBarView = Backbone.View.extend({
                 }
             });
             this.$passwordInput.on("focus", function (e){
-                if  ($(this).val() === ("请输入密码") ) {
-                    $(this).attr("type", "password").val("");
-                }
                 $wrong.hide();
                 self.$usernameInput.removeClass('invalid_input');
                 self.$passwordInput.removeClass('invalid_input');
