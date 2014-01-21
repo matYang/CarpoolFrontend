@@ -5,7 +5,7 @@
     //note this is not a global helper function, it is encapsulated inside this modular function scope
     var isStorageSupported = function () {
         if ( typeof (localStorage) === "undefined" || typeof (sessionStorage) === "undefined") {
-            alert("您的浏览器已经成为历史，强烈建议您使用Chrome浏览器. PS: 神马傻逼360，搜狗，遨游浏览器都是IE内核，跟Chrome比起来基本处于石器时代");
+            alert("您的浏览器已经成为历史，强烈建议您使用Chrome浏览器. PS: 神马360，搜狗，遨游浏览器都是IE内核，跟Chrome比起来基本处于石器时代");
             return false;
         }
         return true;
@@ -20,7 +20,7 @@
         };
         this.searchFilterState = {
             "searchGender": Constants.gender.both,
-            "searchTimeSlot": Constants.timeSlot.unspecified,
+            "searchTimeSlot": Constants.DayTimeSlot.n0,
             "searchPriceInterval": {
                 "min": 0,
                 "max": 999
