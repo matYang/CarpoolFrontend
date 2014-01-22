@@ -194,7 +194,7 @@ var FrontPageView = Backbone.View.extend({
             if (this.$messages) {
                 this.$messages.off();
             }
-            $(".btn_search").off();
+            $("#btn_search").off();
             this.$from.off();
             this.$to.off();
             this.$users.off();

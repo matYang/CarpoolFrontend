@@ -131,9 +131,14 @@ var MapView = Backbone.View.extend({
         }
     },
     getLatLng: function (location, latlng) {
+        if (location.get("defaultId") > 0) {
+            latlng.lat = location.get("lat");
+            latlng.lng = location.get("lng");
+            return;  
+        } 
         var request = {};
         var me = this;
-        request.address = location.toUiString();
+        request.address = location.get("pointName") + "," + location.get("city") + "," + location.get("province");
         var result = this.geocoder.geocode(request, function (geocodeResults, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 me.map.setCenter(geocodeResults[0].geometry.location);
@@ -172,16 +177,25 @@ var MapView = Backbone.View.extend({
         });
     },
     getDirection: function (origin, dest) {
+        debugger;
         var request = {}, that = this;
         if (origin instanceof UserLocation) {
-            request.origin = origin.get("point") + " " + origin.get("city") + " " + origin.get("province");
+            if ( origin.isDefault() ) {
+                request.origin = origin.get("lat") + "," + origin.get("lng");
+            } else {
+                request.origin = origin.get("point") + " " + origin.get("city") + " " + origin.get("province");
+            }
         } else if (origin instanceof google.maps.LatLng ){
             request.origin = origin.lat() + "," + origin.lng();
         } else {
             request.origin = origin.lat+ "," + origin.lng;
         }
         if (dest instanceof UserLocation) {
-            request.destination = dest.get("point") + " " + dest.get("city") + " " + dest.get("province");
+            if ( dest.isDefault() ) {
+                request.destination = dest.get("lat") + "," + dest.get("lng");
+            } else {
+                request.destination = dest.get("point") + " " + dest.get("city") + " " + dest.get("province");
+            }
         } else if (origin instanceof google.maps.LatLng ) {
             request.destination = dest.lat() +","+dest.lng();
         } else {

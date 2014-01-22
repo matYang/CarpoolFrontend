@@ -27,7 +27,7 @@ var MessagePostView = Backbone.View.extend({
      }
      */
     initialize: function () {
-        _.bindAll(this, 'render', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents', 'onTypeSelect', 'onAddClick', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage', 'close');
+        _.bindAll(this, 'render', 'acceptDefaultLocation', 'closeLocationDropDown', 'renderFirstPage', 'renderSecondPage', 'renderThirdPage', 'unbindStepEvents', 'onTypeSelect', 'onAddClick', 'toggleDateVisibility', 'updateValue', 'deleteSlot', 'validate', 'getId', 'toMessage',  'close');
         this.isClosed = false;
         this.baseTemplate = _.template(tpl.get('Publish_base'));
         this.step1Template = _.template(tpl.get('Publish_step1'));
@@ -63,6 +63,42 @@ var MessagePostView = Backbone.View.extend({
             this.renderThirdPage();
         }
     },
+    closeLocationDropDown: function(){
+        if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
+            this.locationDropDownView.close();
+        }
+    },
+    acceptDefaultLocation: function(defaultLocation){
+        var addr;
+        if (this.locationDirection === Constants.LocationDirection.from){
+            var lat = this.toSubmit.origin.get("lat"), lng = this.toSubmit.origin.get("lng");
+            addr = this.$page1originAddr.val();
+            addr = "请输入具体地址" === addr ? "" : addr;
+            this.toSubmit.origin = defaultLocation;
+            if (addr) {
+                this.toSubmit.origin.set("pointAddress", addr);
+                this.toSubmit.origin.set("defaultId", -1);
+                this.toSubmit.origin.set("lat", lat);
+                this.toSubmit.origin.set("lng", lng);
+            }
+            this.$page1origin.val(this.toSubmit.origin.toUiString());
+        }
+        else if (this.locationDirection === Constants.LocationDirection.to){
+            addr = this.$page1destAddr.val();
+            addr = "请输入具体地址" === addr ? "" : addr;
+            this.toSubmit.dest = defaultLocation;
+            if (addr) {
+                this.toSubmit.dest.set("pointAddress", addr);
+                this.toSubmit.dest.set("defaultId", -1);
+                this.toSubmit.dest.set("lat", lat);
+                this.toSubmit.dest.set("lng", lng);
+            }
+            this.$page1dest.val(this.toSubmit.dest.toUiString());
+        }
+        if (this.map) {
+            this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
+        }
+    },
 
     renderFirstPage: function () {
         this.$publishContent.append(this.step1Template());
@@ -74,11 +110,18 @@ var MessagePostView = Backbone.View.extend({
         this.$page1origin = $('#publish_originInput').on("click", function (e) {
             $("#originWrong").remove();
             $("#destWrong").remove();
+            that.closeLocationDropDown();
+            that.locationDirection = Constants.LocationDirection.from;
+            that.locationDropDownView = new LocationDropDownView($("#from"), that);
             // that.locationPicker = new LocationPickerView (that.toSubmit.origin, that, "publish_originInput");
         });
         this.$page1dest = $('#publish_destInput').on("click", function (e) {
             $("#originWrong").remove();
             $("#destWrong").remove();
+            that.closeLocationDropDown();
+            that.locationDirection = Constants.LocationDirection.to;
+            that.locationDropDownView = new LocationDropDownView($("#to"), that);
+            
             // that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
         });
         this.$page1originAddr = $('#publish_originAddress');

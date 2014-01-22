@@ -30,14 +30,14 @@ var MainPageView = Backbone.View.extend({
         } else {
             this.searchRepresentation = app.storage.getSearchRepresentationCache();
         }
-
+        //injecting the template
+        $(this.el).append(this.template);
         //TODO force target type to be all
         this.searchRepresentation.set('targetType', Constants.messageType.both);
+        debugger;
+        app.locationService.getDefaultLocations(this.render, this);
 
         //after data intialiazation, start render curreny view
-        this.render();
-        this.messageSearch();
-        this.bindEvents();
     },
 
     messageSearch: function () {
@@ -46,19 +46,41 @@ var MainPageView = Backbone.View.extend({
             "error": this.renderError
         });
     },
+    closeLocationDropDown: function(){
+        if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
+            this.locationDropDownView.close();
+        }
+    },
+    acceptDefaultLocation: function(defaultLocation){
+        if (this.locationDirection === Constants.LocationDirection.from){
+            this.origin = defaultLocation;
+            this.$locationFrom.val(this.origin.toUiString());
+        }
+        else if (this.locationDirection === Constants.LocationDirection.to){
+            this.dest = defaultLocation;
+            this.$locationTo.val(this.dest.toUiString());
+        }
+        if (this.map) {
+            this.map.getDirection(this.origin, this.dest);
+        }
+    },
 
     render: function () {
+        this.$locationFrom = $("#searchLocationInput_from");
+        this.$locationTo = $("#searchLocationInput_to");
+        this.origin = this.defaultLocations.where({"defaultId":this.searchRepresentation.get("departureMatch_Id")})[0];
+        this.dest = this.defaultLocations.where({"defaultId":this.searchRepresentation.get("arrivalMatch_Id")})[0];
+        this.$locationFrom.val(this.origin.toUiString());
+        this.$locationTo.val(this.dest.toUiString());
         var me = this, mapParams = {
             div: "mainMap",
             class: "mainPage-map",
-            originLocation: this.searchRepresentation.get("departureLocation"),
-            destLocation: this.searchRepresentation.get("arrivalLocation"),
+            originLocation: this.origin,
+            destLocation: this.dest,
             clickable: false
         };
-        //injecting the template
-        $(this.el).append(this.template);
-        this.$locationFrom = $("#searchLocationInput_from");
-        this.$locationTo = $("#searchLocationInput_to");
+
+
         this.$custFrom = $("#customizeLocationInput_from");
         this.$custTo = $("#customizeLocationInput_to");
         this.$type = $("#typeSelections");
@@ -93,8 +115,16 @@ var MainPageView = Backbone.View.extend({
                 me.submitSearch();
             }
         });
-        this.updateLocation('searchLocationInput_from');
-        this.updateLocation('searchLocationInput_to');
+        this.$swap = $("#swap").on("click", function() {
+            me.map.getDirection(me.dest, me.origin);
+            var temp;
+            temp = me.origin;
+            me.origin = me.dest;
+            me.dest = temp;
+            me.$locationFrom.val(me.origin.toUiString());
+            me.$locationTo.val(me.dest.toUiString());
+            me.submitSearch();
+        });
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
@@ -122,6 +152,8 @@ var MainPageView = Backbone.View.extend({
                 me.submitSearch();
             }
         });
+        this.messageSearch();
+        this.bindEvents();
     },
 
     renderSearchResults: function (searchResults) {
@@ -170,6 +202,8 @@ var MainPageView = Backbone.View.extend({
             return;
         }
         app.navigate("main/" + this.searchRepresentation.toString());
+        this.searchRepresentation.set("departureMatch_Id", this.origin.get("defaultId"));
+        this.searchRepresentation.set("arrivalMatch_Id", this.dest.get("defaultId"));
         app.messageManager.searchMessage(this.searchRepresentation, {
             "success": this.renderSearchResults,
             "error": this.renderError
@@ -250,13 +284,15 @@ var MainPageView = Backbone.View.extend({
     bindEvents: function () {
         var that = this;
         this.$locationFrom.on('focus', function (e) {
-            that.temp.from = $(this).val();
-            $(this).val("");
+            that.closeLocationDropDown();
+            that.locationDirection = Constants.LocationDirection.from;
+            that.locationDropDownView = new LocationDropDownView($("#from"), that);
         });
 
         this.$locationTo.on('focus', function (e) {
-            that.temp.to = $(this).val();
-            $(this).val("");
+            that.closeLocationDropDown();
+            that.locationDirection = Constants.LocationDirection.to;
+            that.locationDropDownView = new LocationDropDownView($("#to"), that);
         });
         this.$locationFrom.on('blur', function (e) {
             if (!$(this).val())
@@ -290,12 +326,14 @@ var MainPageView = Backbone.View.extend({
             that.refresh(e);
         });
 
-        this.$custFrom.on("blur", function (e) {
-            that.searchRepresentation.get("departureLocation").set("pointAddress", this.value);
-        });
-        this.$custTo.on("blur", function (e) {
-            that.searchRepresentation.get("arrivalLocation").set("pointAddress", this.value);
-        });
+        // this.$custFrom.on("blur", function (e) {
+        //     that.originLocation.set("pointAddress", this.value);
+        //     that.submitSearch();
+        // });
+        // this.$custTo.on("blur", function (e) {
+        //     that.destLocation.set("pointAddress", this.value);
+        //     that.submitSearch();
+        // });
 
     },
 
@@ -308,6 +346,7 @@ var MainPageView = Backbone.View.extend({
             this.$locationTo.off();
             this.$custFrom.off();
             this.$custTo.off();
+            this.$swap.off();
             if (this.searchResultView) {
                 this.searchResultView.close();
             }
