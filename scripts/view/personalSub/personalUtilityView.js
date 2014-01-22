@@ -252,7 +252,17 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$newPassword = $('input[name=newPassword]');
         this.$confirmPassword = $('input[name=confirmNewPassword]');
         this.$location.on('click', function (e) {
+            if ( self.locationDropDownView ) {
+                self.locationDropDownView.show();    
+            } else {
+                self.locationDropDownView = new LocationDropDownView($("#myPage_locatoin"), self);
+                
+            }
         });
+    },
+    acceptDefaultLocation: function(defaultLocation){
+        this.sessionUser.set("location", defaultLocation);
+        this.$from.val(this.defaultLocation.toUiString());
     },
     savePersonalInfo: function () {
         var that = this, date = new Date ();
