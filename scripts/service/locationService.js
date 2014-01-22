@@ -6,7 +6,6 @@
     //constructor
     this.LocationService = function () {
         this.isLoading = true;
-
         var self = this;
         defaultLocations.fetch({
             dataType:'json',
@@ -36,16 +35,19 @@
         return timeDiff >= expireTime;
     };
 
-    LocationService.prototype.getDefaultLocations = function(){
+    LocationService.prototype.getDefaultLocations = function(callback, inst){
         if (this.shouldReload()){
-            this.reload();
+            this.reload(callback, inst);
+        } else if (inst && callback) {
+            inst.defaultLocations = defaultLocations;
+            callback();
         }
         //no matter reload or not, always immediately return the current cache, ensuring total sync is too much effort
         return defaultLocations;
     };
 
-    LocationService.prototype.reload = function(){
-        if (this.isLoading){
+    LocationService.prototype.reload = function(callback, inst){
+        if (this.isLoading && !callback){
             return;
         }
         this.isLoading = true;
@@ -58,6 +60,8 @@
                 self.timeStamp = new Date();
                 self.isLoading = false;
                 Info.log("Defualt Location successfully loaded");
+                inst.defaultLocations = defaultLocations;
+                callback();
             },
 
             error: function(model, response){

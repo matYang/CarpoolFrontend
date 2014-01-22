@@ -83,6 +83,7 @@
 	height:21px;
 	margin:30px 10px;
 	background:url(../images/input_bg.png) no-repeat -206px -73px;
+	cursor:pointer;
 }
 .mainPage-searchBanner-searchBox .date-return-disabled label {
 	background-position:0 -301px;
