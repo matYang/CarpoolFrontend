@@ -62,6 +62,7 @@ var FrontPageView = Backbone.View.extend({
         this.$resultPanel = this.$resultPanel || $("#frontPage-resultPanel");
         this.$resultPanel.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
     },
+
     bindEvents: function () {
         var self = this;
         this.$from = $("#from").children("input").on("focus", function (e) {
@@ -70,6 +71,7 @@ var FrontPageView = Backbone.View.extend({
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.from;
             self.locationDropDownView = new LocationDropDownView($("#from"), self);
+            e.stopPropagation();
         });
         this.$to = $("#to").children("input").on("focus", function (e) {
             self.temp.to = $(this).val();
@@ -77,7 +79,16 @@ var FrontPageView = Backbone.View.extend({
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.to;
             self.locationDropDownView = new LocationDropDownView($("#to"), self);
+            e.stopPropagation();
         });
+        //stop events from propograting to the body listen in eventClearService
+        this.$from = $("#from").children("input").on("click", function (e) {
+            e.stopPropagation();
+        });
+        this.$to = $("#to").children("input").on("click", function (e) {
+            e.stopPropagation();
+        });
+        
         this.$from.on("blur", function(){
             if ($(this).val() === '')
                 $(this).val(self.temp.from);

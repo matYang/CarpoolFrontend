@@ -44,6 +44,7 @@ var AppRouter = Backbone.Router.extend({
         this.storage = new StorageService ();
 
         this.locationService = new LocationService();
+        this.eventClearService = new EventClearService();
 
         //initializing all the data managers
         this.sessionManager = new SessionManager ();

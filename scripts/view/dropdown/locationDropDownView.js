@@ -10,6 +10,7 @@ var LocationDropDownView = Backbone.View.extend({
         this.parentView = parentView;
 
         this.render();
+        app.eventClearService.registerView(this);
     },
 
     assembleHtml: function(){
@@ -32,6 +33,7 @@ var LocationDropDownView = Backbone.View.extend({
         var self = this;
         this.$parentContainer.children('#default-location-dropdown').children('li').on('click', function (e) {
             self.notifyParent(parseInt($(this).attr('data-defaultLocationId'), 10));
+            e.stopPropagation();
         });
     },
 
