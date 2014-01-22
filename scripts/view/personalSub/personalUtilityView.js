@@ -34,6 +34,9 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#utility_password').hide();
             $('#utility_dp').hide();
             $('.invalid_input').removeClass('invalid_input');
+            $('#myPage_edit_control>.active').remove();
+            $(this).add("active");
+
         });
         $('#passwordInfo').on('click', function () {
             $('#utility_password').show();
@@ -41,6 +44,8 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#utility_accountSetting').hide();
             $('#utility_dp').hide();
             $('.invalid_input').removeClass('invalid_input');
+            $('#myPage_edit_control>.active').remove();
+            $(this).add("active");
         });
         $('#tradeInfo').on('click', function () {
             $('#utility_accountSetting').show();
@@ -48,6 +53,8 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#utility_password').hide();
             $('#utility_dp').hide();
             $('.invalid_input').removeClass('invalid_input');
+            $('#myPage_edit_control>.active').remove();
+            $(this).add("active");
         });
         $('#changeDp').on('click', function () {
             $('#utility_dp').show();
@@ -55,6 +62,8 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#utility_personalInfo').hide();
             $('#utility_password').hide();
             $('.invalid_input').removeClass('invalid_input');
+            $('#myPage_edit_control>.active').remove();
+            $(this).add("active");
         });
         $('#upload_picture').on('click', function () {
             //TODO:
@@ -228,6 +237,7 @@ var PersonalUtilityView = Backbone.View.extend({
         }
         $('#utility_password').hide();
         $('#utility_accountSetting').hide();
+        $('#utility_dp>img').attr("src", this.sessionUser.get("imgPath"));
         $('#utility_dp').hide();
 
         var notificationMethod;
