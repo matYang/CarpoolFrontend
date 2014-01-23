@@ -43,9 +43,11 @@ var MultiPageView = Backbone.View.extend({
         } else {
             this.$domContainer.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
         }
-        var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;
-        height = (height > this.minHeight) ? height : this.minHeight;
-        this.$domContainer.css("height", height + "px");
+        if (this.entryHeight) {
+            var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;
+            height = (height > this.minHeight) ? height : this.minHeight;
+            this.$domContainer.css("height", height + "px");
+        }
         if (this.messages.length > this.pageEntryNumber) {
             this.setPageNavigator();
         }
