@@ -6,7 +6,6 @@ var PersonalMessageView = Backbone.View.extend({
 
         this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalMessage'));
-        this.messageTemplate = _.template(tpl.get('personalDetailMessage'));
 
         this.curUserId = params.intendedUserId;
         this.user = app.sessionManager.getSessionUser();
@@ -29,12 +28,9 @@ var PersonalMessageView = Backbone.View.extend({
             message = messages.at(i);
             if (message.get("ownerId") === this.curUserId) {
                 myMessages.add(message);
-            } else {
-                pMessages.add(message);
             }
         }
-        this.myMessageHistoryView = new MessageHistoryView (myMessages, "my", "profilePage_messagePublishedContent");
-        this.pMessageHistoryView = new MessageHistoryView (pMessages, "my", "profilePage_messageParticipatedContent");
+        this.myMessageHistoryView = new MessageHistoryView (myMessages, "profilePage_messagePublished");
 
     },
     error: function () {

@@ -38,7 +38,7 @@ var Constants = {
     "genderEditWindow", "hourRateEditWindow", "locationEditWindow", "timeDateEditWindow", "transactionDetail", "messageCancel", "locationPicker",
 
     /*-----------  person pages  -----------*/
-    "personal", "personalWatch", "personalMessage", "personalHistory", "personalUtility", "personalSocial", "personalSocialCard", "personalSimpleMessage", "personalDetailMessage", "personalSimpleUser", "personalTransactionHistory", "personalNotificationHistory",
+    "personal", "personalWatch", "personalMessage", "personalHistory", "personalUtility", "personalSocial", "personalSocialCard", "personalSimpleUser", "personalTransactionHistory", "personalNotificationHistory",
 
     /*-----------  Registration  -----------*/
     "registration_base", "registration_step1", "registration_step2", "registration_step3", "registration_step4",
