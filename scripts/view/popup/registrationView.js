@@ -61,6 +61,7 @@ var RegistrationView = Backbone.View.extend({
 					app.navigate("register/step4");
 					self.previousStepIndex = 3;
 					self.render(4);
+					Info.alert('注册成功');
 				},
 
 				error: function(){

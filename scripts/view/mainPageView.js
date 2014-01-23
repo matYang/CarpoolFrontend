@@ -295,6 +295,15 @@ var MainPageView = Backbone.View.extend({
             that.locationDirection = Constants.LocationDirection.to;
             that.locationDropDownView = new LocationDropDownView($("#to"), that);
         });
+
+        //do not remove this, must have to avoid e propagating to body
+        this.$locationFrom.on('click', function (e) {
+            e.stopPropagation();
+        });
+        this.$locationTo.on('click', function (e) {
+            e.stopPropagation();
+        });
+
         this.$locationFrom.on('blur', function (e) {
             if (!$(this).val())
                 $(this).val(that.temp.from);
