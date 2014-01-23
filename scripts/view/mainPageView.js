@@ -68,8 +68,10 @@ var MainPageView = Backbone.View.extend({
     render: function () {
         this.$locationFrom = $("#searchLocationInput_from");
         this.$locationTo = $("#searchLocationInput_to");
-        this.origin = this.defaultLocations.where({"defaultId":this.searchRepresentation.get("departureMatch_Id")})[0];
-        this.dest = this.defaultLocations.where({"defaultId":this.searchRepresentation.get("arrivalMatch_Id")})[0];
+        this.$type = $("#typeSelections");
+        this.origin = (this.searchRepresentation.get("departureMatch_Id")>-1 ) ? this.defaultLocations.where({"defaultId":this.searchRepresentation.get("departureMatch_Id")})[0] : this.defaultLocations.at(0);
+        this.dest = (this.searchRepresentation.get("arrivalMatch_Id")>-1 ) ? this.defaultLocations.where({"defaultId":this.searchRepresentation.get("arrivalMatch_Id")})[0] : this.defaultLocations.at(1);
+
         this.$locationFrom.val(this.origin.toUiString());
         this.$locationTo.val(this.dest.toUiString());
         var me = this, mapParams = {
@@ -346,8 +348,6 @@ var MainPageView = Backbone.View.extend({
                 this.$type.children("span").off();
                 this.$locationFrom.off();
                 this.$locationTo.off();
-                this.$custFrom.off();
-                this.$custTo.off();
                 this.$swap.off();
                 if (this.searchResultView) {
                     this.searchResultView.close();
