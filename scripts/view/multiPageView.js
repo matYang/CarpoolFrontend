@@ -49,6 +49,9 @@ var MultiPageView = Backbone.View.extend({
         if (this.messages.length > this.pageEntryNumber) {
             this.setPageNavigator();
         }
+        if (this.afterRender) {
+            this.afterRender();
+        }
     },
     toPage: function (page) {
         this.currentPage = page;
