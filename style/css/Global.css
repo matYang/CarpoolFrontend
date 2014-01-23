@@ -57,6 +57,53 @@ input.text { font-family:'微软雅黑'; }
 .select_item ul li{padding-left:15px; font-size:14px; line-height:50px; border-bottom:1px dotted #ccc; }
 .select_item ul li:hover{background:#efefef; }
 
+.select_item1 {
+	float:left;
+	margin-right:8px;
+	position:relative;
+	width:180px;
+	cursor:pointer;
+}
+.select_item1 .text {
+	width:88px!important;
+}
+.select_item1 span {
+	position:absolute;
+	display:block;
+	width:24px;
+	height:34px;
+	top:1px;
+	right:0;
+	border-left:1px solid #ccc;
+	background:url(../images/input_bg1.png) no-repeat -206px -57px;
+	z-index:9;
+	cursor:pointer;
+}
+.select_item1 ul {
+	position:absolute;
+	top:50px;
+	left:0;
+	background:#fff;
+	border:1px solid #ccc;
+	width:180px;
+	z-index:99;
+}
+.select_item1 ul li {
+	padding-left:15px;
+	font-size:14px;
+	line-height:50px;
+	border-bottom:1px dotted #ccc;
+}
+.select_item1 ul li:hover {
+	background:#efefef;
+}
+.wrong p {
+	margin-top:10px;
+	padding-left:25px;
+	height:22px;
+	background:url(../images/icon_wrong.png) no-repeat;
+	font-size:16px;
+}
 /*弹出层框架*/
 .mask1 { height: 100%; width: 100%; position: fixed; left: 0px; top: 0px; z-index: 2998; background: #000; opacity: 0.5; filter: alpha(opacity=50);}
 .pop { position: absolute; top: 17%; left: 50%; z-index: 2999; border:10px solid rgba(33, 182, 225, 0.8); border:10px solid #21b6e1\9; }
@@ -77,3 +124,25 @@ input.text { font-family:'微软雅黑'; }
 	user-select: none;
 }
 
+.checkbox {
+	height:25px;
+	line-height:25px;
+	padding-left:30px;
+	background:url(../images/checkbox.png) no-repeat 0 0;
+	cursor:pointer;
+}
+.checked {
+	background-position:0 -25px;
+}
+.radio_box {
+	float:left;
+	height:16px;
+	line-height:16px;
+	padding-left:18px;
+	background:url(../images/radiobox.png) no-repeat 0 2px;
+	cursor:pointer;
+	margin-right:20px;
+}
+.radio_box_checked {
+	background-position:0 -34px;
+}

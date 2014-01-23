@@ -34,7 +34,6 @@ var MainPageView = Backbone.View.extend({
         $(this.el).append(this.template);
         //TODO force target type to be all
         this.searchRepresentation.set('targetType', Constants.messageType.both);
-        debugger;
         app.locationService.getDefaultLocations(this.render, this);
 
         //after data intialiazation, start render curreny view
