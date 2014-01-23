@@ -256,10 +256,13 @@ var TopBarView = Backbone.View.extend({
                     self.$passwordInput.addClass('invalid_input');
                 }
             });
+            $("#login_username,#login_password").on('focus', function () {
+                this.classList.remove('invalid_input');
+            });
         } else {
-            // this.$logo = $('#logo').on('click', function () {
-            //     app.navigate("front", true);
-            // });
+            this.$logo = $('#logo').on('click', function () {
+                app.navigate("front", true);
+            });
 
             this.$npersonal = $('#navigate_personal').on('click', function () {
                 app.navigate("personal/" + app.sessionManager.getUserId(), true);
@@ -337,7 +340,7 @@ var TopBarView = Backbone.View.extend({
                     self.hideProfileDropdown();
                 }
             });
-        //  $('#logout').on('mouseleave', function(e)) {
+        //  $('#logout').on('mouseleave', function(e) {
         //      if (e.toElement.id !== "profilePicture") {
         //          self.hideLikes();
         //      }
@@ -349,12 +352,8 @@ var TopBarView = Backbone.View.extend({
                 e.preventDefault();
                 app.navigate("personal/" + self.sessionUser.id + "/message", true);
             });
-
         }
-
-        $("#login_username,#login_password").on('focus', function () {
-            this.classList.remove('invalid_input');
-        });
+        
     },
 
     logout: function () {
@@ -412,24 +411,29 @@ var TopBarView = Backbone.View.extend({
     },
 
     _clearAll: function () {
-        //this.$logo.off();
-        this.$nmain.off();
-        this.$npersonal.off();
-        this.$nfeedBack.off();
-        this.$notifications.off();
-        this.$letters.off();
-        this.$favorites.off();
-        this.$ndropdown.off();
-        this.$ldropdown.off();
-        this.$fdropdown.off();
-        if (!app.sessionManager.hasSession()) {
+        if (app.sessionManager.hasSession()) {
             this.$passwordInput.off();
             this.$usernameInput.off();
             $('#signup_button').off();
             $('#login_button').off();
             this.$lbt.off();
+            $("#remember_password").off();
         }
-        this._unbindDropdownEvents();
+        else{
+            this.$logo.off();
+            this.$npersonal.off();
+            this.$nfeedBack.off();
+            this.$nusersearch.off();
+            this.$notifications.off();
+            this.$letters.off();
+            this.$favorites.off();
+            this.$ndropdown.off();
+            this.$ldropdown.off();
+            this.$fdropdown.off();
+            this._unbindDropdownEvents();
+            this.$profilePicture.off();
+        }
+        this.$nmain.off();
         this.stopListening();
         this.unbind();
         $(this.el).empty();
