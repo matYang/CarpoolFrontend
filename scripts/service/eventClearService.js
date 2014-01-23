@@ -8,7 +8,6 @@
         var self = this;
         $('body').on('click', function(){
             self.clearViews();
-            Info.log("click received, clearing queue");
         });
 
     };
@@ -20,12 +19,10 @@
             }
             clearableViewQueue.pop();
         }
-        Info.log("queue cleared");
     };
 
     EventClearService.prototype.registerView = function(clearableView) {
         if (typeof clearableView !== 'undefined' && clearableView instanceof Backbone.View){
-            Info.log("adding to clear queue");
             clearableViewQueue.push(clearableView);
         }
     };

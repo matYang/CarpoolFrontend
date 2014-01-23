@@ -117,7 +117,7 @@ var MessagePostView = Backbone.View.extend({
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.from;
 
-            this.closeLocationDropDown();
+            that.closeLocationDropDown();
             that.locationDropDownView = new LocationDropDownView($("#from"), that);
             e.stopPropagation();
         });
@@ -127,7 +127,7 @@ var MessagePostView = Backbone.View.extend({
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.to;
 
-            this.closeLocationDropDown();
+            that.closeLocationDropDown();
             that.locationDropDownView = new LocationDropDownView($("#to"), that);
             e.stopPropagation();
         });
@@ -451,6 +451,7 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     restoreState: function (page) {
+        var date, id;
         if (page === 1) {
             $('#publish_type>.active').removeClass('active');
             $('#publish_' + this.toSubmit.type).addClass('active');
@@ -459,19 +460,19 @@ var MessagePostView = Backbone.View.extend({
             var r = this.toSubmit.requests;
             for (var request = 0; request < r.length; request++) {
                 if (r[request]) {
-                    var id = Utilities.toInt(request) + 1;
+                    id = Utilities.toInt(request) + 1;
                     if (r[request.round]) {
                         $('div[name=publish_round_' + id + ']').attr("class", "checkbox checked");
                     } else {
                         $('div[name=publish_round_' + id + ']').attr("class", "checkbox");
                     }
                     if (r[request].departDate) {
-                        var date = r[request].departDate;
+                        date = r[request].departDate;
                         $('input[name=publish_departDate_' + id + ']').val((1 + date.getMonth()) + "/" + date.getDate() + "/" + date.getFullYear());
                         $('input[name=publish_returnDate_' + id + ']').datepicker("option", "minDate", date);
                     }
                     if (r[request].round && r[request].returnDate) {
-                        var date = r[request].returnDate;
+                        date = r[request].returnDate;
                         $('input[name=publish_departDate_' + id + ']').datepicker("option", "maxDate", this.toSubmit.requests[request].returnDate);
                         $('input[name=publish_returnDate_' + id + ']').val((1 + date.getMonth()) + "/" + date.getDate() + "/" + date.getFullYear());
                     } else {
@@ -494,8 +495,8 @@ var MessagePostView = Backbone.View.extend({
                 this.$conditionalPriceSwitch.addClass("publish_selected");
                 this.$singlePrice.hide();
                 this.$priceListContainer.show();
-                var entryNum = 0,
-                    id = 0;
+                var entryNum = 0;
+                id = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
                     d = i + 1;
                     entryNum++;
