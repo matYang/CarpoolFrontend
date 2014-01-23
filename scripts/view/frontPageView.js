@@ -44,6 +44,7 @@ var FrontPageView = Backbone.View.extend({
         while (this.displayIndex < 3 && this.displayIndex < recents.length) {
             buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
         }
+        this.displayIndex = this.displayIndex % recents.length;
         this.$resultPanel.append(buf.join(""));
         this.bindRecentsEvents();
         this.rollInterval = setInterval(this.scroll, 5000);
@@ -128,11 +129,12 @@ var FrontPageView = Backbone.View.extend({
                 $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
         });
+        this.bindRecentsEvents();
     },
 
     bindRecentsEvents: function () {
         var self = this;
-        this.$messages = $("#frontPage-resultPanel>.message_simple").off().on('click', function (e) {
+        this.$messages = $("#frontPage-resultPanel").on("click", ".message_simple", function (e) {
             if (app.sessionManager.hasSession()) {
                 app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
             } else {
@@ -165,7 +167,6 @@ var FrontPageView = Backbone.View.extend({
                 "error": this.renderError
             });
         }
-        this.bindRecentsEvents();
     },
 
     acceptDefaultLocation: function(defaultLocation){
