@@ -41,7 +41,7 @@ var RegistrationView = Backbone.View.extend({
 		$("#registerInputFemaleContainer").on("click", function(){
 			self.registerInfo.gender = Constants.gender.female;
 		});
-		$('#registerLocationInput').on('click', function(){
+		$('#registerLocationInput').on('click', function(e){
 			self.closeLocationDropDown();
 			self.locationDropDownView = new LocationDropDownView($('#registerLocationInputContainer'), this);
 
