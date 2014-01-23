@@ -66,16 +66,12 @@ var FrontPageView = Backbone.View.extend({
     bindEvents: function () {
         var self = this;
         this.$from = $("#from").children("input").on("focus", function (e) {
-            self.temp.from = $(this).val();
-            $(this).val("");
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.from;
             self.locationDropDownView = new LocationDropDownView($("#from"), self);
             e.stopPropagation();
         });
         this.$to = $("#to").children("input").on("focus", function (e) {
-            self.temp.to = $(this).val();
-            $(this).val("");
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.to;
             self.locationDropDownView = new LocationDropDownView($("#to"), self);

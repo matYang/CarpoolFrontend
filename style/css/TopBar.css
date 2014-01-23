@@ -42,14 +42,13 @@
 }
 .topBar-dropdown {
 	float:left;
-	margin-left:90px;
+	margin-left:170px;
 }
 /*右侧工具*/
 .topBar-dropdown dl {
 	float:left;
-	width:40px;
+	width:70px;
 	position:relative;
-	margin: 0 15px;
 }
 .topBar-dropdown dl dt {
 	display:block;
@@ -83,7 +82,6 @@
 	width:100px;
 	background:url(../images/nav_spites.png) no-repeat 64px -354px;
 	padding-top:12px;
-	z-index:10;
 }
 .topBar-dropdown ul, .topBar-profileImage ul {
 	background-color: #fff;
@@ -115,23 +113,86 @@
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
-
-/*头像*/
-.topBar-profileImage dt { margin-top:5px; }
-.topBar-profileImage dt img { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
-
-.login { position:absolute; right:150px; width:100px; text-align:center; }
-.login span { display:block; height:64px; line-height:64px; background:url(../images/top_nav_login_bg.jpg) no-repeat; font-size:16px; color:#fff; cursor:pointer; }
-.reg { position:absolute; right:50px; width:100px; height:60px; line-height:60px; text-align:center; font-size:16px; color:#fff; cursor:pointer; }
-.login .bd { position:absolute; top:69px; left:0; width:262px; background:#fff; border:1px solid #ccc; z-index:999;}
-.login .bd ul{ padding:20px;}
-.checkbox { height:25px; line-height:25px; padding-left:30px; background:url(../images/checkbox.png) no-repeat 0 0; cursor:pointer; }
-.checked { background-position:0 -25px; }
-.login .bd ul li { margin-bottom:10px;}
-.wrong{ text-align:left; line-height:26px; padding-left:20px; background:url(../images/icon_wrong.png) no-repeat 0 -22px; font-size:12px;}
-.login .bd ul li input.text{width:210px; height:38px; border:1px solid #cccccc; padding-left:10px; color:#ccc; padding:0px;}
-.login .bd ul li .checkbox{float:left;}
-.forget_password{float:right;}
-.btn_topnav_login{width:220px; height:40px; background:url(../images/btns.png) no-repeat 0 -492px; border:none; font-family: 微软雅黑; font-size:16px; color:#fff; cursor:pointer;}
-.btn_topnav_login:hover{ background-position:-231px -492px;}
-
+.login {
+	position:absolute;
+	right:150px;
+	width:100px;
+	text-align:center;
+}
+.login span {
+	display:block;
+	height:64px;
+	line-height:56px;
+	background:url(../images/top_nav_login_bg.jpg) no-repeat;
+	font-size:16px;
+	color:#fff;
+	cursor:pointer;
+}
+.reg {
+	position:absolute;
+	right:50px;
+	width:100px;
+	height:60px;
+	line-height:60px;
+	text-align:center;
+	font-size:16px;
+	color:#fff;
+	cursor:pointer;
+}
+.login .bd {
+	position:absolute;
+	top:69px;
+	left:0;
+	width:262px;
+	background:#fff;
+	border:1px solid #ccc;
+}
+.login .bd ul {
+	padding:20px;
+}
+.checkbox {
+	height:25px;
+	line-height:25px;
+	padding-left:30px;
+	background:url(../images/checkbox.png) no-repeat 0 0;
+	cursor:pointer;
+}
+.checked {
+	background-position:0 -25px;
+}
+.login .bd ul li {
+	margin-bottom:10px;
+}
+.login .wrong {
+	text-align:left;
+	line-height:26px;
+	padding-left:20px;
+	background:url(../images/icon_wrong.png) no-repeat 0 -22px;
+	font-size:12px;
+}
+.login .bd ul li input.text {
+	width:210px;
+	height:38px;
+	border:1px solid #cccccc;
+	padding-left:10px;
+	color:#ccc;
+}
+.login .bd ul li .checkbox {
+	float:left;
+}
+.forget_password {
+	float:right;
+}
+.btn_topnav_login {
+	width:220px;
+	height:40px;
+	background:url(../images/btns.png) no-repeat 0 -492px;
+	border:none;
+	font-family: 微软雅黑;
+	font-size:16px;
+	color:#fff;
+	cursor:pointer;
+}
+.btn_topnav_login:hover {
+	background-position:-231px -492px;
+}

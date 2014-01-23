@@ -31,7 +31,7 @@ var LocationDropDownView = Backbone.View.extend({
 
     bindEvents: function(){
         var self = this;
-        this.$parentContainer.children('#default-location-dropdown').children('li').on('click', function (e) {
+        $('#default-location-dropdown').children('li').on('click', function (e) {
             self.notifyParent(parseInt($(this).attr('data-defaultLocationId'), 10));
             e.stopPropagation();
         });
