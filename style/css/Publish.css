@@ -39,6 +39,10 @@
 	float:right;
 	width:565px;
 }
+
+.publish_info .publish_origin #from, .publish_info .publish_dest #to{
+	position: relative;
+}
 .publish_info .text {
 	width:263px;
 	height:50px;

@@ -113,7 +113,8 @@ var MessagePostView = Backbone.View.extend({
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.from;
             that.locationDropDownView = new LocationDropDownView($("#from"), that);
-            // that.locationPicker = new LocationPickerView (that.toSubmit.origin, that, "publish_originInput");
+
+            e.stopPropagation();
         });
         this.$page1dest = $('#publish_destInput').on("click", function (e) {
             $("#originWrong").remove();
@@ -121,8 +122,8 @@ var MessagePostView = Backbone.View.extend({
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.to;
             that.locationDropDownView = new LocationDropDownView($("#to"), that);
-            
-            // that.locationPicker = new LocationPickerView (that.toSubmit.dest, that, "publish_destInput");
+
+            e.stopPropagation();
         });
         this.$page1originAddr = $('#publish_originAddress');
         this.$page1destAddr = $('#publish_destAddress');
@@ -166,8 +167,7 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     buildGeocodeRequest: function (location, point) {
-        var url = "http://maps.googleapis.com/maps/api/geocode/json?address="
-         + location.get("pointAddress") + "," + location.get("city") + "&sensor=false", that = this;
+        var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + location.get("pointAddress") + "," + location.get("city") + "&sensor=false", that = this;
         $.ajax({
               url: url,
               context: document.body
