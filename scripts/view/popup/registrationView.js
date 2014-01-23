@@ -63,7 +63,7 @@ var RegistrationView = Backbone.View.extend({
 					self.emailCache = user.get('email');
 					app.navigate("register/step4");
 					self.previousStepIndex = 3;
-					self.render(4);
+					//self.render(4);
 					Info.alert('注册成功');
 				},
 

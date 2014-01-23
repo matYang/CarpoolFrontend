@@ -69,9 +69,11 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     acceptDefaultLocation: function(defaultLocation){
-        var addr;
+        var addr,
+            lat, lng;
         if (this.locationDirection === Constants.LocationDirection.from){
-            var lat = this.toSubmit.origin.get("lat"), lng = this.toSubmit.origin.get("lng");
+            lat = this.toSubmit.origin.get("lat");
+            lng = this.toSubmit.origin.get("lng");
             addr = this.$page1originAddr.val();
             addr = "请输入具体地址" === addr ? "" : addr;
             this.toSubmit.origin = defaultLocation;
@@ -84,6 +86,8 @@ var MessagePostView = Backbone.View.extend({
             this.$page1origin.val(this.toSubmit.origin.toUiString());
         }
         else if (this.locationDirection === Constants.LocationDirection.to){
+            lat = this.toSubmit.dest.get("lat");
+            lng = this.toSubmit.dest.get("lng");
             addr = this.$page1destAddr.val();
             addr = "请输入具体地址" === addr ? "" : addr;
             this.toSubmit.dest = defaultLocation;
