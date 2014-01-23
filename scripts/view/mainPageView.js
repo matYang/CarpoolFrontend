@@ -340,7 +340,9 @@ var MainPageView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             //removing all event handlers
-            this.map.close();
+            if (this.map) {
+                this.map.close();
+            }
             this.$type.children("span").off();
             this.$locationFrom.off();
             this.$locationTo.off();
