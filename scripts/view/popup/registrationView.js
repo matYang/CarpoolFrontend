@@ -43,7 +43,7 @@ var RegistrationView = Backbone.View.extend({
 		});
 		$('#registerLocationInput').on('click', function(e){
 			self.closeLocationDropDown();
-			self.locationDropDownView = new LocationDropDownView($('#registerLocationInputContainer'), this);
+			self.locationDropDownView = new LocationDropDownView($('#registerLocationInputContainer'), self);
 
 			e.stopPropagation();
 		});
@@ -82,6 +82,7 @@ var RegistrationView = Backbone.View.extend({
 
 	acceptDefaultLocation: function(defaultLocation){
         this.registerInfo.location = defaultLocation;
+        $('#registerLocationInput').val(defaultLocation.toUiString());
     },
 
     closeLocationDropDown: function(){

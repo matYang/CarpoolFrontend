@@ -60,7 +60,9 @@
                 self.timeStamp = new Date();
                 self.isLoading = false;
                 Info.log("Defualt Location successfully loaded");
-                inst.defaultLocations = defaultLocations;
+                if (typeof inst !== 'undefined'){
+                    inst.defaultLocations = defaultLocations;
+                }
                 callback();
             },
 
