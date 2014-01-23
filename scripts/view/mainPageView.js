@@ -16,6 +16,7 @@ var MainPageView = Backbone.View.extend({
         _.bindAll(this, 'render', 'renderSearchResults', 'messageSearch', 'onClickTime', 'onClickType', 'submitSearch', 'refresh', 'bindEvents', 'close');
         app.viewRegistration.register("mainPage", this, true);
         this.isClosed = false;
+        this.rendered = false;
         this.user = app.sessionManager.getSessionUser();
         //define the template
         this.template = _.template(tpl.get('main'));
@@ -80,9 +81,7 @@ var MainPageView = Backbone.View.extend({
         };
 
 
-        this.$custFrom = $("#customizeLocationInput_from");
-        this.$custTo = $("#customizeLocationInput_to");
-        this.$type = $("#typeSelections");
+
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.$dateDepart = $("#searchDateInput_depart").datepicker({
             buttonImageOnly: true,
@@ -153,6 +152,7 @@ var MainPageView = Backbone.View.extend({
         });
         this.messageSearch();
         this.bindEvents();
+        this.rendered = true;
     },
 
     renderSearchResults: function (searchResults) {
@@ -339,15 +339,19 @@ var MainPageView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             //removing all event handlers
-            this.map.close();
-            this.$type.children("span").off();
-            this.$locationFrom.off();
-            this.$locationTo.off();
-            this.$custFrom.off();
-            this.$custTo.off();
-            this.$swap.off();
-            if (this.searchResultView) {
-                this.searchResultView.close();
+            if (this.rendered) {
+                if (this.map) {
+                    this.map.close();
+                }
+                this.$type.children("span").off();
+                this.$locationFrom.off();
+                this.$locationTo.off();
+                this.$custFrom.off();
+                this.$custTo.off();
+                this.$swap.off();
+                if (this.searchResultView) {
+                    this.searchResultView.close();
+                }
             }
 
             //get ride of the view
