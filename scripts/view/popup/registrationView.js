@@ -5,35 +5,32 @@ var RegistrationView = Backbone.View.extend({
 	el: "",
 
 	initialize: function(){
-		_.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'finish','close');
+		_.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
 		app.viewRegistration.register("registration", this, true);
 		this.isClosed = false;
 
 		this.baseTemplate = _.template(tpl.get('registration_base'));
-		this.step1Template = _.template(tpl.get('registration_step1'));
-		this.step2Template = _.template(tpl.get('registration_step2'));
-		this.step3Template = _.template(tpl.get('registration_step3'));
-		this.step4Template = _.template(tpl.get('registration_step4'));
+
+		this.registerInfo = {'location': new UserLocation()};
+		var self = this;
+		this.render(1);
+
+	},
+
+	render: function(stepIndex){
 		this.domContainer = $('#content');
 		this.domContainer.append(this.baseTemplate);
 		this.domContainer.show();
 		this.registerContainer = $('#registerContainer');
 		this.contentContainer = $('#registerContent');
 		$("#loginBox").hide();
-		this.registerInfo = {"location":new UserLocation()};
-		var self = this;
-		this.registerPopup = true;
-		this.render(1);
 
-	},
-
-	render: function(stepIndex){
 		// --- events binding ---
 		this.bindEvents();
 	},
 
 	updateLocation: function (){
-
+		//caputre custmized lcoation, geo look up, then fill in defaulLocation
 	},
 
 	bindEvents: function(){
@@ -43,6 +40,12 @@ var RegistrationView = Backbone.View.extend({
 		});
 		$("#registerInputFemaleContainer").on("click", function(){
 			self.registerInfo.gender = Constants.gender.female;
+		});
+		$('#registerLocationInput').on('click', function(){
+			self.closeLocationDropDown();
+			self.locationDropDownView = new LocationDropDownView($('#registerLocationInputContainer'), this);
+
+			e.stopPropagation();
 		});
 		$("#complete").on("click", function(){
 			
@@ -76,6 +79,16 @@ var RegistrationView = Backbone.View.extend({
 	finish: function(){
 		Info.displayNotice("注册成功");
 	},
+
+	acceptDefaultLocation: function(defaultLocation){
+        this.registerInfo.location = defaultLocation;
+    },
+
+    closeLocationDropDown: function(){
+        if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
+            this.locationDropDownView.close();
+        }
+    },
 
 	close: function(){
 		if (!this.isClosed){

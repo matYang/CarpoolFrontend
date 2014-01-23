@@ -283,17 +283,19 @@ var MainPageView = Backbone.View.extend({
     },
 
     bindEvents: function () {
-        var that = this;
+        var self = this;
         this.$locationFrom.on('focus', function (e) {
-            that.closeLocationDropDown();
-            that.locationDirection = Constants.LocationDirection.from;
-            that.locationDropDownView = new LocationDropDownView($("#from"), that);
+            self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.from;
+            self.closeLocationDropDown();
+            self.locationDropDownView = new LocationDropDownView($("#from"), self);
         });
 
         this.$locationTo.on('focus', function (e) {
-            that.closeLocationDropDown();
-            that.locationDirection = Constants.LocationDirection.to;
-            that.locationDropDownView = new LocationDropDownView($("#to"), that);
+            self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.to;
+            self.closeLocationDropDown();
+            self.locationDropDownView = new LocationDropDownView($("#to"), self);
         });
 
         //do not remove this, must have to avoid e propagating to body
@@ -306,43 +308,43 @@ var MainPageView = Backbone.View.extend({
 
         this.$locationFrom.on('blur', function (e) {
             if (!$(this).val())
-                $(this).val(that.temp.from);
-            if ($(this).val() && that.$locationTo.val() ) {
-                that.submitSearch();
+                $(this).val(self.temp.from);
+            if ($(this).val() && self.$locationTo.val() ) {
+                self.submitSearch();
             }
         });
 
         this.$locationTo.on('blur', function (e) {
             if (!$(this).val())
-                $(this).val(that.temp.to);
-            if ($(this).val() && that.$locationTo.val() ) {
-                that.submitSearch();
+                $(this).val(self.temp.to);
+            if ($(this).val() && self.$locationTo.val() ) {
+                self.submitSearch();
             }
         });
 
         // $("#timeSelections1>.button").on('click', function (e) {
-        //     that.onClickTime(e, "timeSelections1");
+        //     self.onClickTime(e, "timeSelections1");
         // });
 
         // $("#timeSelections2>.button").on('click', function (e) {
-        //     that.onClickTime(e, "timeSelections2");
+        //     self.onClickTime(e, "timeSelections2");
         // });
 
         this.$type.children("span").on('click', function (e) {
-            that.onClickType(e);
+            self.onClickType(e);
         });
 
         $("#refreshButton").on('click', function (e) {
-            that.refresh(e);
+            self.refresh(e);
         });
 
         // this.$custFrom.on("blur", function (e) {
-        //     that.originLocation.set("pointAddress", this.value);
-        //     that.submitSearch();
+        //     self.originLocation.set("pointAddress", this.value);
+        //     self.submitSearch();
         // });
         // this.$custTo.on("blur", function (e) {
-        //     that.destLocation.set("pointAddress", this.value);
-        //     that.submitSearch();
+        //     self.destLocation.set("pointAddress", this.value);
+        //     self.submitSearch();
         // });
 
     },
@@ -358,6 +360,7 @@ var MainPageView = Backbone.View.extend({
                 this.$locationFrom.off();
                 this.$locationTo.off();
                 this.$swap.off();
+                this.closeLocationDropDown();
                 if (this.searchResultView) {
                     this.searchResultView.close();
                 }

@@ -112,8 +112,9 @@ var MessagePostView = Backbone.View.extend({
             $("#destWrong").remove();
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.from;
-            that.locationDropDownView = new LocationDropDownView($("#from"), that);
 
+            this.closeLocationDropDown();
+            that.locationDropDownView = new LocationDropDownView($("#from"), that);
             e.stopPropagation();
         });
         this.$page1dest = $('#publish_destInput').on("click", function (e) {
@@ -121,8 +122,9 @@ var MessagePostView = Backbone.View.extend({
             $("#destWrong").remove();
             that.closeLocationDropDown();
             that.locationDirection = Constants.LocationDirection.to;
-            that.locationDropDownView = new LocationDropDownView($("#to"), that);
 
+            this.closeLocationDropDown();
+            that.locationDropDownView = new LocationDropDownView($("#to"), that);
             e.stopPropagation();
         });
         this.$page1originAddr = $('#publish_originAddress');
@@ -290,7 +292,7 @@ var MessagePostView = Backbone.View.extend({
                             that.updateValue(this, d);
                             $("input[name=publish_returnDate_" + index + "]").datepicker("option", "minDate", d);
                         }
-                    });                    
+                    });
                 }
             }
             this.restoreState(2);
@@ -488,9 +490,10 @@ var MessagePostView = Backbone.View.extend({
                 this.$conditionalPriceSwitch.addClass("publish_selected");
                 this.$singlePrice.hide();
                 this.$priceListContainer.show();
-                var entryNum = 0;
+                var entryNum = 0,
+                    id = 0;
                 for (var i = 0; i < this.toSubmit.priceList.length; i++) {
-                    var id = i + 1;
+                    d = i + 1;
                     entryNum++;
                     this.priceEntryTemplate[1] = id;
                     this.priceEntryTemplate[3] = id;
@@ -725,6 +728,7 @@ var MessagePostView = Backbone.View.extend({
         if (!this.isClosed) {
             this.map.close();
             this.unbindStepEvents(this.stepIndex);
+            this.closeLocationDropDown();
             this.domContainer.empty();
             this.isClosed = true;
             this.toSubmit = {
