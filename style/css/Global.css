@@ -146,3 +146,6 @@ input.text { font-family:'微软雅黑'; }
 .radio_box_checked {
 	background-position:0 -34px;
 }
+.ui-datepicker{
+	z-index: 100 !important;
+}

@@ -176,26 +176,24 @@ var AppRouter = Backbone.Router.extend({
             return;
         }
 
-        if (!postState || !Config.validateDMPostState(postState)) {
-            app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
-        } else {
-            //if the post session not valid, start new session, creat brand new view
-            if (!this.MessagePostView || this.MessagePostView.isClosed) {
-                if (this.MessageEditView) {
-                    delete this.MessagePostView;
-                    this.MessageEditView.close();
-                    this.MessageEditView = null;
-                }
-                this.MessagePostView = new MessagePublishView ({
-                    "method": "post"
-                });
+        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: false, replace: true});
+        //if the post session not valid, start new session, creat brand new view
+        if (!this.MessagePostView || this.MessagePostView.isClosed) {
+            if (this.MessageEditView) {
+                delete this.MessagePostView;
+                this.MessageEditView.close();
+                this.MessageEditView = null;
             }
-            //if the post session did not end, keep using the same post session
-            else {
-                this.MessagePostView.render(Config.getPostStateStepIndex(postState));
-                this.MessagePostView.isColsed = false;
-            }
+            this.MessagePostView = new MessagePublishView ({
+                "method": "post"
+            });
         }
+        //if the post session did not end, keep using the same post session
+        else {
+            this.MessagePostView.render(Config.getPostStateStepIndex(postState));
+            this.MessagePostView.isColsed = false;
+        }
+
     },
 
     letter: function (targetUserId) {

@@ -346,7 +346,9 @@ var MessagePostView = Backbone.View.extend({
         this.$timeSlots.on("keypress", "input.date", function (e) {
             e.preventDefault();
         });
-
+        if (this.toSubmit.numberRequests <= 1){
+            $('.publish_delete').css('display', 'none');
+        }
     },
     renderThirdPage: function () {
         var that = this;
@@ -601,6 +603,9 @@ var MessagePostView = Backbone.View.extend({
         $("input[name=publish_departDate_" + id + "]").on("keypress", function (e) {
             e.preventDefault();
         });
+        if (this.toSubmit.numberRequests > 1){
+            $('.publish_delete').css('display', 'block');
+        }
     },
     toggleDateVisibility: function (id, state) {
         if (state) {
@@ -635,10 +640,15 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     deleteSlot: function (e) {
-        var id = this.getId(e.target.id);
-        $('#publish_time_' + id).remove();
-        this.toSubmit.numberRequests--;
-        this.toSubmit.requests[Utilities.toInt(id) - 1] = null;
+        if ( this.toSubmit.numberRequests > 1){
+            var id = this.getId(e.target.id);
+            $('#publish_time_' + id).remove();
+            this.toSubmit.numberRequests--;
+            this.toSubmit.requests[Utilities.toInt(id) - 1] = null;
+            if (this.toSubmit.numberRequests <= 1){
+                $('.publish_delete').css('display', 'none');
+            }
+        }
     },
 
     getId: function (str) {
