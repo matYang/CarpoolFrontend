@@ -227,14 +227,10 @@ var AppRouter = Backbone.Router.extend({
         }
 
         if (!registrationState || !Config.validateRegistrationState(registrationState)) {
-            app.navigate("register/" + Config.getDefaultRegistrationState(), {trigger: true, replace: true});
-        } else {
-            if (!this.registrationView || this.registrationView.isClosed) {
-                this.registrationView = new RegistrationView ();
-            } else {
-                this.registrationView.render(Config.getRegistrationStateStepIndex(registrationState));
-            }
-        }
+            app.navigate("register/" + Config.getDefaultRegistrationState(), {replace: true});
+        } 
+        this.registrationView = new RegistrationView ();
+        
     },
 
     emailActivation: function (authKey) {
