@@ -146,7 +146,7 @@
 	width:262px;
 	background:#fff;
 	border:1px solid #ccc;
-	z-index: 1000;
+	z-index: 9999;
 }
 .login .bd ul {
 	padding:20px;
