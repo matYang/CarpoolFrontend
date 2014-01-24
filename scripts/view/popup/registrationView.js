@@ -5,9 +5,9 @@ var RegistrationView = Backbone.View.extend({
     el: "",
 
     initialize: function(){
-        _.bindAll(this, 'render', 'bindEvents', 'updateLocation', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
         app.viewRegistration.register("registration", this, true);
-        this.isClosed = true;
+        this.isClosed = false;
 
         this.baseTemplate = _.template(tpl.get('registration_base'));
 
