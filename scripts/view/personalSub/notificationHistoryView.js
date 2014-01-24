@@ -1,7 +1,7 @@
 var NotificationHistoryView = MultiPageView.extend({
 
     initialize: function (messageList) {
-        _.bindAll(this, 'render', 'bindNotificationEvent', 'fetchMessageError', 'close');
+        _.bindAll(this, 'render', 'bindNotificationEvent', 'additionalEvents', 'fetchMessageError', 'close');
         this.messages = messageList;
         this.entryTemplate = _.template(tpl.get('personalNotificationHistory'));
         this.pageNumberClass = "searchResultPageNumber";
@@ -9,12 +9,10 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryEvent = this.bindNotificationEvent;
         this.pageNavigator = "notificationHistoryNavigator";
         this.user = app.sessionManager.getSessionUser();
-        this.entryHeight = 61;
         this.pageEntryNumber = 7;
-        this.entryClass = "personal_notification_message";
-        this.entryContainer = "notificationHistoryContent";
-        this.domContainer = $("#notificationHistoryContent");
-        this.minHeight = 427;
+        this.entryClass = "notice_viewDetail";
+        this.entryContainer = "personalNotificationContainer";
+        this.domContainer = $("#personalNotificationContainer");
         MultiPageView.prototype.render.call(this);
     },
 
@@ -31,9 +29,13 @@ var NotificationHistoryView = MultiPageView.extend({
             app.navigate("message/" + messageId, true);
         }
     },
+    additionalEvents: function() {
 
+    },
     fetchMessageError: function () {
+        $("#personalNotificationContainer").("click", ".delete", function (e) {
 
+        });
     },
 
     close: function () {
