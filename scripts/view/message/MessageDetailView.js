@@ -95,7 +95,7 @@ var MessageDetailView = Backbone.View.extend({
         this.$messages = $automatch.children("message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
-        });        
+        });
     },
     bindEvents: function () {
         var that = this;

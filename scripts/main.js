@@ -92,11 +92,11 @@ var AppRouter = Backbone.Router.extend({
     },
 
     front: function () {
-        this.frontPageVew = new FrontPageView ();
+        this.frontPageVew = new FrontPageView();
     },
 
     main: function () {
-        this.mainPageVew = new MainPageView ();
+        this.mainPageVew = new MainPageView();
     },
 
     encodedMain: function (encodedSearchKey) {

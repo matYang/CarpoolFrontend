@@ -118,7 +118,7 @@ var FrontPageView = Backbone.View.extend({
                 self.searchRepresentation.set("departureMatch_Id", self.departLocation.get("defaultId"));
                 self.searchRepresentation.set("arrivalMatch_Id", self.arrivalLocation.get("defaultId"));
                 app.storage.setSearchRepresentationCache(self.searchRepresentation);
-                app.navigate("main/" + self.searchRepresentation.toString(), true);
+                app.navigate("main/" + self.searchRepresentation.toString(), {'trigger': true});
             }
         });
         this.$users = $("#frontPage-userButtons>.user").on("click", function (e) {
@@ -129,7 +129,7 @@ var FrontPageView = Backbone.View.extend({
                 $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
         });
-        this.bindRecentsEvents();
+        //this.bindRecentsEvents();
     },
 
     bindRecentsEvents: function () {

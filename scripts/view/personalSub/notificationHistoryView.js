@@ -39,4 +39,4 @@ var NotificationHistoryView = MultiPageView.extend({
     close: function () {
         this.domContainer.empty();
     }
-}); 
+});

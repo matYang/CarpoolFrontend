@@ -202,7 +202,7 @@ var MainPageView = Backbone.View.extend({
         } else if (!this.$dateReturn.val() && this.filter.isRoundTrip) {
             return;
         }
-        app.navigate("main/" + this.searchRepresentation.toString());
+        app.navigate("main/" + this.searchRepresentation.toString(), {'trigger': false});
         this.searchRepresentation.set("departureMatch_Id", this.origin.get("defaultId"));
         this.searchRepresentation.set("arrivalMatch_Id", this.dest.get("defaultId"));
         app.messageManager.searchMessage(this.searchRepresentation, {
