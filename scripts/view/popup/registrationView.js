@@ -11,20 +11,20 @@ var RegistrationView = Backbone.View.extend({
 
         this.baseTemplate = _.template(tpl.get('registration_base'));
 
-        this.registerInfo = {"registerInfo":new UserLocation()};
+        this.registerInfo = {"location":new UserLocation()};
         this.out = false;
         this.geocoder = new google.maps.Geocoder();
         this.render(1);
 
     },
-    getLatLng: function (location) {
+    getLatLng: function (loc) {
         var request = {}, me = this;
-        location.set("defaultId", -1);
-        request.address = location.get("pointName") + "," + location.get("city") + "," + location.get("province");
+        loc.set("defaultId", -1);
+        request.address = loc.get("pointName") + "," + loc.get("city") + "," + loc.get("province");
         var result = this.geocoder.geocode(request, function (geocodeResults, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                locationlocation.set("lat", geocodeResults[0].geometry.location.lat());
-                location.set("lng", geocodeResults[0].geometry.location.lng());
+                loc.set("lat", geocodeResults[0].geometry.location.lat());
+                loc.set("lng", geocodeResults[0].geometry.location.lng());
             } else {
                 Info.warn('Geocode was not successful for the following reason: ' + status);
             }
@@ -59,6 +59,9 @@ var RegistrationView = Backbone.View.extend({
             self.getLatLng(self.registerInfo.location);
         });
         $("#complete").on("click", function(){
+            if (!self.registerInfo.pivot) {
+                return;
+            }
             if (!self.registerInfo.pivot.isInRange(self.registerInfo.location)) {
                 //TODO: notify user
                 return;
