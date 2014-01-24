@@ -5,8 +5,8 @@
 var getEnvironmentServerOrigin = function () {
     var isOnLocal = C_ENV_VAR !== 'REMOTE';
     return {
-        'httpOrigin': isOnLocal ? 'localhost:8015' : '..',
-        'socketOrigin': isOnLocal ? 'localhost:3000' : '54.201.115.56:3000'
+        'httpOrigin': isOnLocal ? 'http://localhost:8015' : '..',
+        'socketOrigin': isOnLocal ? 'http://localhost:3000' : 'http://54.201.115.56:3000'
     };
 
 };
@@ -22,8 +22,8 @@ var Constants = {
         Info.warn(err);
     },
 
-    origin: 'http://' + getEnvironmentServerOrigin().httpOrigin,
-    socketOrigin: 'http://' + getEnvironmentServerOrigin().socketOrigin,
+    origin: getEnvironmentServerOrigin().httpOrigin,
+    socketOrigin: getEnvironmentServerOrigin().socketOrigin,
 
     miliSecInDay: 86400000,
 
