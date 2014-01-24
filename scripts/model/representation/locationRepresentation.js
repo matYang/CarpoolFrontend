@@ -26,10 +26,22 @@ var UserLocation = Backbone.Model.extend({
         _.bindAll(this, 'isNew', 'isDefault','toUiString', 'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
     },
 
-    isNew: function(){
+    isNew: function (){
         return typeof this.get('id') === 'undefined' || this.get('id') === -1;
     },
 
+    clone: function () {
+        var newLocation = new UserLocation();
+        for ( var attr in this ) {
+            newLocation.set(attr, this.get("attr"));
+        }
+        return newLocation;
+    },
+    copy: function (val) {
+        for ( var attr in this ) {
+            this.set(attr, val.get("attr"));
+        }
+    },
     isDefault: function(){
         return typeof this.get('defaultId') === 'number' && this.get('defaultId') > 0;
     },

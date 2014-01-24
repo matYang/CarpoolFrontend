@@ -20,7 +20,6 @@ var MainPageView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
         //define the template
         this.template = _.template(tpl.get('main'));
-        this.temp = {};
         this.searchRepresentation = new SearchRepresentation ();
         this.currentPage = 0;
         if (params) {
@@ -307,16 +306,12 @@ var MainPageView = Backbone.View.extend({
         });
 
         this.$locationFrom.on('blur', function (e) {
-            if (!$(this).val())
-                $(this).val(self.temp.from);
             if ($(this).val() && self.$locationTo.val() ) {
                 self.submitSearch();
             }
         });
 
         this.$locationTo.on('blur', function (e) {
-            if (!$(this).val())
-                $(this).val(self.temp.to);
             if ($(this).val() && self.$locationTo.val() ) {
                 self.submitSearch();
             }

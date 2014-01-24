@@ -33,7 +33,7 @@ var NotificationHistoryView = MultiPageView.extend({
 
     },
     fetchMessageError: function () {
-        $("#personalNotificationContainer").("click", ".delete", function (e) {
+        $("#personalNotificationContainer").on("click", ".delete", function (e) {
 
         });
     },
