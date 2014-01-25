@@ -41,7 +41,7 @@ var Constants = {
     "personal", "personalWatch", "personalMessage", "personalHistory", "personalNotification", "personalUtility", "personalSocial", "personalSocialCard", "personalSimpleUser", "personalTransactionHistory", "personalNotificationHistory",
 
     /*-----------  Registration  -----------*/
-    "registration_base", "registration_step1", "registration_step2", "registration_step3", "registration_step4",
+    "registration", "registration_finish",
 
     /*-----------  topBar  ------------*/
     "topBar-loggedIn", "topBar-notLoggedIn",

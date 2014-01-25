@@ -225,11 +225,12 @@ var AppRouter = Backbone.Router.extend({
             this.navigate("main", true);
             return;
         }
-
-        if (!registrationState || !Config.validateRegistrationState(registrationState)) {
-            app.navigate("register/" + Config.getDefaultRegistrationState(), {replace: true});
-        } 
-        this.registrationView = new RegistrationView ();
+        if (this.registrationView && !this.registrationView.isClosed) {
+            this.registrationView.state = registrationState;
+            this.registrationView.render();
+        } else {
+            this.registrationView = new RegistrationView ({"state":"registrationState"});
+        }
         
     },
 

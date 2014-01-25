@@ -12,7 +12,7 @@ var Config = {
     },
 
     getPossiblePersonalViewStates: function () {
-        return ['social', 'message', 'history', 'utility'];
+        return ['social', 'message', 'notification', 'history', 'utility'];
     },
 
     validatePersonalViewState: function (personalViewState) {
@@ -55,38 +55,39 @@ var Config = {
         }
         Info.warn("Config::getPostStepIndex:: invalid postState, using the default step 1");
         return 1;
-    },
-
-    //-------------- Registration state transfer --------------
-    getDefaultRegistrationState: function () {
-        return "step1";
-    },
-
-    getPossibleRegistrationStates: function () {
-        return ['step1', 'step2', 'step3', 'step4'];
-    },
-
-    validateRegistrationState: function (registrationState) {
-        var possibleStates = this.getPossibleRegistrationStates(), i;
-
-        for ( i = 0; i < possibleStates.length; i++) {
-            if (possibleStates[i] === registrationState) {
-                return true;
-            }
-        }
-        return false;
-    },
-
-    getRegistrationStateStepIndex: function (registrationState) {
-        var possibleStates = this.getPossibleRegistrationStates(), i;
-
-        for ( i = 0; i < possibleStates.length; i++) {
-            if (possibleStates[i] === registrationState) {
-                return i + 1;
-            }
-        }
-        Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
-        return 1;
     }
+    // ,
+
+    // //-------------- Registration state transfer --------------
+    // getDefaultRegistrationState: function () {
+    //     return "";
+    // },
+
+    // getPossibleRegistrationStates: function () {
+    //     return ["", "finish"];
+    // },
+
+    // validateRegistrationState: function (registrationState) {
+    //     var possibleStates = this.getPossibleRegistrationStates(), i;
+
+    //     for ( i = 0; i < possibleStates.length; i++) {
+    //         if (possibleStates[i] === registrationState) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // },
+
+    // getRegistrationStateStepIndex: function (registrationState) {
+    //     var possibleStates = this.getPossibleRegistrationStates(), i;
+
+    //     for ( i = 0; i < possibleStates.length; i++) {
+    //         if (possibleStates[i] === registrationState) {
+    //             return i + 1;
+    //         }
+    //     }
+    //     Info.warn("Config::getRegistrationStateStepIndex:: invalid postState, using the default step 1");
+    //     return 1;
+    // }
 
 };
