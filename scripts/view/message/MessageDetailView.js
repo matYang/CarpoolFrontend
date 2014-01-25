@@ -31,8 +31,8 @@ var MessageDetailView = Backbone.View.extend({
                 self.render();
                 self.bindEvents();
                 self.showTransaction = false;
-                for ( i = 0; i < self.pricelist.length; i++) {
-                    if (self.pricelist[i] === 0) {
+                for ( i = 1; i < self.pricelist.length; i++) {
+                    if (self.pricelist[i]) {
                         self.pricelist[i] = self.pricelist[i - 1];
                     }
                 }
