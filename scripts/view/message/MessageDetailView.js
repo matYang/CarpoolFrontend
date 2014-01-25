@@ -64,6 +64,10 @@ var MessageDetailView = Backbone.View.extend({
             "success": this.loadTransactions,
             "error": this.loadError
         });
+        app.messageManager.fetchTransactionList(this.message.id, {
+            "success": this.renderAutoMatch,
+            "error": this.loadError
+        });
     },
     loadTransactions: function (transactions) {
         var i, buffer = [], that = this;
@@ -82,7 +86,7 @@ var MessageDetailView = Backbone.View.extend({
         $("#reservation_count").html(this.transactions.length);
     },
     loadError: function () {
-
+        alert("加载失败");
     },
     renderAutoMatch: function (result) {
         var i, buf = [], len = result.length, that = this;
