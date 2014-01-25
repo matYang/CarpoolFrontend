@@ -144,7 +144,7 @@ var MainPageView = Backbone.View.extend({
             $(e.target).addClass("active");
             if ($(e.target).attr("data-id") == "roundtrip") {
                 me.filter.isRoundTrip = true;
-                me.$dateReturn.prop("disabled", false);
+                me.$dateReturn.removeAttr("disabled");
                 me.$dateReturn.parent().removeClass("date-return-disabled");
                 me.submitSearch();
             } else {

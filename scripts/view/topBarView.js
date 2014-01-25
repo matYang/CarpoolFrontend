@@ -30,6 +30,7 @@ var TopBarView = Backbone.View.extend({
             this.$ndropdown = $('#notifications>dd');
             this.$ldropdown = $('#letters>dd');
             this.$fdropdown = $('#favorites>dd');
+            this.$pdropdown = $('#profileDropdown>dd');
             this.bindEvents();
 
             //dropdown specific data binding
@@ -294,10 +295,10 @@ var TopBarView = Backbone.View.extend({
             this.$favorites = $('#favorites').on('mouseenter', function () {
                 self.showFavoriteDropdown();
             });
-            this.$profilePicture = $('#profilePicture').on('mouseenter', function () {
+            this.$profilePicture = $('#profileDropdown').on('mouseenter', function () {
                 self.showProfileDropdown();
             });
-            this.$profilePicture.on("click", function () {
+            this.$profilePicture.find('img').on("click", function () {
                 app.navigate("personal/" + this.sessionUser.id, true);
             });
             this.$notifications.on('mouseleave', function (e) {
@@ -335,7 +336,7 @@ var TopBarView = Backbone.View.extend({
                     self.hideLetterDropdown();
                 }
             });
-            this.$pdropdown = $('#profileDropdown').on('mouseleave', function (e) {
+            $('#profileDropdown').on('mouseleave', function (e) {
                 if (!e.toElement || e.toElement.id !== "profilePicture" && e.toElement.parentElement.id !== "profilePicture") {
                     self.hideProfileDropdown();
                 }
@@ -345,7 +346,8 @@ var TopBarView = Backbone.View.extend({
         //          self.hideLikes();
         //      }
         //  });
-            $('#logout').on('click', function () {
+            $('#logout').on('click', function (e) {
+                e.preventDefault();
                 self.logout();
             });
             $("#topBar-avatar").on('click', function (e) {

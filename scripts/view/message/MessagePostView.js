@@ -6,6 +6,8 @@ var MessagePostView = Backbone.View.extend({
     toSubmit: {
         "origin": new UserLocation (),
         "dest": new UserLocation (),
+        "originPivot": undefined,
+        "destPivot": undefined,
         "type": Constants.messageType.ask,
         "numberRequests": 0,
         "requests": [],
@@ -69,14 +71,14 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     acceptDefaultLocation: function(defaultLocation){
-        var addr,
-            lat, lng;
+        var addr, lat, lng;
         if (this.locationDirection === Constants.LocationDirection.from){
             lat = this.toSubmit.origin.get("lat");
             lng = this.toSubmit.origin.get("lng");
             addr = this.$page1originAddr.val();
             addr = "请输入具体地址" === addr ? "" : addr;
-            this.toSubmit.origin = defaultLocation;
+            this.toSubmit.originPivot = defaultLocation;
+            this.toSubmit.originPivot.copy(this.toSubmit.origin);
             if (addr) {
                 this.toSubmit.origin.set("pointAddress", addr);
                 this.toSubmit.origin.set("defaultId", -1);
@@ -84,13 +86,17 @@ var MessagePostView = Backbone.View.extend({
                 this.toSubmit.origin.set("lng", lng);
             }
             this.$page1origin.val(this.toSubmit.origin.toUiString());
+            if ( !this.toSubmit.originPivot.isInRange(this.toSubmit.origin)) {
+
+            }
         }
         else if (this.locationDirection === Constants.LocationDirection.to){
             lat = this.toSubmit.dest.get("lat");
             lng = this.toSubmit.dest.get("lng");
             addr = this.$page1destAddr.val();
             addr = "请输入具体地址" === addr ? "" : addr;
-            this.toSubmit.dest = defaultLocation;
+            this.toSubmit.destPivot = defaultLocation;
+            this.toSubmit.destPivot.copy(this.toSubmit.dest);
             if (addr) {
                 this.toSubmit.dest.set("pointAddress", addr);
                 this.toSubmit.dest.set("defaultId", -1);
@@ -98,6 +104,9 @@ var MessagePostView = Backbone.View.extend({
                 this.toSubmit.dest.set("lng", lng);
             }
             this.$page1dest.val(this.toSubmit.dest.toUiString());
+            if ( !this.toSubmit.destPivot.isInRange(this.toSubmit.dest)) {
+
+            }
         }
         if (this.map) {
             this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
@@ -188,13 +197,6 @@ var MessagePostView = Backbone.View.extend({
         } else {
             this.$page1destAddr.val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.dest.parseGoogleJson(json);
-        }
-    },
-    updateLocation: function (flag, id) {
-        this.$page1origin.val(this.toSubmit.origin.toUiString());
-        this.$page1dest.val(this.toSubmit.dest.toUiString());
-        if (this.map) {
-            this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
         }
     },
     refactorRequests: function () {
@@ -457,7 +459,10 @@ var MessagePostView = Backbone.View.extend({
         if (page === 1) {
             $('#publish_type>.active').removeClass('active');
             $('#publish_' + this.toSubmit.type).addClass('active');
-            this.updateLocation(1);
+            this.$page1origin.val(this.toSubmit.origin.toUiString());
+            this.$page1dest.val(this.toSubmit.dest.toUiString());
+            this.$page1originAddr.val(this.toSubmit.origin.get("pointAddress"));
+            this.$page1destAddr.val(this.toSubmit.dest.get("pointAddress"));
         } else if (page === 2) {
             var r = this.toSubmit.requests;
             for (var request = 0; request < r.length; request++) {
@@ -616,6 +621,7 @@ var MessagePostView = Backbone.View.extend({
         $('input[name=publish_returnDate_' + id + ']').prop('disabled', state);
         $('#return_time_' + id).prop('disabled', state);
     },
+
     updateValue: function (e, d) {
         var id;
         if (e.target && e.target.value !== "") {
@@ -639,6 +645,7 @@ var MessagePostView = Backbone.View.extend({
             }
         }
     },
+
     deleteSlot: function (e) {
         if ( this.toSubmit.numberRequests > 1){
             var id = this.getId(e.target.id);
@@ -655,6 +662,7 @@ var MessagePostView = Backbone.View.extend({
         var list = str.split("_");
         return list[list.length - 1];
     },
+
     validate: function (page) {
 
         var counter = 0;
@@ -742,6 +750,7 @@ var MessagePostView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.map.close();
+            this.map = null;
             this.unbindStepEvents(this.stepIndex);
             this.closeLocationDropDown();
             this.domContainer.empty();

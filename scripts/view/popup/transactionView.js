@@ -202,7 +202,7 @@ var TransactionDetailView = Backbone.View.extend({
         
     },
     bookFail: function () {
-        this.$functionButton.val("预约失败, 重试").prop("disabled", false);
+        this.$functionButton.val("预约失败, 重试").removeAttr("disabled");
     },
     bindEvaluationEvent: function () {
 

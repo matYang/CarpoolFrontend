@@ -31,8 +31,8 @@ var MessageDetailView = Backbone.View.extend({
                 self.render();
                 self.bindEvents();
                 self.showTransaction = false;
-                for ( i = 0; i < self.pricelist.length; i++) {
-                    if (self.pricelist[i] === 0) {
+                for ( i = 1; i < self.pricelist.length; i++) {
+                    if (self.pricelist[i]) {
                         self.pricelist[i] = self.pricelist[i - 1];
                     }
                 }
@@ -120,6 +120,7 @@ var MessageDetailView = Backbone.View.extend({
                 });
             });
             this.$viewendCancel = $("#messageEndClose,#messageEndCancel").on("click", function(){
+                that.$viewendConfirm.val("确认");
                 $popup.hide();
                 $overlay.hide();
             });
@@ -210,12 +211,14 @@ var MessageDetailView = Backbone.View.extend({
         $("#pricelist").append(appender.join(""));
     },
     cancelSuccess: function(){
-        this.$viewendConfirm.val("取消成功, 关闭").off();
+        this.$viewendConfirm.val("取消成功, 关闭").off().on("click", function (e) {
+            $popup.empty();
+            $overlay.hide();
+        });
         this.$viewend.off();
     },
     cancelError: function(){
-        this.$viewendConfirm.val("取消失败,请重试");
-        $(this).prop("disabled", false);
+        this.$viewendConfirm.val("取消失败,请重试").removeAttr("disabled");
     },
     close: function () {
         if (!this.isClosed) {
@@ -229,6 +232,7 @@ var MessageDetailView = Backbone.View.extend({
             if ( typeof this.domContainer !== 'undefined') {
                 this.domContainer.empty();
             }
+            $("#popup").empty();
             this.isClosed = true;
         }
     }

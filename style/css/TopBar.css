@@ -82,6 +82,7 @@
 	width:100px;
 	background:url(../images/nav_spites.png) no-repeat 64px -354px;
 	padding-top:12px;
+	z-index:100;
 }
 .topBar-dropdown ul, .topBar-profileImage ul {
 	background-color: #fff;
