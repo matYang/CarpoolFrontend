@@ -62,6 +62,9 @@ var MainPageView = Backbone.View.extend({
         if (this.map) {
             this.map.getDirection(this.origin, this.dest);
         }
+        if (this.$locationFrom.val() && this.$locationTo.val()) {
+            this.submitSearch();
+        }
     },
 
     render: function () {
@@ -287,6 +290,7 @@ var MainPageView = Backbone.View.extend({
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.from;
             self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.from;
             self.locationDropDownView = new LocationDropDownView($("#from"), self);
         });
 
@@ -294,6 +298,7 @@ var MainPageView = Backbone.View.extend({
             self.closeLocationDropDown();
             self.locationDirection = Constants.LocationDirection.to;
             self.closeLocationDropDown();
+            self.locationDirection = Constants.LocationDirection.to;
             self.locationDropDownView = new LocationDropDownView($("#to"), self);
         });
 
@@ -305,17 +310,17 @@ var MainPageView = Backbone.View.extend({
             e.stopPropagation();
         });
 
-        this.$locationFrom.on('blur', function (e) {
-            if ($(this).val() && self.$locationTo.val() ) {
-                self.submitSearch();
-            }
-        });
+        // this.$locationFrom.on('blur', function (e) {
+        //     if ($(this).val() && self.$locationTo.val() ) {
+        //         self.submitSearch();
+        //     }
+        // });
 
-        this.$locationTo.on('blur', function (e) {
-            if ($(this).val() && self.$locationTo.val() ) {
-                self.submitSearch();
-            }
-        });
+        // this.$locationTo.on('blur', function (e) {
+        //     if ($(this).val() && self.$locationTo.val() ) {
+        //         self.submitSearch();
+        //     }
+        // });
 
         // $("#timeSelections1>.button").on('click', function (e) {
         //     self.onClickTime(e, "timeSelections1");
