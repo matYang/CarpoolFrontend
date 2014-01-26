@@ -84,6 +84,8 @@
 .sign_up dd.wrong p {
 	font-size:14px;
 	line-height:22px;
+	margin-left:2px;
+	float:left;
 }
 .sign_up dd .right {
 	float:left;
