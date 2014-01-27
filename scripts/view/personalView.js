@@ -106,7 +106,7 @@ var PersonalView = Backbone.View.extend({
                 break;
             case "notification":
                 $('#profilePage_notificationTab').addClass('active');
-                this.activeChildView = new PersonalNoticeView ({
+                this.activeChildView = new NotificationHistoryView ({
                     'intendedUserId': this.curUserId
                 });
                 break;
@@ -145,7 +145,10 @@ var PersonalView = Backbone.View.extend({
             app.navigate("personal/" + that.curUserId + "/history");
             that.switchChildView("history");
         });
-
+        $('#profilePage_notificationTab').on('click', function (){
+            app.navigate("personal/" + that.curUserId + "/notification");
+            that.switchChildView("notification"); 
+        });
         $('#profilePage_utilityTab').on('click', function () {
             if (app.sessionManager.getUserId() === that.curUserId) {
                 app.navigate("personal/" + that.curUserId + "/utility");

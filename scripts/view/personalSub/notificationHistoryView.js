@@ -1,10 +1,13 @@
 var NotificationHistoryView = MultiPageView.extend({
 
-    initialize: function (messageList) {
-        _.bindAll(this, 'render', 'bindNotificationEvent', 'additionalEvents', 'fetchMessageError', 'close');
-        this.messages = messageList;
+    initialize: function (params) {
+        _.bindAll(this, 'render', 'bindNotificationEvent', 'additionalEvents', 'fetchNotificationError', 'close');
+        app.sessionManager.fetchCurUserNotifications({
+            "success": this.render,
+            "error": this.fetchNotificationError 
+        });
         this.baseTemplate = _.template(tpl.get('personalNotificationHistory'))
-        $("#content").append(this.baseTemplate);
+        $("#profilePage_content").append(this.baseTemplate());
         this.entryTemplate = _.template(tpl.get('personalNotificationEntry'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "notificationPageNumber";
@@ -15,10 +18,10 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryClass = "notice_viewDetail";
         this.entryContainer = "personalNotificationContainer";
         this.domContainer = $("#personalNotificationContainer");
-        this.render();
     },
 
-    render: function (start) {
+    render: function (message) {
+        this.messages = message;
         MultiPageView.prototype.render.call(this);
     },
     bindNotificationEvent: function (messageId) {
@@ -37,15 +40,24 @@ var NotificationHistoryView = MultiPageView.extend({
             app.notificationManager.deleteNotification(Utilities.getId(e.target),{
                 "success": that.deleteSuccess,
             });
+        }).on("click", ".checkbox", function (e) {
+            if ($(e.target).hasClass("checked")) {
+                $(e.target).removeClass("checked");
+            } else {
+                $(e.target).addClass("checked");
+            }
         });
     },
-    fetchMessageError: function () {
+    fetchNotificationError: function () {
 
     },
     deleteSuccess: function (id) {
         $("#personal_notification_"+id).remove();
     },
     close: function () {
-        this.domContainer.empty();
+        if (!this.isClosed) {
+            this.domContainer.empty();
+            $("#profilePage_content").empty();
+        }
     }
 });
