@@ -125,7 +125,7 @@
                 users_searchUser: api_maker('users', 'searchUser'),
                 users_uncheckedNotification: api_maker('users', 'uncheckedNotification'),
                 users_uncheckedLetter: api_maker('users', 'uncheckedLetter'),
-                users_searchHistory: api_make('users', 'searchHistory'),
+                users_searchHistory: api_maker('users', 'searchHistory'),
 
                 transaction_transaction: api_maker('transaction', 'transaction'),
                 transaction_admin: api_maker('transaction', 'admin'),
