@@ -56,6 +56,10 @@
                 request: ['content'],
                 antiRequest: ['content', 'advertisement']
             },
+            'findPassword': {
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
+            },
             'transactionDetail': {
                 request: ['popup'],
                 antiRequest: ['popup']
@@ -64,7 +68,6 @@
                 request: ['popup'],
                 antiRequest: ['popup']
             }
-
         };
 
         //call this function at the initialization of each new view, will guarantee the closing of anti-requested views

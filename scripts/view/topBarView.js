@@ -216,6 +216,10 @@ var TopBarView = Backbone.View.extend({
                     });
                 }
             });
+            $("#forget_password").on("click", function (e) {
+                e.preventDefault();
+                app.navigate("lost", true);
+            })
             this.remember = $("#remember_password").on("click", function (e) {
                 if ($(this).hasClass("checked")){
                     $(this).removeClass("checked");

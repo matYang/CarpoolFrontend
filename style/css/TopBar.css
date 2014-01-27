@@ -1,200 +1,44 @@
 @charset "utf-8";
 /* CSS Document */
 
-.topBar {
-	width:100%;
-	height:60px;
-	background:#000;
-}
-.topBar-inner {
-	position:relative;
-	width:1000px;
-	margin:0 auto;
-}
-.topBar-logo a {
-	float:left;
-	background:url(../images/logo.png) no-repeat left center;
-	width:138px;
-	height:60px;
-	text-indent: -32768px;
-}
-.topBar-navigation {
-	float:left;
-	margin-left:55px;
-}
+.topBar { width:100%; height:60px; background:#000; }
+.topBar-inner { position:relative; width:1000px; margin:0 auto; z-index:98;}
+.topBar-logo a { float:left; background:url(../images/logo.png) no-repeat left center; width:138px; height:60px; text-indent: -32768px; }
+.topBar-navigation { float:left; margin-left:55px; }
 /*主导航*/
-.topBar-navigation li {
-	float:left;
-	height:60px;
-	line-height:60px;
-	margin-right:52px;
-	font-family:'幼圆', '微软雅黑', '黑体', '宋体';
-	font-size:18px;
-	color:#fff;
-	font-weight:bold;
-	cursor:pointer;
-}
-.topBar-navigation li:hover {
-	color:#b9eaff;
-}
-.topBar-navigation li.active {
-	background:url(../images/nav_spites.png) no-repeat 21px -366px;
-}
-.topBar-dropdown {
-	float:left;
-	margin-left:170px;
-}
+.topBar-navigation li { float:left; height:60px; line-height:60px; margin-right:52px; font-family:'幼圆', '微软雅黑', '黑体', '宋体'; font-size:18px; color:#fff; font-weight:bold; cursor:pointer; }
+.topBar-navigation li:hover { color:#b9eaff; }
+.topBar-navigation li.active { background:url(../images/nav_spites.png) no-repeat 21px -366px; }
+.topBar-dropdown { float:left; margin-left:170px; }
 /*右侧工具*/
-.topBar-dropdown dl {
-	float:left;
-	width:70px;
-	position:relative;
-}
-.topBar-dropdown dl dt {
-	display:block;
-	height:60px;
-	background:url(../images/nav_spites.png) no-repeat;
-	text-indent: -32768px;
-	cursor:pointer;
-}
-.topBar-dropdown dl.message dt {
-	background-position:0 16px;
-}
-.topBar-dropdown dl.email dt {
-	background-position:0 -43px;
-}
-.topBar-dropdown dl.collection dt {
-	background-position:0 -106px;
-}
-.topBar-dropdown dl.message dt:hover {
-	background-position:0 -164px;
-}
-.topBar-dropdown dl.email dt:hover {
-	background-position:0 -223px;
-}
-.topBar-dropdown dl.collection dt:hover {
-	background-position:0 -286px;
-}
-.topBar-dropdown dd, .topBar-profileImage dd {
-	position:absolute;
-	left:-53px;
-	top:45px;
-	width:100px;
-	background:url(../images/nav_spites.png) no-repeat 64px -354px;
-	padding-top:12px;
-	z-index:100;
-}
-.topBar-dropdown ul, .topBar-profileImage ul {
-	background-color: #fff;
-}
-.topBar-dropdown ul li, .topBar-profileImage ul li {
-	line-height:32px;
-	color:#333;
-	font-size:12px;
-}
-.topBar-dropdown ul li a, .topBar-profileImage ul li a {
-	padding:0 10px;
-	display:block;
-	text-decoration:none;
-}
-.topBar-dropdown ul li a:hover, .topBar-profileImage ul li a:hover {
-	background:#efefef;
-}
-.topBar-profileImage {
-	float:right;
-	position:relative;
-	width:50px;
-}
+.topBar-dropdown dl { float:left; width:70px; position:relative; }
+.topBar-dropdown dl dt { display:block; height:60px; background:url(../images/nav_spites.png) no-repeat; text-indent: -32768px; cursor:pointer; }
+.topBar-dropdown dl.message dt { background-position:0 16px; }
+.topBar-dropdown dl.email dt { background-position:0 -43px; }
+.topBar-dropdown dl.collection dt { background-position:0 -106px; }
+.topBar-dropdown dl.message dt:hover { background-position:0 -164px; }
+.topBar-dropdown dl.email dt:hover { background-position:0 -223px; }
+.topBar-dropdown dl.collection dt:hover { background-position:0 -286px; }
+.topBar-dropdown dd, .topBar-profileImage dd { position:absolute; left:-88px; top:45px; width:135px; background:url(../images/nav_spites.png) no-repeat 103px -354px; padding-top:12px; }
+.topBar-dropdown ul, .topBar-profileImage ul { background-color: #fff; }
+.topBar-dropdown ul li, .topBar-profileImage ul li { line-height:32px; color:#333; font-size:12px; }
+.topBar-dropdown ul li a, .topBar-profileImage ul li a { padding:0 10px; display:block; text-decoration:none; }
+.topBar-dropdown ul li a:hover, .topBar-profileImage ul li a:hover { background:#efefef; }
+.topBar-profileImage { float:right; position:relative; width:50px; }
 /*头像*/
-.topBar-profileImage dt {
-	margin-top:5px;
-}
-.topBar-profileImage dt img {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-}
-.login {
-	position:absolute;
-	right:150px;
-	width:100px;
-	text-align:center;
-}
-.login span {
-	display:block;
-	height:64px;
-	line-height:56px;
-	background:url(../images/top_nav_login_bg.jpg) no-repeat;
-	font-size:16px;
-	color:#fff;
-	cursor:pointer;
-}
-.reg {
-	position:absolute;
-	right:50px;
-	width:100px;
-	height:60px;
-	line-height:60px;
-	text-align:center;
-	font-size:16px;
-	color:#fff;
-	cursor:pointer;
-}
-.login .bd {
-	position:absolute;
-	top:69px;
-	left:0;
-	width:262px;
-	background:#fff;
-	border:1px solid #ccc;
-	z-index: 9999;
-}
-.login .bd ul {
-	padding:20px;
-}
-.checkbox {
-	height:25px;
-	line-height:25px;
-	padding-left:30px;
-	background:url(../images/checkbox.png) no-repeat 0 0;
-	cursor:pointer;
-}
-.checked {
-	background-position:0 -25px;
-}
-.login .bd ul li {
-	margin-bottom:10px;
-}
-.login .wrong {
-	text-align:left;
-	line-height:26px;
-	padding-left:20px;
-	background:url(../images/icon_wrong.png) no-repeat 0 -22px;
-	font-size:12px;
-}
-.login .bd ul li input.text {
-	width:210px;
-	height:38px;
-	border:1px solid #cccccc;
-	padding-left:10px;
-	color:#ccc;
-}
-.login .bd ul li .checkbox {
-	float:left;
-}
-.forget_password {
-	float:right;
-}
-.btn_topnav_login {
-	width:220px;
-	height:40px;
-	background:url(../images/btns.png) no-repeat 0 -492px;
-	border:none;
-	font-family: 微软雅黑;
-	font-size:16px;
-	color:#fff;
-	cursor:pointer;
-}
-.btn_topnav_login:hover {
-	background-position:-231px -492px;
-}
+.topBar-profileImage dt { margin-top:5px; }
+.topBar-profileImage dt img { -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+.login { position:absolute; z-index:8; right:150px; width:100px; text-align:center; }
+.login span { display:block; height:64px; line-height:56px; background:url(../images/top_nav_login_bg.jpg) no-repeat; font-size:16px; color:#fff; cursor:pointer; }
+.reg { position:absolute; right:50px; width:100px; height:60px; line-height:60px; text-align:center; font-size:16px; color:#fff; cursor:pointer; }
+.login .bd { position:absolute; top:69px; left:0; width:262px; background:#fff; border:1px solid #ccc; z-index:99;}
+.login .bd ul { padding:20px; }
+.checkbox { height:25px; line-height:25px; padding-left:30px; background:url(../images/checkbox.png) no-repeat 0 0; cursor:pointer; }
+.checked { background-position:0 -25px; }
+.login .bd ul li { margin-bottom:10px; }
+.login .wrong { text-align:left; line-height:26px; padding-left:20px; background:url(../images/icon_wrong.png) no-repeat 0 -22px; font-size:12px; }
+.login .bd ul li input.text { width:210px; height:38px; line-height:38px\9;  border:1px solid #cccccc; padding-left:10px; color:#333;}
+.login .bd ul li .checkbox { float:left; }
+.forget_password { float:right; }
+.btn_topnav_login { width:220px; height:40px; background:url(../images/btns.png) no-repeat 0 -492px; border:none; font-family: 微软雅黑; font-size:16px; color:#fff; cursor:pointer; }
+.btn_topnav_login:hover { background-position:-231px -492px; }
