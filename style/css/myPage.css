@@ -256,7 +256,7 @@
 	float:left;
 	width:372px;
 	height:34px;
-	line-height:34px;
+	line-height:34px/9;
 	border:1px solid #d3d3d3;
 	padding-left:10px;
 }
@@ -282,9 +282,10 @@
 	padding-left:90px;
 	margin-top:50px;
 }
-.account .birthday .select_item1 {
+.account .birthday .text {
 	float:left;
-	width:98px;
+	width:88px;
+	margin-right:5px;
 }
 .account .birthday label {
 	float:left;

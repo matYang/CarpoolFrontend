@@ -399,7 +399,49 @@ input {
 	color:#57b7e1;
 }
 
+/*
 #content{
     min-height: 855px;
     overflow: hidden;
+}
+*/
+
+/*填写地址时的下拉框*/
+.search_down {
+	position:absolute;
+	top:46px;
+	left:0;
+	z-index:99;
+	background:#fff;
+	width:318px;
+	padding:5px 0;
+	border:1px solid #b0b0b0;
+}
+.search_down li {
+	height:36px;
+	line-height:36px;
+	padding-left:25px;
+	border-bottom:1px dotted #eee;
+}
+.search_down li:hover {
+	background:#efefef;
+}
+
+/*Sticky Footer*/
+html, body, .main {
+	height: 100%;
+}
+body > .main {
+	height:auto;
+	min-height: 100%;
+}
+.content {
+	padding-bottom: 80px;
+}   /* 必须使用和footer相同的高度 */
+
+.footer {
+	position: relative;
+	margin-top: -80px; /* footer高度的负值 */
+	height: 80px;
+	clear:both;
 }

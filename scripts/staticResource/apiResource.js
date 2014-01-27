@@ -60,7 +60,10 @@
                     messageHistory: '/messageHistory',
                     transaction: '/transaction',
                     notification: '/notification',
-                    searchUser: '/searchUser'
+                    searchUser: '/searchUser',
+                    uncheckedNotification: '/uncheckedNotification',
+                    uncheckedLetter: '/uncheckedLetter',
+                    searchHistory: '/searchHistory'
                 },
 
                 'transaction': {
@@ -120,6 +123,9 @@
                 users_transaction: api_maker('users', 'transaction'),
                 users_notification: api_maker('users', 'notification'),
                 users_searchUser: api_maker('users', 'searchUser'),
+                users_uncheckedNotification: api_maker('users', 'uncheckedNotification'),
+                users_uncheckedLetter: api_maker('users', 'uncheckedLetter'),
+                users_searchHistory: api_make('users', 'searchHistory'),
 
                 transaction_transaction: api_maker('transaction', 'transaction'),
                 transaction_admin: api_maker('transaction', 'admin'),

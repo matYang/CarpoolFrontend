@@ -13,14 +13,14 @@
 	top:20px;
 	height:82px;
 	background:url(../images/searchBox.png) no-repeat;
-	padding-left:16px;
+	padding-left:12px;
 }
 .mainPage-searchBanner-searchBox input.text {
-	width:285px;
+	width:225px;
 	height:50px;
 	line-height:50px\9;
 	font-family:微软雅黑;
-	background:url(../images/input_bg.png) no-repeat;
+	background:url(../images/input_bg.png) no-repeat 0 -280px;
 	border:none;
 	padding-left:35px;
 	font-size:18px;
@@ -29,7 +29,7 @@
 .mainPage-searchBanner-searchBox .from {
 	position:relative;
 	float:left;
-	width:320px;
+	width:260px;
 	margin-top:16px;
 	margin-right:10px;
 }
@@ -45,7 +45,7 @@
 .mainPage-searchBanner-searchBox .to {
 	position:relative;
 	float:left;
-	width:320px;
+	width:260px;
 	margin-top:16px;
 	margin-right:10px;
 }
@@ -83,7 +83,6 @@
 	height:21px;
 	margin:30px 10px;
 	background:url(../images/input_bg.png) no-repeat -206px -73px;
-	cursor:pointer;
 }
 .mainPage-searchBanner-searchBox .date-return-disabled label {
 	background-position:0 -301px;
@@ -92,6 +91,25 @@
 	background-position:0 -165px;
 	cursor:default;
 }
+
+.mainPage-searchBanner-searchBox .search {
+	float:left;
+	margin-top: 16px;
+	margin-left:10px;
+}
+.mainPage-searchBanner-searchBox .search input {
+	width:115px;
+	height:50px;
+	background:url(../images/btns.png) no-repeat -367px -288px;
+	cursor:pointer;
+	border:none;
+	font-size:18px;
+	color:#fff;
+}
+.mainPage-searchBanner-searchBox .search_down {
+	width:258px;
+}
+
 .mainPage-middle {
 	width:1000px;
 	margin:25px auto 45px;
@@ -153,7 +171,7 @@
 .mainPage-map {
 	border:3px solid #57b7dd;
 	width:269px;
-	height:339px;
+	height:344px;
 }/*地图*/
 .mainPage-filter {
 	position:relative;
