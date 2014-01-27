@@ -54,3 +54,8 @@
 .frontPage-experience dd .userInfo { float:left; line-height:23px; padding:12px; font-size:14px; }
 .frontPage-experience dd .active { background:#57b7e1 url(../images/icon.png) no-repeat 150px -217px; color:#fff; }
 .frontPage-experience dd .user:hover { background:#57b7e1 url(../images/icon.png) no-repeat 150px -217px; color:#fff; }
+
+.frontPage-resultPanel{
+        overflow: hidden;
+        height:285px;
+}
