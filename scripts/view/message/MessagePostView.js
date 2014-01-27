@@ -4,8 +4,8 @@ var MessagePostView = Backbone.View.extend({
 
     el: "",
     toSubmit: {
-        "origin": new UserLocation (),
-        "dest": new UserLocation (),
+        "origin": undefined,
+        "dest": undefined,
         "originPivot": undefined,
         "destPivot": undefined,
         "type": Constants.messageType.ask,
@@ -18,6 +18,7 @@ var MessagePostView = Backbone.View.extend({
         "priceListEntries": 1,
         "conditionalPrice": false
     },
+    addrInputConst: "请输入具体地址",
     /**
      request
      {
@@ -73,28 +74,33 @@ var MessagePostView = Backbone.View.extend({
     acceptDefaultLocation: function(defaultLocation){
         var addr, lat, lng;
         if (this.locationDirection === Constants.LocationDirection.from){
+            $("#originWrong").remove();
             lat = this.toSubmit.origin.get("lat");
             lng = this.toSubmit.origin.get("lng");
             addr = this.$page1originAddr.val();
-            addr = "请输入具体地址" === addr ? "" : addr;
+            addr = this.addrInputConst === addr ? "" : addr;
             this.toSubmit.originPivot = defaultLocation;
             this.toSubmit.originPivot.copy(this.toSubmit.origin);
+            this.$page1origin.val(this.toSubmit.origin.toUiString());
             if (addr) {
                 this.toSubmit.origin.set("pointAddress", addr);
                 this.toSubmit.origin.set("defaultId", -1);
                 this.toSubmit.origin.set("lat", lat);
                 this.toSubmit.origin.set("lng", lng);
-            }
-            this.$page1origin.val(this.toSubmit.origin.toUiString());
-            if ( !this.toSubmit.originPivot.isInRange(this.toSubmit.origin)) {
-
+                if ( !this.toSubmit.originPivot.isInRange(this.toSubmit.origin)) {
+                    this.inRange = false;
+                    $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                } else {
+                    this.inRange = true;
+                }
             }
         }
         else if (this.locationDirection === Constants.LocationDirection.to){
+            $("#destWrong").remove();
             lat = this.toSubmit.dest.get("lat");
             lng = this.toSubmit.dest.get("lng");
             addr = this.$page1destAddr.val();
-            addr = "请输入具体地址" === addr ? "" : addr;
+            addr = this.addrInputConst === addr ? "" : addr;
             this.toSubmit.destPivot = defaultLocation;
             this.toSubmit.destPivot.copy(this.toSubmit.dest);
             if (addr) {
@@ -105,7 +111,10 @@ var MessagePostView = Backbone.View.extend({
             }
             this.$page1dest.val(this.toSubmit.dest.toUiString());
             if ( !this.toSubmit.destPivot.isInRange(this.toSubmit.dest)) {
-
+                this.inRange = false;
+                $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+            } else {
+                this.inRange = true;
             }
         }
         if (this.map) {
@@ -144,24 +153,24 @@ var MessagePostView = Backbone.View.extend({
         this.$page1destAddr = $('#publish_destAddress');
 
         this.$page1originAddr.on("focus", function() {
-            if ($(this).val() === "请输入具体地址") {
+            if ($(this).val() === that.addrInputConst) {
                 $(this).val("");
             }
         }).on("blur", function () {
             if ($(this).val() === "") {
-                $(this).val("请输入具体地址");
+                $(this).val(that.addrInputConst);
             } else {
                 that.toSubmit.origin.set("pointAddress", $(this).val());
                 that.buildGeocodeRequest(that.toSubmit.origin, "origin");
             }
         });
         this.$page1destAddr.on("focus", function() {
-            if ($(this).val() === "请输入具体地址") {
+            if ($(this).val() === that.addrInputConst) {
                 $(this).val("");
             }
         }).on("blur", function () {
             if ($(this).val() === "") {
-                $(this).val("请输入具体地址");
+                $(this).val(that.addrInputConst);
             } else {
                 that.toSubmit.dest.set("pointAddress", $(this).val());
                 that.buildGeocodeRequest(that.toSubmit.dest, "dest");
@@ -188,6 +197,23 @@ var MessagePostView = Backbone.View.extend({
               context: document.body
         }).done(function(json) {
             that.map.setMarker(json, point);
+            $("#originWrong").remove();
+            $("#destWrong").remove();
+            if (point === "origin") {
+                that.toSubmit.origin.set("lat", json.results[0].geometry.location.lat);
+                that.toSubmit.origin.set("lng", json.results[0].geometry.location.lng);
+                that.inRange = that.toSubmit.originPivot.isInRange(that.toSubmit.origin);
+                if (!that.inRange) {
+                    $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                }
+            } else {
+                that.toSubmit.dest.set("lat", json.results[0].geometry.location.lat);
+                that.toSubmit.dest.set("lng", json.results[0].geometry.location.lng);
+                that.inRange = that.toSubmit.destPivot.isInRange(that.toSubmit.dest);
+                if (!that.inRange) {
+                    $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                }
+            }
         });
     },
     updateByMapMarker: function (type, json) {
@@ -225,8 +251,8 @@ var MessagePostView = Backbone.View.extend({
         if (this.toSubmit.requests.length === 0 || this.toSubmit.requests[0].type !== this.toSubmit.type) {
             this.toSubmit.requests = [];
             this.toSubmit.requests[0] = {};
-            this.toSubmit.requests[0].departTime = 0;
-            this.toSubmit.requests[0].returnTime = 0;
+            this.toSubmit.requests[0].departTime = -1;
+            this.toSubmit.requests[0].returnTime = -1;
             this.toSubmit.requests[0].id = 1;
             this.toSubmit.requests[0].type = this.toSubmit.type;
             this.toSubmit.requests[0].round = true;
@@ -379,13 +405,19 @@ var MessagePostView = Backbone.View.extend({
             if (e.keyCode < 48 || e.keyCode > 57) {
                 e.preventDefault();
             }
-            that.toSubmit.departureSeats = Utilities.toInt(e.target.value);
-            that.toSubmit.returnSeats = Utilities.toInt(e.target.value);
             if (that.toSubmit.departureSeats>1) {
                 that.$downArrow.attr("class","plus");
             } else {
                 that.$downArrow.attr("class","plus_disabled");
             }
+        }).on("blur", function (e) {
+            var value = Utilities.toInt($(this).val());
+            if (!value || isNaN(value) || value < that.toSubmit.priceListEntries) {
+                value = that.toSubmit.priceListEntries;
+                $(this).val(value);
+            }
+            that.toSubmit.departureSeats = value;
+            that.toSubmit.returnSeats = value;
         });
         this.$upArrow.on("click", function (e) {
             that.toSubmit.departureSeats++;
@@ -411,8 +443,11 @@ var MessagePostView = Backbone.View.extend({
             that.toSubmit.description = e.target.value;
         });
         if (this.toSubmit.type === Constants.messageType.help) {
+            $("#seatlabeltext").html("提<b></b>供");
             this.$priceList.on("blur", "input", function (e) {
-                that.toSubmit.priceList[Utilities.toInt(Utilities.getId(e.target.id))] = Utilities.toInt(e.target.value);
+                that.toSubmit.priceList[Utilities.toInt(Utilities.getId(e.target.id))-1] = Utilities.toInt(e.target.value);
+            }).on("focus", "input", function (e) {
+                $("#publish_priceError").remove();
             });
             this.$priceAdd.on("click", function (e) {
                 if (that.toSubmit.priceListEntries < that.toSubmit.departureSeats) {
@@ -423,6 +458,9 @@ var MessagePostView = Backbone.View.extend({
                     that.toSubmit.priceList[seatId - 1] = 0;
                     that.$entryClose.show();
                     that.$entryClose.appendTo(that.$priceList.children(".publish_price_list_entry").last());
+                    if (that.toSubmit.departureSeats <= that.toSubmit.priceListEntries) {
+                        that.$downArrow.attr("class","plus_disabled");
+                    }
                 } else {
                     if ($("#publish_seats_full").length === 0) {
                         that.$priceListContainer.append('<div id="publish_seats_full" class="publish_price_notice" style="float:left">请添加更多座位</div>');
@@ -459,10 +497,18 @@ var MessagePostView = Backbone.View.extend({
         if (page === 1) {
             $('#publish_type>.active').removeClass('active');
             $('#publish_' + this.toSubmit.type).addClass('active');
-            this.$page1origin.val(this.toSubmit.origin.toUiString());
-            this.$page1dest.val(this.toSubmit.dest.toUiString());
-            this.$page1originAddr.val(this.toSubmit.origin.get("pointAddress"));
-            this.$page1destAddr.val(this.toSubmit.dest.get("pointAddress"));
+            if (this.toSubmit.origin) {
+                this.$page1origin.val(this.toSubmit.origin.toUiString());
+                this.$page1originAddr.val(this.toSubmit.origin.get("pointAddress"));
+            } else {
+                this.toSubmit.origin = new UserLocation();
+            }
+            if (this.toSubmit.dest) {
+                this.$page1dest.val(this.toSubmit.dest.toUiString());
+                this.$page1destAddr.val(this.toSubmit.dest.get("pointAddress"));
+            } else {
+                this.toSubmit.dest = new UserLocation();
+            }
         } else if (page === 2) {
             var r = this.toSubmit.requests;
             for (var request = 0; request < r.length; request++) {
@@ -486,8 +532,8 @@ var MessagePostView = Backbone.View.extend({
                         $('input[name=publish_returnDate_' + id + ']').prop("disabled", true);
                         $('#return_time_' + id).prop("disabled", true);
                     }
-                    $('#depart_time_' + id).val(r[request].departTime);
-                    $('#return_time_' + id).val(r[request].returnTime);
+                    $('#depart_time_' + id).val(Utilities.getDayTimeSlotText(r[request].departTime));
+                    $('#return_time_' + id).val(Utilities.getDayTimeSlotText(r[request].returnTime));
                 }
             }
         } else if (page === 3) {
@@ -625,7 +671,7 @@ var MessagePostView = Backbone.View.extend({
     updateValue: function (e, d) {
         var id;
         if (e.target && e.target.value !== "") {
-            var name = $(e.delegateTarget).attr("id");
+            var name = e.target.parentElement.parentElement.id;
             id = this.getId(name);
             if (name.indexOf("depart_time") > -1) {
                 this.toSubmit.requests[Utilities.toInt(id) - 1].departTime = e.target.value;
@@ -668,15 +714,31 @@ var MessagePostView = Backbone.View.extend({
         var counter = 0;
 
         if (page === 1) {
-            if (Utilities.isEmpty($("#publish_originInput").val())) {
-                $("#publish_origin>dd").after('<dd id="originWrong" class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
-                return false;
-            } else if (Utilities.isEmpty($("#publish_destInput").val())) {
-                $("#publish_dest>dd").after('<dd id="destWrong" class="wrong"><p>很抱歉，该地址无效，请输入正确的地址</p></dd>');
-                return false;
-            } else {
-                return true;
+            $("#originWrong").add($("#destWrong")).remove();
+            var locvalid = true;
+            if (!this.toSubmit.originPivot) {
+                $("#from").append('<dd id="originWrong" class="wrong"><p>请选择具体地区</p></dd>');
+                locvalid = false;
             }
+            if (!this.toSubmit.destPivot) {
+                $("#to").append('<dd id="destWrong" class="wrong"><p>请选择具体地区</p></dd>');
+                locvalid = false;
+            }
+            if (!locvalid) {
+                return false;
+            }
+            // if (!$("publish_originAddress").val() || $("publish_originAddress").val() === this.addrInputConst ) {
+            //     $("#from").append('<dd id="originWrong" class="wrong"><p>请输入具体地址</p></dd>');
+            //     locvalid = false;
+            // }
+            // if (!$("publish_destAddress").val() || $("publish_destAddress").val() === this.addrInputConst ) {
+            //     $("#to").append('<dd id="destWrong" class="wrong"><p>请输入具体地址</p></dd>');
+            //     locvalid = false;
+            // }
+            if (!locvalid) {
+                return false;
+            }
+            return this.inRange;
         } else if (page === 2) {
             var requests = this.toSubmit.requests;
             counter = 0;
@@ -685,19 +747,67 @@ var MessagePostView = Backbone.View.extend({
             }
 
             for (var request = 0; request < requests.length; request++) {
+                $("#timewrong").remove();
                 if (!requests[request])
                     continue;
                 counter++;
                 if (requests[request].round) {
                     if (Utilities.isEmpty(requests[request].returnDate)) {
+                        if ($("#timewrong").length === 0) {
+                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请填写回程日期</p></div>");
+                        }
                         return false;
                     }
-                } else if (Utilities.isEmpty(requests[request].departDate)) {
-                    return false;
+                    if (Utilities.isEmpty(requests[request].returnTime) || requests[request].returnTime === -1) {
+                        if ($("#timewrong").length === 0) {
+                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请选择回程时间</p></div>");
+                        }
+                        return false;
+                    }
+                } else {
+                    if (Utilities.isEmpty(requests[request].departDate)) {
+                        if ($("#timewrong").length === 0) {
+                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请填写出发日期</p></div>");
+                        }
+                        return false;
+                    }
+                    if (Utilities.isEmpty(requests[request].departTime) || requests[request].departTime === -1) {
+                        if ($("#timewrong").length === 0) {
+                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请选择出发时间</p></div>");
+                        }
+                        return false;
+                    }
                 }
+
             }
         } else {
+            var seatNum = Utilities.toInt(this.$seats.val());
+            if ( seatNum < 1 || isNaN(seatNum)) {
 
+            }
+            if (this.toSubmit.type === Constants.messageType.help ) {
+                var price;
+                if (this.toSubmit.conditionalPrice) {
+                    for (var i = 0; i < this.toSubmit.priceListEntries; i++) {
+                        price = Utilities.toInt(this.toSubmit.priceList[i]);
+                        if (!price || isNaN(price) || price < 1 || price > 999 ) {
+                            if ($("#publish_priceError").length === 0) { 
+                                this.$priceListContainer.append('<div id="publish_priceError" class="publish_price_notice" style="float:left">所有价格必须在1-999之间</div>');
+                            }
+                            return false;
+                        }
+                    }
+                } else {
+                    price = Utilities.toInt($("#seats_single").val());
+                    if (!price || isNaN(price) || price < 1 || price > 999 ) {
+                        if ($("#publish_priceError").length === 0) { 
+                            this.$priceListContainer.append('<div id="publish_priceError" class="publish_price_notice" style="float:left">所有价格必须在1-999之间</div>');
+                        }
+                        return false;
+                    }
+                }
+            }
+            
         }
         if (counter > 0)
             return true;
@@ -711,15 +821,6 @@ var MessagePostView = Backbone.View.extend({
         } else {
             if (!this.toSubmit.conditionalPrice) {
                 this.toSubmit.priceList[0] = Utilities.toInt($("#seats_single").val());
-            } else {
-                for ( i = 1; i <= this.toSubmit.departureSeats; i++) {
-                    this.toSubmit.priceList[i] = 0;
-                }
-                for ( i = 1; i <= this.toSubmit.priceListEntries; i++) {
-                    var seatNumber = $("#seatsNumber_" + i).val();
-                    seatNumber = Utilities.toInt(seatNumber);
-                    this.toSubmit.priceList[seatNumber - 1] = Utilities.toInt($("#seats_" + i).val()) || 0;
-                }
             }
         }
         for (var r = 0; r < this.toSubmit.requests.length; r++) {
@@ -756,8 +857,6 @@ var MessagePostView = Backbone.View.extend({
             this.domContainer.empty();
             this.isClosed = true;
             this.toSubmit = {
-                "origin": new UserLocation (),
-                "dest": new UserLocation (),
                 "type": Constants.messageType.ask,
                 "numberRequests": 0,
                 "requests": [],

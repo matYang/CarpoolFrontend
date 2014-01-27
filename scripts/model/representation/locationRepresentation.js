@@ -32,15 +32,17 @@ var UserLocation = Backbone.Model.extend({
 
     clone: function () {
         var newLocation = new UserLocation();
-        for ( var attr in this ) {
-            newLocation.set(attr, this.get("attr"));
-        }
+        var json = this.toJSON();
+        $.each(json, function(key, value) {
+            newLocation.set(key, value);
+        });
         return newLocation;
     },
     copy: function (val) {
-        for ( var attr in this ) {
-            this.set(attr, val.get("attr"));
-        }
+        var json = this.toJSON();
+        $.each(json, function(key, value) {
+            val.set(key, value);
+        });
     },
     isDefault: function(){
         return typeof this.get('defaultId') === 'number' && this.get('defaultId') > 0;
