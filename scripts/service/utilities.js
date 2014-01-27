@@ -226,21 +226,29 @@ var Utilities = {
 
     getDayTimeSlotText: function(timeSlot){
         var prefixText = '',
-            actualStartHour = 0;
+            actualStartHour = 0,
+            actualEndHour = 1;
         if (timeSlot < Constants.DayTimeSlot.n12){
             prefixText = '上午';
             actualStartHour = timeSlot;
+            actualEndHour = actualStartHour + 1;
         }
         else if (timeSlot < Constants.DayTimeSlot.n18){
             prefixText = '下午';
-            actualStartHour = timeSlot - 12;
+            if ( timeSlot === Constants.DayTimeSlot.n12 ) {
+                actualEndHour = 1;
+            } else {
+                actualStartHour = timeSlot - 12;
+                actualEndHour = actualStartHour + 1;
+            }
         }
         else{
             prefixText = '晚上';
             actualStartHour = timeSlot - 12;
-        }
+            actualEndHour = actualStartHour + 1;
 
-        return prefixText+actualStartHour+'点';
+        }
+        return prefixText+actualStartHour+'-'+actualEndHour+'点';
     },
     getDayTimeSlot_morningStart: function(){
         return Constants.DayTimeSlot.n0;

@@ -60,7 +60,9 @@ var MessagePublishView = MessagePostView.extend({
             that.renderSecondPage();
         });
         $("#publish_finish").on("click", function (e) {
-            that.finish();
+            if (MessagePostView.prototype.validate(3)) {
+                that.finish();
+            }
         });
     },
     finish: function () {

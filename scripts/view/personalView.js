@@ -104,8 +104,8 @@ var PersonalView = Backbone.View.extend({
                     'intendedUserId': this.curUserId
                 });
                 break;
-            case "profilePage_notificationTab":
-                $('#profilePage_historyTab').addClass('active');
+            case "notification":
+                $('#profilePage_notificationTab').addClass('active');
                 this.activeChildView = new PersonalNoticeView ({
                     'intendedUserId': this.curUserId
                 });

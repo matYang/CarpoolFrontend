@@ -63,7 +63,9 @@
                 if (typeof inst !== 'undefined'){
                     inst.defaultLocations = defaultLocations;
                 }
-                callback();
+                if (callback) {
+                    callback();
+                }
             },
 
             error: function(model, response){

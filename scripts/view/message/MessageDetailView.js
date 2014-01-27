@@ -3,7 +3,7 @@ var MessageDetailView = Backbone.View.extend({
     el: "",
 
     initialize: function (messageIdWrapper) {
-        _.bindAll(this, 'render', 'bindEvents', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'cancelSuccess', 'cancelError', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'renderAutoMatch', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'cancelSuccess', 'cancelError', 'close');
         app.viewRegistration.register("MessageDetail", this, true);
         this.isClosed = false;
 
@@ -96,7 +96,7 @@ var MessageDetailView = Backbone.View.extend({
         }
         this.$automatch = $("#view_automatch").append(buf.join(""));
         this.$automatch.children(".messageDetail-middle-autoMatch-loading").remove();
-        this.$messages = $automatch.children("message_simple").on('click', function (e) {
+        this.$messages = this.$automatch.children("message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
         });

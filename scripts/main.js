@@ -31,6 +31,9 @@ var AppRouter = Backbone.Router.extend({
 
         "register": "register",
         "register/*registerState": "register",
+        "lost/": "lost",
+        "lost" : "lost",
+        "lost/*token" : "lost",
 
         "emailActivation/*authKey": "emailActivation",
 
@@ -232,6 +235,10 @@ var AppRouter = Backbone.Router.extend({
             this.registrationView = new RegistrationView ({"state":"registrationState"});
         }
         
+    },
+
+    lost: function (token) {
+        this.findPasswordView = new FindPasswordView({"token":token});
     },
 
     emailActivation: function (authKey) {
