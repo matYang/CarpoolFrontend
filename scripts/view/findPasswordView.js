@@ -8,7 +8,6 @@ var FindPasswordView = Backbone.View.extend({
         this.template2 = _.template(tpl.get("findPassword_2"));
         this.template3 = _.template(tpl.get("findPassword_3"));
         this.$domContainer = $("#content");
-        this.$domContainer.empty();
         if (params.token) {
             this.token = params.token;
             this.state = 3;
@@ -18,6 +17,7 @@ var FindPasswordView = Backbone.View.extend({
         this.render();
     },
     render: function (state) {
+        this.$domContainer.empty();
         if (this.state === 3) {
             this.$domContainer.append(this.template3);
         } else if (this.state === 2) {
@@ -101,7 +101,7 @@ var FindPasswordView = Backbone.View.extend({
 
     },
     changeError: function (response) {
-
+        $("#forgot_container").append("<div class='wrong'><p>"+respones+"</p></div>")
     },
     close: function () {
         if (!this.isClosed) {
