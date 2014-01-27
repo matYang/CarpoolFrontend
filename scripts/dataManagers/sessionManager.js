@@ -19,6 +19,10 @@
 		this.cur_letters = new Letters();
 		this.cur_lettersTimeStamp = new Date();
 
+		this.cur_uncheckedNotifications = new Notifications();
+		this.cur_uncheckedLetters = new Letters();
+		this.cur_searchHistory = new SearchRepresentations();
+
 	};
 
 	SessionManager.prototype.resgisterManager = function(manager) {
@@ -59,6 +63,14 @@
 
 	SessionManager.prototype.getCurUserLetters = function() {
 		return this.cur_letters;
+	};
+
+	SessionManager.prototype.getCurUserUncheckedNotifications = function() {
+		return this.cur_uncheckedNotifications;
+	};
+
+	SessionManager.prototype.getCurUserUncheckedLetters = function() {
+		return this.cur_uncheckedLetters;
 	};
 	
 	//using the find session API to determine if the uer has logged in or not
@@ -208,7 +220,33 @@
 			}
 		});
 	};
-	
+
+	SessionManager.prototype.fetchCurUserUncheckedNotifications = function(callback) {
+		var self = this;
+        if (!this.hasSession()){
+                Constants.dWarn("SessionManager::fetchCurUserUncheckedNotifications:: session does not exist, exit");
+                return;
+        }
+        this.cur_uncheckedNotifications.overrideUrl(users_uncheckedNotification + '/' + this.getUserId());
+        this.cur_uncheckedNotifications.fetch({
+			dataType:'json',
+			reset: true,
+
+			success:function(model, response){
+				if(callback){
+					callback.success();
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchCurUserUncheckedNotifications:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error(response);
+				}
+			}
+		});
+	};
+
 
 	SessionManager.prototype.fetchCurUserLetters = function(callback){
 		var self = this;
@@ -243,6 +281,32 @@
 			}
 		});
 	};
+
+	SessionManager.prototype.fetchCurUserUncheckedLetters = function(callback) {
+		var self = this;
+        if (!this.hasSession()){
+                Constants.dWarn("SessionManager::fetchCurUserUncheckedLetters:: session does not exist, exit");
+                return;
+        }
+        this.cur_uncheckedLetters.overrideUrl(this.apis.users_uncheckedLetter + '/' + this.getUserId());
+        this.cur_uncehckedLetters.fetch({
+			dataType:'json',
+			reset: true,
+
+			success:function(model, response){
+				if(callback){
+					callback.success();
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchCurUserUncheckedLetters:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error(response);
+				}
+			}
+		});
+	};
 	
 	SessionManager.prototype.fetchCurUserFavorites = function(callback) {
 		var self = this;
@@ -266,6 +330,34 @@
 			},
 			error: function(model, response){
 				Constants.dWarn("SessionManager::fetchSocialList:: fetch failed with response:");
+				Constants.dLog(response);
+				if(callback){
+					callback.error(response);
+				}
+			}
+		});
+	};
+
+	SessionManager.prototype.fetchCurUserSearchHistory = function(callback) {
+		var self = this;
+
+		if (!this.hasSession()){
+			Constants.dWarn("SessionManager::fetchCurUserSearchHistory:: session does not exist, exit");
+			return;
+		}
+
+		this.cur_searchHistory.overrideUrl(this.apis.users_searchHistory + '/' + this.getUserId());
+		this.cur_searchHistory.fetch({
+			dataType:'json',
+			reset: true,
+
+			success:function(model, response){
+				if(callback){
+					callback.success();
+				}
+			},
+			error: function(model, response){
+				Constants.dWarn("SessionManager::fetchCurUserSearchHistory:: fetch failed with response:");
 				Constants.dLog(response);
 				if(callback){
 					callback.error(response);

@@ -57,3 +57,22 @@ var SearchRepresentation = Backbone.Model.extend({
     }
 
 });
+
+var SearchRepresentations = Backbone.Collection.extend({
+
+    model: SearchRepresentation,
+
+    initialize: function (urlOverride) {
+        _.bindAll(this, 'overrideUrl');
+        if ( typeof urlOverride !== 'undefined') {
+            this.url = urlOverride;
+        }
+
+    },
+
+    overrideUrl: function (urlOverride) {
+        if ( typeof urlOverride !== 'undefined') {
+            this.url = urlOverride;
+        }
+    }
+});
