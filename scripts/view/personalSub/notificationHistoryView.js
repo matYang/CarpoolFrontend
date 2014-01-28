@@ -18,6 +18,7 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryClass = "notice_viewDetail";
         this.entryContainer = "personalNotificationContainer";
         this.domContainer = $("#personalNotificationContainer");
+        this.selected = [];
     },
 
     render: function (message) {
@@ -43,9 +44,38 @@ var NotificationHistoryView = MultiPageView.extend({
         }).on("click", ".checkbox", function (e) {
             if ($(e.target).hasClass("checked")) {
                 $(e.target).removeClass("checked");
+                that.selected.remove(Utilities.getId(checkbox[i].parentElement.parentElement.id));
             } else {
                 $(e.target).addClass("checked");
+                that.selected.push(Utilities.getId(checkbox[i].parentElement.parentElement.id));
             }
+        });
+        $("#selectAll").on("click", function (e) {
+            e.preventDefault();
+            var checkboxes = $("#personalNotificationContainer").find(".checkbox").addClass("checked");
+            that.selected = [];
+            for ( var i = 0; i < checkboxes.length; i++ ) {
+                that.selected.push(Utilities.getId(checkbox[i].parentElement.parentElement.id));
+            }
+        });
+        $("selectOpposite").on("click", function (e) {
+            e.preventDefault();
+            that.selected = [];
+            var checkboxes = $("#personalNotificationContainer").find(".checkbox")；
+            for ( var i = 0; i < checkboxes.length; i++ ) {
+                if (checkboxes[i].hasClass("checked")) {
+                    checkboxes[i].removeClass("checked");
+                } else {
+                    checkboxes[i].addClass("checked");
+                    that.selected.push(Utilities.getId(checkbox[i].parentElement.parentElement.id));
+                }
+            }
+        });
+        $("#markAsRead").on("click", function (e) {
+
+        });
+        $("#deleteSelected").on("click", function (e) {
+            
         });
     },
     fetchNotificationError: function () {
