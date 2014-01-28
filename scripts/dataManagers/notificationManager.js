@@ -39,7 +39,7 @@
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(_idArr);
 				}
 			},
 			error: function(model, response){
@@ -69,7 +69,7 @@
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success();
+					callback.success(_idArr);
 				}
 			},
 			error: function(model, response){
