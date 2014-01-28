@@ -61,7 +61,7 @@ var NotificationHistoryView = MultiPageView.extend({
         $("selectOpposite").on("click", function (e) {
             e.preventDefault();
             that.selected = [];
-            var checkboxes = $("#personalNotificationContainer").find(".checkbox")；
+            var checkboxes = $("#personalNotificationContainer").find(".checkbox");
             for ( var i = 0; i < checkboxes.length; i++ ) {
                 if (checkboxes[i].hasClass("checked")) {
                     checkboxes[i].removeClass("checked");

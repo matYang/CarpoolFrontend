@@ -89,20 +89,20 @@
 	float:right;
 	width:275px;
 }
-.profile {
+.messageDetail-upper-user-profile {
 	margin-top:20px;
 	border:1px solid #d8d8d8;
 	padding:15px;
 	background:url(../images/profile.png) no-repeat;
 }
-.profile dt {
+.messageDetail-upper-user-profile dt {
 	float:left;
 	margin-right:10px;
 }
-.profile dd {
+.messageDetail-upper-user-profile dd {
 	float:left;
 }
-.profile dd div {
+.messageDetail-upper-user-profile dd div {
 	margin-bottom:6px;
 }
 .actButton {
