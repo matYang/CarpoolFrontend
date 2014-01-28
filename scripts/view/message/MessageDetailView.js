@@ -64,7 +64,7 @@ var MessageDetailView = Backbone.View.extend({
             "success": this.loadTransactions,
             "error": this.loadError
         });
-        app.messageManager.fetchTransactionList(this.message.id, {
+        app.messageManager.autoMatch(this.message.id, {
             "success": this.renderAutoMatch,
             "error": this.loadError
         });
