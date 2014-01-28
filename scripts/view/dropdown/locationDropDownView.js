@@ -20,7 +20,7 @@ var LocationDropDownView = Backbone.View.extend({
               self.htmlContent += '<li class="default-location-dropdown-li" data-defaultLocationId="' + defaultLocation.get('defaultId') + '">' + defaultLocation.toUiString() + '</li>';
         });
 
-        this.htmlContent = '<ul id="default-location-dropdown">' + this.htmlContent + '</ul>';
+        this.htmlContent = '<ul id="default-location-dropdown" class="search_down">' + this.htmlContent + '</ul>';
         return this.htmlContent;
     },
 
