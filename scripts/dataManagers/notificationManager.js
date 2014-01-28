@@ -21,11 +21,9 @@
 		return this.timeStamp;
 	};
 
-	NotificationManager.prototype.checkNotification = function(notificationId, callback) {
-		if (typeof notificationId !== 'number'){
-			Constants.dWarn("NotificationManager::checkNotification:: invalid parameter");
-			return;
-		}
+	NotificationManager.prototype.checkNotification = function(notificationIdOpt, callback) {
+		var _idArr = Utilities.getIdList(notificationIdOpt);
+		var notificationId = _idArr[0];
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("NotificationManager::checkNotification:: session does not exist, exit");
 			return;
@@ -34,15 +32,14 @@
 		var self = this;
 	
 		var notification = new Notification();
-		notification.overrideUrl(this.apis.notification_notification);
-		notification.set('notificationId', notificationId);
-		notification.save({},{
-			data: JSON.stringify({'userId': this.sessionManager.getUserId()}),
+		notification.overrideUrl(this.apis.notification_notificationByIdList);
+		notification.save({
+			data: JSON.stringify({'userId': this.sessionManager.getUserId(), 'idArray': _idArr, 'stateChangeAction': Constants.notificationStateChangeAction.check}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success(notification);
+					callback.success();
 				}
 			},
 			error: function(model, response){
@@ -55,11 +52,9 @@
 		});
 	};
 
-	NotificationManager.prototype.deleteNotification = function(notificationId, callback) {
-		if (typeof notificationId !== 'number'){
-			Constants.dWarn("NotificationManager::deleteNotification:: invalid parameter");
-			return;
-		}
+	NotificationManager.prototype.deleteNotification = function(notificationIdOpt, callback) {
+		var _idArr = Utilities.getIdList(notificationIdOpt);
+		var notificationId = _idArr[0];
 		if (!this.sessionManager.hasSession()){
 			Constants.dWarn("NotificationManager::deleteNotification:: session does not exist, exit");
 			return;
@@ -67,14 +62,14 @@
 
 		var self = this;
 		var notification = new Notification();
-		notification.overrideUrl(this.apis.notification_notification);
-		notification.set('notificationId', notificationId);
-		notification.destroy({
+		notification.overrideUrl(this.apis.notification_notificationByIdList);
+		notification.save({},{
+			data: SON.stringify({'userId': this.sessionManager.getUserId(), 'idArray': _idArr, 'stateChangeAction': Constants.notificationStateChangeAction.delete}),
 			dataType:'json',
 			success:function(model, response){
 				self.timeStamp = new Date();
 				if(callback){
-					callback.success(notification);
+					callback.success();
 				}
 			},
 			error: function(model, response){
@@ -86,6 +81,7 @@
 			}
 		});
 	};
+
 
 
 }).call(this);

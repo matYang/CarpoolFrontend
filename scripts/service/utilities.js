@@ -258,6 +258,36 @@ var Utilities = {
     },
     getDayTimeSlot_nightStart: function(){
         return Constants.DayTimeSlot.n18;
+    },
+
+    //accepts id in number, string, object, array formats
+    getIdList: function(idOpt){
+        var _id = -1;
+        var _arr = [];
+        if ($.isArray(idOpt)){
+            if (idOpt.length === 0){
+                throw new Error('fatal error: id array empty');
+            }
+            return idOpt;
+        }
+        else{
+            switch (typeof idOpt){
+                case 'string':
+                    _id = parseInt(idOpt, 10);
+                    _arr.push(_id);
+                    break;
+                case 'object':
+                    _id = parseInt(idOpt.id, 10);
+                    _arr.push(_id);
+                    break;
+                case 'number':
+                    _arr.push(_id);
+                    break;
+                default:
+                    throw new Error('fatal error: Invalid id format');
+            }
+            return _arr;
+        }
     }
 
 

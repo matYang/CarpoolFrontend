@@ -110,6 +110,11 @@ var Constants = {
         'watched': 6
     },
 
+    notificationStateChangeAction: {
+        'check': 0,
+        'delete': 1
+    },
+
     userState: {
         "normal": 0,
         "invalid": -1

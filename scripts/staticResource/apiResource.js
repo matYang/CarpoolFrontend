@@ -72,7 +72,8 @@
                 },
 
                 'notification': {
-                    notification: '/notification'
+                    notification: '/notification',
+                    notificationByIdList: '/notificationByIdList'
                 },
 
                 'general': {
@@ -131,6 +132,7 @@
                 transaction_admin: api_maker('transaction', 'admin'),
 
                 notification_notification: api_maker('notification', 'notification'),
+                notification_notificationByIdList: api_maker('notification', 'notificationByIdList'),
 
                 letter_letter: api_maker('letter', 'letter'),
                 letter_user: api_maker('letter', 'user'),
