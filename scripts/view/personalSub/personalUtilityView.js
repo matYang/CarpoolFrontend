@@ -1,7 +1,7 @@
 var PersonalUtilityView = Backbone.View.extend({
 
     initialize: function (params) {
-        _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError', 'updateLocation');
+        _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError');
         this.isClosed = false;
         this.domContainer = $("#profilePage_content");
         this.template = _.template(tpl.get('personalUtility'));
@@ -13,6 +13,7 @@ var PersonalUtilityView = Backbone.View.extend({
         if (testMockObj.testMode === true) {
             this.sessionUser = testMockObj.sampleUser;
         }
+        this.geocoder = new google.maps.Geocoder();
         this.render();
         this.bindEvents();
         this.bindValidator();
@@ -129,12 +130,15 @@ var PersonalUtilityView = Backbone.View.extend({
 
     bindValidator: function () {
         var cmv, cdv, cyv, that = this;
+
         this.$name.on('blur', function (e) {
+            $("#nameWrong,#nameCorrect").remove();
             if (Utilities.isEmpty(this.value)) {
-                this.classList.add("invalid_input");
+                $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能为空</p></dd>");
             } else {
-                this.classList.remove("invalid_input");
+                $(this).after("<span id='nameCorrect' class='right'></span>");
             }
+
         });
         this.$location.on('blur', function (e) {
             if (Utilities.isEmpty(this.value)) {
@@ -151,10 +155,11 @@ var PersonalUtilityView = Backbone.View.extend({
             }
         });
         this.$phone.on('blur', function (e) {
+            $("#phoneWrong,#phoneRight").remove();
             if (!($.isNumeric(this.value)) || this.value.length > 11 || this.value.length < 8) {
-                this.classList.add("invalid_input");
+                $(this).parent().parent().after("<dd id='phoneWrong' class='wrong'><p>很抱歉，电话的格式不对，请重新输入</p></dd>");
             } else {
-                this.classList.remove("invalid_input");
+                $(this).after("<span id='phoneRight' class='right'></span>");
             }
         });
         this.$birthyear.on('blur', function (e) {
@@ -251,24 +256,57 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$oldPassword = $('input[name=oldPassword]');
         this.$newPassword = $('input[name=newPassword]');
         this.$confirmPassword = $('input[name=confirmNewPassword]');
+        this.$address = $('#personal_editAddress');
         this.$location.on('click', function (e) {
-            if ( self.locationDropDownView ) {
-                self.locationDropDownView.show();    
+            that.locationDropDownView = new LocationDropDownView($("#myPage_location"), that);
+            e.stopPropagation();
+        });
+        this.$address.on('blur', function (e) {
+            if ($(this).val()) {
+                that.editedLocation.set("defaultId", -1);
+                that.editedLocation.set("pointAddress", $(this).val());
+                that.getLatLng(that.editedLocation);
+            }
+        });
+    },
+    getLatLng: function (loc) {
+        var request = {}, that = this;
+        request.address = loc.get("pointName") + "," + loc.get("city") + "," + loc.get("province");
+        var result = this.geocoder.geocode(request, function (geocodeResults, status) {
+            $("#addrWrong, #addrCorrect").remove();
+            if (status == google.maps.GeocoderStatus.OK) {
+                loc.set("lat", geocodeResults[0].geometry.location.lat());
+                loc.set("lng", geocodeResults[0].geometry.location.lng());
+                if (!that.pivotLocation) {
+                    that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("matchId")})[0];
+                }
+                if (!that.pivotLocation.isInRange(loc) && $("#addrWrong").length === 0) {
+                    that.$address.parent().parent().after("<dd class='wrong'><p>很抱歉，该地址不在服务区内</p></dd>");
+                    return;
+                } else {
+                    if ($("#addrCorrect").length === 0) {
+                        that.$address.after("<span id='addrCorrect' class='right'></span>");
+                    }
+                }
             } else {
-                self.locationDropDownView = new LocationDropDownView($("#myPage_locatoin"), self);
-                
+                Info.warn('Geocode was not successful for the following reason: ' + status);
             }
         });
     },
     acceptDefaultLocation: function(defaultLocation){
-        this.sessionUser.set("location", defaultLocation);
-        this.$from.val(this.defaultLocation.toUiString());
+        this.pivotLocation = defaultLocation;
+        this.editedLocation = defaultLocation.clone();
+        this.$location.val(this.pivotLocation.toUiString());
+        this.$address.val("");
     },
     savePersonalInfo: function () {
         var that = this, date = new Date ();
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()));
         date.setDate(Utilities.toInt(this.$birthday.val()));
+        if ($(".wrong") || !this.$phone.val()) {
+            return;
+        }
         app.userManager.changeContactInfo(this.$name.val(), Utilities.toInt($('input[name=gender]').val()), this.$phone.val(), this.$qq.val(), date, {
             "success": that.saveSuccess,
             "error": that.saveError
@@ -352,13 +390,6 @@ var PersonalUtilityView = Backbone.View.extend({
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
-    },
-    noticeError: function () {
-        Info.displayNotice("提示方式修改失败，请稍后再试");
-    },
-
-    updateLocation: function () {
-        $("#personal_editLocation").val(this.editedLocation.toUiString());
     },
     close: function () {
         if (!this.isClosed) {

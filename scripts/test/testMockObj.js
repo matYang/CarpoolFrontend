@@ -58,7 +58,7 @@ var testMockObj = {
 															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
 															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
 															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleUser": (new User()).set("userId", 1560198).set("name", "卢卡子").set("imgPath","http://tp3.sinaimg.cn/2018108150/180/40023913088/1"),
+	"sampleUser": (new User()).set("userId", 1560198).set("name", "卢卡子").set("imgPath","http://tp3.sinaimg.cn/2018108150/180/40023913088/1").set("location", (new UserLocation()).set("matchId", 4)),
 	"sampleUsers": new Users(),
 	"sampleUserA": (new User()).set("userId", 1),
 	"sampleUserB": (new User()).set("userId", 2),

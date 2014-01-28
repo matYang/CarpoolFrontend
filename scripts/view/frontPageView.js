@@ -155,8 +155,6 @@ var FrontPageView = Backbone.View.extend({
         var $resp = this.$resultPanel.prepend(buf);
         var $respdiv = $resp.children("div").first().css("margin-top",-100);
         $respdiv.first().animate({"margin-top":0}, 600);
-
-        debugger;
         if ($resp.children("div").length > 4) {
            $resp.children("div").last().remove();
         }

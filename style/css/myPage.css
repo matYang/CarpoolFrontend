@@ -250,7 +250,6 @@
 }
 .account dd {
 	line-height:34px;
-	overflow:hidden;
 }
 .account dd .text {
 	float:left;
@@ -259,6 +258,11 @@
 	line-height:34px/9;
 	border:1px solid #d3d3d3;
 	padding-left:10px;
+}
+
+.account dd .search_down {
+	margin-left: 90px;
+	margin-top: -11px;
 }
 .account dd .radio_box {
 	margin-top:8px;

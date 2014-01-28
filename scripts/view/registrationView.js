@@ -30,7 +30,7 @@ var RegistrationView = Backbone.View.extend({
                     $("#pivotLocation").parent().addClass("wrong").append("<p id='vlocation' title='请选择一个地区'></p>");
                     return;
                 }
-                if (!that.registerInfo.pivot.isInRange(that.registerInfo.location)) {
+                if (!that.registerInfo.pivot.isInRange(loc)) {
                     $("#pivotLocation").parent().addClass("wrong").append("<p id='vlocation' title='对不起，该地区暂时不在服务区'></p>");
                     return;
                 }
@@ -107,7 +107,6 @@ var RegistrationView = Backbone.View.extend({
         });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
             var y = that.$year.val(), m = that.$month.val(), d = that.$day.val(), bdvalid = true;
-            debugger;
             if ( y && m && d ) {
                 $(this).parent().removeClass("wrong");
                 $("#vbirth").remove();
