@@ -208,7 +208,7 @@
 				self.cur_notificationsTimeStamp = new Date();
 				if(callback){
 					//should've used binding, not retrurning or passing models back
-					callback.success();
+					callback.success(response);
 				}
 			},
 			error: function(model, response){

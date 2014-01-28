@@ -136,7 +136,7 @@ var FrontPageView = Backbone.View.extend({
         var self = this;
         this.$messages = $("#frontPage-resultPanel").on("click", ".message_simple", function (e) {
             if (app.sessionManager.hasSession()) {
-                app.navigate("message/" + Utilities.getId(e.delegateTarget.id), true);
+                app.navigate("message/" + Utilities.getId(this.id), true);
             } else {
                 self.loginAlert();
             }
@@ -155,8 +155,10 @@ var FrontPageView = Backbone.View.extend({
         var $resp = this.$resultPanel.prepend(buf);
         var $respdiv = $resp.children("div").first().css("margin-top",-100);
         $respdiv.first().animate({"margin-top":0}, 600);
-        if ($respdiv.length > 4) {
-            $respdiv.last().remove();
+
+        debugger;
+        if ($resp.children("div").length > 4) {
+           $resp.children("div").last().remove();
         }
         if (this.displayIndex === this.displayMessages.length) {
             this.displayIndex = 0;

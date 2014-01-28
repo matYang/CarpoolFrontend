@@ -1,7 +1,7 @@
 var NotificationHistoryView = MultiPageView.extend({
 
     initialize: function (params) {
-        _.bindAll(this, 'render', 'bindNotificationEvent', 'additionalEvents', 'fetchNotificationError', 'close');
+        _.bindAll(this, 'render', 'bindNotificationEvent', 'bindDelegateEvents', 'fetchNotificationError', 'close');
         app.sessionManager.fetchCurUserNotifications({
             "success": this.render,
             "error": this.fetchNotificationError 
@@ -19,6 +19,7 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryContainer = "personalNotificationContainer";
         this.domContainer = $("#personalNotificationContainer");
         this.selected = [];
+        this.bindDelegateEvents();
     },
 
     render: function (message) {
@@ -35,8 +36,8 @@ var NotificationHistoryView = MultiPageView.extend({
             app.navigate("message/" + messageId, true);
         }
     },
-    additionalEvents: function() {
-        var taht = this;
+    bindDelegateEvents: function() {
+        var that = this;
         $("#personalNotificationContainer").on("click", ".delete", function (e) {
             app.notificationManager.deleteNotification(Utilities.getId(e.target),{
                 "success": that.deleteSuccess,
@@ -58,7 +59,7 @@ var NotificationHistoryView = MultiPageView.extend({
                 that.selected.push(Utilities.getId(checkbox[i].parentElement.parentElement.id));
             }
         });
-        $("selectOpposite").on("click", function (e) {
+        $("#selectOpposite").on("click", function (e) {
             e.preventDefault();
             that.selected = [];
             var checkboxes = $("#personalNotificationContainer").find(".checkbox");
