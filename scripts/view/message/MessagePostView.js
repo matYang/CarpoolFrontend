@@ -528,9 +528,11 @@ var MessagePostView = Backbone.View.extend({
                         date = r[request].returnDate;
                         $('input[name=publish_departDate_' + id + ']').datepicker("option", "maxDate", this.toSubmit.requests[request].returnDate);
                         $('input[name=publish_returnDate_' + id + ']').val((1 + date.getMonth()) + "/" + date.getDate() + "/" + date.getFullYear());
+                        $("div[name=publish_round_" + id + "]").addClass("checked");
                     } else {
                         $('input[name=publish_returnDate_' + id + ']').prop("disabled", true);
                         $('#return_time_' + id).prop("disabled", true);
+                        $("div[name=publish_round_" + id + "]").parent().parent().addClass("disabled");
                     }
                     $('#depart_time_' + id).val(Utilities.getDayTimeSlotText(r[request].departTime));
                     $('#return_time_' + id).val(Utilities.getDayTimeSlotText(r[request].returnTime));
