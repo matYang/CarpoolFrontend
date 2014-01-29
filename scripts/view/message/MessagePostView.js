@@ -72,53 +72,28 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     acceptDefaultLocation: function(defaultLocation){
+        debugger;
         var addr, lat, lng;
         if (this.locationDirection === Constants.LocationDirection.from){
             $("#originWrong").remove();
-            lat = this.toSubmit.origin.get("lat");
-            lng = this.toSubmit.origin.get("lng");
-            addr = this.$page1originAddr.val();
-            addr = this.addrInputConst === addr ? "" : addr;
             this.toSubmit.originPivot = defaultLocation;
             this.toSubmit.originPivot.copy(this.toSubmit.origin);
             this.$page1origin.val(this.toSubmit.origin.toUiString());
-            if (addr) {
-                this.toSubmit.origin.set("pointAddress", addr);
-                this.toSubmit.origin.set("defaultId", -1);
-                this.toSubmit.origin.set("lat", lat);
-                this.toSubmit.origin.set("lng", lng);
-                if ( !this.toSubmit.originPivot.isInRange(this.toSubmit.origin)) {
-                    this.inRange = false;
-                    $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
-                } else {
-                    this.inRange = true;
-                }
-            }
+            this.$page1originAddr.val("");
+            defaultLocation.copy(this.toSubmit.origin);
+            this.toSubmit.origin.set("defaultId", -1);
         }
         else if (this.locationDirection === Constants.LocationDirection.to){
             $("#destWrong").remove();
-            lat = this.toSubmit.dest.get("lat");
-            lng = this.toSubmit.dest.get("lng");
-            addr = this.$page1destAddr.val();
-            addr = this.addrInputConst === addr ? "" : addr;
             this.toSubmit.destPivot = defaultLocation;
             this.toSubmit.destPivot.copy(this.toSubmit.dest);
-            if (addr) {
-                this.toSubmit.dest.set("pointAddress", addr);
-                this.toSubmit.dest.set("defaultId", -1);
-                this.toSubmit.dest.set("lat", lat);
-                this.toSubmit.dest.set("lng", lng);
-            }
             this.$page1dest.val(this.toSubmit.dest.toUiString());
-            if ( !this.toSubmit.destPivot.isInRange(this.toSubmit.dest)) {
-                this.inRange = false;
-                $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
-            } else {
-                this.inRange = true;
-            }
+            this.$page1destAddr.val("");
+            defaultLocation.copy(this.toSubmit.dest);
+            this.toSubmit.dest.set("defaultId", -1);
         }
         if (this.map) {
-            this.map.getDirection(this.toSubmit.origin, this.toSubmit.dest);
+            this.map.getDirection(this.toSubmit.originPivot, this.toSubmit.destPivot);
         }
     },
 
@@ -159,6 +134,10 @@ var MessagePostView = Backbone.View.extend({
         }).on("blur", function () {
             if ($(this).val() === "") {
                 $(this).val(that.addrInputConst);
+                if (that.toSubmit.originPivot) {
+                    that.toSubmit.originPivot.copy(that.toSubmit.origin);
+                    that.toSubmit.origin.set("defaultId", -1);
+                }
             } else {
                 that.toSubmit.origin.set("pointAddress", $(this).val());
                 that.buildGeocodeRequest(that.toSubmit.origin, "origin");
@@ -167,6 +146,10 @@ var MessagePostView = Backbone.View.extend({
         this.$page1destAddr.on("focus", function() {
             if ($(this).val() === that.addrInputConst) {
                 $(this).val("");
+                if (that.toSubmit.destPivot) {
+                    that.toSubmit.destPivot.copy(that.toSubmit.dest);
+                    that.toSubmit.dest.set("defaultId", -1);
+                }
             }
         }).on("blur", function () {
             if ($(this).val() === "") {
@@ -202,16 +185,20 @@ var MessagePostView = Backbone.View.extend({
             if (point === "origin") {
                 that.toSubmit.origin.set("lat", json.results[0].geometry.location.lat);
                 that.toSubmit.origin.set("lng", json.results[0].geometry.location.lng);
-                that.inRange = that.toSubmit.originPivot.isInRange(that.toSubmit.origin);
-                if (!that.inRange) {
-                    $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                if (that.toSubmit.originPivot) {
+                    that.inRange = that.toSubmit.originPivot.isInRange(that.toSubmit.origin);
+                    if (!that.inRange) {
+                        $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                    }
                 }
             } else {
                 that.toSubmit.dest.set("lat", json.results[0].geometry.location.lat);
                 that.toSubmit.dest.set("lng", json.results[0].geometry.location.lng);
-                that.inRange = that.toSubmit.destPivot.isInRange(that.toSubmit.dest);
-                if (!that.inRange) {
-                    $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                if (that.toSubmit.destPivot) {
+                    that.inRange = that.toSubmit.destPivot.isInRange(that.toSubmit.dest);
+                    if (!that.inRange) {
+                        $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
+                    }
                 }
             }
         });
@@ -220,9 +207,11 @@ var MessagePostView = Backbone.View.extend({
         if (type === "origin") {
             this.$page1originAddr.val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.origin.parseGoogleJson(json);
+            this.buildGeocodeRequest(this.toSubmit.origin, "origin");
         } else {
             this.$page1destAddr.val(json.results[0].formatted_address.split(",")[0]);
             this.toSubmit.dest.parseGoogleJson(json);
+            this.buildGeocodeRequest(this.toSubmit.dest, "dest");
         }
     },
     refactorRequests: function () {

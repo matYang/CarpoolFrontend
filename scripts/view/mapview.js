@@ -128,6 +128,12 @@ var MapView = Backbone.View.extend({
             this.getDirection(this.oMarker.getPosition(), this.dMarker.getPosition());
             this.oMarker.setMap(null);
             this.dMarker.setMap(null);
+        } else if (type === "origin") {
+            this.getDirection(this.oMarker.getPosition(), this.dest);
+            this.oMarker.setMap(null);
+        } else if (type === "dest") {
+            this.getDirection(this.origin, this.dMarker.getPosition());
+            this.dMarker.setMap(null);
         }
     },
     getLatLng: function (location, latlng) {
@@ -177,28 +183,39 @@ var MapView = Backbone.View.extend({
         });
     },
     getDirection: function (origin, dest) {
+        debugger;
         var request = {}, that = this;
-        if (origin instanceof UserLocation) {
-            if ( origin.isDefault() ) {
-                request.origin = origin.get("lat") + "," + origin.get("lng");
+        if (origin) {
+            if (origin instanceof UserLocation) {
+                if ( origin.isDefault() ) {
+                    request.origin = origin.get("lat") + "," + origin.get("lng");
+                } else {
+                    request.origin = origin.get("pointName") + " " + origin.get("city") + " " + origin.get("province");
+                }
+                this.origin = origin;
+            } else if (origin instanceof google.maps.LatLng ){
+                request.origin = origin.lat() + "," + origin.lng();
             } else {
-                request.origin = origin.get("point") + " " + origin.get("city") + " " + origin.get("province");
+                request.origin = origin.lat+ "," + origin.lng;
             }
-        } else if (origin instanceof google.maps.LatLng ){
-            request.origin = origin.lat() + "," + origin.lng();
         } else {
-            request.origin = origin.lat+ "," + origin.lng;
+            return;
         }
-        if (dest instanceof UserLocation) {
-            if ( dest.isDefault() ) {
-                request.destination = dest.get("lat") + "," + dest.get("lng");
+        if (dest) {
+            if (dest instanceof UserLocation) {
+                if ( dest.isDefault() ) {
+                    request.destination = dest.get("lat") + "," + dest.get("lng");
+                } else {
+                    request.destination = dest.get("pointName") + " " + dest.get("city") + " " + dest.get("province");
+                }
+                this.dest = dest;
+            } else if (origin instanceof google.maps.LatLng ) {
+                request.destination = dest.lat() +","+dest.lng();
             } else {
-                request.destination = dest.get("point") + " " + dest.get("city") + " " + dest.get("province");
+                request.destination = dest.lat +","+dest.lng;
             }
-        } else if (origin instanceof google.maps.LatLng ) {
-            request.destination = dest.lat() +","+dest.lng();
         } else {
-            request.destination = dest.lat +","+dest.lng;
+            return;
         }
         request.travelMode = google.maps.TravelMode.DRIVING;
         request.unitSystem = google.maps.UnitSystem.METRIC;
@@ -238,6 +255,10 @@ var MapView = Backbone.View.extend({
             this.getDirection(this.oMarker.getPosition(), this.dMarker.getPosition());
             this.oMarker.setMap(null);
             this.dMarker.setMap(null);
+        } else if (point === "origin" && this.dest) {
+            this.getDirection(this.oMarker.getPosition(), this.dest);
+        } else if (point === "dest" && this.origin) {
+            this.getDirection(this.origin, this.dMarker.getPosition());
         }
     },
     close: function (destroy) {

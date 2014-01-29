@@ -131,7 +131,7 @@ var MainPageView = Backbone.View.extend({
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
         $stc.children(".active").removeClass("active");
-            this.$spans = $stc.children("span");
+        this.$spans = $stc.children("span");
         if (!me.filter.isRoundTrip) {
             this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
             this.$spans.first().addClass("active");
@@ -146,13 +146,16 @@ var MainPageView = Backbone.View.extend({
                 me.filter.isRoundTrip = true;
                 me.$dateReturn.removeAttr("disabled");
                 me.$dateReturn.parent().removeClass("date-return-disabled");
-                me.submitSearch();
             } else {
                 me.filter.isRoundTrip = false;
                 me.$dateReturn.prop("disabled", true);
                 me.$dateReturn.parent().addClass("date-return-disabled");
-                me.submitSearch();
             }
+            me.searchRepresentation.set('isRoundTrip', me.filter.isRoundTrip);
+            me.submitSearch();
+        });
+        this.$search = $("#search").on("click", function (e) {
+            me.submitSearch();
         });
         this.messageSearch();
         this.bindEvents();
@@ -161,6 +164,7 @@ var MainPageView = Backbone.View.extend({
 
     renderSearchResults: function (searchResults) {
         //prevent memory leaks
+        $("#searchResultDisplayPanel").empty();
         if (this.searchResultView) {
             this.searchResultView.close();
         }
@@ -207,6 +211,7 @@ var MainPageView = Backbone.View.extend({
         app.navigate("main/" + this.searchRepresentation.toString(), {'trigger': false});
         this.searchRepresentation.set("departureMatch_Id", this.origin.get("defaultId"));
         this.searchRepresentation.set("arrivalMatch_Id", this.dest.get("defaultId"));
+        $("#searchResultDisplayPanel").empty().append('<div class="messageDetail-middle-autoMatch-loading">正在为您寻找信息</div>');
         app.messageManager.searchMessage(this.searchRepresentation, {
             "success": this.renderSearchResults,
             "error": this.renderError
