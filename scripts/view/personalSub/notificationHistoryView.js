@@ -20,10 +20,15 @@ var NotificationHistoryView = MultiPageView.extend({
         this.domContainer = $("#personalNotificationContainer");
         this.selected = [];
         this.bindDelegateEvents();
+        this.bindFilterEvents();
     },
 
     render: function (message) {
-        this.messages = message;
+        this.messages = [];
+        if (message.length) {
+            this.messages = message.where({'state': Constants.notificationState.unread});
+        }
+        this.allMessages = message;
         MultiPageView.prototype.render.call(this);
     },
     bindNotificationEvent: function (messageId) {
@@ -75,6 +80,31 @@ var NotificationHistoryView = MultiPageView.extend({
                 "success":that.deleteSuccess,
                 "error":null
             });
+        });
+    },
+    bindFilterEvents: function () {
+        var that = this;
+        this.$unread = $("#unreadNotificationFilter").on("click", function (e) {
+            $("#markAsRead").show();
+            if (that.messages.length) {
+                that.messages = that.allMessages.where({'state': Constants.notificationState.unread});
+            }
+            MultiPageView.prototype.render.call(that);
+            that.$read.removeClass("active");
+            $(this).addClass("active");
+        });
+        this.$read = $("#readNotificationFilter").on("click", function (e) {
+            $("#markAsRead").hide();
+            if (that.messages.length) {
+                that.messages = that.allMessages.where({'state': Constants.notificationState.read});
+            }
+            MultiPageView.prototype.render.call(that);
+            that.$unread.removeClass("active");
+            $(this).addClass("active");
+        });
+        $("#notificationSetting").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/"+that.user.id+"/utility", true);
         });
     },
     getCheckedNotificationIds: function () {

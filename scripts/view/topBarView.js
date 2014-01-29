@@ -303,7 +303,7 @@ var TopBarView = Backbone.View.extend({
                 self.showProfileDropdown();
             });
             this.$profilePicture.find('img').on("click", function () {
-                app.navigate("personal/" + this.sessionUser.id, true);
+                app.navigate("personal/" + self.sessionUser.id, true);
             });
             this.$notifications.on('mouseleave', function (e) {
                 if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
