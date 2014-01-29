@@ -72,7 +72,6 @@ var MessagePostView = Backbone.View.extend({
         }
     },
     acceptDefaultLocation: function(defaultLocation){
-        debugger;
         var addr, lat, lng;
         if (this.locationDirection === Constants.LocationDirection.from){
             $("#originWrong").remove();
