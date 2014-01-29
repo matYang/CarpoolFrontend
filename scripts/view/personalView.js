@@ -46,7 +46,7 @@ var PersonalView = Backbone.View.extend({
                 $("#profilePage_utilityTab").html(" + 关注");
                 this.bindWatchEvent();
             }
-
+            $("#profilePage_notificationTab").remove();
         }
     },
     render: function () {
@@ -105,10 +105,12 @@ var PersonalView = Backbone.View.extend({
                 });
                 break;
             case "notification":
-                $('#profilePage_notificationTab').addClass('active');
-                this.activeChildView = new NotificationHistoryView ({
-                    'intendedUserId': this.curUserId
-                });
+                if (this.sessionUser.get("userId") === this.curUserId) {
+                    $('#profilePage_notificationTab').addClass('active');
+                    this.activeChildView = new NotificationHistoryView ({
+                        'intendedUserId': this.curUserId
+                    });
+                }
                 break;
             case "utility":
                 if (this.sessionUser.get("userId") === this.curUserId) {
@@ -145,16 +147,18 @@ var PersonalView = Backbone.View.extend({
             app.navigate("personal/" + that.curUserId + "/history");
             that.switchChildView("history");
         });
-        $('#profilePage_notificationTab').on('click', function (){
-            app.navigate("personal/" + that.curUserId + "/notification");
-            that.switchChildView("notification"); 
-        });
+        if (app.sessionManager.getUserId() === that.curUserId) {
+            $('#profilePage_notificationTab').on('click', function (){
+                app.navigate("personal/" + that.curUserId + "/notification");
+                that.switchChildView("notification"); 
+            });
+        }
         $('#profilePage_utilityTab').on('click', function () {
             if (app.sessionManager.getUserId() === that.curUserId) {
                 app.navigate("personal/" + that.curUserId + "/utility");
                 that.switchChildView("utility");
             } else {
-
+                
             }
         });
         $("#profilePage_sendLetter").on('click', function () {

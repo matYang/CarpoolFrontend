@@ -22,9 +22,9 @@ var MultiPageView = Backbone.View.extend({
 
     render: function () {
         this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
+        this.$domContainer.empty();
         if (this.messages.length > 0) {
             var buf = [], i, length = this.messages.length - this.startIndex;
-            this.$domContainer.empty();
             length = (length < this.pageEntryNumber) ? length : this.pageEntryNumber;
             for ( i = 0; i < length; i++) {
                 var message;
@@ -69,12 +69,14 @@ var MultiPageView = Backbone.View.extend({
         });
     },
     setPageNavigator: function () {
+        if (this.$pn && this.$pn.length) {
+            this.$pn.children("." + this.pageNumberClass).off();
+            this.$pn.children(".pre").off();
+            this.$pn.children(".next").off();
+            this.$pn.remove();
+        }
+        this.$domContainer.after($("<div>").attr("id", this.pageNavigator).attr("class", "mainPage-searchResult-multiPage-pageNum clearfix"));
         this.$pn = $("#" + this.pageNavigator);
-        this.$pn.children("." + this.pageNumberClass).off();
-        this.$pre = this.$pn.children(".pre").off();
-        this.$next = this.$pn.children(".next").off();
-        this.$pn.remove();
-        this.$domContainer.after($("<div>").attr("id", this.pageNavigator));
         var length = this.messages ? this.messages.length : 0;
         var pages = Math.floor(length / this.pageEntryNumber) + 1;
         this.pages = pages;
@@ -90,8 +92,10 @@ var MultiPageView = Backbone.View.extend({
         this.$pn.empty()
                 .append(html)
                 .addClass(this.pageNavigatorClass);
+        this.$pre = this.$pn.children(".pre");
+        this.$next = this.$pn.children(".next");
         var self = this;
-        this.$pn.children("." + this.pageNumberClass).on("click", function (e) {
+        this.$pn.on("click", "." + this.pageNumberClass, function (e) {
             var id = Utilities.toInt(Utilities.getId(e.target.id));
             self.toPage(id);
         });

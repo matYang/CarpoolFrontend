@@ -2,10 +2,6 @@ var NotificationHistoryView = MultiPageView.extend({
 
     initialize: function (params) {
         _.bindAll(this, 'render', 'bindNotificationEvent', 'bindDelegateEvents', 'fetchNotificationError', 'close');
-        app.sessionManager.fetchCurUserNotifications({
-            "success": this.render,
-            "error": this.fetchNotificationError 
-        });
         this.baseTemplate = _.template(tpl.get('personalNotificationHistory'))
         $("#profilePage_content").append(this.baseTemplate());
         this.entryTemplate = _.template(tpl.get('personalNotificationEntry'));
@@ -18,15 +14,25 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryClass = "notice_viewDetail";
         this.entryContainer = "personalNotificationContainer";
         this.domContainer = $("#personalNotificationContainer");
+        app.sessionManager.fetchCurUserNotifications({
+            "success": this.render,
+            "error": this.fetchNotificationError 
+        });
         this.selected = [];
         this.bindDelegateEvents();
+        this.bindFilterEvents();
     },
 
     render: function (message) {
-        this.messages = message;
+        this.messages = new Notifications();;
+        if (message.length) {
+            this.messages.reset(message.where({'state': Constants.notificationState.unread}));
+        }
+        this.allMessages = message;
         MultiPageView.prototype.render.call(this);
     },
     bindNotificationEvent: function (messageId) {
+        debugger;
         var currentNotification = this.messages.get(messageId);
         var n_evt = currentNotification.get('notificationEvent');
         app.notificationManager.checkNotification(messageId);
@@ -75,6 +81,31 @@ var NotificationHistoryView = MultiPageView.extend({
                 "success":that.deleteSuccess,
                 "error":null
             });
+        });
+    },
+    bindFilterEvents: function () {
+        var that = this;
+        this.$unread = $("#unreadNotificationFilter").on("click", function (e) {
+            $("#markAsRead").show();
+            if (that.messages.length) {
+                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.unread}));
+            }
+            MultiPageView.prototype.render.call(that);
+            that.$read.removeClass("active");
+            $(this).addClass("active");
+        });
+        this.$read = $("#readNotificationFilter").on("click", function (e) {
+            $("#markAsRead").hide();
+            if (that.messages.length) {
+                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.read}));
+            }
+            MultiPageView.prototype.render.call(that);
+            that.$unread.removeClass("active");
+            $(this).addClass("active");
+        });
+        $("#notificationSetting").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/"+that.user.id+"/utility", true);
         });
     },
     getCheckedNotificationIds: function () {

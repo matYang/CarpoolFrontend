@@ -81,6 +81,7 @@ var Notification = Backbone.Model.extend({
 
     _toJSON: function () {
         var json = this.toDropdownJSON();
+        json.creationTime = this.get('creationTime');
         return json;
     },
 
