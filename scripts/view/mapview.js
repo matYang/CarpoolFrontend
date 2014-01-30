@@ -183,7 +183,6 @@ var MapView = Backbone.View.extend({
         });
     },
     getDirection: function (origin, dest) {
-        debugger;
         var request = {}, that = this;
         if (origin) {
             if (origin instanceof UserLocation) {
