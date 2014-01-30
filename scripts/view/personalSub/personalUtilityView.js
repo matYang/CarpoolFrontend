@@ -103,6 +103,24 @@ var PersonalUtilityView = Backbone.View.extend({
         });
 
         this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId());
+        $("#submitImg").on("click", function (e) {
+            $("#fileValid").hide();
+            var file = $("input[type=file]").val();
+            if (file == '') {
+                $("#fileValid").html("请先选择一个图片").show();
+                e.preventDefault();
+            } else {
+                //Check file extension
+                var ext = file.split('.').pop().toLowerCase();   //Check file extension if valid or expected
+                if ($.inArray(ext, ['png', 'jpg', 'jpeg', 'bmp']) == -1) {
+                    $("#fileValid").html("文件类型错误").show();
+                    e.preventDefault(); //Prevent submission of form
+                }
+                else {
+                    $("this").val("上传中...");
+                }
+            }
+        });
     },
 
     prepareImgUpload: function (formElem, action, callback) {
@@ -123,7 +141,6 @@ var PersonalUtilityView = Backbone.View.extend({
         formElem.parentNode.appendChild(iframe);
 
         $(iframe).one("load", function () {
-            Info.displayNotice("照片上传成功");
             app.sessionManager.fetchSession(true);
             app.navigate('/temp', {
                 replace: true
@@ -314,12 +331,14 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     getLatLng: function (loc) {
         var request = {}, that = this;
-        request.address = loc.get("pointName") + "," + loc.get("city") + "," + loc.get("province");
+        request.address = loc.get("pointAddress") + "," + loc.get("city") + "," + loc.get("province");
         var result = this.geocoder.geocode(request, function (geocodeResults, status) {
             $("#addrWrong, #addrCorrect").remove();
             if (status == google.maps.GeocoderStatus.OK) {
                 loc.set("lat", geocodeResults[0].geometry.location.lat());
                 loc.set("lng", geocodeResults[0].geometry.location.lng());
+                loc.set("pointAddress", geocodeResults[0].formatted_address);
+                loc.set("pointName", geocodeResults[0].formatted_address.split(",")[0]);
                 if (!that.pivotLocation) {
                     that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("matchId")})[0];
                 }

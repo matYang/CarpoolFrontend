@@ -144,13 +144,17 @@ var MapView = Backbone.View.extend({
         } 
         var request = {};
         var me = this;
-        request.address = location.get("pointName") + "," + location.get("city") + "," + location.get("province");
+        request.address = location.get("pointAddress") + "," + location.get("city") + "," + location.get("province");
         var result = this.geocoder.geocode(request, function (geocodeResults, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 me.map.setCenter(geocodeResults[0].geometry.location);
                 me.map.setZoom(13);
                 latlng.lat = geocodeResults[0].geometry.location.lat();
                 latlng.lng = geocodeResults[0].geometry.location.lng();
+                location.set("lat", latlng.lat);
+                location.set("lng", latlng.lng);
+                location.set("pointAddress", geocodeResults[0].formatted_address);
+                location.set("pointName", geocodeResults[0].formatted_address.split(",")[0]);
             } else {
                 Info.warn('Geocode was not successful for the following reason: ' + status);
             }
@@ -189,7 +193,7 @@ var MapView = Backbone.View.extend({
                 if ( origin.isDefault() ) {
                     request.origin = origin.get("lat") + "," + origin.get("lng");
                 } else {
-                    request.origin = origin.get("pointName") + " " + origin.get("city") + " " + origin.get("province");
+                    request.origin = origin.get("pointAddress") + " " + origin.get("city") + " " + origin.get("province");
                 }
                 this.origin = origin;
             } else if (origin instanceof google.maps.LatLng ){
@@ -205,7 +209,7 @@ var MapView = Backbone.View.extend({
                 if ( dest.isDefault() ) {
                     request.destination = dest.get("lat") + "," + dest.get("lng");
                 } else {
-                    request.destination = dest.get("pointName") + " " + dest.get("city") + " " + dest.get("province");
+                    request.destination = dest.get("pointAddress") + " " + dest.get("city") + " " + dest.get("province");
                 }
                 this.dest = dest;
             } else if (origin instanceof google.maps.LatLng ) {
