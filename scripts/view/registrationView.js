@@ -71,6 +71,7 @@ var RegistrationView = Backbone.View.extend({
     },
     bindValidator: function(){
         this.valid = {};
+        this.valid.location = true;
         //email regex
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             that = this;
@@ -221,7 +222,6 @@ var RegistrationView = Backbone.View.extend({
                 success: function(){
                     that.emailCache = user.get('email');
                     app.navigate("register/finish", {trigger: true});
-                    //that.render(4);
                     Info.alert('注册成功');
                 },
 
