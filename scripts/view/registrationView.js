@@ -20,7 +20,7 @@ var RegistrationView = Backbone.View.extend({
     getLatLng: function (loc) {
         var request = {}, that = this;
         loc.set("defaultId", -1);
-        request.address = loc.get("pointName") + "," + loc.get("city") + "," + loc.get("province");
+        request.address = loc.get("pointAddress") + "," + loc.get("city") + "," + loc.get("province");
         var result = this.geocoder.geocode(request, function (geocodeResults, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 loc.set("lat", geocodeResults[0].geometry.location.lat());
@@ -220,7 +220,7 @@ var RegistrationView = Backbone.View.extend({
             app.userManager.registerUser(user, {
                 success: function(){
                     that.emailCache = user.get('email');
-                    app.navigate("register/finish");
+                    app.navigate("register/finish", {trigger: true});
                     //that.render(4);
                     Info.alert('注册成功');
                 },

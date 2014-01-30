@@ -18,7 +18,7 @@
 .btn_search input { width:177px; height:50px; background:url(../images/input_bg.png) no-repeat 0 -55px; border:none; font-size:18px; color:#fff; cursor:pointer; font-family:'微软雅黑'; }
 .btn_search input:hover { background-position:0 -110px; }
 /*右侧文字*/
-.frontPage-searchBanner-introText { float:right; width:450px; height:160px; margin-top:105px; color:#fff; background:url(../images/intro_text.png) no-repeat right bottom; }
+.frontPage-searchBanner-introText { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;float:right; width:450px; height:160px; margin-top:105px; color:#fff; background:url(../images/intro_text.png) no-repeat right bottom; }
 .frontPage-searchBanner-introText h2 { font-size:32px; margin-bottom:22px; text-shadow:2px 3px 3px #333; }
 .frontPage-searchBanner-introText p { line-height:30px; font-size:16px; }
 .frontPage-searchBanner-introText p a, .frontPage-searchBanner-introText p a:visited { color:#f3fb79; text-decoration:underline; }

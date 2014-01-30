@@ -219,7 +219,7 @@ var TopBarView = Backbone.View.extend({
             $("#forget_password").on("click", function (e) {
                 e.preventDefault();
                 app.navigate("lost", true);
-            })
+            });
             this.remember = $("#remember_password").on("click", function (e) {
                 if ($(this).hasClass("checked")){
                     $(this).removeClass("checked");
@@ -428,7 +428,7 @@ var TopBarView = Backbone.View.extend({
         else{
             this.$logo.off();
             this.$npersonal.off();
-            this.$nfeedBack.off();
+            //this.$nfeedBack.off();
             this.$nusersearch.off();
             this.$notifications.off();
             this.$letters.off();

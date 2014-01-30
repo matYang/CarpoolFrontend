@@ -125,6 +125,8 @@ var UserLocation = Backbone.Model.extend({
     },
 
     isInRange: function(loc){
+        //TODO
+        return true;
         if (this.get('radius') <= 0 && loc.get('radius') <= 0){
             Info.alert("无效地理位置比较，确认是否在服务区内必须和默认位置比较");
         }
