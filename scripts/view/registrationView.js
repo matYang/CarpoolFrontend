@@ -7,7 +7,7 @@ var RegistrationView = Backbone.View.extend({
     initialize: function(params){
         _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
         app.viewRegistration.register("registration", this, true);
-        this.isClosed = false; 
+        this.isClosed = false;
         this.state = params.state || "default";
 
         this.baseTemplate = _.template(tpl.get('registration'));
@@ -27,11 +27,13 @@ var RegistrationView = Backbone.View.extend({
                 loc.set("lng", geocodeResults[0].geometry.location.lng());
                 that.valid.location = false;
                 if (!that.registerInfo.pivot) {
-                    $("#pivotLocation").parent().addClass("wrong").append("<p id='vlocation' title='请选择一个地区'></p>");
+                    $("#pivotLocation").parent().children('.sign_up_err').remove();
+                    $("#pivotLocation").parent().addClass("wrong").append("<p class='sign_up_err' id='vlocation' title='请选择一个地区'><span>请选择一个地区</span></p>");
                     return;
                 }
                 if (!that.registerInfo.pivot.isInRange(loc)) {
-                    $("#pivotLocation").parent().addClass("wrong").append("<p id='vlocation' title='对不起，该地区暂时不在服务区'></p>");
+                    $("#pivotLocation").parent().children('.sign_up_err').remove();
+                    $("#pivotLocation").parent().addClass("wrong").append("<p class='sign_up_err' id='vlocation' title='对不起，该地区暂时不在服务区'><span>对不起，该地区暂时不在服务区</span></p>");
                     return;
                 }
                 that.valid.location = true;
@@ -81,7 +83,7 @@ var RegistrationView = Backbone.View.extend({
                 that.$email.after('<span id="vemail" class="right"></span>');
             } else {
                 that.valid.email = false;
-                that.$email.parent().addClass("wrong").append('<p id="vemail" title="邮箱地址有误"></p>');
+                that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="邮箱地址有误"><span>邮箱地址有误</span></p>');
             }
 
         });
@@ -98,9 +100,9 @@ var RegistrationView = Backbone.View.extend({
                 that.registerInfo.password = that.$password.val();
             } else {
                 if (!p || p.length < 8) {
-                    that.$password.parent().addClass("wrong").append('<p id="vpass" title="密码长度至少为8位"></p>');
+                    that.$password.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass" title="密码长度至少为8位"><span>密码长度至少为8位</span></p>');
                 } else {
-                    that.$confirm.parent().addClass("wrong").append('<p id="vpass2" title="两次输入密码不匹配"></p>');
+                    that.$confirm.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass2" title="两次输入密码不匹配"><span>两次输入密码不匹配</span></p>');
                 }
                 that.valid.password = false;
             }
@@ -131,7 +133,7 @@ var RegistrationView = Backbone.View.extend({
                     }
                 }
                 if (!bdvalid) {
-                    $(this).parent().addClass("wrong").append("<p id='vbirth' title='请填写正确的日期'></p>");
+                    $(this).parent().addClass("wrong").append("<p class='sign_up_err' id='vbirth' title='请填写正确的日期'><span>请填写正确的日期</span></p>");
                     that.registerInfo.birthday = null;
                     that.valid.birthday = false;
                 } else {
@@ -161,7 +163,7 @@ var RegistrationView = Backbone.View.extend({
 
         $('#pivotLocation').on('click', function (e) {
             that.closeLocationDropDown();
-            that.locationDropDownView = new LocationDropDownView($('#pivotLocation'), that);
+            that.locationDropDownView = new LocationDropDownView($('#sign_up_location_container'), that);
             e.stopPropagation();
         });
 
@@ -179,22 +181,22 @@ var RegistrationView = Backbone.View.extend({
             if (that.valid.email) {
             } else {
                 if ($("#vemail").length === 0) {
-                    that.$email.parent().addClass("wrong").append('<p id="vemail" title="请输入你的邮箱"></p>');
+                    that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="请输入你的邮箱"><span>请输入你的邮箱</span></p>');
                 }
                 return;
             }
             if (that.valid.password) {
             } else {
                 if ($("#vpass").length === 0) {
-                    that.$password.parent().addClass("wrong").append('<p id="vpass" title="请输入一个密码"></p>');
-                    that.$confirm.parent().addClass("wrong").append('<p id="vpass2" title="请输入一个密码"></p>');
+                    that.$password.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass" title="请输入一个密码"><span>请输入一个密码</span></p>');
+                    that.$confirm.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass2" title="请输入一个密码"><span>请输入一个密码</span></p>');
                 }
                 return;   
             }
             if (that.valid.location) {
             } else {
                 if ($("#vlocation").length === 0) {
-                    $('#pivotLocation').parent().addClass("wrong").append('<p id="vlocation" title="请选择你的地址"></p>');
+                    $('#pivotLocation').parent().addClass("wrong").append('<p class="sign_up_err" id="vlocation" title="请选择你的地址"><span>请选择你的地址</span></p>');
                 }
                 return;
             }

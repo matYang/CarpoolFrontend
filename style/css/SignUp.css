@@ -65,7 +65,8 @@
 }
 .sign_up dd {
 	line-height:34px;
-	overflow:hidden;
+	/*TODO overflow:hidden;*/
+	position: relative;
 }
 .sign_up dd .text {
 	float:left;
@@ -139,4 +140,20 @@
 }
 .forgot_password .btns {
 	padding-left:70px;
+}
+
+.sign_up_err{
+	position: relative;
+	top: 40px;
+	text-align: left;
+}
+
+.sign_up_err span{
+	display: inline-block;
+	margin-left: -335px;
+}
+
+#sign_up_location_container{
+	position:relative;
+	overflow: visible;
 }
