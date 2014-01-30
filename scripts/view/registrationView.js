@@ -44,8 +44,8 @@ var RegistrationView = Backbone.View.extend({
     },
     render: function(){
         this.domContainer = $('#content');
+        this.domContainer.empty();
         if (this.state !== "finish") {
-            this.domContainer.empty();
             this.domContainer.append(this.baseTemplate);
             this.registerContainer = $('#registerContainer');
             this.contentContainer = $('#registerContent');
@@ -94,14 +94,14 @@ var RegistrationView = Backbone.View.extend({
             $("#vpass2").remove();
             that.$password.parent().removeClass("wrong");
             that.$confirm.parent().removeClass("wrong");
-            if (p && p.length >= 8 && that.$password.val() === that.$confirm.val()) {
+            if (p && p.length >= 6 && that.$password.val() === that.$confirm.val()) {
                 that.$password.after('<span id="vpass" class="right"></span>');
                 that.$confirm.after('<span id="vpass2" class="right"></span>');
                 that.valid.password = true;
                 that.registerInfo.password = that.$password.val();
             } else {
-                if (!p || p.length < 8) {
-                    that.$password.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass" title="密码长度至少为8位"><span>密码长度至少为8位</span></p>');
+                if (!p || p.length < 6) {
+                    that.$password.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass" title="密码长度至少为6位"><span>密码长度至少为6位</span></p>');
                 } else {
                     that.$confirm.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass2" title="两次输入密码不匹配"><span>两次输入密码不匹配</span></p>');
                 }
@@ -222,11 +222,15 @@ var RegistrationView = Backbone.View.extend({
                 success: function(){
                     that.emailCache = user.get('email');
                     app.navigate("register/finish", {trigger: true});
-                    Info.alert('注册成功');
                 },
 
-                error: function(){
-                    Info.alert("注册失败，请稍后再试");
+                error: function(response){
+                    if (response.responseText){
+                        Info.alert(response.responseText);
+                    }
+                    else{
+                      Info.alert("注册失败，请稍后再试");
+                    }
                 }
 
             });

@@ -232,7 +232,7 @@ var AppRouter = Backbone.Router.extend({
             this.registrationView.state = registrationState;
             this.registrationView.render();
         } else {
-            this.registrationView = new RegistrationView ({"state":"registrationState"});
+            this.registrationView = new RegistrationView ({"state":registrationState});
         }
         
     },
