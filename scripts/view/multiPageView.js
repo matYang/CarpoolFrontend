@@ -80,12 +80,16 @@ var MultiPageView = Backbone.View.extend({
         var length = this.messages ? this.messages.length : 0;
         var pages = Math.floor(length / this.pageEntryNumber) + 1;
         this.pages = pages;
+        pages = pages > 10 ? 10 : pages;
         var buf = ['<a class="pre"></a>'];
         var divBuf = ["<a id='", this.pageNumberId, "_", 0, "' class='", this.pageNumberClass, "'> ", 0, "</a>"];
         for (var i = 1; i <= pages; i++) {
             divBuf[3] = i;
             divBuf[7] = i;
             buf.push(divBuf.join(""));
+        }
+        if (this.pages > 10) {
+            buf.push("<span>...</span>");
         }
         buf.push("<a class='next'></a>");
         var html = buf.join("");

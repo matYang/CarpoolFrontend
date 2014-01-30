@@ -1,7 +1,6 @@
 var PersonalUtilityView = Backbone.View.extend({
-
     initialize: function (params) {
-        _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError');
+        _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError', 'noticeError', 'noticeSuccess');
         this.isClosed = false;
         this.domContainer = $("#profilePage_content");
         this.template = _.template(tpl.get('personalUtility'));
@@ -70,8 +69,8 @@ var PersonalUtilityView = Backbone.View.extend({
         $('#upload_picture').on('click', function () {
             //TODO:
         });
-        $("#submit_password").on('click', function () {
-            if ($('.invalid_input').length === 0 && $('input[name=oldPassword]').val().length && $('input[name=newPassword]').val().length && $('input[name=confirmNewPassword]').val().length) {
+        $("#submit_password").children("input").on('click', function () {
+            if (that.passwordValid.o && that.passwordValid.n && that.passwordValid.c) {
                 that.savePassword($("input[name=oldPassword]").val(), $("input[name=newPassword]").val(), $("input[name=confirmNewPassword]").val());
             }
         });
@@ -91,8 +90,16 @@ var PersonalUtilityView = Backbone.View.extend({
             e.preventDefault();
         });
 
-        $('#toggleNotificationMethods').on('change', function () {
-            that.toggleNotificationMethods(this.value);
+        $('#notice_toggle').on('click', '.checkbox', function (e) {
+            var to;
+            if ($(e.target).hasClass("checked")) {
+                $(e.target).removeClass("checked");
+                to = false;
+            } else {
+                $(e.target).addClass("checked");
+                to = true;
+            }
+            that.toggleNotificationMethods($(e.target).attr("data-id"), to);
         });
 
         this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId());
@@ -130,7 +137,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
     bindValidator: function () {
         var cmv, cdv, cyv, that = this;
-
+        this.passwordValid = {};
         this.$name.on('blur', function (e) {
             $("#nameWrong,#nameCorrect").remove();
             if (Utilities.isEmpty(this.value)) {
@@ -200,23 +207,56 @@ var PersonalUtilityView = Backbone.View.extend({
 
         this.$oldPassword.on('blur', function (e) {
             if (Utilities.isEmpty(this.value)) {
-                this.classList.add("invalid_input");
+                if (!$("#pvalid1").length) {
+                    $("#oldPassword").after('<dd id="pvalid1" class="wrong"><p>密码输入错误，请重新输入</p></dd>');
+                }
+                that.passwordValid.o = false;
             } else {
-                this.classList.remove("invalid_input");
+                $("#pvalid1").remove();
+                that.passwordValid.o = true;
             }
         });
         this.$newPassword.on('blur', function (e) {
+            $("#pcheck2").remove();
+            $("#pcheck3").remove();
             if (Utilities.isEmpty(this.value) || this.value.length < 8) {
-                this.classList.add("invalid_input");
+                if (!$("#pvalid2").length) {
+                    $("#newPassword").after('<dd id="pvalid2" class="wrong"><p>密码长度至少8位</p></dd>');
+                }
+                that.passwordValid.n = false;
             } else {
-                this.classList.remove("invalid_input");
+                if (!$("#pcheck2").length) {
+                    $(this).after('<span id="pcheck2" class="right"></span>');
+                }
+                $("#pvalid2").remove();
+                that.passwordValid.n = true;
+            }
+            if (this.value !== that.$confirmPassword.val() && that.$confirmPassword.val()) {
+                if (!$("#pvalid3").length) {
+                    $("#confirmNewPassword").after('<dd id="pvalid3" class="wrong"><p>两次密码不一致</p></dd>');
+                }
+                that.passwordValid.c = false;
+            } else {
+                if (!$("#pcheck3").length) {
+                    $("#confirmNewPassword").after('<span id="pcheck3" class="right"></span>');
+                }
+                $("#pvalid3").remove();
+                that.passwordValid.c = true;
             }
         });
         this.$confirmPassword.on('blur', function (e) {
+            $("#pcheck3").remove();
             if (Utilities.isEmpty(this.value) || this.value !== that.$newPassword.val()) {
-                this.classList.add("invalid_input");
+                if (!$("#pvalid3").length) {
+                    $("#confirmNewPassword").after('<dd id="pvalid3" class="wrong"><p>两次密码不一致</p></dd>');
+                }
+                that.passwordValid.c = false;
             } else {
-                this.classList.remove("invalid_input");
+                if (!$("#pcheck3").length) {
+                    $(this).after('<span id="pcheck3" class="right"></span>');
+                }
+                $("#pvalid3").remove();
+                that.passwordValid.c = true;
             }
         });
 
@@ -231,7 +271,7 @@ var PersonalUtilityView = Backbone.View.extend({
         $('input[name=gender][value=' + this.sessionUser.get("gender") + ']').prop("checked", true);
         this.$birthyear = $('input[name=birthyear]');
         this.$birthmonth = $('input[name=birthmonth]');
-        this.$birthday = $('input[name=birthday]'); 
+        this.$birthday = $('input[name=birthday]');
         if (this.sessionUser.get("birthday").getFullYear() !== new Date ().getFullYear()) {
             this.$birthyear.val(this.sessionUser.get("birthday").getFullYear());
             this.$birthmonth.val(this.sessionUser.get("birthday").getMonth());
@@ -251,7 +291,6 @@ var PersonalUtilityView = Backbone.View.extend({
         } else if (this.sessionUser.get("phoneNotice")) {
             notificationMethod = "phone";
         }
-        $("#toggleNotificationMethods").val(notificationMethod);
         this.editedLocation = this.sessionUser.get("location");
         this.$oldPassword = $('input[name=oldPassword]');
         this.$newPassword = $('input[name=newPassword]');
@@ -268,6 +307,10 @@ var PersonalUtilityView = Backbone.View.extend({
                 that.getLatLng(that.editedLocation);
             }
         });
+        $("#accountEmailValue").html(this.sessionUser.get("email"));
+        if (this.sessionUser.get("emailNotice")) {
+            $("#notice_toggle").children("div[data-id=email]").addClass("checked");
+        }
     },
     getLatLng: function (loc) {
         var request = {}, that = this;
@@ -359,37 +402,19 @@ var PersonalUtilityView = Backbone.View.extend({
     passwordError: function () {
         Info.displayNotice("密码修改失败，请重试");
     },
-    toggleNotificationMethods: function (value) {
-        var shouldEmail = true, shouldPhone = true;
-        switch (value) {
-            case "both":
-                shouldEmail = shouldPhone = true;
-                break;
-            case "phone":
-                shouldEmail = false;
-                shouldPhone = true;
-                break;
-            case "email":
-                shouldEmail = true;
-                shouldPhone = false;
-                break;
-            default:
-                return;
-        }
+    toggleNotificationMethods: function (value, to) {
 
-        app.userManager.toggleNotices(shouldEmail, shouldPhone, {
+        app.userManager.toggleNotices(to, this.sessionUser.get(""), {
             "success": this.noticeSuccess,
             "error": this.noticeError
         });
 
     },
     noticeSuccess: function () {
-        app.navigate('/temp', {
-            replace: true
-        });
-        app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
-            trigger: true
-        });
+
+    },
+    noticeError: function () {
+
     },
     close: function () {
         if (!this.isClosed) {
