@@ -293,7 +293,7 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$name = $("input[name=name]").val(this.sessionUser.get("name"));
         this.$phone = $('input[name=phone]').val(this.sessionUser.get("phone"));
         this.$qq = $('input[name=qq]').val(this.sessionUser.get("qq"));
-        this.$location = $('input[name=location]').val(this.sessionUser.get("location").toUiString());
+        this.$location = $('input[name=location]');
         this.$gender = $("dd[name=gender]>div").removeClass("radio_box_checked");
         $("dd[name=gender] [data-id=" + this.sessionUser.get("gender") + "]").addClass("radio_box_checked");
         this.$birthyear = $('input[name=birthyear]');
@@ -338,7 +338,19 @@ var PersonalUtilityView = Backbone.View.extend({
         if (this.sessionUser.get("emailNotice")) {
             $("#notice_toggle").children("div[data-id=email]").addClass("checked");
         }
+
+        this.$address.val(that.sessionUser.get("location").get("pointAddress"));
+        this.$location.val(that.sessionUser.get("location").get("pointName"));
+        if (!this.defaultLocations) {
+            app.locationService.getDefaultLocations(function () {
+                that.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("matchId")).toUiString());
+            }, this);
+        } else {
+            this.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("matchId")).toUiString());
+        }
     },
+
+
     getLatLng: function (loc) {
         var request = {}, that = this;
         request.address = loc.get("pointAddress") + "," + loc.get("city") + "," + loc.get("province");

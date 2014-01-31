@@ -132,7 +132,6 @@ var MainPageView = Backbone.View.extend({
         var $stc = $("#searchTypeContainer");
         $stc.children(".active").removeClass("active");
         this.$spans = $stc.children("span");
-        debugger;
         if (!me.filter.isRoundTrip) {
             this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
             this.$spans.first().addClass("active");
