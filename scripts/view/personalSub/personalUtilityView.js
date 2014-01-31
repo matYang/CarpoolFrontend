@@ -343,10 +343,10 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$location.val(that.sessionUser.get("location").get("pointName"));
         if (!this.defaultLocations) {
             app.locationService.getDefaultLocations(function () {
-                that.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("matchId")).toUiString());
+                that.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("match_Id")).toUiString());
             }, this);
         } else {
-            this.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("matchId")).toUiString());
+            this.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("match_Id")).toUiString());
         }
     },
 
@@ -362,7 +362,7 @@ var PersonalUtilityView = Backbone.View.extend({
                 loc.set("pointAddress", geocodeResults[0].formatted_address);
                 loc.set("pointName", geocodeResults[0].formatted_address.split(",")[0]);
                 if (!that.pivotLocation) {
-                    that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("matchId")})[0];
+                    that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("match_Id")})[0];
                 }
                 if (!that.pivotLocation.isInRange(loc) && $("#addrWrong").length === 0) {
                     that.$address.parent().parent().after("<dd class='wrong'><p>很抱歉，该地址不在服务区内</p></dd>");
