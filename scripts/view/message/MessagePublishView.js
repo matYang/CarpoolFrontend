@@ -27,11 +27,13 @@ var MessagePublishView = MessagePostView.extend({
         MessagePostView.prototype.render(1);
         $('#publish_nextStep').off();
         $('#publish_nextStep').on('click', function () {
+            $("#publish_originAddr").trigger("blur");
+            $("#publish_destAddr").trigger("blur");
             if (MessagePostView.prototype.validate(1)) {
                 app.navigate("post/step2");
                 that.renderSecondPage();
             } else {
-                
+
             }
         });
     },

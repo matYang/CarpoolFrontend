@@ -213,7 +213,7 @@ var PersonalUtilityView = Backbone.View.extend({
                 }
                 if (!bdvalid) {
                     if ($("#birthwrong").length === 0) {
-                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></p>");
+                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
                     }
                 } else {
                     $("#birthwrong").remove();
@@ -373,6 +373,8 @@ var PersonalUtilityView = Backbone.View.extend({
         var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
         this.$phone.trigger("focus").trigger("blur");
         this.$name.trigger("focus").trigger("blur");
+        this.$birthyear.trigger("focus").trigger("blur");
+        this.$address.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()));
         date.setDate(Utilities.toInt(this.$birthday.val()));
