@@ -103,17 +103,21 @@ var PersonalUtilityView = Backbone.View.extend({
         });
 
         this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId());
+        $("#selectImg").on("change", function (e) {
+            $("#img-filePath").html(e.target.value);
+        });
         $("#submitImg").on("click", function (e) {
             $("#fileValid").hide();
-            var file = $("input[type=file]").val();
+            var file = $("input[type=file]").val(); 
             if (file == '') {
-                $("#fileValid").html("请先选择一个图片").show();
+                $("#fileValid").show().find("p").html("请先选择一个图片");
                 e.preventDefault();
             } else {
                 //Check file extension
                 var ext = file.split('.').pop().toLowerCase();   //Check file extension if valid or expected
+
                 if ($.inArray(ext, ['png', 'jpg', 'jpeg', 'bmp']) == -1) {
-                    $("#fileValid").html("文件类型错误").show();
+                    $("#fileValid>p").show().find("p").html("文件类型错误");
                     e.preventDefault(); //Prevent submission of form
                 }
                 else {
@@ -162,8 +166,11 @@ var PersonalUtilityView = Backbone.View.extend({
             } else {
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
-
         });
+        $("dd[name=gender]").on('click', "div", function (e) {
+            $(e.delegateTarget).find(".radio_box_checked").removeClass("radio_box_checked");
+            $(this).addClass("radio_box_checked");
+        })
         this.$location.on('blur', function (e) {
             if (Utilities.isEmpty(this.value)) {
                 this.classList.add("invalid_input");
@@ -285,7 +292,8 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$phone = $('input[name=phone]').val(this.sessionUser.get("phone"));
         this.$qq = $('input[name=qq]').val(this.sessionUser.get("qq"));
         this.$location = $('input[name=location]').val(this.sessionUser.get("location").toUiString());
-        $('input[name=gender][value=' + this.sessionUser.get("gender") + ']').prop("checked", true);
+        this.$gender = $("dd[name=gender]>div").removeClass("radio_box_checked");
+        $("dd[name=gender] [data-id=" + this.sessionUser.get("gender") + "]").addClass("radio_box_checked");
         this.$birthyear = $('input[name=birthyear]');
         this.$birthmonth = $('input[name=birthmonth]');
         this.$birthday = $('input[name=birthday]');
