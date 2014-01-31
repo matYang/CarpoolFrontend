@@ -378,7 +378,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
     },
     acceptDefaultLocation: function(defaultLocation){
-        if (this.pivotLocation.get("defaultId") !== defaultLocation.get("defaultId")) {
+        if (this.editedLocation.get("match_Id") !== defaultLocation.get("defaultId")) {
             this.pivotLocation = defaultLocation;
             this.editedLocation = defaultLocation.clone();
             this.$location.val(this.pivotLocation.toUiString());
