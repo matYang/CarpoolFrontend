@@ -33,7 +33,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
 
@@ -43,7 +43,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.show();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -52,7 +52,6 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.show();
             that.$passwordContent.hide();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -62,7 +61,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$passwordContent.hide();
             that.$dpContent.show();
 
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -80,6 +79,10 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$confirmPassword.val("");
         });
 
+        $("dd[name=gender]").on('click', "div", function (e) {
+            $(e.delegateTarget).find(".radio_box_checked").removeClass("radio_box_checked");
+            $(this).addClass("radio_box_checked");
+        })
         this.$qq.on('keypress', function (e) {
             that.testInput(e, "^[0-9]+$");
         });
@@ -167,10 +170,6 @@ var PersonalUtilityView = Backbone.View.extend({
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
         });
-        $("dd[name=gender]").on('click', "div", function (e) {
-            $(e.delegateTarget).find(".radio_box_checked").removeClass("radio_box_checked");
-            $(this).addClass("radio_box_checked");
-        })
         this.$location.on('blur', function (e) {
             if (Utilities.isEmpty(this.value)) {
                 this.classList.add("invalid_input");
@@ -371,13 +370,16 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     savePersonalInfo: function () {
         var that = this, date = new Date ();
+        var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
+        this.$phone.trigger("focus").trigger("blur");
+        this.$name.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()));
         date.setDate(Utilities.toInt(this.$birthday.val()));
-        if ($(".wrong") || !this.$phone.val()) {
+        if ($(".wrong").length || !this.$phone.val()) {
             return;
         }
-        app.userManager.changeContactInfo(this.$name.val(), Utilities.toInt($('input[name=gender]').val()), this.$phone.val(), this.$qq.val(), date, {
+        app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, {
             "success": that.saveSuccess,
             "error": that.saveError
         });
@@ -386,11 +388,12 @@ var PersonalUtilityView = Backbone.View.extend({
             "success": that.saveSuccess,
             "error": that.saveError
         });
-
+        $("#save_personalInfo").attr("value", "保存中...");
     },
 
     saveSuccess: function () {
         Info.displayNotice("成功更新用户信息");
+        $("#save_personalInfo").attr("value", "更新完毕");
         app.navigate('/temp', {
             replace: true
         });
@@ -400,6 +403,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     saveError: function () {
         Info.warn("Personal info update failed");
+        $("#save_personalInfo").attr("value", "更新失败(重试)");
     },
     saveFile: function (fileName) {
         var fileTypes = ["png", "jpg", "jpeg", "bmp"], dots, fileType;
@@ -444,6 +448,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
     },
     close: function () {
+        debugger;
         if (!this.isClosed) {
             $('#save_personalInfo').off();
             $('input[name=location]').off();
