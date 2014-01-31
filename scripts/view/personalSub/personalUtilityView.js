@@ -384,11 +384,7 @@ var PersonalUtilityView = Backbone.View.extend({
         if ($(".wrong").length || !this.$phone.val()) {
             return;
         }
-        app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, {
-            "success": that.saveSuccess,
-            "error": that.saveError
-        });
-        app.userManager.changeLocation(this.editedLocation, {
+        app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, this.editedLocation, {
             "success": that.saveSuccess,
             "error": that.saveError
         });
