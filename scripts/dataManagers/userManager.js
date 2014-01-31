@@ -163,7 +163,6 @@
 
 	UserManager.prototype.changeContactInfo = function(name, gender, phone, qq, birthday, location, callback) {
 		//if invalid input or is already logged in, can not change contact information
-debugger;
 		if (!(name && (typeof gender === 'number') && phone)){
 			Constants.dWarn("UserManager::changeContactInfo:: invalid parameter");
 			return;

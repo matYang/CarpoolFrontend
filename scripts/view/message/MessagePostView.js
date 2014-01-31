@@ -504,8 +504,9 @@ var MessagePostView = Backbone.View.extend({
             for (var request = 0; request < r.length; request++) {
                 if (r[request]) {
                     id = Utilities.toInt(request) + 1;
-                    if (r[request.round]) {
+                    if (r[request].round) {
                         $('div[name=publish_round_' + id + ']').attr("class", "checkbox checked");
+                        $('#return_time_' + id).find("input").val(Utilities.getDayTimeSlotText(r[request].returnTime));
                     } else {
                         $('div[name=publish_round_' + id + ']').attr("class", "checkbox");
                     }
@@ -524,8 +525,7 @@ var MessagePostView = Backbone.View.extend({
                         $('#return_time_' + id).prop("disabled", true);
                         $("div[name=publish_round_" + id + "]").parent().parent().addClass("disabled");
                     }
-                    $('#depart_time_' + id).val(Utilities.getDayTimeSlotText(r[request].departTime));
-                    $('#return_time_' + id).val(Utilities.getDayTimeSlotText(r[request].returnTime));
+                    $('#depart_time_' + id).find("input").val(Utilities.getDayTimeSlotText(r[request].departTime));
                 }
             }
         } else if (page === 3) {
@@ -756,19 +756,18 @@ var MessagePostView = Backbone.View.extend({
                         }
                         return false;
                     }
-                } else {
-                    if (Utilities.isEmpty(requests[request].departDate)) {
-                        if ($("#timewrong").length === 0) {
-                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请填写出发日期</p></div>");
-                        }
-                        return false;
+                }
+                if (Utilities.isEmpty(requests[request].departDate)) {
+                    if ($("#timewrong").length === 0) {
+                        $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请填写出发日期</p></div>");
                     }
-                    if (Utilities.isEmpty(requests[request].departTime) || requests[request].departTime === -1) {
-                        if ($("#timewrong").length === 0) {
-                            $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请选择出发时间</p></div>");
-                        }
-                        return false;
+                    return false;
+                }
+                if (Utilities.isEmpty(requests[request].departTime) || requests[request].departTime === -1) {
+                    if ($("#timewrong").length === 0) {
+                        $("#publish_time_add").append("<div class='wrong' id='timewrong'><p>请选择出发时间</p></div>");
                     }
+                    return false;
                 }
 
             }

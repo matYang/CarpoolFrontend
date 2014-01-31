@@ -188,7 +188,6 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         this.$birthyear.add(this.$birthmonth).add(this.$birthday).on("blur", function (e) {
             var y = that.$birthyear.val(), m = that.$birthmonth.val(), d = that.$birthday.val(), bdvalid = true;
-            debugger;
             if ( y && m && d ) {
                 $(this).parent().removeClass("wrong");
                 $("#vbirth").remove();
@@ -448,7 +447,6 @@ var PersonalUtilityView = Backbone.View.extend({
 
     },
     close: function () {
-        debugger;
         if (!this.isClosed) {
             $('#save_personalInfo').off();
             $('input[name=location]').off();

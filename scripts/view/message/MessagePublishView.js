@@ -30,6 +30,8 @@ var MessagePublishView = MessagePostView.extend({
             if (MessagePostView.prototype.validate(1)) {
                 app.navigate("post/step2");
                 that.renderSecondPage();
+            } else {
+                
             }
         });
     },
