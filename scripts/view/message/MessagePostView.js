@@ -824,12 +824,14 @@ var MessagePostView = Backbone.View.extend({
                 m.set("arrival_location", this.toSubmit.dest);
                 m.set("note", this.toSubmit.description);
                 m.set("departure_time", this.toSubmit.requests[r].departDate);
+                m.set("departure_timeSlot", this.toSubmit.requests[r].departTime);
                 m.set("departure_location", this.toSubmit.origin);
                 m.set("departure_seatsNumber", this.toSubmit.departureSeats);
                 m.set("departure_priceList", this.toSubmit.priceList);
                 if (this.toSubmit.requests[r].round) {
                     m.set("isRoundTrip", true);
                     m.set("arrival_time", this.toSubmit.requests[r].returnDate);
+                    m.set("arrival_timeSlot", this.toSubmit.requests[r].returnTime);
                     m.set("arrival_location", this.toSubmit.dest);
                     m.set("arrival_seatsNumber", this.toSubmit.departureSeats);
                     m.set("arrival_priceList", this.toSubmit.priceList);
