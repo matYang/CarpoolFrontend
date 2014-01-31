@@ -378,10 +378,12 @@ var PersonalUtilityView = Backbone.View.extend({
         });
     },
     acceptDefaultLocation: function(defaultLocation){
-        this.pivotLocation = defaultLocation;
-        this.editedLocation = defaultLocation.clone();
-        this.$location.val(this.pivotLocation.toUiString());
-        this.$address.val("");
+        if (this.pivotLocation.get("defaultId") !== defaultLocation.get("defaultId")) {
+            this.pivotLocation = defaultLocation;
+            this.editedLocation = defaultLocation.clone();
+            this.$location.val(this.pivotLocation.toUiString());
+            this.$address.val("");
+        }
     },
     savePersonalInfo: function () {
         var that = this, date = new Date ();
