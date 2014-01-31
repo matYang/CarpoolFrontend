@@ -41,7 +41,7 @@ var MessagePostView = Backbone.View.extend({
 
         this.user = app.sessionManager.getSessionUser();
         this.userId = this.user.get("userId");
-
+        this.inRange = {};
         this.domContainer = $('#content');
         this.domContainer.append(this.baseTemplate);
         this.$publishContent = $('#publish_requirement');
@@ -81,6 +81,7 @@ var MessagePostView = Backbone.View.extend({
             this.$page1originAddr.val("");
             defaultLocation.copy(this.toSubmit.origin);
             this.toSubmit.origin.set("defaultId", -1);
+            this.inRange.from = true;
         }
         else if (this.locationDirection === Constants.LocationDirection.to){
             $("#destWrong").remove();
@@ -90,6 +91,7 @@ var MessagePostView = Backbone.View.extend({
             this.$page1destAddr.val("");
             defaultLocation.copy(this.toSubmit.dest);
             this.toSubmit.dest.set("defaultId", -1);
+            this.inRange.to = true;
         }
         if (this.map) {
             this.map.getDirection(this.toSubmit.originPivot, this.toSubmit.destPivot);
@@ -185,8 +187,8 @@ var MessagePostView = Backbone.View.extend({
                 that.toSubmit.origin.set("lat", json.results[0].geometry.location.lat);
                 that.toSubmit.origin.set("lng", json.results[0].geometry.location.lng);
                 if (that.toSubmit.originPivot) {
-                    that.inRange = that.toSubmit.originPivot.isInRange(that.toSubmit.origin);
-                    if (!that.inRange) {
+                    that.inRange.from = that.toSubmit.originPivot.isInRange(that.toSubmit.origin);
+                    if (!that.inRange.from) {
                         $("#from").append('<dd id="originWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
                     }
                 }
@@ -194,8 +196,8 @@ var MessagePostView = Backbone.View.extend({
                 that.toSubmit.dest.set("lat", json.results[0].geometry.location.lat);
                 that.toSubmit.dest.set("lng", json.results[0].geometry.location.lng);
                 if (that.toSubmit.destPivot) {
-                    that.inRange = that.toSubmit.destPivot.isInRange(that.toSubmit.dest);
-                    if (!that.inRange) {
+                    that.inRange.to = that.toSubmit.destPivot.isInRange(that.toSubmit.dest);
+                    if (!that.inRange.to) {
                         $("#to").append('<dd id="destWrong" class="wrong"><p>对不起，你所填写的地址不在服务区</p></dd>');
                     }
                 }
@@ -728,7 +730,7 @@ var MessagePostView = Backbone.View.extend({
             if (!locvalid) {
                 return false;
             }
-            return this.inRange;
+            return this.inRange.from && this.inRange.to;
         } else if (page === 2) {
             var requests = this.toSubmit.requests;
             counter = 0;
@@ -770,10 +772,12 @@ var MessagePostView = Backbone.View.extend({
                 }
 
             }
+            if (counter > 0)
+                return true;
         } else {
             var seatNum = Utilities.toInt(this.$seats.val());
             if ( seatNum < 1 || isNaN(seatNum)) {
-
+                return false;
             }
             if (this.toSubmit.type === Constants.messageType.help ) {
                 var price;
@@ -797,10 +801,8 @@ var MessagePostView = Backbone.View.extend({
                     }
                 }
             }
-            
-        }
-        if (counter > 0)
             return true;
+        }
     },
 
     toMessage: function () {
