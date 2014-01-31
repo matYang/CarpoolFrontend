@@ -37,12 +37,14 @@ var PersonalSocialView = MultiPageView.extend({
         this.sessionUser.set("socialList", socialList);
         MultiPageView.prototype.render.call(this);
         $("#socialListContent").on("click", ".cancel", function (e) {
+            e.preventDefault();
             app.userManager.deWatchUser(Utilities.toInt(Utilities.getId(e.target.id)), {
                 "success": function (user) {
                     $("#socialCard_" + Utilities.getId(e.target.id)).remove();
                     $("#social_following").html("关注（" + (socialList.length - 1) + "）");
                 },
                 "error": function () {
+                    debugger;
                     $(this).html("取消失败 重试");
                 }
             });
