@@ -236,9 +236,9 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$newPassword.on('blur', function (e) {
             $("#pcheck2").remove();
             $("#pcheck3").remove();
-            if (Utilities.isEmpty(this.value) || this.value.length < 8) {
+            if (Utilities.isEmpty(this.value) || this.value.length < 6) {
                 if (!$("#pvalid2").length) {
-                    $("#newPassword").after('<dd id="pvalid2" class="wrong"><p>密码长度至少8位</p></dd>');
+                    $("#newPassword").after('<dd id="pvalid2" class="wrong"><p>密码长度至少6位</p></dd>');
                 }
                 that.passwordValid.n = false;
             } else {

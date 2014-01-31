@@ -400,7 +400,7 @@
 			dataType: 'json',
 			success: function(data){
 				if(callback){
-					callback.success();
+					callback.success(2);
 				}
 			},
 			error: function (data, textStatus, jqXHR){
@@ -426,26 +426,20 @@
 
 
 		$.ajax({
-			type: "PUT",
+			type: "POST",
 			async: true,
 			url: self.apis.users_forgetPassword,
 			data: JSON.stringify({ 'key': key, 'newPassword': newPassword, 'confirmNewPassword': confirmNewPassword}),
 			dataType: 'json',
 			contentType: 'application/json',	//setting this should be covering the data into PUT body
 			success: function(data){
-				
-				if(callback){
-					self.sessionManager.fetchSession(callback.success);
-				}
-				else{
-					self.sessionManager.fetchSession();
-				}
+				self.sessionManager.fetchSession(false, callback);
+
 			},
 			error: function (data, textStatus, jqXHR){
-				alert("请稍后再试");
 				Constants.dWarn("UserManager::findPassword:: action failed");
 				if(callback){
-					callback.error(response);
+					callback.error(data);
 				}
 			}
 		});

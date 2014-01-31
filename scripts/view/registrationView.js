@@ -103,7 +103,9 @@ var RegistrationView = Backbone.View.extend({
                 if (!p || p.length < 6) {
                     that.$password.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass" title="密码长度至少为6位"><span>密码长度至少为6位</span></p>');
                 } else {
-                    that.$confirm.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass2" title="两次输入密码不匹配"><span>两次输入密码不匹配</span></p>');
+                    if (that.$confirm.val().length !== 0){
+                        that.$confirm.parent().addClass("wrong").append('<p class="sign_up_err" id="vpass2" title="两次输入密码不匹配"><span>两次输入密码不匹配</span></p>');
+                    }
                 }
                 that.valid.password = false;
             }

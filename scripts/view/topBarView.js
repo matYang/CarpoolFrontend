@@ -208,8 +208,9 @@ var TopBarView = Backbone.View.extend({
                             });
                         },
 
-                        error: function (status) {
+                        error: function (response) {
                             $wrong.show();
+                            $('#credentialWrong').html(response.responseText);
                             self.$usernameInput.addClass('invalid_input');
                             self.$passwordInput.addClass('invalid_input');
                         }
@@ -219,6 +220,7 @@ var TopBarView = Backbone.View.extend({
             $("#forget_password").on("click", function (e) {
                 e.preventDefault();
                 app.navigate("lost", true);
+                self.$lb.toggle();
             });
             this.remember = $("#remember_password").on("click", function (e) {
                 if ($(this).hasClass("checked")){
@@ -248,8 +250,9 @@ var TopBarView = Backbone.View.extend({
                             });
                         },
 
-                        error: function (status) {
+                        error: function (response) {
                             $wrong.show();
+                            $('#credentialWrong').html(response.responseText);
                             self.$usernameInput.addClass('invalid_input');
                             self.$passwordInput.addClass('invalid_input');
                         }

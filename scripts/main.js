@@ -33,7 +33,7 @@ var AppRouter = Backbone.Router.extend({
         "register/*registerState": "register",
         "lost/": "lost",
         "lost" : "lost",
-        "lost/*token" : "lost",
+        "forgetPassword/*token" : "lost",
 
         "emailActivation/*authKey": "emailActivation",
 
@@ -88,9 +88,9 @@ var AppRouter = Backbone.Router.extend({
     defaultRoute: function () {
         //if login, procees to main/:id, if not, proceed to front
         if (this.sessionManager.hasSession()) {
-            this.navigate("main", true);
+            this.navigate("main", {trigger: true});
         } else {
-            this.navigate("front", true);
+            this.navigate("front", {trigger: true});
         }
     },
 
