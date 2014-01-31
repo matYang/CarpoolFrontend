@@ -100,7 +100,9 @@ var LetterView = Backbone.View.extend({
     },
     renderContacts: function (list) {
         var i;
-        this.$userList.empty();
+        if (this.$userList) {
+            this.$userList.empty();
+        }
         if (!this.letterUserList) {
             this.letterUserList = list;
         } else if (list && this.letterUserList !== list) {

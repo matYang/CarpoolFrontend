@@ -21,9 +21,7 @@ var PersonalUtilityView = Backbone.View.extend({
     bindEvents: function () {
         var that = this;
         $('#save_personalInfo').on('click', function () {
-            if ($(".invalid_input").length === 0) {
-                that.savePersonalInfo();
-            }
+            that.savePersonalInfo();
         });
         this.$location.on('click', function () {
             // that.editLocation();
@@ -33,7 +31,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
 
@@ -43,7 +41,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.show();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -52,7 +50,6 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.show();
             that.$passwordContent.hide();
             that.$dpContent.hide();
-            $('.invalid_input').removeClass('invalid_input');
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -62,7 +59,7 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$passwordContent.hide();
             that.$dpContent.show();
 
-            $('.invalid_input').removeClass('invalid_input');
+            $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
         });
@@ -80,6 +77,10 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$confirmPassword.val("");
         });
 
+        $("dd[name=gender]").on('click', "div", function (e) {
+            $(e.delegateTarget).find(".radio_box_checked").removeClass("radio_box_checked");
+            $(this).addClass("radio_box_checked");
+        })
         this.$qq.on('keypress', function (e) {
             that.testInput(e, "^[0-9]+$");
         });
@@ -103,17 +104,21 @@ var PersonalUtilityView = Backbone.View.extend({
         });
 
         this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId());
+        $("#selectImg").on("change", function (e) {
+            $("#img-filePath").html(e.target.value);
+        });
         $("#submitImg").on("click", function (e) {
             $("#fileValid").hide();
-            var file = $("input[type=file]").val();
+            var file = $("input[type=file]").val(); 
             if (file == '') {
-                $("#fileValid").html("请先选择一个图片").show();
+                $("#fileValid").show().find("p").html("请先选择一个图片");
                 e.preventDefault();
             } else {
                 //Check file extension
                 var ext = file.split('.').pop().toLowerCase();   //Check file extension if valid or expected
+
                 if ($.inArray(ext, ['png', 'jpg', 'jpeg', 'bmp']) == -1) {
-                    $("#fileValid").html("文件类型错误").show();
+                    $("#fileValid>p").show().find("p").html("文件类型错误");
                     e.preventDefault(); //Prevent submission of form
                 }
                 else {
@@ -162,20 +167,15 @@ var PersonalUtilityView = Backbone.View.extend({
             } else {
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
-
         });
         this.$location.on('blur', function (e) {
-            if (Utilities.isEmpty(this.value)) {
-                this.classList.add("invalid_input");
-            } else {
-                this.classList.remove("invalid_input");
-            }
+
         });
         this.$qq.on('blur', function (e) {
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
-                this.classList.add("invalid_input");
+                
             } else {
-                this.classList.remove("invalid_input");
+                
             }
         });
         this.$phone.on('blur', function (e) {
@@ -186,39 +186,46 @@ var PersonalUtilityView = Backbone.View.extend({
                 $(this).after("<span id='phoneRight' class='right'></span>");
             }
         });
-        this.$birthyear.on('blur', function (e) {
-
-            if (!($.isNumeric(this.value)) || Utilities.toInt(this.value) < 1910 || Utilities.toInt(this.value) > 2012) {
-                this.classList.add("invalid_input");
+        this.$birthyear.add(this.$birthmonth).add(this.$birthday).on("blur", function (e) {
+            var y = that.$birthyear.val(), m = that.$birthmonth.val(), d = that.$birthday.val(), bdvalid = true;
+            debugger;
+            if ( y && m && d ) {
+                $(this).parent().removeClass("wrong");
+                $("#vbirth").remove();
+                y = Utilities.toInt(y);
+                m = Utilities.toInt(m);
+                d = Utilities.toInt(d);
+                if ( y < 1910 || y > 2012 ) {
+                    bdvalid = false;
+                }
+                if ( m < 1 || m > 12 ) {
+                    bdvalid = false;
+                }
+                if (m < 1 || m > 31) {
+                    bdvalid = false;
+                } else if (m === 4 || m === 6 ||m === 9 || m === 11){
+                    bdvalid = bdvalid && (d <= 30);
+                } else if (m === 2) {
+                    if ( y % 4 === 0 ) {
+                        bdvalid = bdvalid && (d <= 29);
+                    } else {
+                        bdvalid = bdvalid && (d <= 28)
+                    }
+                }
+                if (!bdvalid) {
+                    if ($("#birthwrong").length === 0) {
+                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></p>");
+                    }
+                } else {
+                    $("#birthwrong").remove();
+                    if ($("#birthdaycheck").length === 0) {
+                        $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
+                    }
+                }
             } else {
-                this.classList.remove("invalid_input");
-            }
-        });
-        this.$birthmonth.on('blur', function (e) {
-            cdv = Utilities.toInt($('input[name=birthday]').val()), cmv = Utilities.toInt(this.value);
-            if (!($.isNumeric(this.value)) || cmv < 1 || cmv > 12) {
-                this.classList.add("invalid_input");
-            } else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30) {
-                this.classList.add("invalid_input");
-            } else if (cmv === 2 && (cdv > 29 || (cdv > 28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) ))) {
-                this.classList.add("invalid_input");
-            } else {
-                this.classList.remove("invalid_input");
-                that.$birthday.removeClass("invalid_input");
-            }
-        });
-        this.$birthday.on('blur', function (e) {
-            cmv = Utilities.toInt(that.$birthmonth.val()), cdv = Utilities.toInt(this.value);
-            cyv = Utilities.toInt(that.$birthyear.val());
-            if (!($.isNumeric(this.value)) || cdv < 1 || cdv > 31) {
-                this.classList.add("invalid_input");
-            } else if ((cmv === 4 || cmv === 6 || cmv === 9 || cmv === 11 ) && cdv > 30) {
-                this.classList.add("invalid_input");
-            } else if (cmv === 2 && cdv > 29 || (cdv > 28 && (cyv >= 1910 && ((cyv % 100 === 0) && (cyv % 400 !== 0)) || ((cyv % 100 !== 0) && (cyv % 4 !== 0))) )) {
-                this.classList.add("invalid_input");
-            } else {
-                that.$birthmonth.removeClass("invalid_input");
-                this.classList.remove("invalid_input");
+                if ($("#birthwrong").length === 0) {
+                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                }
             }
         });
 
@@ -285,7 +292,8 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$phone = $('input[name=phone]').val(this.sessionUser.get("phone"));
         this.$qq = $('input[name=qq]').val(this.sessionUser.get("qq"));
         this.$location = $('input[name=location]').val(this.sessionUser.get("location").toUiString());
-        $('input[name=gender][value=' + this.sessionUser.get("gender") + ']').prop("checked", true);
+        this.$gender = $("dd[name=gender]>div").removeClass("radio_box_checked");
+        $("dd[name=gender] [data-id=" + this.sessionUser.get("gender") + "]").addClass("radio_box_checked");
         this.$birthyear = $('input[name=birthyear]');
         this.$birthmonth = $('input[name=birthmonth]');
         this.$birthday = $('input[name=birthday]');
@@ -363,26 +371,29 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     savePersonalInfo: function () {
         var that = this, date = new Date ();
+        var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
+        this.$phone.trigger("focus").trigger("blur");
+        this.$name.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()));
         date.setDate(Utilities.toInt(this.$birthday.val()));
-        if ($(".wrong") || !this.$phone.val()) {
+        if ($(".wrong").length || !this.$phone.val()) {
             return;
         }
-        app.userManager.changeContactInfo(this.$name.val(), Utilities.toInt($('input[name=gender]').val()), this.$phone.val(), this.$qq.val(), date, {
+        app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, {
             "success": that.saveSuccess,
             "error": that.saveError
         });
-
         app.userManager.changeLocation(this.editedLocation, {
             "success": that.saveSuccess,
             "error": that.saveError
         });
-
+        $("#save_personalInfo").attr("value", "保存中...");
     },
 
     saveSuccess: function () {
         Info.displayNotice("成功更新用户信息");
+        $("#save_personalInfo").attr("value", "更新完毕");
         app.navigate('/temp', {
             replace: true
         });
@@ -392,6 +403,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     saveError: function () {
         Info.warn("Personal info update failed");
+        $("#save_personalInfo").attr("value", "更新失败(重试)");
     },
     saveFile: function (fileName) {
         var fileTypes = ["png", "jpg", "jpeg", "bmp"], dots, fileType;
@@ -436,6 +448,7 @@ var PersonalUtilityView = Backbone.View.extend({
 
     },
     close: function () {
+        debugger;
         if (!this.isClosed) {
             $('#save_personalInfo').off();
             $('input[name=location]').off();
