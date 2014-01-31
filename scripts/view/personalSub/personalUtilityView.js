@@ -103,11 +103,13 @@ var PersonalUtilityView = Backbone.View.extend({
             that.toggleNotificationMethods($(e.target).attr("data-id"), to);
         });
 
-        this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId());
+        this.prepareImgUpload(document.getElementById('uploadform'), Constants.origin + '/api/v1.0/users/img/' + app.sessionManager.getUserId(), "uploadTarget");
+        $("#uploadform").attr("target", "uploadTarget");
         $("#selectImg").on("change", function (e) {
             $("#img-filePath").html(e.target.value);
         });
         $("#submitImg").on("click", function (e) {
+            debugger;
             $("#fileValid").hide();
             var file = $("input[type=file]").val(); 
             if (file == '') {
@@ -122,7 +124,8 @@ var PersonalUtilityView = Backbone.View.extend({
                     e.preventDefault(); //Prevent submission of form
                 }
                 else {
-                    $("this").val("上传中...");
+                    $(this).val("上传中...");
+
                 }
             }
         });

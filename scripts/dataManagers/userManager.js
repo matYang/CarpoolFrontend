@@ -87,10 +87,10 @@
 
 	//will be used to display personal informatiom page only
 	UserManager.prototype.fetchUser = function(intendedUserId, callback){
-		// if (testMockObj.testMode) {
-		// 	callback.success(testMockObj.sampleUser);
-		// 	return;
-		// }
+		if (testMockObj.testMode) {
+			callback.success(testMockObj.sampleUser);
+			return;
+		}
 		var self = this;
 
 		if (!this.sessionManager.hasSession()){
@@ -553,11 +553,11 @@
 
 
 	UserManager.prototype.fetchWatchedUsers = function(intendedUserId, callback) {
-		// if(testMockObj.testMode){
-		// 	watchedUsers = testMockObj.sampleUsers;
-		// 	callback.success(watchedUsers, 0);
-		// 	return;
-		// }
+		if(testMockObj.testMode){
+			watchedUsers = testMockObj.sampleUsers;
+			callback.success(watchedUsers, 0);
+			return;
+		}
 		var self = this;
 
 		if (typeof intendedUserId !== 'number'){
