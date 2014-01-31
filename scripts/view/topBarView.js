@@ -357,9 +357,13 @@ var TopBarView = Backbone.View.extend({
                 e.preventDefault();
                 self.logout();
             });
-            $("#topBar-avatar").on('click', function (e) {
+            $("#topBar-avatar").add("#topBar-myPage").on('click', function (e) {
                 e.preventDefault();
                 app.navigate("personal/" + self.sessionUser.id + "/message", true);
+            });
+            $("#topBar-utility").on('click', function (e) {
+                e.preventDefault();
+                app.navigate("personal/" + self.sessionUser.id + "/utility", true);
             });
         }
         
