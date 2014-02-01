@@ -498,8 +498,8 @@
 		//set the id of the temp user to curUserId to confront to API requirements
 		tempCurUser.overrideUrl(this.apis.users_watchUser);
 		tempCurUser.set('userId', self.sessionManager.getUserId());
-		tempCurUser.save({
-			data: $.param({ 'targetUserId': targetUserId, 'action': 'dewatch'}),
+		tempCurUser.save({}, {
+			data: JSON.stringify({'userId':self.sessionManager.getUserId(),'targetUserId': targetUserId, 'action': 'dewatch'}),
             dataType:'json',
 
             success:function(model, response){
