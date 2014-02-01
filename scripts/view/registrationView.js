@@ -167,7 +167,11 @@ var RegistrationView = Backbone.View.extend({
             }
         });
 
-        $('#pivotLocation').on('focus', function (e) {
+        $('#pivotLocation').on('click', function (e) {
+            that.closeLocationDropDown();
+            that.locationDropDownView = new LocationDropDownView($('#sign_up_location_container'), that);
+            e.stopPropagation();
+        }).on('focus', function (e) {
             that.closeLocationDropDown();
             that.locationDropDownView = new LocationDropDownView($('#sign_up_location_container'), that);
             e.stopPropagation();
