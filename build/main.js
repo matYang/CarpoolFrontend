@@ -13599,7 +13599,7 @@ var RegistrationView = Backbone.View.extend({
 
         this.baseTemplate = _.template(tpl.get('registration'));
         this.finishTemplate = _.template(tpl.get('registration_finish'));
-        this.registerInfo = {"location":new UserLocation()};
+        this.registerInfo = {"location":new UserLocation(),"gender":Constants.gender.female};
         this.out = false;
         this.geocoder = new google.maps.Geocoder();
         this.render(1);
@@ -13747,7 +13747,7 @@ var RegistrationView = Backbone.View.extend({
         $("#registerGenderSelect").on("click", function (e) {
             $(this).find(".radio_box_checked").removeClass("radio_box_checked");
             var g = $(e.target).addClass("radio_box_checked").attr("data-id");
-            if (g === "male") {
+            if (g === "female") {
                 that.registerInfo.gender = Constants.gender.female;
             } else if (g === "male") {
                 that.registerInfo.gender = Constants.gender.male;
