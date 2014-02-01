@@ -65,6 +65,9 @@ var RegistrationView = Backbone.View.extend({
             $("#gotoEmail").on("click", function (e) {
                 window.open("http://"+emailDomain);
             });
+            $("#resendEmail").on("click", function (e) {
+                app.userManager.resendActivationEmail();
+            });
         }
 
         // --- events binding ---
@@ -164,7 +167,7 @@ var RegistrationView = Backbone.View.extend({
             }
         });
 
-        $('#pivotLocation').on('click', function (e) {
+        $('#pivotLocation').on('focus', function (e) {
             that.closeLocationDropDown();
             that.locationDropDownView = new LocationDropDownView($('#sign_up_location_container'), that);
             e.stopPropagation();

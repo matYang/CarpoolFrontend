@@ -256,7 +256,7 @@ input {
 .select_item ul li {
 	padding-left:15px;
 	font-size:14px;
-	line-height:50px;
+	line-height:25px;
 	border-bottom:1px dotted #ccc;
 }
 .select_item ul li:hover {
