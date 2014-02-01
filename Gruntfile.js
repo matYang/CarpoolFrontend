@@ -17,7 +17,6 @@ module.exports = function(grunt) {
               "scripts/lib/custom.js",
               "scripts/lib/DD_belatedPNG_0.0.8a.js",
               "scripts/service/info.js",
-              "scripts/EnvConfig.js",
               "scripts/prototypes.js",
               "scripts/staticResource/constants.js",
               "scripts/staticResource/apiResource.js",
