@@ -109,7 +109,6 @@ var PersonalUtilityView = Backbone.View.extend({
             $("#img-filePath").html(e.target.value);
         });
         $("#submitImg").on("click", function (e) {
-            debugger;
             $("#fileValid").hide();
             var file = $("input[type=file]").val(); 
             if (file == '') {
@@ -133,16 +132,16 @@ var PersonalUtilityView = Backbone.View.extend({
 
     prepareImgUpload: function (formElem, action, callback) {
         // we name a callback that will be called from inside the iframe
-        var callbackName = 'iframe' + Math.ceil(Math.random() * 10000);
+        // var callbackName = 'iframe' + Math.ceil(Math.random() * 10000);
         var iframe = document.createElement('iframe');
         action = action + (action.indexOf('?') == -1 ? '?' : '&');
 
         // we create an iframe and use the callback as its name (why not).
-        iframe.setAttribute('name', callbackName);
+        iframe.setAttribute('name', callback);
         iframe.style.display = 'none';
 
         // we add the target and edit the action of the form
-        formElem.setAttribute('target', callbackName);
+        formElem.setAttribute('target', callback);
         formElem.setAttribute('action', action);
 
         // we add the hidden iframe after the form
@@ -341,9 +340,12 @@ var PersonalUtilityView = Backbone.View.extend({
 
         this.$address.val(that.sessionUser.get("location").get("pointAddress"));
         this.$location.val(that.sessionUser.get("location").get("pointName"));
+        var matchId = that.sessionUser.get("location").get("match_Id");
         if (!this.defaultLocations) {
             app.locationService.getDefaultLocations(function () {
-                that.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("match_Id")).toUiString());
+                if (matchId >= 0) {
+                    that.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("match_Id")).toUiString());
+                }
             }, this);
         } else {
             this.$location.val(that.defaultLocations.get(that.sessionUser.get("location").get("match_Id")).toUiString());
