@@ -133,7 +133,7 @@ var MainPageView = Backbone.View.extend({
         $stc.children(".active").removeClass("active");
         this.$spans = $stc.children("span");
         if (!me.filter.isRoundTrip) {
-            this.$dateReturn.parent().addClass("date-return-disabled").prop("disabled", true);
+            this.$dateReturn.prop("disabled", true).parent().addClass("date-return-disabled");
             this.$spans.first().addClass("active");
         } else {
             this.$dateReturn.val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
