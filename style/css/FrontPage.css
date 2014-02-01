@@ -31,7 +31,7 @@
 .frontPage-destinations { float:right; width:275px; }
 .frontPage-destinations h2 { font-size:18px; padding-left:22px; margin-bottom:10px; background:url(../images/icon.png) no-repeat 0 -96px; color:#57b7e1; font-weight:normal; border-bottom:1px solid #57b7e1; padding-bottom:5px; _padding-bottom:2px; text-indent: -32768px; }
 .slider_container { position:relative; width:275px; height:240px; overflow:hidden; }
-.slider_container .left_arr, .slider_container .right_arr { position:absolute; width:36px; height:36px; top:90px; cursor:pointer; z-index:100; }
+.slider_container .left_arr, .slider_container .right_arr { position:absolute; width:36px; height:36px; top:90px; cursor:pointer; z-index:800; }
 .slider_container .left_arr { left:0; background:url(../images/left_arr.png) no-repeat; }
 .slider_container .left_arr:hover { background-position:0 -36px; }
 .slider_container .right_arr { right:0; background:url(../images/right_arr.png) no-repeat; }
