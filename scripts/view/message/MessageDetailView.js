@@ -212,7 +212,7 @@ var MessageDetailView = Backbone.View.extend({
     },
     cancelSuccess: function(){
         this.$viewendConfirm.removeAttr("disabled").val("取消成功, 关闭").off().on("click", function (e) {
-            $("#popup").empty();
+            $("#popup").empty().hide();
             $("#overlay").hide();
         });
         this.$viewend.off();
@@ -222,10 +222,16 @@ var MessageDetailView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            this.map.close();
+            if (this.map) {
+                this.map.close();
+            }
 //            $("#view_edit").off();
-            this.$viewbook.off();
-            this.$viewcontact.off();
+            if (this.$viewbook) {
+                this.$viewbook.off();
+            }
+            if (this.$viewcontact){
+                this.$viewcontact.off();
+            }
             if (this.$messages) {
                 this.$messages.off();
             }
