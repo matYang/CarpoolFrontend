@@ -211,9 +211,9 @@ var MessageDetailView = Backbone.View.extend({
         $("#pricelist").append(appender.join(""));
     },
     cancelSuccess: function(){
-        this.$viewendConfirm.val("取消成功, 关闭").off().on("click", function (e) {
-            $popup.empty();
-            $overlay.hide();
+        this.$viewendConfirm.removeAttr("disabled").val("取消成功, 关闭").off().on("click", function (e) {
+            $("#popup").empty();
+            $("#overlay").hide();
         });
         this.$viewend.off();
     },

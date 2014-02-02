@@ -28,7 +28,7 @@ var Message = Backbone.Model.extend({
             "note": "deault",
             "type": Constants.messageType.ask,
             "genderRequirement": Constants.gender.both,
-            "state": Constants.messageState.normal,
+            "state": Constants.messageState.closed,
 
             "creationTime": new Date (),
             "editTime": new Date (),
