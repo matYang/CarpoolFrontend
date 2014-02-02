@@ -7126,6 +7126,14 @@ var Message = Backbone.Model.extend({
         json.arrival_time = Utilities.getDateString(this.get('arrival_time'));
 
         //these 2 are actually ignored by server side, placing here for uniformity
+        var now = new Date();
+        now = now.getTime();
+        json.expired = false;
+        if (this.get("isRoundTrip") && this.get('arrival_time').getTime() < now ) {
+            json.expired = true;
+        } else if (this.get("isRoundTrip") && this.get('departure_time').getTime() < now ) {
+            json.expired = true;
+        }
         json.creationTime = Utilities.getDateString(this.get('creationTime'));
         json.editTime = Utilities.getDateString(this.get('editTime'));
         var priceList = this.get("departure_priceList");
