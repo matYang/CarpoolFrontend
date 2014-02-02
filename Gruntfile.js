@@ -4,9 +4,19 @@ module.exports = function(grunt) {
 
     concat: {
      dist: {
-        src: ["scripts/lib/*.js",
+        src: ["scripts/lib/jquery-1.9.1.min.js",
+              "scripts/lib/jquery.cycle2.min.js",
+              "scripts/lib/underscore-1.5.2-min.js",
+              "scripts/lib/backbone-1.1.0-min.js",
+              "scripts/lib/jquery-ui-1.10.0.custom.min.js",
+              "scripts/lib/jquery.placeholder.min.js",
+              "scripts/lib/jquery.validate.min.js",
+              "scripts/lib/additional-methods.min.js",
+              "scripts/lib/json2.js",
+              "scripts/lib/socket.io.js",
+              "scripts/lib/custom.js",
+              "scripts/lib/DD_belatedPNG_0.0.8a.js",
               "scripts/service/info.js",
-              "scripts/EnvConfig.js",
               "scripts/prototypes.js",
               "scripts/staticResource/constants.js",
               "scripts/staticResource/apiResource.js",
@@ -77,9 +87,11 @@ module.exports = function(grunt) {
       }
     },
     cssmin: {
+      dist: {
         files: {
-          'build/style-min.css': ['style/css/*.css']
+          'build/style/css/style-min.css': ['style/css/*.css']
         }
+      }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-uglify');

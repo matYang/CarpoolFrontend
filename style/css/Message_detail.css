@@ -275,3 +275,11 @@
 .comment dd .on {
 	background:url(../images/icon.png) no-repeat 0 -504px;
 }
+#view_expired {
+	width: 275px;
+	height: 50px;
+	border: none;
+	font-size: 18px;
+	cursor: pointer;
+	color:#000;
+}
