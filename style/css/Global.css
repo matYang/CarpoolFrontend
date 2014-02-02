@@ -230,6 +230,12 @@ input {
 	cursor:pointer;
 }
 .select_item .text {
+	height: 50px;
+	line-height: 50px\9;
+	border: none;
+	padding-left: 12px;
+	color: #333;
+	font-size: 16px;
 	width:168px;
 	background:url(../images/input_bg1.png) no-repeat 0 -50px;
 }
