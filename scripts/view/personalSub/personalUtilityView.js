@@ -194,7 +194,7 @@ var PersonalUtilityView = Backbone.View.extend({
             var m = Utilities.toInt(mi);
             var d = Utilities.toInt(di);
             $("#birthwrong").remove();
-            if ( yi && mi && di !( isNaN(y) || isNaN(m) || isNaN(d))) {
+            if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
                 $(this).parent().removeClass("wrong");
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;

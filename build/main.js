@@ -13085,20 +13085,20 @@ var PersonalUtilityView = Backbone.View.extend({
             }
         });
         this.$birthyear.add(this.$birthmonth).add(this.$birthday).on("blur", function (e) {
-            var y = that.$birthyear.val(), m = that.$birthmonth.val(), d = that.$birthday.val(), bdvalid = true;
-            if ( y && m && d ) {
+            var yi = that.$birthyear.val(), mi = that.$birthmonth.val(), di = that.$birthday.val(), bdvalid = true;
+            var y = Utilities.toInt(yi);
+            var m = Utilities.toInt(mi);
+            var d = Utilities.toInt(di);
+            $("#birthwrong").remove();
+            if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
                 $(this).parent().removeClass("wrong");
-                $("#vbirth").remove();
-                y = Utilities.toInt(y);
-                m = Utilities.toInt(m);
-                d = Utilities.toInt(d);
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (m < 1 || m > 31) {
+                if (d < 1 || dpContent > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
@@ -13119,6 +13119,10 @@ var PersonalUtilityView = Backbone.View.extend({
                         $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
                     }
                 }
+            } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
+                $(this).parent().addClass("wrong").append("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                that.registerInfo.birthday = null;
+                that.valid.birthday = false;
             } else {
                 if ($("#birthwrong").length === 0) {
                     $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
@@ -13727,23 +13731,20 @@ var RegistrationView = Backbone.View.extend({
             }
         });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
-            var y = that.$year.val(), m = that.$month.val(), d = that.$day.val(), bdvalid = true;
-            y = Utilities.parseInt(y);
-            m = Utilities.parseInt(m);
-            d = Utilities.parseInt(d);
-            if ( y && m && d && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
+            var yi = that.$year.val(), mi = that.$month.val(), di = that.$day.val(), bdvalid = true;
+            var y = Utilities.toInt(yi);
+            var m = Utilities.toInt(mi);
+            var d = Utilities.toInt(di);
+            $("#vbirth").remove();
+            if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
                 $(this).parent().removeClass("wrong");
-                $("#vbirth").remove();
-                y = Utilities.toInt(y);
-                m = Utilities.toInt(m);
-                d = Utilities.toInt(d);
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (m < 1 || m > 31) {
+                if (d < 1 || d > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
