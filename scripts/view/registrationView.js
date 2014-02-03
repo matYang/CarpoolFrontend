@@ -61,7 +61,8 @@ var RegistrationView = Backbone.View.extend({
         } else {
             this.domContainer.append(this.finishTemplate);
             $("#emailValue").html(this.emailCache);
-            var emailDomain = this.emailCache.split("@")[1];
+            var domain = this.emailCache.split("@")[1];
+            var emailDomain = Constants.emailLink[domain] || domain;
             $("#gotoEmail").on("click", function (e) {
                 window.open("http://"+emailDomain);
             });
@@ -115,9 +116,12 @@ var RegistrationView = Backbone.View.extend({
         });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
             var y = that.$year.val(), m = that.$month.val(), d = that.$day.val(), bdvalid = true;
-            if ( y && m && d ) {
+            y = Utilities.toInt(y);
+            m = Utilities.toInt(m);
+            d = Utilities.toInt(d);
+            $("#vbirth").remove();
+            if ( y && m && d && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
                 $(this).parent().removeClass("wrong");
-                $("#vbirth").remove();
                 y = Utilities.toInt(y);
                 m = Utilities.toInt(m);
                 d = Utilities.toInt(d);
@@ -150,6 +154,10 @@ var RegistrationView = Backbone.View.extend({
                     that.registerInfo.birthday.setDate(d);
                     that.valid.birthday = true;
                 }
+            } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
+                $(this).parent().addClass("wrong").append("<p class='sign_up_err' id='vbirth' title='请填写正确的日期'><span>请填写正确的日期</span></p>");
+                that.registerInfo.birthday = null;
+                that.valid.birthday = false;
             } else {
                 that.registerInfo.birthday = null;
             }

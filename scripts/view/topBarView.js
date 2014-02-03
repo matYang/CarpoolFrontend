@@ -267,6 +267,16 @@ var TopBarView = Backbone.View.extend({
             $("#login_username,#login_password").on('focus', function () {
                 this.classList.remove('invalid_input');
             });
+            $(document).mouseup(function (e)
+            {
+                var container = $("#loginBox");
+
+                if (!container.is(e.target) // if the target of the click isn't the container...
+                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                {
+                    container.hide();
+                }
+            });
         } else {
             this.$logo = $('#logo').on('click', function () {
                 app.navigate("front", true);

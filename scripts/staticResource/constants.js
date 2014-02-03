@@ -193,7 +193,18 @@ var Constants = {
         'personalSocial': 'personalPage/personalSocial',
         'personalUtility': 'personalPage/personalUtility'
     },
-
+    emailLink: {
+        "qq.com":"mail.qq.com",
+        "sina.com":"mail.sina.com",
+        "163.com":"mail.163.com",
+        "126.com":"mail.126.com",
+        "163.com":"mail.163.com",
+        "sohu.com":"mail.sohu.com",
+        "yahoo.com.cn":"mail.yahoo.com.cn",
+        "yahoo.com":"mail.yahoo.com",
+        "live.com":"mail.live.com",
+        "live.cn":"mail.live.com"
+    },
     getDefaultUserLocation: function () {
         return new UserLocation();
     },

@@ -5226,7 +5226,18 @@ var Constants = {
         'personalSocial': 'personalPage/personalSocial',
         'personalUtility': 'personalPage/personalUtility'
     },
-
+    emailLink: {
+        "qq.com":"mail.qq.com",
+        "sina.com":"mail.sina.com",
+        "163.com":"mail.163.com",
+        "126.com":"mail.126.com",
+        "163.com":"mail.163.com",
+        "sohu.com":"mail.sohu.com",
+        "yahoo.com.cn":"mail.yahoo.com.cn",
+        "yahoo.com":"mail.yahoo.com",
+        "live.com":"mail.live.com",
+        "live.cn":"mail.live.com"
+    },
     getDefaultUserLocation: function () {
         return new UserLocation();
     },
@@ -13662,7 +13673,8 @@ var RegistrationView = Backbone.View.extend({
         } else {
             this.domContainer.append(this.finishTemplate);
             $("#emailValue").html(this.emailCache);
-            var emailDomain = this.emailCache.split("@")[1];
+            var domain = this.emailCache.split("@")[1];
+            var emailDomain = Constants.emailLink[domain] || domain;
             $("#gotoEmail").on("click", function (e) {
                 window.open("http://"+emailDomain);
             });
@@ -13716,7 +13728,10 @@ var RegistrationView = Backbone.View.extend({
         });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
             var y = that.$year.val(), m = that.$month.val(), d = that.$day.val(), bdvalid = true;
-            if ( y && m && d ) {
+            y = Utilities.parseInt(y);
+            m = Utilities.parseInt(m);
+            d = Utilities.parseInt(d);
+            if ( y && m && d && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
                 $(this).parent().removeClass("wrong");
                 $("#vbirth").remove();
                 y = Utilities.toInt(y);
@@ -13751,6 +13766,10 @@ var RegistrationView = Backbone.View.extend({
                     that.registerInfo.birthday.setDate(d);
                     that.valid.birthday = true;
                 }
+            } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
+                $(this).parent().addClass("wrong").append("<p class='sign_up_err' id='vbirth' title='请填写正确的日期'><span>请填写正确的日期</span></p>");
+                that.registerInfo.birthday = null;
+                that.valid.birthday = false;
             } else {
                 that.registerInfo.birthday = null;
             }
@@ -14572,6 +14591,16 @@ var TopBarView = Backbone.View.extend({
             });
             $("#login_username,#login_password").on('focus', function () {
                 this.classList.remove('invalid_input');
+            });
+            $(document).mouseup(function (e)
+            {
+                var container = $("#loginBox");
+
+                if (!container.is(e.target) // if the target of the click isn't the container...
+                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                {
+                    container.hide();
+                }
             });
         } else {
             this.$logo = $('#logo').on('click', function () {

@@ -190,12 +190,12 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         this.$birthyear.add(this.$birthmonth).add(this.$birthday).on("blur", function (e) {
             var y = that.$birthyear.val(), m = that.$birthmonth.val(), d = that.$birthday.val(), bdvalid = true;
-            if ( y && m && d ) {
+            y = Utilities.toInt(y);
+            m = Utilities.toInt(m);
+            d = Utilities.toInt(d);
+            $("#birthwrong").remove();
+            if ( y && m && d !( isNaN(y) || isNaN(m) || isNaN(d))) {
                 $(this).parent().removeClass("wrong");
-                $("#vbirth").remove();
-                y = Utilities.toInt(y);
-                m = Utilities.toInt(m);
-                d = Utilities.toInt(d);
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
@@ -223,6 +223,10 @@ var PersonalUtilityView = Backbone.View.extend({
                         $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
                     }
                 }
+            } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
+                $(this).parent().addClass("wrong").append("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                that.registerInfo.birthday = null;
+                that.valid.birthday = false;
             } else {
                 if ($("#birthwrong").length === 0) {
                     $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
