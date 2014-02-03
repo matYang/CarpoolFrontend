@@ -115,23 +115,20 @@ var RegistrationView = Backbone.View.extend({
             }
         });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
-            var y = that.$year.val(), m = that.$month.val(), d = that.$day.val(), bdvalid = true;
-            y = Utilities.toInt(y);
-            m = Utilities.toInt(m);
-            d = Utilities.toInt(d);
+            var yi = that.$year.val(), mi = that.$month.val(), di = that.$day.val(), bdvalid = true;
+            var y = Utilities.toInt(yi);
+            var m = Utilities.toInt(mi);
+            var d = Utilities.toInt(di);
             $("#vbirth").remove();
-            if ( y && m && d && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
+            if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d)) ) {
                 $(this).parent().removeClass("wrong");
-                y = Utilities.toInt(y);
-                m = Utilities.toInt(m);
-                d = Utilities.toInt(d);
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (m < 1 || m > 31) {
+                if (d < 1 || d > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);

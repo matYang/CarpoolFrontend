@@ -189,12 +189,12 @@ var PersonalUtilityView = Backbone.View.extend({
             }
         });
         this.$birthyear.add(this.$birthmonth).add(this.$birthday).on("blur", function (e) {
-            var y = that.$birthyear.val(), m = that.$birthmonth.val(), d = that.$birthday.val(), bdvalid = true;
-            y = Utilities.toInt(y);
-            m = Utilities.toInt(m);
-            d = Utilities.toInt(d);
+            var yi = that.$birthyear.val(), mi = that.$birthmonth.val(), di = that.$birthday.val(), bdvalid = true;
+            var y = Utilities.toInt(yi);
+            var m = Utilities.toInt(mi);
+            var d = Utilities.toInt(di);
             $("#birthwrong").remove();
-            if ( y && m && d !( isNaN(y) || isNaN(m) || isNaN(d))) {
+            if ( yi && mi && di !( isNaN(y) || isNaN(m) || isNaN(d))) {
                 $(this).parent().removeClass("wrong");
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
@@ -202,7 +202,7 @@ var PersonalUtilityView = Backbone.View.extend({
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (m < 1 || m > 31) {
+                if (d < 1 || dpContent > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
