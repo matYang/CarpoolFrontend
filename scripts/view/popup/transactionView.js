@@ -166,7 +166,7 @@ var TransactionDetailView = Backbone.View.extend({
         } else {
             this.$functionButton = $("#contactButton").on("click", function () {
                 var targetUserId = that.user.id === that.transaction.get("provider").id ? that.transaction.get("customer").id : that.transaction.get("provider").id;
-                app.navigate("letter/"+targetUserId, true);
+                app.letterView.switchContact(targetUserId);
             });
         }
     },

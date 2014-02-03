@@ -49,8 +49,8 @@
                 antiRequest: ['content', 'advertisement']
             },
             'letter': {
-                request: ['content'],
-                antiRequest: ['content', 'advertisement']
+                request: ['chat'],
+                antiRequest: ['chat']
             },
             'registration': {
                 request: ['content'],

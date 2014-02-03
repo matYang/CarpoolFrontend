@@ -22,10 +22,6 @@ var AppRouter = Backbone.Router.extend({
         "post": "postMessage",
         "post/*postState": "postMessageWithState",
 
-        "letter": "letter",
-        "letter/": "letter",
-        "letter/:targetUserId": "letter",
-
         "finduser": "finduser",
         "finduser/*encodedSearchkey": "finduser",
 
@@ -199,18 +195,6 @@ var AppRouter = Backbone.Router.extend({
 
     },
 
-    letter: function (targetUserId) {
-        if (targetUserId === app.sessionManager.getUserId() + "") {
-            targetUserId = undefined;
-            app.navigate(app.sessionManager.getUserId() + "/letter");
-        }
-        var options = {
-            "toUserId": targetUserId
-        };
-        options.type = typeof targetUserId == 'undefined' ? Constants.LetterType.system : Constants.LetterType.user;
-        this.letterView = new LetterView (options);
-    },
-
     finduser: function (encodedSearchkey) {
         var sr = new UserSearchRepresentation ();
         if (encodedSearchkey) {
@@ -267,5 +251,9 @@ tpl.loadTemplates(Constants.templateResources, function () {
     app = new AppRouter ();
     app.topBarView = new TopBarView ();
     Backbone.history.start();
+    if (app.sessionManager.hasSession()) {
+    	// create letter view if use is logged in.
+    	app.letterView = new LetterView();
+    }
 });
 

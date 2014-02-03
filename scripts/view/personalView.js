@@ -162,7 +162,7 @@ var PersonalView = Backbone.View.extend({
             }
         });
         $("#profilePage_sendLetter").on('click', function () {
-            app.navigate("letter/" + that.curUserId, true);
+        	app.letterView.switchContact(that.curUserId);
         });
     },
     bindWatchEvent: function () {

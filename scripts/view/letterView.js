@@ -1,8 +1,6 @@
 var LetterView = Backbone.View.extend({
     el: "",
-    messageBoxTemplate: ["<div class='letterBoxContainer ", null, "'><img src='", null, "'/><div class='letterBoxMessage'><div class='letterBoxText letterId_", null, "'>", null, "</div><div class='letterBoxTime'>", null, "</div></div></div>"],
-    dateSplitTemplate: ["<div class='letterDateSplit'>", null, "</div>"],
-    contactListTemplate: ["<div class='letterContactListEntry' id='contactList_", null, "'><img src='", null, "'><span>", null, "</span></div>"],
+    messageBoxTemplate: ["<div class='", null, "'><dt><span>", null, "</span>", null, "</dt><dd>", null, "</dd></dl>"],
     initialize: function (params) {
         var self = this;
         _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'displayNewLetters', 'fetchLetterUserError', 'close');
@@ -20,7 +18,6 @@ var LetterView = Backbone.View.extend({
                 "success": function (user) {
                     self.toUser = user;
                     $("#letter_toUser_name").html(user.get("name"));
-                    $("#letter_toUser_pic").attr("src", user.get("imgPath"));
 
                     if (!self.letterUserList) {
                         self.letterUserList = new Letters ();
@@ -42,7 +39,6 @@ var LetterView = Backbone.View.extend({
         this.domContainer.append(this.template);
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
-            $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
         }
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
@@ -68,9 +64,7 @@ var LetterView = Backbone.View.extend({
         this.$messagePanel = $("#letter_message_panel");
         this.$letterInput = $("#letter_input");
         $("#letter_send_button").on("click", function (e) {
-
             if (!self.$letterInput.val()) {
-                $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                 return;
             }
             app.letterManager.sendLetter(self.toUserId, self.$letterInput.val(), {
@@ -85,7 +79,6 @@ var LetterView = Backbone.View.extend({
             if (e.which == 13) {
                 e.preventDefault();
                 if (!self.$letterInput.val()) {
-                    $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                     return;
                 }
                 self.$messagePanel.append(self.buildMessageBox(-1, self.$letterInput.val(), new Date (), true));
@@ -96,6 +89,21 @@ var LetterView = Backbone.View.extend({
                 self.$messagePanel.scrollTop($('#letter_message_panel')[0].scrollHeight);
                 self.$letterInput.val("");
             }
+        });
+        $("#letter_user_list").on("click", 'dd', function (e) {
+            id = Utilities.toInt(Utilities.getId(e.target.id));
+            if (id !== self.toUserId) {
+                self.switchContact(id);
+            }
+        });
+        $("#chat_hide").on("click", function () {
+            $("#chat_left>.chat_content").hide();
+        });
+        $("#chat_left>.chat_box_title").on("click", function () {
+            $("#chat_left>.chat_content").show();
+        });
+        $("#chat_contact_min").on("click", function(){
+           $("#letter_user_list").toggle();
         });
     },
     renderContacts: function (list) {
@@ -113,33 +121,19 @@ var LetterView = Backbone.View.extend({
         var buf = [], len = this.letterUserList.length, bufLen = 0, self = this, user, id;
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
-            this.contactListTemplate[1] = user.get("userId");
-            this.contactListTemplate[3] = user.get("imgPath");
-            this.contactListTemplate[5] = user.get("name");
-
-            buf[bufLen++] = this.contactListTemplate.join("");
+            buf[bufLen++] = "<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>";
         }
         this.$userList.append(buf.join(""));
-        $(".letterContactListEntry").off().on("click", function (e) {
-            id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
-            if (id !== self.toUserId) {
-                app.navigate("letter/" + id);
-                //do not recreate view.
-                self.switchContact(id);
-            }
-        });
-        $("#contactList_" + this.toUserId).addClass("highlitedUser");
     },
     switchContact: function (id) {
         this.$messagePanel.empty();
         this.$letterInput.val("");
-        $(".highlitedUser.userNewMessage").removeClass("userNewMessage");
-        $(".highlitedUser").removeClass("highlitedUser");
-        $("#contactList_" + id).addClass("highlitedUser");
+        $(this).find(".active").removeClass("active");
+        $("#letter_contact_"+id).addClass("active");
+        $(".active.userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
-            $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
             return;
         }
         var user = this.letterUserList.get(id), option = {
@@ -149,7 +143,6 @@ var LetterView = Backbone.View.extend({
         };
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
-        $("#letter_toUser_pic").attr("src", user.get("imgPath"));
 
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
@@ -159,34 +152,30 @@ var LetterView = Backbone.View.extend({
     },
 
     fillRecentHistory: function (letters) {
+        this.$messagePanel.empty();
         if (!letters)
             return;
         this.letterHistories = letters;
-        this.$messagePanel.empty();
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
-        for ( i = 0; i < len; i++) {
+        var start = len < 10 ? 0 : len - 10;
+        for ( i = start; i < len; i++) {
             letter = letters.at(i);
             send_time = new Date (letter.get("send_time"));
             send_time.setHours(0);
             send_time.setMinutes(0);
             send_time.setSeconds(0);
             send_time.setMilliseconds(0);
-            if (!lastDay || lastDay < send_time) {
-                this.dateSplitTemplate[1] = letter.get("send_time").toLocaleDateString();
-                buf[bufLen++] = this.dateSplitTemplate.join("");
-                lastDay = send_time;
-            }
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
         this.$messagePanel.append(buf.join(""));
+        this.$messagePanel.append('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
     },
     buildMessageBox: function (id, message, time, sendByMe) {
-        this.messageBoxTemplate[1] = sendByMe ? "sendByMe" : "sendByYou";
-        this.messageBoxTemplate[3] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
-        this.messageBoxTemplate[5] = id;
+        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + id;
+        this.messageBoxTemplate[3] = sendByMe ? "我" : this.toUser.get("name");
+        this.messageBoxTemplate[5] = time;
         this.messageBoxTemplate[7] = message;
-        this.messageBoxTemplate[9] = time;
         return this.messageBoxTemplate.join("");
     },
     sendSuccess: function (letter) {
@@ -251,10 +240,7 @@ var LetterView = Backbone.View.extend({
             if (to_userId !== -1) {
                 app.userManager.fetchUser(to_userId, {
                     "success": function (user) {
-                        self.contactListTemplate[1] = user.get("userId");
-                        self.contactListTemplate[3] = user.get("imgPath");
-                        self.contactListTemplate[5] = user.get("name");
-                        self.$userList.prepend(self.contactListTemplate.join(""));
+                        self.$userList.prepend("<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>");
                         $("#contactList_" + user.get("userId")).addClass("userNewMessage");
                     },
                     "error": function () {
@@ -269,6 +255,7 @@ var LetterView = Backbone.View.extend({
         if (!this.isClosed) {
             $("#letter_send_button").off();
             this.$letterInput.off();
+            $("#letter_user_list").off();
             this.domContainer.empty();
             this.isClosed = true;
         }

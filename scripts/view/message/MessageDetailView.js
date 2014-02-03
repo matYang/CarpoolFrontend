@@ -141,12 +141,12 @@ var MessageDetailView = Backbone.View.extend({
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             this.$viewcontact.on('click', function () {
-                app.navigate("letter/" + that.ownerId, true);
+                app.letterView.switchContact(that.ownerId);
             });
         }
         this.$viewlink.on('click', function (e) {
             e.preventDefault();
-            app.navigate("letter/" + that.ownerId, true);
+            app.letterView.switchContact(that.ownerId);
         });
     },
     createNewTransaction: function () {
