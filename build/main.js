@@ -12084,7 +12084,9 @@ var FrontPageView = Backbone.View.extend({
     },
 
     loginAlert: function () {
-        Info.displayNotice("请先登录。若是已经登陆，请刷新页面。");
+        Info.alert("请先登录。若是已经登陆，请刷新页面。");
+         $("html, body").animate({ scrollTop: 0 }, "slow");
+         $("#loginBox").show();
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
@@ -14598,10 +14600,11 @@ var TopBarView = Backbone.View.extend({
                 var container = $("#loginBox");
 
                 if (!container.is(e.target) // if the target of the click isn't the container...
-                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                    && container.has(e.target).length === 0 && e.target.id !== "loginBoxToggler") // ... nor a descendant of the container
                 {
                     container.hide();
                 }
+                e.stopPropagation();
             });
         } else {
             this.$logo = $('#logo').on('click', function () {

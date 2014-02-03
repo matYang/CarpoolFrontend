@@ -272,10 +272,11 @@ var TopBarView = Backbone.View.extend({
                 var container = $("#loginBox");
 
                 if (!container.is(e.target) // if the target of the click isn't the container...
-                    && container.has(e.target).length === 0) // ... nor a descendant of the container
+                    && container.has(e.target).length === 0 && e.target.id !== "loginBoxToggler") // ... nor a descendant of the container
                 {
                     container.hide();
                 }
+                e.stopPropagation();
             });
         } else {
             this.$logo = $('#logo').on('click', function () {
