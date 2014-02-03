@@ -253,7 +253,9 @@ tpl.loadTemplates(Constants.templateResources, function () {
     Backbone.history.start();
     if (app.sessionManager.hasSession()) {
     	// create letter view if use is logged in.
-    	app.letterView = new LetterView();
+    	app.letterView = new LetterView({
+    		"toUserId": app.storage.getLastContact();
+    	});
     }
 });
 

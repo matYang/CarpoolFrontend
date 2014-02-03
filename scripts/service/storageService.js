@@ -46,6 +46,7 @@
                     "max": localStorage.searchPriceMax
                 }
             };
+            localStorage.lastContact = localStorage.lastContact || {};
         }
 
         this.sr = new SearchRepresentation ();
@@ -88,6 +89,7 @@
             localStorage.searchTimeSlot = newSearchTimeSlot;
             localStorage.searchPriceMin = newSearchPriceInterval.min;
             localStorage.searchPriceMax = newSearchPriceInterval.max;
+            localStorage.searchPriceMax = newSearchPriceInterval.max;
         }
     };
 
@@ -104,6 +106,14 @@
             this.sr = sr;
         }
     };
+	StorageService.prototype.getLastContact = function () {
+        return localstorage.lastContact[app.sessionManager.sessionUser.id] || -1;
+    };
+
+    StorageService.prototype.setLastContact = function (id) {
+        localstorage.lastContact[app.sessionManager.sessionUser.id] = id;
+    };
+
     StorageService.prototype.setViewCache = function (type, view) {
         this.views[type] = view;
     };
