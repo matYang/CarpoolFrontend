@@ -10,6 +10,12 @@ var LetterView = Backbone.View.extend({
         var option = {
             "direction": 2
         };
+        this.template = _.template(tpl.get('letter'));
+        this.domContainer = $('#chat');
+        this.domContainer.append(this.template);
+        this.$messagePanel = $("#letter_message_panel");
+        this.$letterInput = $("#letter_input");
+        this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== "-1") {
             this.toUserId = Utilities.toInt(params.toUserId);
             option.targetUserId = this.toUserId;
@@ -34,9 +40,6 @@ var LetterView = Backbone.View.extend({
             option.targetType = Constants.LetterType.system;
         }
 
-        this.template = _.template(tpl.get('letter'));
-        this.domContainer = $('#content');
-        this.domContainer.append(this.template);
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
         }
@@ -60,9 +63,6 @@ var LetterView = Backbone.View.extend({
     },
     bindEvent: function () {
         var self = this;
-        this.$userList = $("#letter_user_list");
-        this.$messagePanel = $("#letter_message_panel");
-        this.$letterInput = $("#letter_input");
         $("#letter_send_button").on("click", function (e) {
             if (!self.$letterInput.val()) {
                 return;
@@ -96,13 +96,12 @@ var LetterView = Backbone.View.extend({
                 self.switchContact(id);
             }
         });
-        $("#chat_hide").on("click", function () {
-            $("#chat_left>.chat_content").hide();
+        $("#chat_hide").on("click", function (e) {
+            e.preventDefault();
+            $("#chat_left>.chat_box_body").toggle();
         });
-        $("#chat_left>.chat_box_title").on("click", function () {
-            $("#chat_left>.chat_content").show();
-        });
-        $("#chat_contact_min").on("click", function(){
+        $("#chat_contact_min").on("click", function(e){
+            e.preventDefault();
            $("#letter_user_list").toggle();
         });
     },
@@ -110,6 +109,8 @@ var LetterView = Backbone.View.extend({
         var i;
         if (this.$userList) {
             this.$userList.empty();
+        } else {
+
         }
         if (!this.letterUserList) {
             this.letterUserList = list;
@@ -118,17 +119,19 @@ var LetterView = Backbone.View.extend({
                 this.letterUserList.add(list.at(i));
             }
         }
-        var buf = [], len = this.letterUserList.length, bufLen = 0, self = this, user, id;
+        var buf = [], len = this.letterUserList.length, bufLen = 1, self = this, user, id;
+        buf[0] ="<dd id='letter_contact_-1'>系统</dd>";
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
             buf[bufLen++] = "<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>";
         }
         this.$userList.append(buf.join(""));
+        $("#letter_contact_"+this.toUserId).addClass("active");
     },
     switchContact: function (id) {
         this.$messagePanel.empty();
         this.$letterInput.val("");
-        $(this).find(".active").removeClass("active");
+        $("#letter_user_list").find(".active").removeClass("active");
         $("#letter_contact_"+id).addClass("active");
         $(".active.userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;

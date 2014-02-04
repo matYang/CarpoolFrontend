@@ -253,19 +253,12 @@ var TopBarView = Backbone.View.extend({
                         error: function (response) {
                             $wrong.show();
                             $('#credentialWrong').html(response.responseText);
-                            self.$usernameInput.addClass('invalid_input');
-                            self.$passwordInput.addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
                     $wrong.show();
-                    self.$usernameInput.addClass('invalid_input');
-                    self.$passwordInput.addClass('invalid_input');
                 }
-            });
-            $("#login_username,#login_password").on('focus', function () {
-                this.classList.remove('invalid_input');
             });
             $(document).mouseup(function (e)
             {

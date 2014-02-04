@@ -107,11 +107,11 @@
         }
     };
 	StorageService.prototype.getLastContact = function () {
-        return localstorage.lastContact[app.sessionManager.sessionUser.id] || -1;
+        return localStorage.lastContact[app.sessionManager.sessionUser.id] || -1;
     };
 
     StorageService.prototype.setLastContact = function (id) {
-        localstorage.lastContact[app.sessionManager.sessionUser.id] = id;
+        localStorage.lastContact[app.sessionManager.sessionUser.id] = id;
     };
 
     StorageService.prototype.setViewCache = function (type, view) {

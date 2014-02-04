@@ -254,8 +254,9 @@ tpl.loadTemplates(Constants.templateResources, function () {
     if (app.sessionManager.hasSession()) {
     	// create letter view if use is logged in.
     	app.letterView = new LetterView({
-    		"toUserId": app.storage.getLastContact();
+    		"toUserId": app.storage.getLastContact()
     	});
+        $("#chat").show();
     }
 });
 

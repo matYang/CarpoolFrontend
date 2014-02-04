@@ -44,7 +44,6 @@ var PersonalSocialView = MultiPageView.extend({
                     $("#social_following").html("关注（" + (socialList.length - 1) + "）");
                 },
                 "error": function () {
-                    debugger;
                     $(this).html("取消失败 重试");
                 }
             });
