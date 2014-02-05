@@ -6,7 +6,7 @@
 body, dl, dd, h1, h2, h3, h4, h5, h6, p, form {
 	margin:0;
 }
-input[type="text"] {
+input[type="text"], input[type="password"] {
 	padding:0px;
 }
 ol, ul {

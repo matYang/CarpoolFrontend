@@ -127,6 +127,10 @@ var MainPageView = Backbone.View.extend({
             me.$locationTo.val(me.dest.toUiString());
             me.submitSearch();
         });
+        var dd = this.searchRepresentation.get("departureDate"), now = new Date();
+        if (dd.getTime() < now.getTime()) {
+            this.searchRepresentation.set("departureDate", now);
+        }
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
@@ -136,6 +140,10 @@ var MainPageView = Backbone.View.extend({
             this.$dateReturn.prop("disabled", true).parent().addClass("date-return-disabled");
             this.$spans.first().addClass("active");
         } else {
+            dd = this.searchRepresentation.get("arrivalDate");
+            if (dd.getTime() < now.getTime()) {
+                this.searchRepresentation.set("arrivalDate", now);
+            }
             this.$dateReturn.val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
             this.$spans.last().addClass("active");
         }
