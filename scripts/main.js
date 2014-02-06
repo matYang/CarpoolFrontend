@@ -115,22 +115,26 @@ var AppRouter = Backbone.Router.extend({
             this.navigate("front", {trigger: true, replace: true});
             return;
         }
-
-        if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
-            this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
-        } else {
-            if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
-                if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
-                    personalViewState = "history";
-                this.personalView = new PersonalView ({
-                    'intendedUserId': intendedUserId,
-                    'viewState': personalViewState
-                });
+        var id = Utilities.toInt(intendedUserId);
+        if ( typeof id === 'number' && !isNaN(id)){
+            if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
+                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
             } else {
-                this.personalView.switchChildView({
-                    'viewState': personalViewState
-                });
+                if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
+                    if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
+                        personalViewState = "history";
+                    this.personalView = new PersonalView ({
+                        'intendedUserId': intendedUserId,
+                        'viewState': personalViewState
+                    });
+                } else {
+                    this.personalView.switchChildView({
+                        'viewState': personalViewState
+                    });
+                }
             }
+        } else {
+            this.navigate("personal/" + this.sessionManager.getSessionUser().id + "/history", {trigger: true, replace: true});
         }
     },
 
