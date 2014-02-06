@@ -100,6 +100,11 @@ var LetterView = Backbone.View.extend({
             e.preventDefault();
             $("#chat_left>.chat_box_body").toggle();
         });
+        $("#chat_close").on("click", function (e) {
+             $("#chat").hide();
+             self.toUserId = null;
+             $("#letter_user_list").find(".active").removeClass("active");
+        });
         $("#chat_contact_min").on("click", function(e){
             e.preventDefault();
            $("#letter_user_list").toggle();
@@ -129,6 +134,7 @@ var LetterView = Backbone.View.extend({
         $("#letter_contact_"+this.toUserId).addClass("active");
     },
     switchContact: function (id) {
+        $("#chat").show();
         this.$messagePanel.empty();
         this.$letterInput.val("");
         $("#letter_user_list").find(".active").removeClass("active");
@@ -244,7 +250,7 @@ var LetterView = Backbone.View.extend({
                 app.userManager.fetchUser(to_userId, {
                     "success": function (user) {
                         self.$userList.prepend("<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>");
-                        $("#contactList_" + user.get("userId")).addClass("userNewMessage");
+                        $("#letter_contact_" + user.get("userId")).addClass("userNewMessage");
                     },
                     "error": function () {
                     }
