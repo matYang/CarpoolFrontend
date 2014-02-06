@@ -97,6 +97,7 @@
 .sign_up .btns {
 	padding-left:90px;
 	margin-top:50px;
+	text-align: left;
 }
 .sign_up .birthday .text {
 	float:left;

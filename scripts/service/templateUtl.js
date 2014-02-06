@@ -52,6 +52,7 @@ tpl = {
                         }
                         self.templates[name] = tplContent;
                     }
+                    tplContainer.remove();
                     callback();
                 },
                 error: function(){

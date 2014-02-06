@@ -110,7 +110,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         $("#submitImg").on("click", function (e) {
             $("#fileValid").hide();
-            var file = $("input[type=file]").val(); 
+            var file = $("input[type=file]").val();
             if (file == '') {
                 $("#fileValid").show().find("p").html("请先选择一个图片");
                 e.preventDefault();

@@ -56,6 +56,7 @@ var RegistrationView = Backbone.View.extend({
             this.$year = $("#birthyear");
             this.$month = $("#birthmonth");
             this.$day = $("#birthday");
+            this.$name = $("#registerNameInput");
             this.bindEvents();
             this.bindValidator();
         } else {
@@ -79,6 +80,19 @@ var RegistrationView = Backbone.View.extend({
         //email regex
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             that = this;
+        this.$name.on("blur", function (e) {
+            $("#vname").remove();
+            that.$name.parent().removeClass("wrong");
+            if (that.$name.val() && that.$name.val().length > 1) {
+                that.valid.name = true;
+                that.registerInfo.name = that.$name.val();
+                that.$name.after('<span id="vname" class="right"></span>');
+            } else {
+                that.valid.name = false;
+                that.registerInfo.name = "";
+                that.$name.parent().addClass("wrong").append('<p class="sign_up_err" id="vname" title="请填写姓名"><span>请填写姓名</span></p>');
+            }
+        });
         this.$email.on("blur", function (e) {
             $("#vemail").remove();
             that.$email.parent().removeClass("wrong");
@@ -228,7 +242,7 @@ var RegistrationView = Backbone.View.extend({
             user.set('gender', that.registerInfo.gender);
             user.set('email', that.registerInfo.email);
             user.set('password', that.registerInfo.password);
-
+            user.set('name', that.registerInfo.name);
             if (that.registerInfo.birthday) {
                 user.set("birthday", that.registerInfo.birthday);
             }
