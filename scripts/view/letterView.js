@@ -118,6 +118,7 @@ var LetterView = Backbone.View.extend({
              e.preventDefault();
              $("#chat_left").hide();
              self.toUserId = null;
+             e.stopPropagation();
         });
         $("#chat_contact_min, #chat_box_right_title").on("click", function(e){
             e.preventDefault();
