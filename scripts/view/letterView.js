@@ -24,8 +24,8 @@ var LetterView = Backbone.View.extend({
         this.$messagePanel = $("#letter_message_panel>ul");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
-        if (params.toUserId && params.toUserId !== "-1") {
-            this.toUserId = Utilities.toInt(params.toUserId);
+        if (params.toUserId && params.toUserId !== -1) {
+            this.toUserId = params.toUserId;
             option.targetUserId = this.toUserId;
             option.targetType = Constants.LetterType.user;
             app.userManager.fetchUser(this.toUserId, {
@@ -188,6 +188,7 @@ var LetterView = Backbone.View.extend({
             "error": function () {
             }
         });
+        app.storage.setLastContact(id);
     },
 
     fillRecentHistory: function (letters) {

@@ -107,7 +107,13 @@
         }
     };
 	StorageService.prototype.getLastContact = function () {
-        return localStorage.lastContact[app.sessionManager.sessionUser.id] || -1;
+        var ret = localStorage.lastContact[app.sessionManager.sessionUser.id];
+        if ( ret ) {
+            ret = Utilities.toInt(ret);
+            return isNaN(ret) ? -1 : ret;
+        } else {
+            return -1;
+        }
     };
 
     StorageService.prototype.setLastContact = function (id) {
