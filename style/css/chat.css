@@ -1,6 +1,6 @@
 /*即时对话框*/
 .chat_box { position:fixed; right:0; bottom:0; width:518px; height:423px;  font-size:12px; z-index:9999; pointer-events:none;}
-.chat_box .chat_left { float:left; width:345px; height:423px; border-right:1px solid #b5b5b5; background:#fff; box-shadow: 0 0 5px #222; pointer-events: all;}
+.chat_box .chat_left { float:left; width:345px; height:423px;  background:#fff; box-shadow: 0 0 5px #222; pointer-events: all;}
 .chat_box .chat_box_title { height:32px; line-height:32px; background:#333333; padding-left:15px; color:#fff; cursor:pointer;}
 .chat_box .chat_box_title .close { float:right; width:10px; height:24px; background:url(../images/chat_box.png) no-repeat 0 -97px; margin:0 20px 0 10px; text-indent:-32768px; }
 .chat_box .chat_box_title .min { float:right; width:10px; height:24px; background:url(../images/chat_box.png) no-repeat 0 -75px; margin:0 10px 0 10px; text-indent:-32768px; }
@@ -26,7 +26,7 @@
 .chat_btn input { width:100%; height:32px; background:url(../images/chat_box.png) repeat-x; border:none; cursor:pointer; color:#fff; }
 .failed_to_send{ clear:both; width:150px; height:22px; margin:20px auto; background:url(../images/chat_box.png) no-repeat 0 -50px; text-align:center; line-height:22px;}
 
-.chat_box .chat_right { float:right; width:172px; height:423px; background:#fff; pointer-events: all;}
+.chat_box .chat_right { float:right; width:172px; height:423px; background:#fff; pointer-events: all; border-left:1px solid #b5b5b5;}
 .chat_right .chat_box_title .fleft { padding-left:25px; background:url(../images/chat_box.png) no-repeat 0 -123px; }
 .chat_right_content { position:relative; height:391px; }
 .chat_right_content_scroll { position:relative; height:392px; overflow:hidden; }
