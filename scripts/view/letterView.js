@@ -100,9 +100,8 @@ var LetterView = Backbone.View.extend({
         });
         $("#letter_user_list").on("click", 'li', function (e) {
             id = Utilities.toInt(Utilities.getId(e.target.id));
-            if (id !== self.toUserId) {
-                self.switchContact(id);
-            }
+            self.switchContact(id);
+            
         });
         $("#chat_hide, #chat_box_left_title").on("click", function (e) {
             e.preventDefault();
