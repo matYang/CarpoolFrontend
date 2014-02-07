@@ -260,10 +260,9 @@ var TopBarView = Backbone.View.extend({
                     $wrong.show();
                 }
             });
-            $(document).mouseup(function (e)
+            $(document).click(function (e)
             {
                 var container = $("#loginBox");
-
                 if (!container.is(e.target) // if the target of the click isn't the container...
                     && container.has(e.target).length === 0 && e.target.id !== "loginBoxToggler") // ... nor a descendant of the container
                 {
