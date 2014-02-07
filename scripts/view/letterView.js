@@ -1,6 +1,14 @@
 var LetterView = Backbone.View.extend({
     el: "",
-    messageBoxTemplate: ["<div class='", null, "'><dt><span>", null, "</span>", null, "</dt><dd>", null, "</dd></dl>"],
+    messageBoxTemplate: ["<li class='",
+                        null,
+                        "'><div class='date'>", 
+                        null,
+                        "</div><dl><dt><img src='",
+                        null,
+                        "' width='35' height='35'/></dt><dd><div class='arrow'></div><p>",
+                        null,
+                        "</p></dd></dl></li>"],
     initialize: function (params) {
         var self = this;
         _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'displayNewLetters', 'fetchLetterUserError', 'close');
@@ -13,7 +21,7 @@ var LetterView = Backbone.View.extend({
         this.template = _.template(tpl.get('letter'));
         this.domContainer = $('#chat');
         this.domContainer.append(this.template);
-        this.$messagePanel = $("#letter_message_panel");
+        this.$messagePanel = $("#letter_message_panel>ul");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== "-1") {
@@ -90,24 +98,46 @@ var LetterView = Backbone.View.extend({
                 self.$letterInput.val("");
             }
         });
-        $("#letter_user_list").on("click", 'dd', function (e) {
+        $("#letter_user_list").on("click", 'li', function (e) {
             id = Utilities.toInt(Utilities.getId(e.target.id));
             if (id !== self.toUserId) {
                 self.switchContact(id);
             }
         });
-        $("#chat_hide").on("click", function (e) {
+        $("#chat_hide, #chat_box_left_title").on("click", function (e) {
             e.preventDefault();
-            $("#chat_left>.chat_box_body").toggle();
+            var style = $("#chat_left").attr("style");
+            if (style && style.indexOf("390px") >= 0) {
+                $("#chat_left").attr("style","margin-top: 0px;");
+            } else {
+                 $("#chat_left").attr("style","margin-top: 390px;");
+            }
+            e.stopPropagation();
         });
         $("#chat_close").on("click", function (e) {
-             $("#chat").hide();
+             e.preventDefault();
+             $("#chat_left").hide();
              self.toUserId = null;
-             $("#letter_user_list").find(".active").removeClass("active");
         });
-        $("#chat_contact_min").on("click", function(e){
+        $("#chat_contact_min, #chat_box_right_title").on("click", function(e){
             e.preventDefault();
-           $("#letter_user_list").toggle();
+            var style = $("#chat_right").attr("style");
+            if (style && style.indexOf("390px") >= 0) {
+                $("#chat_right").attr("style","margin-top: 0px;");
+            } else {
+                 $("#chat_right").attr("style","margin-top: 390px;");
+            }
+            e.stopPropagation();
+        });
+        $("#failed_to_send>a").on("click", function (e) {
+            e.preventDefault();
+            app.letterManager.sendLetter(self.toUserIdResend, self.messageResend, {
+                "success": self.sendSuccess,
+                "error": self.sendError
+            });
+            self.toUserIdResend = null;
+            self.messageResend = null;
+            $("#failed_to_send").hide();
         });
     },
     renderContacts: function (list) {
@@ -125,21 +155,20 @@ var LetterView = Backbone.View.extend({
             }
         }
         var buf = [], len = this.letterUserList.length, bufLen = 1, self = this, user, id;
-        buf[0] ="<dd id='letter_contact_-1'>系统</dd>";
+        buf[0] ="<li id='letter_contact_-1'><img src='' width='30' height='30'/> 系统</li>";
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
-            buf[bufLen++] = "<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>";
+            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + '<img src="' +user.get("imgPath") + '" width="30" height="30"/>'+ user.get("name")+ "</li>";
         }
         this.$userList.append(buf.join(""));
-        $("#letter_contact_"+this.toUserId).addClass("active");
     },
     switchContact: function (id) {
-        $("#chat").show();
+        $("#chat_left").show().attr("style","margin-top: 0;");
         this.$messagePanel.empty();
         this.$letterInput.val("");
-        $("#letter_user_list").find(".active").removeClass("active");
-        $("#letter_contact_"+id).addClass("active");
-        $(".active.userNewMessage").removeClass("userNewMessage");
+        this.toUserIdResend = null;
+        this.messageResend = null;
+        $(".userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
@@ -182,8 +211,8 @@ var LetterView = Backbone.View.extend({
     },
     buildMessageBox: function (id, message, time, sendByMe) {
         this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + id;
-        this.messageBoxTemplate[3] = sendByMe ? "我" : this.toUser.get("name");
-        this.messageBoxTemplate[5] = time;
+        this.messageBoxTemplate[3] = time.toLocaleString();;
+        this.messageBoxTemplate[5] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
         this.messageBoxTemplate[7] = message;
         return this.messageBoxTemplate.join("");
     },
@@ -196,14 +225,9 @@ var LetterView = Backbone.View.extend({
         });
     },
     sendError: function (letter) {
-        $(".letterId_-1").each(function (index) {
-            if ($(this).text() === letter.get("content")) {
-                if ($(this).parent().parent().find(".letterSendFail").length === 0) {
-                    $(this).parent().parent().prepend($("<div>").addClass("letterSendFail"));
-                    return;
-                }
-            }
-        });
+        $("#failed_to_send").show();
+        this.toUserIdResend = letter.get("to_userId");
+        this.messageResend = letter.get("content");
     },
     fetchLetterUserError: function () {
 
