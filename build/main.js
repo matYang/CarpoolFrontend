@@ -5567,6 +5567,7 @@ var Config = {
                     "max": localStorage.searchPriceMax
                 }
             };
+            localStorage.lastContact = localStorage.lastContact || {};
         }
 
         this.sr = new SearchRepresentation ();
@@ -5609,6 +5610,7 @@ var Config = {
             localStorage.searchTimeSlot = newSearchTimeSlot;
             localStorage.searchPriceMin = newSearchPriceInterval.min;
             localStorage.searchPriceMax = newSearchPriceInterval.max;
+            localStorage.searchPriceMax = newSearchPriceInterval.max;
         }
     };
 
@@ -5625,6 +5627,20 @@ var Config = {
             this.sr = sr;
         }
     };
+	StorageService.prototype.getLastContact = function () {
+        var ret = localStorage.lastContact[app.sessionManager.sessionUser.id];
+        if ( ret ) {
+            ret = Utilities.toInt(ret);
+            return isNaN(ret) ? -1 : ret;
+        } else {
+            return -1;
+        }
+    };
+
+    StorageService.prototype.setLastContact = function (id) {
+        localStorage.lastContact[app.sessionManager.sessionUser.id] = id;
+    };
+
     StorageService.prototype.setViewCache = function (type, view) {
         this.views[type] = view;
     };
@@ -5988,6 +6004,7 @@ tpl = {
                         }
                         self.templates[name] = tplContent;
                     }
+                    tplContainer.remove();
                     callback();
                 },
                 error: function(){
@@ -6059,8 +6076,8 @@ tpl = {
                 antiRequest: ['content', 'advertisement']
             },
             'letter': {
-                request: ['content'],
-                antiRequest: ['content', 'advertisement']
+                request: ['chat'],
+                antiRequest: ['chat']
             },
             'registration': {
                 request: ['content'],
@@ -9850,8 +9867,8 @@ var MapView = Backbone.View.extend({
     },
     mapInitialize: function () {
         this.isClosed = false;
-        this.getLatLng(this.origin, this.oLatLng);
-        this.getLatLng(this.dest, this.dLatLng);
+        this.getLatLng(this.origin, this.oLatLng, true);
+        this.getLatLng(this.dest, this.dLatLng, true);
         var center = new google.maps.LatLng (this.oLatLng.lat, this.oLatLng.lng);
         var myOptions = {
             center: center,
@@ -9952,8 +9969,8 @@ var MapView = Backbone.View.extend({
             this.dMarker.setMap(null);
         }
     },
-    getLatLng: function (location, latlng) {
-        if (location.get("defaultId") > 0) {
+    getLatLng: function (location, latlng, noFetch) {
+        if (location.get("defaultId") > 0 || noFetch) {
             latlng.lat = location.get("lat");
             latlng.lng = location.get("lng");
             return;  
@@ -10130,9 +10147,15 @@ var AdvertisementView = Backbone.View.extend({
 
 var LetterView = Backbone.View.extend({
     el: "",
-    messageBoxTemplate: ["<div class='letterBoxContainer ", null, "'><img src='", null, "'/><div class='letterBoxMessage'><div class='letterBoxText letterId_", null, "'>", null, "</div><div class='letterBoxTime'>", null, "</div></div></div>"],
-    dateSplitTemplate: ["<div class='letterDateSplit'>", null, "</div>"],
-    contactListTemplate: ["<div class='letterContactListEntry' id='contactList_", null, "'><img src='", null, "'><span>", null, "</span></div>"],
+    messageBoxTemplate: ["<li class='",
+                        null,
+                        "'><div class='date'>", 
+                        null,
+                        "</div><dl><dt><img src='",
+                        null,
+                        "' width='35' height='35'/></dt><dd><div class='arrow'></div><p>",
+                        null,
+                        "</p></dd></dl></li>"],
     initialize: function (params) {
         var self = this;
         _.bindAll(this, 'render', 'fillRecentHistory', 'buildMessageBox', 'sendSuccess', 'renderContacts', 'switchContact', 'sendError', 'onNewLetter', 'fetchLetterError', 'displayNewLetters', 'fetchLetterUserError', 'close');
@@ -10142,15 +10165,20 @@ var LetterView = Backbone.View.extend({
         var option = {
             "direction": 2
         };
-        if (params.toUserId && params.toUserId !== "-1") {
-            this.toUserId = Utilities.toInt(params.toUserId);
+        this.template = _.template(tpl.get('letter'));
+        this.domContainer = $('#chat');
+        this.domContainer.append(this.template);
+        this.$messagePanel = $("#letter_message_panel>ul");
+        this.$letterInput = $("#letter_input");
+        this.$userList = $("#letter_user_list");
+        if (params.toUserId && params.toUserId !== -1) {
+            this.toUserId = params.toUserId;
             option.targetUserId = this.toUserId;
             option.targetType = Constants.LetterType.user;
             app.userManager.fetchUser(this.toUserId, {
                 "success": function (user) {
                     self.toUser = user;
                     $("#letter_toUser_name").html(user.get("name"));
-                    $("#letter_toUser_pic").attr("src", user.get("imgPath"));
 
                     if (!self.letterUserList) {
                         self.letterUserList = new Letters ();
@@ -10167,12 +10195,8 @@ var LetterView = Backbone.View.extend({
             option.targetType = Constants.LetterType.system;
         }
 
-        this.template = _.template(tpl.get('letter'));
-        this.domContainer = $('#content');
-        this.domContainer.append(this.template);
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
-            $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
         }
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
@@ -10194,13 +10218,8 @@ var LetterView = Backbone.View.extend({
     },
     bindEvent: function () {
         var self = this;
-        this.$userList = $("#letter_user_list");
-        this.$messagePanel = $("#letter_message_panel");
-        this.$letterInput = $("#letter_input");
         $("#letter_send_button").on("click", function (e) {
-
             if (!self.$letterInput.val()) {
-                $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                 return;
             }
             app.letterManager.sendLetter(self.toUserId, self.$letterInput.val(), {
@@ -10215,7 +10234,6 @@ var LetterView = Backbone.View.extend({
             if (e.which == 13) {
                 e.preventDefault();
                 if (!self.$letterInput.val()) {
-                    $("#letter_flash").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100);
                     return;
                 }
                 self.$messagePanel.append(self.buildMessageBox(-1, self.$letterInput.val(), new Date (), true));
@@ -10227,11 +10245,54 @@ var LetterView = Backbone.View.extend({
                 self.$letterInput.val("");
             }
         });
+        $("#letter_user_list").on("click", 'li', function (e) {
+            id = Utilities.toInt(Utilities.getId(e.target.id));
+            self.switchContact(id);
+            
+        });
+        $("#chat_hide, #chat_box_left_title").on("click", function (e) {
+            e.preventDefault();
+            var style = $("#chat_left").attr("style");
+            if (style && style.indexOf("390px") >= 0) {
+                $("#chat_left").attr("style","margin-top: 0px;");
+            } else {
+                 $("#chat_left").attr("style","margin-top: 390px;");
+            }
+            e.stopPropagation();
+        });
+        $("#chat_close").on("click", function (e) {
+             e.preventDefault();
+             $("#chat_left").hide();
+             self.toUserId = null;
+             e.stopPropagation();
+        });
+        $("#chat_contact_min, #chat_box_right_title").on("click", function(e){
+            e.preventDefault();
+            var style = $("#chat_right").attr("style");
+            if (style && style.indexOf("390px") >= 0) {
+                $("#chat_right").attr("style","margin-top: 0px;");
+            } else {
+                 $("#chat_right").attr("style","margin-top: 390px;");
+            }
+            e.stopPropagation();
+        });
+        $("#failed_to_send>a").on("click", function (e) {
+            e.preventDefault();
+            app.letterManager.sendLetter(self.toUserIdResend, self.messageResend, {
+                "success": self.sendSuccess,
+                "error": self.sendError
+            });
+            self.toUserIdResend = null;
+            self.messageResend = null;
+            $("#failed_to_send").hide();
+        });
     },
     renderContacts: function (list) {
         var i;
         if (this.$userList) {
             this.$userList.empty();
+        } else {
+
         }
         if (!this.letterUserList) {
             this.letterUserList = list;
@@ -10240,36 +10301,24 @@ var LetterView = Backbone.View.extend({
                 this.letterUserList.add(list.at(i));
             }
         }
-        var buf = [], len = this.letterUserList.length, bufLen = 0, self = this, user, id;
+        var buf = [], len = this.letterUserList.length, bufLen = 1, self = this, user, id;
+        buf[0] ="<li id='letter_contact_-1'><img src='' width='30' height='30'/> 系统</li>";
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
-            this.contactListTemplate[1] = user.get("userId");
-            this.contactListTemplate[3] = user.get("imgPath");
-            this.contactListTemplate[5] = user.get("name");
-
-            buf[bufLen++] = this.contactListTemplate.join("");
+            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + '<img src="' +user.get("imgPath") + '" width="30" height="30"/>'+ user.get("name")+ "</li>";
         }
         this.$userList.append(buf.join(""));
-        $(".letterContactListEntry").off().on("click", function (e) {
-            id = Utilities.toInt(Utilities.getId(e.delegateTarget.id));
-            if (id !== self.toUserId) {
-                app.navigate("letter/" + id);
-                //do not recreate view.
-                self.switchContact(id);
-            }
-        });
-        $("#contactList_" + this.toUserId).addClass("highlitedUser");
     },
     switchContact: function (id) {
+        $("#chat_left").show().attr("style","margin-top: 0;");
         this.$messagePanel.empty();
         this.$letterInput.val("");
-        $(".highlitedUser.userNewMessage").removeClass("userNewMessage");
-        $(".highlitedUser").removeClass("highlitedUser");
-        $("#contactList_" + id).addClass("highlitedUser");
+        this.toUserIdResend = null;
+        this.messageResend = null;
+        $(".userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
-            $("#letter_toUser_pic").attr("src", "res/personal/default-avatar.jpg");
             return;
         }
         var user = this.letterUserList.get(id), option = {
@@ -10279,44 +10328,40 @@ var LetterView = Backbone.View.extend({
         };
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
-        $("#letter_toUser_pic").attr("src", user.get("imgPath"));
 
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
             "error": function () {
             }
         });
+        app.storage.setLastContact(id);
     },
 
     fillRecentHistory: function (letters) {
+        this.$messagePanel.empty();
         if (!letters)
             return;
         this.letterHistories = letters;
-        this.$messagePanel.empty();
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
-        for ( i = 0; i < len; i++) {
+        var start = len < 10 ? 0 : len - 10;
+        for ( i = start; i < len; i++) {
             letter = letters.at(i);
             send_time = new Date (letter.get("send_time"));
             send_time.setHours(0);
             send_time.setMinutes(0);
             send_time.setSeconds(0);
             send_time.setMilliseconds(0);
-            if (!lastDay || lastDay < send_time) {
-                this.dateSplitTemplate[1] = letter.get("send_time").toLocaleDateString();
-                buf[bufLen++] = this.dateSplitTemplate.join("");
-                lastDay = send_time;
-            }
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
         this.$messagePanel.append(buf.join(""));
+        this.$messagePanel.append('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
     },
     buildMessageBox: function (id, message, time, sendByMe) {
-        this.messageBoxTemplate[1] = sendByMe ? "sendByMe" : "sendByYou";
-        this.messageBoxTemplate[3] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
-        this.messageBoxTemplate[5] = id;
+        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + id;
+        this.messageBoxTemplate[3] = time.toLocaleString();;
+        this.messageBoxTemplate[5] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
         this.messageBoxTemplate[7] = message;
-        this.messageBoxTemplate[9] = time;
         return this.messageBoxTemplate.join("");
     },
     sendSuccess: function (letter) {
@@ -10328,14 +10373,9 @@ var LetterView = Backbone.View.extend({
         });
     },
     sendError: function (letter) {
-        $(".letterId_-1").each(function (index) {
-            if ($(this).text() === letter.get("content")) {
-                if ($(this).parent().parent().find(".letterSendFail").length === 0) {
-                    $(this).parent().parent().prepend($("<div>").addClass("letterSendFail"));
-                    return;
-                }
-            }
-        });
+        $("#failed_to_send").show();
+        this.toUserIdResend = letter.get("to_userId");
+        this.messageResend = letter.get("content");
     },
     fetchLetterUserError: function () {
 
@@ -10381,11 +10421,8 @@ var LetterView = Backbone.View.extend({
             if (to_userId !== -1) {
                 app.userManager.fetchUser(to_userId, {
                     "success": function (user) {
-                        self.contactListTemplate[1] = user.get("userId");
-                        self.contactListTemplate[3] = user.get("imgPath");
-                        self.contactListTemplate[5] = user.get("name");
-                        self.$userList.prepend(self.contactListTemplate.join(""));
-                        $("#contactList_" + user.get("userId")).addClass("userNewMessage");
+                        self.$userList.prepend("<dd id='letter_contact_" + user.id + "'>" + user.get("name")+ "</dd>");
+                        $("#letter_contact_" + user.get("userId")).addClass("userNewMessage");
                     },
                     "error": function () {
                     }
@@ -10399,6 +10436,7 @@ var LetterView = Backbone.View.extend({
         if (!this.isClosed) {
             $("#letter_send_button").off();
             this.$letterInput.off();
+            $("#letter_user_list").off();
             this.domContainer.empty();
             this.isClosed = true;
         }
@@ -10603,12 +10641,12 @@ var MessageDetailView = Backbone.View.extend({
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             this.$viewcontact.on('click', function () {
-                app.navigate("letter/" + that.ownerId, true);
+                app.letterView.switchContact(that.ownerId);
             });
         }
         this.$viewlink.on('click', function (e) {
             e.preventDefault();
-            app.navigate("letter/" + that.ownerId, true);
+            app.letterView.switchContact(that.ownerId);
         });
     },
     createNewTransaction: function () {
@@ -12085,8 +12123,7 @@ var FrontPageView = Backbone.View.extend({
 
     loginAlert: function () {
         Info.alert("请先登录。若是已经登陆，请刷新页面。");
-         $("html, body").animate({ scrollTop: 0 }, "slow");
-         $("#loginBox").show();
+         $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
@@ -12274,6 +12311,10 @@ var MainPageView = Backbone.View.extend({
             me.$locationTo.val(me.dest.toUiString());
             me.submitSearch();
         });
+        var dd = this.searchRepresentation.get("departureDate"), now = new Date();
+        if (dd.getTime() < now.getTime()) {
+            this.searchRepresentation.set("departureDate", now);
+        }
         this.$dateDepart.val(Utilities.getDateString(this.searchRepresentation.get("departureDate")));
         me.filter.isRoundTrip = me.searchRepresentation.get("isRoundTrip");
         var $stc = $("#searchTypeContainer");
@@ -12283,6 +12324,10 @@ var MainPageView = Backbone.View.extend({
             this.$dateReturn.prop("disabled", true).parent().addClass("date-return-disabled");
             this.$spans.first().addClass("active");
         } else {
+            dd = this.searchRepresentation.get("arrivalDate");
+            if (dd.getTime() < now.getTime()) {
+                this.searchRepresentation.set("arrivalDate", now);
+            }
             this.$dateReturn.val(Utilities.getDateString(this.searchRepresentation.get("arrivalDate")));
             this.$spans.last().addClass("active");
         }
@@ -12791,7 +12836,6 @@ var PersonalSocialView = MultiPageView.extend({
                     $("#social_following").html("关注（" + (socialList.length - 1) + "）");
                 },
                 "error": function () {
-                    debugger;
                     $(this).html("取消失败 重试");
                 }
             });
@@ -13008,7 +13052,7 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         $("#submitImg").on("click", function (e) {
             $("#fileValid").hide();
-            var file = $("input[type=file]").val(); 
+            var file = $("input[type=file]").val();
             if (file == '') {
                 $("#fileValid").show().find("p").html("请先选择一个图片");
                 e.preventDefault();
@@ -13561,7 +13605,7 @@ var PersonalView = Backbone.View.extend({
             }
         });
         $("#profilePage_sendLetter").on('click', function () {
-            app.navigate("letter/" + that.curUserId, true);
+        	app.letterView.switchContact(that.curUserId);
         });
     },
     bindWatchEvent: function () {
@@ -13674,6 +13718,7 @@ var RegistrationView = Backbone.View.extend({
             this.$year = $("#birthyear");
             this.$month = $("#birthmonth");
             this.$day = $("#birthday");
+            this.$name = $("#registerNameInput");
             this.bindEvents();
             this.bindValidator();
         } else {
@@ -13697,6 +13742,19 @@ var RegistrationView = Backbone.View.extend({
         //email regex
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             that = this;
+        this.$name.on("blur", function (e) {
+            $("#vname").remove();
+            that.$name.parent().removeClass("wrong");
+            if (that.$name.val() && that.$name.val().length > 1) {
+                that.valid.name = true;
+                that.registerInfo.name = that.$name.val();
+                that.$name.after('<span id="vname" class="right"></span>');
+            } else {
+                that.valid.name = false;
+                that.registerInfo.name = "";
+                that.$name.parent().addClass("wrong").append('<p class="sign_up_err" id="vname" title="请填写姓名"><span>请填写姓名</span></p>');
+            }
+        });
         this.$email.on("blur", function (e) {
             $("#vemail").remove();
             that.$email.parent().removeClass("wrong");
@@ -13846,7 +13904,7 @@ var RegistrationView = Backbone.View.extend({
             user.set('gender', that.registerInfo.gender);
             user.set('email', that.registerInfo.email);
             user.set('password', that.registerInfo.password);
-
+            user.set('name', that.registerInfo.name);
             if (that.registerInfo.birthday) {
                 user.set("birthday", that.registerInfo.birthday);
             }
@@ -14209,7 +14267,7 @@ var TransactionDetailView = Backbone.View.extend({
         } else {
             this.$functionButton = $("#contactButton").on("click", function () {
                 var targetUserId = that.user.id === that.transaction.get("provider").id ? that.transaction.get("customer").id : that.transaction.get("provider").id;
-                app.navigate("letter/"+targetUserId, true);
+                app.letterView.switchContact(targetUserId);
             });
         }
     },
@@ -14581,24 +14639,16 @@ var TopBarView = Backbone.View.extend({
                         error: function (response) {
                             $wrong.show();
                             $('#credentialWrong').html(response.responseText);
-                            self.$usernameInput.addClass('invalid_input');
-                            self.$passwordInput.addClass('invalid_input');
                         }
                     });
                 } else {
                     //请输入密码
                     $wrong.show();
-                    self.$usernameInput.addClass('invalid_input');
-                    self.$passwordInput.addClass('invalid_input');
                 }
             });
-            $("#login_username,#login_password").on('focus', function () {
-                this.classList.remove('invalid_input');
-            });
-            $(document).mouseup(function (e)
+            $(document).click(function (e)
             {
                 var container = $("#loginBox");
-
                 if (!container.is(e.target) // if the target of the click isn't the container...
                     && container.has(e.target).length === 0 && e.target.id !== "loginBoxToggler") // ... nor a descendant of the container
                 {
@@ -14823,10 +14873,6 @@ var AppRouter = Backbone.Router.extend({
         "post": "postMessage",
         "post/*postState": "postMessageWithState",
 
-        "letter": "letter",
-        "letter/": "letter",
-        "letter/:targetUserId": "letter",
-
         "finduser": "finduser",
         "finduser/*encodedSearchkey": "finduser",
 
@@ -14920,22 +14966,26 @@ var AppRouter = Backbone.Router.extend({
             this.navigate("front", {trigger: true, replace: true});
             return;
         }
-
-        if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
-            this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
-        } else {
-            if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
-                if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
-                    personalViewState = "history";
-                this.personalView = new PersonalView ({
-                    'intendedUserId': intendedUserId,
-                    'viewState': personalViewState
-                });
+        var id = Utilities.toInt(intendedUserId);
+        if ( typeof id === 'number' && !isNaN(id)){
+            if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
+                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
             } else {
-                this.personalView.switchChildView({
-                    'viewState': personalViewState
-                });
+                if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
+                    if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
+                        personalViewState = "history";
+                    this.personalView = new PersonalView ({
+                        'intendedUserId': intendedUserId,
+                        'viewState': personalViewState
+                    });
+                } else {
+                    this.personalView.switchChildView({
+                        'viewState': personalViewState
+                    });
+                }
             }
+        } else {
+            this.navigate("personal/" + this.sessionManager.getSessionUser().id + "/history", {trigger: true, replace: true});
         }
     },
 
@@ -15000,18 +15050,6 @@ var AppRouter = Backbone.Router.extend({
 
     },
 
-    letter: function (targetUserId) {
-        if (targetUserId === app.sessionManager.getUserId() + "") {
-            targetUserId = undefined;
-            app.navigate(app.sessionManager.getUserId() + "/letter");
-        }
-        var options = {
-            "toUserId": targetUserId
-        };
-        options.type = typeof targetUserId == 'undefined' ? Constants.LetterType.system : Constants.LetterType.user;
-        this.letterView = new LetterView (options);
-    },
-
     finduser: function (encodedSearchkey) {
         var sr = new UserSearchRepresentation ();
         if (encodedSearchkey) {
@@ -15068,5 +15106,12 @@ tpl.loadTemplates(Constants.templateResources, function () {
     app = new AppRouter ();
     app.topBarView = new TopBarView ();
     Backbone.history.start();
+    if (app.sessionManager.hasSession()) {
+    	// create letter view if use is logged in.
+    	app.letterView = new LetterView({
+    		"toUserId": app.storage.getLastContact()
+    	});
+        $("#chat").show();
+    }
 });
 

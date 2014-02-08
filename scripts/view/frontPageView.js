@@ -149,8 +149,7 @@ var FrontPageView = Backbone.View.extend({
 
     loginAlert: function () {
         Info.alert("请先登录。若是已经登陆，请刷新页面。");
-         $("html, body").animate({ scrollTop: 0 }, "slow");
-         $("#loginBox").show();
+         $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
