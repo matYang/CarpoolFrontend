@@ -201,6 +201,10 @@ var TopBarView = Backbone.View.extend({
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
                                     app.navigate("main", true);
+                                    app.letterView = new LetterView({
+                                        "toUserId": app.storage.getLastContact()
+                                    });
+                                    $("#chat").show();
                                 },
                                 error: function () {
                                     Info.displayNotice("登录失败，请稍后再试");
