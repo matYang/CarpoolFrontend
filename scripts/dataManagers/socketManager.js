@@ -22,7 +22,7 @@
 		var self = this;
 
 		if (this.sessionManager.hasSession()){
-			this.socket = io.connect(Constants.socketOrigin);
+			this.socket = io.connect(Constants.socketOrigin, {secure: true});
 			this.timeStamp = new Date();
 
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
