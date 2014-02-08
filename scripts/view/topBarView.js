@@ -385,7 +385,9 @@ var TopBarView = Backbone.View.extend({
                 app.sessionManager.fetchSession(true, {
                     success: function () {
                         app.userManager.sessionUser = app.sessionManager.getSessionUser();
+                        app.letterView.close();
                         app.navigate("front", true);
+                        $("#chat").hide();
                     },
                     error: function () {
                         Info.warn("Session fetch failed");
