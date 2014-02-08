@@ -34,8 +34,8 @@ var MapView = Backbone.View.extend({
     },
     mapInitialize: function () {
         this.isClosed = false;
-        this.getLatLng(this.origin, this.oLatLng);
-        this.getLatLng(this.dest, this.dLatLng);
+        this.getLatLng(this.origin, this.oLatLng, true);
+        this.getLatLng(this.dest, this.dLatLng, true);
         var center = new google.maps.LatLng (this.oLatLng.lat, this.oLatLng.lng);
         var myOptions = {
             center: center,
@@ -136,8 +136,8 @@ var MapView = Backbone.View.extend({
             this.dMarker.setMap(null);
         }
     },
-    getLatLng: function (location, latlng) {
-        if (location.get("defaultId") > 0) {
+    getLatLng: function (location, latlng, noFetch) {
+        if (location.get("defaultId") > 0 || noFetch) {
             latlng.lat = location.get("lat");
             latlng.lng = location.get("lng");
             return;  
