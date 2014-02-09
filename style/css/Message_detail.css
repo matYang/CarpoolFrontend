@@ -283,3 +283,6 @@
 	cursor: pointer;
 	color:#000;
 }
+#view_profilePicture, #view_profileName {
+	cursor:pointer;
+}

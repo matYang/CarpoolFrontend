@@ -90,13 +90,18 @@ var MessageDetailView = Backbone.View.extend({
     },
     renderAutoMatch: function (result) {
         var i, buf = [], len = result.length, that = this;
+        this.$automatch = $("#view_automatch");
+        if (!len) {
+            this.$automatch.hide();
+            return;
+        }
         len = len < 3 ? len : 3;
         for ( i = 0; i < len; i++) {
             buf[i] = this.quickmatchTemplate(result.at(i)._toJSON());
         }
-        this.$automatch = $("#view_automatch").append(buf.join(""));
+        this.$automatch.append(buf.join(""));
         this.$automatch.children(".messageDetail-middle-autoMatch-loading").remove();
-        this.$messages = this.$automatch.children("message_simple").on('click', function (e) {
+        this.$messages = this.$automatch.children(".message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
         });
@@ -147,6 +152,9 @@ var MessageDetailView = Backbone.View.extend({
         this.$viewlink.on('click', function (e) {
             e.preventDefault();
             app.letterView.switchContact(that.ownerId);
+        });
+        $("#view_profilePicture, #view_profileName").on("click", function (e) {
+            app.navigate("personal/"+this.ownerId, true);
         });
     },
     createNewTransaction: function () {
@@ -238,6 +246,7 @@ var MessageDetailView = Backbone.View.extend({
             if ( typeof this.domContainer !== 'undefined') {
                 this.domContainer.empty();
             }
+            $("#view_profilePicture, #view_profileName").off();
             $("#popup").empty();
             this.isClosed = true;
         }
