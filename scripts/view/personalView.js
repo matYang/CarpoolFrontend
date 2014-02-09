@@ -23,6 +23,7 @@ var PersonalView = Backbone.View.extend({
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
             "success": this.renderWatchButton
         });
+        $("#popup").attr("class", "pop message_reservation");
         var that = this;
         this.user = user;
         this.render();
