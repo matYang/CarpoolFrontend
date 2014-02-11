@@ -148,12 +148,16 @@ var PersonalUtilityView = Backbone.View.extend({
         formElem.parentNode.appendChild(iframe);
 
         $(iframe).one("load", function () {
-            app.sessionManager.fetchSession(true);
-            app.navigate('/temp', {
-                replace: true
-            });
-            app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
-                trigger: true
+            app.sessionManager.fetchSession(true, {
+                "success": function () {
+                    var path = app.getSessionUser().get("imgPath");
+                    $("#profile_image").attr("src", path);
+                    $("#utility_dp>form").find("img").attr("src", path);
+                    $("#topBar-avatar>img").attr("src", path);
+                },
+                "error":function(response) {
+                    location.reload();
+                }
             });
         });
 
