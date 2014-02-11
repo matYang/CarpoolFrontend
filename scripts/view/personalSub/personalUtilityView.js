@@ -153,7 +153,7 @@ var PersonalUtilityView = Backbone.View.extend({
                     var path = app.sessionManager.getSessionUser().get("imgPath");
                     $("#profile_image").attr("src", path);
                     $("#utility_dp>form").find("img").attr("src", path);
-                    $("#topBar-avatar>img").attr("src", path);
+                    $("#topBar-avatar").find("img").attr("src", path);
                 },
                 "error":function(response) {
                     location.reload();
