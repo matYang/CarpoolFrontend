@@ -150,7 +150,7 @@ var PersonalUtilityView = Backbone.View.extend({
         $(iframe).one("load", function () {
             app.sessionManager.fetchSession(true, {
                 "success": function () {
-                    var path = app.getSessionUser().get("imgPath");
+                    var path = app.sessionManager.getSessionUser().get("imgPath");
                     $("#profile_image").attr("src", path);
                     $("#utility_dp>form").find("img").attr("src", path);
                     $("#topBar-avatar>img").attr("src", path);
