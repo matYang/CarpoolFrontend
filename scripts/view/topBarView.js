@@ -7,7 +7,7 @@ var TopBarView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
+        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'updateProfileImg', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
@@ -34,7 +34,6 @@ var TopBarView = Backbone.View.extend({
             this.bindEvents();
 
             //dropdown specific data binding
-            this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
             this.notifications = app.sessionManager.getCurUserNotifications();
             this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
             this.letters = app.sessionManager.getCurUserLetters();
@@ -45,6 +44,7 @@ var TopBarView = Backbone.View.extend({
             this.renderNotificationDropdown();
             this.renderLetterDropdown();
             this.renderFavoriteDropdown();
+            this.bindDropdownEvents();
         } else {
             $(this.el).append(this.notLoggedInTemplate);
             this.bindEvents();
@@ -65,7 +65,6 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.notificationContainer.html(htmlContext);
-        // this.bindDropdownEvents('notifications');
     },
 
     renderLetterDropdown: function () {
@@ -76,7 +75,6 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.letterContainer.html(htmlContext);
-        // this.bindDropdownEvents('letter');
     },
 
     renderFavoriteDropdown: function () {
@@ -87,67 +85,35 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.favoriteContainer.html(htmlContext);
-        // this.bindDropdownEvents('favorites');
     },
 
-    bindDropdownEvents: function (dropdownName) {
+    bindDropdownEvents: function () {
         var self = this;
-        this._unbindDropdownEvents(dropdownName);
-        if (dropdownName === 'notifications') {
-            this.$ndropdown.find('li').on('click', function (e) {
-                var n_id = parseInt($(this).attr("data-notificationId"), 10);
-                var n_model = self.notifications.get(n_id);
-                var n_evt = n_model.get('notificationEvent');
+        this.$ndropdown.on('click', 'li', function (e) {
+            var n_id = parseInt($(e.target).attr("data-notificationId"), 10);
+            var n_model = self.notifications.get(n_id);
+            var n_evt = n_model.get('notificationEvent');
 
-                //async, don't care about result
-                app.notificationManager.checkNotification(n_id);
+            //async, don't care about result
+            app.notificationManager.checkNotification(n_id);
 
-                if (n_evt === Constants.notificationEvent.watched) {
-                    app.navigate("personal/" + n_model.get('initUserId'), true);
-                }
-                //transaction related
-                else if (n_evt < Constants.notificationEvent.watched) {
-                    app.navigate("message/" + n_model.get('messageId'), true);
-                }
-            });
-        } else if (dropdownName === 'letter') {
-            this.$ldropdown.find('li').on('click', function (e) {
-                var u_id = $(this).attr("data-userId");
-                app.navigate("letter/" + u_id, true);
-            });
-        } else if (dropdownName === 'favorites') {
-            this.$fdropdown.find('li').on('click', function (e) {
-                var u_id = $(this).attr("data-userId");
-                app.navigate("personal/" + u_id, true);
-            });
-        }
-    },
-
-    _unbindDropdownEvents: function (dropdownName) {
-        if (dropdownName === 'notifications' && this.notificationContainer) {
-            this.notificationContainer.find('.dropdownContent').off();
-        } else if (dropdownName === 'letter' && this.letterContainer) {
-            this.letterContainer.find('.dropdownContent').off();
-        } else if (dropdownName === 'favorites' && this.favoriteContainer) {
-            this.favoriteContainer.find('.dropdownContent').off();
-        } else {
-            //unbind all
-            if (this.notificationContainer) {
-                this.notificationContainer.find('.dropdownContent').off();
+            if (n_evt === Constants.notificationEvent.watched) {
+                app.navigate("personal/" + n_model.get('initUserId'), true);
             }
-            if (this.letterContainer) {
-                this.letterContainer.find('.dropdownContent').off();
+            //transaction related
+            else if (n_evt < Constants.notificationEvent.watched) {
+                app.navigate("message/" + n_model.get('messageId'), true);
             }
-            if (this.favoriteContainer) {
-                this.favoriteContainer.find('.dropdownContent').off();
-            }
-        }
+        });
+        this.$ldropdown.on('click', 'li', function (e) {
+            var u_id = $(e.target).attr("data-userId");
+            app.letterView.switchContact(u_id);
+        });
+        this.$fdropdown.on('click', 'li', function (e) {
+            var u_id = $(e.target).attr("data-userId");
+            app.navigate("personal/" + u_id, true);
+        });
     },
-
-    updateProfileImg: function (sessionUser) {
-        $('#profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
-    },
-
     bindEvents: function () {
         var self = this;
         var username, password;
