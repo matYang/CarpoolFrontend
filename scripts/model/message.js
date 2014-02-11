@@ -99,6 +99,8 @@ var Message = Backbone.Model.extend({
 
     _toJSON: function () {
         var json = this.toJSON();
+        // Security protection against XSS
+        json.note = this.escape("note");
         // json.departure_location = this.get('departure_location').toUiString();
         json.departure_time = Utilities.getDateString(this.get('departure_time'));
 

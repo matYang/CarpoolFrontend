@@ -40,10 +40,6 @@
 		if (typeof messageId !== 'number'){
 			messageId = parseInt(messageId, 10);
 		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("MessageManager::fetchMessage:: session does not exist, exit");
-			return;
-		}
 
 		var self = this;
 
