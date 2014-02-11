@@ -30,11 +30,7 @@ var SearchResultView = MultiPageView.extend({
 
     },
     transferURL: function (messageId) {
-        if (app.sessionManager.hasSession()) {
-            app.navigate("message/" + messageId, true);
-        } else {
-            Info.displayNotice("请先登陆");
-        }
+        app.navigate("message/" + messageId, true);
     },
     
     close: function () {

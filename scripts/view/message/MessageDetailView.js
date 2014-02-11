@@ -139,14 +139,24 @@ var MessageDetailView = Backbone.View.extend({
             this.$viewbook.text("座位已满").css("background-color", "#888888").css("width", "100%").off();
         } else if (this.parsedMessage.type === Constants.messageType.help) {
             this.$viewbook.on("click", function (e) {
-                that.transactionView = new TransactionDetailView (that.newTransaction, {
-                    "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
-                    "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
-                });
+                if (app.sessionManager.hasSession()) {
+                    that.transactionView = new TransactionDetailView (that.newTransaction, {
+                        "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
+                        "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
+                    });
+                } else {
+                    Info.alert("请先登录。若是已经登陆，请刷新页面。");
+                    $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
+                }
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             this.$viewcontact.on('click', function () {
-                app.letterView.switchContact(that.ownerId);
+                if (app.sessionManager.hasSession()) {
+                    app.letterView.switchContact(that.ownerId);
+                } else {
+                    Info.alert("请先登录。若是已经登陆，请刷新页面。");
+                    $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
+                }
             });
         }
         this.$viewlink.on('click', function (e) {

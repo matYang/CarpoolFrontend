@@ -139,11 +139,6 @@ var AppRouter = Backbone.Router.extend({
     },
 
     MessageDetail: function (messageId) {
-        if (!this.sessionManager.hasSession()) {
-            this.navigate("front", true);
-            return;
-        }
-
         this.MessageDetailView = new MessageDetailView ({
             'messageId': messageId
         });
