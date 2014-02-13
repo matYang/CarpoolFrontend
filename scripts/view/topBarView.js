@@ -121,6 +121,8 @@ var TopBarView = Backbone.View.extend({
         /*  navigation events  */
         //main nav
         
+        this.$passwordInput = $("#login_password");
+        this.$usernameInput = $("#login_username");
         this.$nmain = $('#navigate_main').on('click', function () {
             app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
@@ -128,12 +130,11 @@ var TopBarView = Backbone.View.extend({
             this.$lb = $("#loginBox");
             this.$lbt = $("#loginBoxToggler").on("click", function (e) {
                 self.$lb.toggle();
+                self.$usernameInput.trigger("focus");
             });
             $('#signup_button').on('click', function () {
                 app.navigate("/register", {trigger: true, replace: true});
             });
-            this.$passwordInput = $("#login_password");
-            this.$usernameInput = $("#login_username");
             var $wrong = $("#credentialWrong");
             this.$usernameInput.on("click", function (e){
                 if  ($(this).val() === ("请输入邮箱") ) {
@@ -150,8 +151,6 @@ var TopBarView = Backbone.View.extend({
             });
             this.$passwordInput.on("focus", function (e){
                 $wrong.hide();
-                self.$usernameInput.removeClass('invalid_input');
-                self.$passwordInput.removeClass('invalid_input');
             });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
@@ -180,7 +179,7 @@ var TopBarView = Backbone.View.extend({
                         error: function (response) {
                             $wrong.show();
                             $('#credentialWrong').html(response.responseText);
-                            self.$passwordInput.val("   ");
+                            self.$passwordInput.val("");
                         }
                     });
                 }

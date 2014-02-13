@@ -67,7 +67,7 @@ var LetterView = Backbone.View.extend({
     render: function () {
         this.fillRecentHistory();
         this.bindEvent();
-        $("#letter_flash").hide();
+        $("#chat_left").hide();
     },
     bindEvent: function () {
         var self = this;
