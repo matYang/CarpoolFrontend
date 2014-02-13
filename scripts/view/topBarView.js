@@ -166,7 +166,6 @@ var TopBarView = Backbone.View.extend({
                             app.sessionManager.fetchSession(true, {
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.navigate("main", true);
                                     app.letterView = new LetterView({
                                         "toUserId": app.storage.getLastContact()
                                     });
@@ -181,8 +180,7 @@ var TopBarView = Backbone.View.extend({
                         error: function (response) {
                             $wrong.show();
                             $('#credentialWrong').html(response.responseText);
-                            self.$usernameInput.addClass('invalid_input');
-                            self.$passwordInput.addClass('invalid_input');
+                            self.$passwordInput.val("   ");
                         }
                     });
                 }
@@ -356,7 +354,6 @@ var TopBarView = Backbone.View.extend({
                     },
                     error: function () {
                         Info.warn("Session fetch failed");
-                        app.navigate("front", true);
                         app.userManager.sessionUser = app.sessionManager.getSessionUser();
                     }
                 });
@@ -417,7 +414,6 @@ var TopBarView = Backbone.View.extend({
             this.$ndropdown.off();
             this.$ldropdown.off();
             this.$fdropdown.off();
-            this._unbindDropdownEvents();
             this.$profilePicture.off();
         }
         this.$nmain.off();
