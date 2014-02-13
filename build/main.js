@@ -5039,7 +5039,7 @@ var getEnvironmentServerOrigin = function () {
     var isOnLocal = C_ENV_VAR !== 'REMOTE';
     return {
         'httpOrigin': isOnLocal ? 'http://localhost:8015' : '..',
-        'socketOrigin': isOnLocal ? 'http://localhost:3000' : 'http://54.201.115.56:3000'
+        'socketOrigin': isOnLocal ? 'http://localhost:3000' : 'https://www.routea.ca:3000'
     };
 
 };
@@ -7147,6 +7147,8 @@ var Message = Backbone.Model.extend({
 
     _toJSON: function () {
         var json = this.toJSON();
+        // Security protection against XSS
+        json.note = this.escape("note");
         // json.departure_location = this.get('departure_location').toUiString();
         json.departure_time = Utilities.getDateString(this.get('departure_time'));
 
@@ -8800,10 +8802,6 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		if (typeof messageId !== 'number'){
 			messageId = parseInt(messageId, 10);
 		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("MessageManager::fetchMessage:: session does not exist, exit");
-			return;
-		}
 
 		var self = this;
 
@@ -9652,7 +9650,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		var self = this;
 
 		if (this.sessionManager.hasSession()){
-			this.socket = io.connect(Constants.socketOrigin);
+			this.socket = io.connect(Constants.socketOrigin, {secure: true});
 			this.timeStamp = new Date();
 
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
@@ -10214,7 +10212,7 @@ var LetterView = Backbone.View.extend({
     render: function () {
         this.fillRecentHistory();
         this.bindEvent();
-        $("#letter_flash").hide();
+        $("#chat_left").hide();
     },
     bindEvent: function () {
         var self = this;
@@ -10590,13 +10588,18 @@ var MessageDetailView = Backbone.View.extend({
     },
     renderAutoMatch: function (result) {
         var i, buf = [], len = result.length, that = this;
+        this.$automatch = $("#view_automatch");
+        if (!len) {
+            this.$automatch.hide();
+            return;
+        }
         len = len < 3 ? len : 3;
         for ( i = 0; i < len; i++) {
             buf[i] = this.quickmatchTemplate(result.at(i)._toJSON());
         }
-        this.$automatch = $("#view_automatch").append(buf.join(""));
+        this.$automatch.append(buf.join(""));
         this.$automatch.children(".messageDetail-middle-autoMatch-loading").remove();
-        this.$messages = this.$automatch.children("message_simple").on('click', function (e) {
+        this.$messages = this.$automatch.children(".message_simple").on('click', function (e) {
             var id = Utilities.getId(e.delegateTarget.id);
             app.navigate("message/" + id, true);
         });
@@ -10634,19 +10637,32 @@ var MessageDetailView = Backbone.View.extend({
             this.$viewbook.text("座位已满").css("background-color", "#888888").css("width", "100%").off();
         } else if (this.parsedMessage.type === Constants.messageType.help) {
             this.$viewbook.on("click", function (e) {
-                that.transactionView = new TransactionDetailView (that.newTransaction, {
-                    "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
-                    "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
-                });
+                if (app.sessionManager.hasSession()) {
+                    that.transactionView = new TransactionDetailView (that.newTransaction, {
+                        "departure_seatsNumber": that.message.get("departure_seatsNumber") - that.message.get("departure_seatsBooked"),
+                        "arrival_seatsNumber": that.message.get("arrival_seatsNumber") - that.message.get("arrival_seatsBooked")
+                    });
+                } else {
+                    Info.alert("请先登录。若是已经登陆，请刷新页面。");
+                    $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
+                }
             });
         } else if (this.parsedMessage.type === Constants.messageType.ask) {
             this.$viewcontact.on('click', function () {
-                app.letterView.switchContact(that.ownerId);
+                if (app.sessionManager.hasSession()) {
+                    app.letterView.switchContact(that.ownerId);
+                } else {
+                    Info.alert("请先登录。若是已经登陆，请刷新页面。");
+                    $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
+                }
             });
         }
         this.$viewlink.on('click', function (e) {
             e.preventDefault();
             app.letterView.switchContact(that.ownerId);
+        });
+        $("#view_profilePicture, #view_profileName").on("click", function (e) {
+            app.navigate("personal/"+this.ownerId, true);
         });
     },
     createNewTransaction: function () {
@@ -10738,6 +10754,7 @@ var MessageDetailView = Backbone.View.extend({
             if ( typeof this.domContainer !== 'undefined') {
                 this.domContainer.empty();
             }
+            $("#view_profilePicture, #view_profileName").off();
             $("#popup").empty();
             this.isClosed = true;
         }
@@ -11864,11 +11881,7 @@ var SearchResultView = MultiPageView.extend({
 
     },
     transferURL: function (messageId) {
-        if (app.sessionManager.hasSession()) {
-            app.navigate("message/" + messageId, true);
-        } else {
-            Info.displayNotice("请先登陆");
-        }
+        app.navigate("message/" + messageId, true);
     },
     
     close: function () {
@@ -12109,21 +12122,12 @@ var FrontPageView = Backbone.View.extend({
     bindRecentsEvents: function () {
         var self = this;
         this.$messages = $("#frontPage-resultPanel").on("click", ".message_simple", function (e) {
-            if (app.sessionManager.hasSession()) {
-                app.navigate("message/" + Utilities.getId(this.id), true);
-            } else {
-                self.loginAlert();
-            }
+            app.navigate("message/" + Utilities.getId(this.id), true);
         });
     },
 
     updateLocation: function (id) {
         this.getRecents();
-    },
-
-    loginAlert: function () {
-        Info.alert("请先登录。若是已经登陆，请刷新页面。");
-         $("html, body").animate({ scrollTop: 0, complete: function(){ $("#loginBox").show();} }, "slow");
     },
     scroll: function () {
         var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
@@ -13090,12 +13094,16 @@ var PersonalUtilityView = Backbone.View.extend({
         formElem.parentNode.appendChild(iframe);
 
         $(iframe).one("load", function () {
-            app.sessionManager.fetchSession(true);
-            app.navigate('/temp', {
-                replace: true
-            });
-            app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
-                trigger: true
+            app.sessionManager.fetchSession(true, {
+                "success": function () {
+                    var path = app.sessionManager.getSessionUser().get("imgPath");
+                    $("#profile_image").attr("src", path);
+                    $("#utility_dp>form").find("img").attr("src", path);
+                    $("#topBar-avatar").find("img").attr("src", path);
+                },
+                "error":function(response) {
+                    location.reload();
+                }
             });
         });
 
@@ -13466,6 +13474,7 @@ var PersonalView = Backbone.View.extend({
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
             "success": this.renderWatchButton
         });
+        $("#popup").attr("class", "pop message_reservation");
         var that = this;
         this.user = user;
         this.render();
@@ -14393,7 +14402,7 @@ var TopBarView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', '_unbindDropdownEvents', 'updateProfileImg', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
+        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
@@ -14420,7 +14429,6 @@ var TopBarView = Backbone.View.extend({
             this.bindEvents();
 
             //dropdown specific data binding
-            this.listenTo(this.sessionUser, 'change:imgPath', this.updateProfileImg);
             this.notifications = app.sessionManager.getCurUserNotifications();
             this.listenTo(this.notifications, 'reset', this.renderNotificationDropdown);
             this.letters = app.sessionManager.getCurUserLetters();
@@ -14431,6 +14439,7 @@ var TopBarView = Backbone.View.extend({
             this.renderNotificationDropdown();
             this.renderLetterDropdown();
             this.renderFavoriteDropdown();
+            this.bindDropdownEvents();
         } else {
             $(this.el).append(this.notLoggedInTemplate);
             this.bindEvents();
@@ -14451,7 +14460,6 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.notificationContainer.html(htmlContext);
-        // this.bindDropdownEvents('notifications');
     },
 
     renderLetterDropdown: function () {
@@ -14462,7 +14470,6 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.letterContainer.html(htmlContext);
-        // this.bindDropdownEvents('letter');
     },
 
     renderFavoriteDropdown: function () {
@@ -14473,67 +14480,35 @@ var TopBarView = Backbone.View.extend({
         // }
 
         // this.favoriteContainer.html(htmlContext);
-        // this.bindDropdownEvents('favorites');
     },
 
-    bindDropdownEvents: function (dropdownName) {
+    bindDropdownEvents: function () {
         var self = this;
-        this._unbindDropdownEvents(dropdownName);
-        if (dropdownName === 'notifications') {
-            this.$ndropdown.find('li').on('click', function (e) {
-                var n_id = parseInt($(this).attr("data-notificationId"), 10);
-                var n_model = self.notifications.get(n_id);
-                var n_evt = n_model.get('notificationEvent');
+        this.$ndropdown.on('click', 'li', function (e) {
+            var n_id = parseInt($(e.target).attr("data-notificationId"), 10);
+            var n_model = self.notifications.get(n_id);
+            var n_evt = n_model.get('notificationEvent');
 
-                //async, don't care about result
-                app.notificationManager.checkNotification(n_id);
+            //async, don't care about result
+            app.notificationManager.checkNotification(n_id);
 
-                if (n_evt === Constants.notificationEvent.watched) {
-                    app.navigate("personal/" + n_model.get('initUserId'), true);
-                }
-                //transaction related
-                else if (n_evt < Constants.notificationEvent.watched) {
-                    app.navigate("message/" + n_model.get('messageId'), true);
-                }
-            });
-        } else if (dropdownName === 'letter') {
-            this.$ldropdown.find('li').on('click', function (e) {
-                var u_id = $(this).attr("data-userId");
-                app.navigate("letter/" + u_id, true);
-            });
-        } else if (dropdownName === 'favorites') {
-            this.$fdropdown.find('li').on('click', function (e) {
-                var u_id = $(this).attr("data-userId");
-                app.navigate("personal/" + u_id, true);
-            });
-        }
-    },
-
-    _unbindDropdownEvents: function (dropdownName) {
-        if (dropdownName === 'notifications' && this.notificationContainer) {
-            this.notificationContainer.find('.dropdownContent').off();
-        } else if (dropdownName === 'letter' && this.letterContainer) {
-            this.letterContainer.find('.dropdownContent').off();
-        } else if (dropdownName === 'favorites' && this.favoriteContainer) {
-            this.favoriteContainer.find('.dropdownContent').off();
-        } else {
-            //unbind all
-            if (this.notificationContainer) {
-                this.notificationContainer.find('.dropdownContent').off();
+            if (n_evt === Constants.notificationEvent.watched) {
+                app.navigate("personal/" + n_model.get('initUserId'), true);
             }
-            if (this.letterContainer) {
-                this.letterContainer.find('.dropdownContent').off();
+            //transaction related
+            else if (n_evt < Constants.notificationEvent.watched) {
+                app.navigate("message/" + n_model.get('messageId'), true);
             }
-            if (this.favoriteContainer) {
-                this.favoriteContainer.find('.dropdownContent').off();
-            }
-        }
+        });
+        this.$ldropdown.on('click', 'li', function (e) {
+            var u_id = $(e.target).attr("data-userId");
+            app.letterView.switchContact(u_id);
+        });
+        this.$fdropdown.on('click', 'li', function (e) {
+            var u_id = $(e.target).attr("data-userId");
+            app.navigate("personal/" + u_id, true);
+        });
     },
-
-    updateProfileImg: function (sessionUser) {
-        $('#profilePictureImg').attr("src", this.sessionUser.get('imgPath'));
-    },
-
     bindEvents: function () {
         var self = this;
         var username, password;
@@ -14541,6 +14516,8 @@ var TopBarView = Backbone.View.extend({
         /*  navigation events  */
         //main nav
         
+        this.$passwordInput = $("#login_password");
+        this.$usernameInput = $("#login_username");
         this.$nmain = $('#navigate_main').on('click', function () {
             app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
@@ -14548,12 +14525,11 @@ var TopBarView = Backbone.View.extend({
             this.$lb = $("#loginBox");
             this.$lbt = $("#loginBoxToggler").on("click", function (e) {
                 self.$lb.toggle();
+                self.$usernameInput.trigger("focus");
             });
             $('#signup_button').on('click', function () {
                 app.navigate("/register", {trigger: true, replace: true});
             });
-            this.$passwordInput = $("#login_password");
-            this.$usernameInput = $("#login_username");
             var $wrong = $("#credentialWrong");
             this.$usernameInput.on("click", function (e){
                 if  ($(this).val() === ("请输入邮箱") ) {
@@ -14570,8 +14546,6 @@ var TopBarView = Backbone.View.extend({
             });
             this.$passwordInput.on("focus", function (e){
                 $wrong.hide();
-                self.$usernameInput.removeClass('invalid_input');
-                self.$passwordInput.removeClass('invalid_input');
             });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
@@ -14586,7 +14560,10 @@ var TopBarView = Backbone.View.extend({
                             app.sessionManager.fetchSession(true, {
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.navigate("main", true);
+                                    app.letterView = new LetterView({
+                                        "toUserId": app.storage.getLastContact()
+                                    });
+                                    $("#chat").show();
                                 },
                                 error: function () {
                                     Info.displayNotice("登录失败，请稍后再试");
@@ -14597,8 +14574,7 @@ var TopBarView = Backbone.View.extend({
                         error: function (response) {
                             $wrong.show();
                             $('#credentialWrong').html(response.responseText);
-                            self.$usernameInput.addClass('invalid_input');
-                            self.$passwordInput.addClass('invalid_input');
+                            self.$passwordInput.val("");
                         }
                     });
                 }
@@ -14628,7 +14604,7 @@ var TopBarView = Backbone.View.extend({
                             app.sessionManager.fetchSession(true, {
                                 success: function () {
                                     app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.navigate("main", true);
+                                    location.reload();
                                 },
                                 error: function () {
                                     $wrong.show();
@@ -14767,11 +14743,11 @@ var TopBarView = Backbone.View.extend({
                 app.sessionManager.fetchSession(true, {
                     success: function () {
                         app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                        app.navigate("front", true);
+                        app.letterView.close();
+                        location.reload();
                     },
                     error: function () {
                         Info.warn("Session fetch failed");
-                        app.navigate("front", true);
                         app.userManager.sessionUser = app.sessionManager.getSessionUser();
                     }
                 });
@@ -14832,7 +14808,6 @@ var TopBarView = Backbone.View.extend({
             this.$ndropdown.off();
             this.$ldropdown.off();
             this.$fdropdown.off();
-            this._unbindDropdownEvents();
             this.$profilePicture.off();
         }
         this.$nmain.off();
@@ -14990,11 +14965,6 @@ var AppRouter = Backbone.Router.extend({
     },
 
     MessageDetail: function (messageId) {
-        if (!this.sessionManager.hasSession()) {
-            this.navigate("front", true);
-            return;
-        }
-
         this.MessageDetailView = new MessageDetailView ({
             'messageId': messageId
         });
