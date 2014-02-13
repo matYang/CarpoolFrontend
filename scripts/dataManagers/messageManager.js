@@ -47,7 +47,7 @@
 		message.set('messageId', messageId);
 
 		message.fetch({
-			data: $.param({ 'userId': self.sessionManager.getUserId()}),
+			//data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
 
 			success:function(model, response){
