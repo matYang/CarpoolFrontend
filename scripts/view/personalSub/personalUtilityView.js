@@ -308,7 +308,7 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$birthday = $('input[name=birthday]');
         if (this.sessionUser.get("birthday").getFullYear() !== new Date ().getFullYear()) {
             this.$birthyear.val(this.sessionUser.get("birthday").getFullYear());
-            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth());
+            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth() + 1);
             this.$birthday.val(this.sessionUser.get("birthday").getDate());
         }
         this.$personalContent = $("#utility_personalInfo");
@@ -403,7 +403,7 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$birthyear.trigger("focus").trigger("blur");
         this.$address.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
-        date.setMonth(Utilities.toInt(this.$birthmonth.val()));
+        date.setMonth(Utilities.toInt(this.$birthmonth.val()) - 1);
         date.setDate(Utilities.toInt(this.$birthday.val()));
         if ($(".wrong").length || !this.$phone.val()) {
             return;
