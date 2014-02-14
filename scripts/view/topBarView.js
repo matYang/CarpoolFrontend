@@ -7,7 +7,7 @@ var TopBarView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
+        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'close', 'logout', '_clearAll');
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
@@ -26,10 +26,9 @@ var TopBarView = Backbone.View.extend({
         this.listenTo(this.sessionUser, 'change:userId', this.reRender);
         if (app.sessionManager.hasSession()) {
             $(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
-            this.$alldropdowns = $("#dropdowns").find("dd").hide();
-            this.$ndropdown = $('#notifications>dd');
-            this.$ldropdown = $('#letters>dd');
-            this.$fdropdown = $('#favorites>dd');
+            this.$ndropdown = $('#notifications').find("ul");
+            this.$ldropdown = $('#letters').find("ul");
+            this.$fdropdown = $('#favorites').find("ul");
             this.$pdropdown = $('#profileDropdown>dd');
             this.bindEvents();
 
@@ -58,38 +57,44 @@ var TopBarView = Backbone.View.extend({
     },
 
     renderNotificationDropdown: function (notifications) {
-        // var i = 0, htmlContext = '';
-
-        // for ( i = 0; i < this.notifications.length; i++) {
-        //     htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
-        // }
-
-        // this.notificationContainer.html(htmlContext);
+        var i = 0, htmlContext = '';
+        if ( this.notifications.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.notifications.length; i++) {
+            htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
+        }
+        this.$ndropdown.empty().append(htmlContext);
     },
 
     renderLetterDropdown: function () {
-        // var i = 0, htmlContext = '';
+        var i = 0, htmlContext = '';
+        if ( this.letters.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.letters.length; i++) {
+            htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
+        }
 
-        // for ( i = 0; i < this.letters.length; i++) {
-        //     htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
-        // }
-
-        // this.letterContainer.html(htmlContext);
+        this.$ldropdown.empty().append(htmlContext);
     },
 
     renderFavoriteDropdown: function () {
-        // var i = 0, htmlContext = '';
+        var i = 0, htmlContext = '';
+        if ( this.favorites.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.favorites.length; i++) {
+            htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
+        }
 
-        // for ( i = 0; i < this.favorites.length; i++) {
-        //     htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
-        // }
-
-        // this.favoriteContainer.html(htmlContext);
+        this.$fdropdown.empty().append(htmlContext);
     },
 
     bindDropdownEvents: function () {
         var self = this;
         this.$ndropdown.on('click', 'li', function (e) {
+            e.preventDefault();
             var n_id = parseInt($(e.target).attr("data-notificationId"), 10);
             var n_model = self.notifications.get(n_id);
             var n_evt = n_model.get('notificationEvent');
@@ -113,6 +118,19 @@ var TopBarView = Backbone.View.extend({
             var u_id = $(e.target).attr("data-userId");
             app.navigate("personal/" + u_id, true);
         });
+        $('#notifications').find(".more").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/" + self.sessionUser.id + "/history", true);
+        });
+        $('#letters').find(".more").on("click", function (e) {
+            e.preventDefault();
+            $("#chat_right").attr("style","margin-top: 0px;");
+        });
+        $('#favorites').find(".more").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/" + self.sessionUser.id + "/social", true);
+        });
+
     },
     bindEvents: function () {
         var self = this;
@@ -261,68 +279,6 @@ var TopBarView = Backbone.View.extend({
             this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
                 app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
             });
-
-            /*  UI events  */
-            this.$notifications = $('#notifications').on('mouseenter', function () {
-                self.showNotificationDropdown();
-            });
-            this.$letters = $('#letters').on('mouseenter', function () {
-                self.showLetterDropdown();
-            });
-            this.$favorites = $('#favorites').on('mouseenter', function () {
-                self.showFavoriteDropdown();
-            });
-            this.$profilePicture = $('#profileDropdown').on('mouseenter', function () {
-                self.showProfileDropdown();
-            });
-            this.$profilePicture.find('img').on("click", function () {
-                app.navigate("personal/" + self.sessionUser.id, true);
-            });
-            this.$notifications.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
-                    self.hideNotificationDropdown();
-                }
-            });
-            this.$letters.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
-                    self.hideLetterDropdown();
-                }
-            });
-            this.$favorites.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
-                    self.hideFavoriteDropdown();
-                }
-            });
-            this.$profilePicture.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
-                    self.hideProfileDropdown();
-                }
-            });
-            this.$fdropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "favorites" && e.toElement.parentElement.id !== "favorites") {
-                    self.hideFavoriteDropdown();
-                }
-            });
-            this.$ndropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "notifications" && e.toElement.parentElement.id !== "notifications") {
-                    self.hideNotificationDropdown();
-                }
-            });
-            this.$ldropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "letters" && e.toElement.parentElement.id !== "letters" ) {
-                    self.hideLetterDropdown();
-                }
-            });
-            $('#profileDropdown').on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "profilePicture" && e.toElement.parentElement.id !== "profilePicture") {
-                    self.hideProfileDropdown();
-                }
-            });
-        //  $('#logout').on('mouseleave', function(e) {
-        //      if (e.toElement.id !== "profilePicture") {
-        //          self.hideLikes();
-        //      }
-        //  });
             $('#logout').on('click', function (e) {
                 e.preventDefault();
                 self.logout();
@@ -362,35 +318,6 @@ var TopBarView = Backbone.View.extend({
                 Info.displayNotice("登出失败，请稍后再试");
             }
         });
-    },
-
-    showNotificationDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$ndropdown.show();
-    },
-    hideNotificationDropdown: function () {
-        this.$ndropdown.hide();
-    },
-    showFavoriteDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$fdropdown.show();
-    },
-    hideFavoriteDropdown: function () {
-        this.$fdropdown.hide();
-    },
-    showLetterDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$ldropdown.show();
-    },
-    hideLetterDropdown: function () {
-        this.$ldropdown.hide();
-    },
-    showProfileDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$pdropdown.show();
-    },
-    hideProfileDropdown: function () {
-        this.$pdropdown.hide();
     },
 
     _clearAll: function () {

@@ -157,35 +157,35 @@
 	background:url(../images/icon.png) no-repeat 0 -597px;
 }
 /*通知*/
-.notice {
+.myPage_content .notice {
 	margin-top:-20px;
 }
-.notice table td {
+.myPage_content .notice table td {
 	padding:15px 0;
 	border-bottom:1px dotted #ccc;
 }
-.notice table td a, .notice table td a:visited {
+.myPage_content .notice table td a, .myPage_content .notice table td a:visited {
 	color:#57b7e1;
 }
-.notice table .user {
+.myPage_content .notice table .user {
 	vertical-align:top;
 	font-size:13px;
 }
-.notice table .user dt {
+.myPage_content .notice table .user dt {
 	float:left;
 	margin-right:10px;
 }
-.notice table .user dd.name {
+.myPage_content .notice table .user dd.name {
 	margin-bottom:8px;
 }
-.notice table .notice_content div {
+.myPage_content .notice table .notice_content div {
 	margin-bottom:20px;
 }
-.notice table .delete {
+.myPage_content .notice table .delete {
 	text-align:right;
 	padding-right:5px;
 }
-.notice table .user img {
+.myPage_content .notice table .user img {
 	width:60px;
 	height:60px;
 }
