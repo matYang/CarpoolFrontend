@@ -206,7 +206,7 @@ var PersonalUtilityView = Backbone.View.extend({
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (d < 1 || dpContent > 31) {
+                if (d < 1 || d > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
