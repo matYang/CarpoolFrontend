@@ -168,8 +168,11 @@ var PersonalUtilityView = Backbone.View.extend({
         this.passwordValid = {};
         this.$name.on('blur', function (e) {
             $("#nameWrong,#nameCorrect").remove();
-            if (Utilities.isEmpty(this.value)) {
+            var nameValue = this.value ? this.value.trim() || "";
+            if (Utilities.isEmpty(nameValue)) {
                 $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能为空</p></dd>");
+            } else if (nameValue.split(" ").length > 2) {
+                $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能有超过一个空格</p></dd>");
             } else {
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
