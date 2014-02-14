@@ -222,6 +222,8 @@ var LetterView = Backbone.View.extend({
         $(".letterId_-1").each(function (index) {
             if ($(this).text() === letter.get("content")) {
                 $(this).removeClass("letterId_-1").addClass("letterId_" + letter.get("letterId"));
+                this.letterHistories.add(letter);
+                return;
             }
         });
     },
@@ -241,15 +243,8 @@ var LetterView = Backbone.View.extend({
         var i = letters.length - 1, letter, buf = [], j = 0;
         for (; len > 0; len--) {
             letter = letters.at(len);
-            if (this.letterHisotries.get(letter.id)) {
-                len += 1;
-                while (len < letters.length) {
-                    letter = letters.at(len);
-                    this.letterHistories.add();
-                    buf[j] = this.buildMessageBox(letter.id, letter.get("content"), letter.get("send_time"), false);
-                    len++;
-                    j++;
-                }
+            if (!this.letterHisotries.get(letter.id)) {
+                buf[j] = this.buildMessageBox(letter.id, letter.get("content"), letter.get("send_time"), false);
                 break;
             }
         }
