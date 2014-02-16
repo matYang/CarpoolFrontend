@@ -21,7 +21,8 @@ var LetterView = Backbone.View.extend({
         this.template = _.template(tpl.get('letter'));
         this.domContainer = $('#chat');
         this.domContainer.append(this.template);
-        this.$messagePanel = $("#letter_message_panel>ul");
+        this.$historyPanel = $("#letter_message_panel>#letter_history");
+        this.$messagePanel = $("#letter_message_panel>letter_new");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== -1) {
@@ -185,6 +186,7 @@ var LetterView = Backbone.View.extend({
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
             "error": function () {
+                
             }
         });
         app.storage.setLastContact(id);
@@ -192,8 +194,12 @@ var LetterView = Backbone.View.extend({
 
     fillRecentHistory: function (letters) {
         this.$messagePanel.empty();
-        if (!letters)
+        if (!letters || !letters.length) {
+            this.$historyPanel.hide();
             return;
+        }
+        this.$historyPanel.empty();
+        this.$historyPanel.show();
         this.letterHistories = letters;
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
@@ -207,12 +213,12 @@ var LetterView = Backbone.View.extend({
             send_time.setMilliseconds(0);
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
-        this.$messagePanel.append(buf.join(""));
-        this.$messagePanel.append('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+        this.$historyPanel.append(buf.join(""));
+        this.$historyPanel.after('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
     },
     buildMessageBox: function (id, message, time, sendByMe) {
-        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + id;
-        this.messageBoxTemplate[3] = time.toLocaleString();;
+        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + "letterId_"+id;
+        this.messageBoxTemplate[3] = time.toLocaleString();
         this.messageBoxTemplate[5] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
         this.messageBoxTemplate[7] = message;
         return this.messageBoxTemplate.join("");
