@@ -189,6 +189,9 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         this.$phone.on('blur', function (e) {
             $("#phoneWrong,#phoneRight").remove();
+            if (!$(this).val()) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 11 || this.value.length < 8) {
                 $(this).parent().parent().after("<dd id='phoneWrong' class='wrong'><p>很抱歉，电话的格式不对，请重新输入</p></dd>");
             } else {
@@ -401,7 +404,6 @@ var PersonalUtilityView = Backbone.View.extend({
     savePersonalInfo: function () {
         var that = this, date = new Date ();
         var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
-        this.$phone.trigger("focus").trigger("blur");
         this.$name.trigger("focus").trigger("blur");
         this.$birthyear.trigger("focus").trigger("blur");
         this.$address.trigger("focus").trigger("blur");
@@ -419,11 +421,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
 
     saveSuccess: function () {
-        Info.displayNotice("成功更新用户信息");
         $("#save_personalInfo").attr("value", "更新完毕");
-        app.navigate('/temp', {
-            replace: true
-        });
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
