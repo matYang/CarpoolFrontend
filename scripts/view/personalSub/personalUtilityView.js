@@ -181,10 +181,11 @@ var PersonalUtilityView = Backbone.View.extend({
 
         });
         this.$qq.on('blur', function (e) {
+            $("#qqWrong").remove();
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
-                
+                $(this).parent().parent().after("<dd id='qqWrong' class='wrong'><p>很抱歉，QQ的格式不对，请重新输入</p></dd>");
             } else {
-                
+                $(this).after("<span id='qqRight' class='right'></span>");
             }
         });
         this.$phone.on('blur', function (e) {
@@ -204,6 +205,7 @@ var PersonalUtilityView = Backbone.View.extend({
             var m = Utilities.toInt(mi);
             var d = Utilities.toInt(di);
             $("#birthwrong").remove();
+            $("#birthdaycheck").remove();
             if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
@@ -223,23 +225,17 @@ var PersonalUtilityView = Backbone.View.extend({
                     }
                 }
                 if (!bdvalid) {
-                    if ($("#birthwrong").length === 0) {
-                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                    }
+                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
                 } else {
-                    $("#birthwrong").remove();
                     if ($("#birthdaycheck").length === 0) {
                         $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
                     }
                 }
             } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
                 $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                that.registerInfo.birthday = null;
                 that.valid.birthday = false;
             } else {
-                if ($("#birthwrong").length === 0) {
-                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                }
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
             }
         });
 
