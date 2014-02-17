@@ -205,7 +205,6 @@ var PersonalUtilityView = Backbone.View.extend({
             var d = Utilities.toInt(di);
             $("#birthwrong").remove();
             if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
-                $(this).parent().removeClass("wrong");
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
@@ -234,7 +233,7 @@ var PersonalUtilityView = Backbone.View.extend({
                     }
                 }
             } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
-                $(this).parent().addClass("wrong").append("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
                 that.registerInfo.birthday = null;
                 that.valid.birthday = false;
             } else {
