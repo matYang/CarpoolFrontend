@@ -233,7 +233,7 @@ var PersonalUtilityView = Backbone.View.extend({
                 }
             } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
                 $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                that.valid.birthday = false;
+                bdvalid = false;
             } else {
                 $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
             }
