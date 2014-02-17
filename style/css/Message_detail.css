@@ -286,3 +286,7 @@
 #view_profilePicture, #view_profileName {
 	cursor:pointer;
 }
+.pop_content .user img {
+	width:100px;
+	height:100px;
+}

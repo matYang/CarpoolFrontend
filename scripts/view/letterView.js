@@ -165,6 +165,7 @@ var LetterView = Backbone.View.extend({
     },
     switchContact: function (id) {
         $("#chat_left").show().attr("style","margin-top: 0;");
+        $("#letter_input").focus();
         this.$messagePanel.empty();
         this.$letterInput.val("");
         this.toUserIdResend = null;

@@ -74,7 +74,15 @@ var User = Backbone.Model.extend({
     isNew: function () {
         return this.id === -1;
     },
-
+    getAge: function () {
+        var today = new Date (), birthday = this.get('birthday');
+        var age = today.getFullYear() - birthday.getFullYear();
+        var month = today.getMonth() - birthday.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthday.getDate() )) {
+            age--;
+        }
+        return age;
+    },
     parse: function (data) {
         if ( typeof data !== 'undefined' && typeof data.userId !== 'undefined') {
             data.userId = parseInt(data.userId, 10);
@@ -111,6 +119,7 @@ var User = Backbone.Model.extend({
             json.location = this.get('location').toUiString();
         }
         json.name = decodeURI(json.name);
+        json.age = this.getAge();
         return json;
     },
     toJSON: function () {

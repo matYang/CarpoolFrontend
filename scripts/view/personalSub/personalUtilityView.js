@@ -422,6 +422,10 @@ var PersonalUtilityView = Backbone.View.extend({
 
     saveSuccess: function () {
         $("#save_personalInfo").attr("value", "更新完毕");
+        $("#myPage_myInfo").find("p[data-id=name]").html("姓名："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=gender]").html("性别："+this.sessionUser.get("gender"));
+        $("#myPage_myInfo").find("p[data-id=age]").html("年龄："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=location]").html("地区："+this.sessionUser.get("location").get("pointName"));
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });

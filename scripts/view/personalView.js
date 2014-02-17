@@ -52,13 +52,6 @@ var PersonalView = Backbone.View.extend({
     },
     render: function () {
         var userJson = this.user._toJSON();
-        var today = new Date (), birthday = this.user.get('birthday');
-        var age = today.getFullYear() - birthday.getFullYear();
-        var month = today.getMonth() - birthday.getMonth();
-        if (month < 0 || (month === 0 && today.getDate() < birthday.getDate() )) {
-            age--;
-        }
-        userJson.age = age;
         this.domContainer.append(this.template(userJson));
     },
     renderError: function () {
