@@ -168,8 +168,11 @@ var PersonalUtilityView = Backbone.View.extend({
         this.passwordValid = {};
         this.$name.on('blur', function (e) {
             $("#nameWrong,#nameCorrect").remove();
-            if (Utilities.isEmpty(this.value)) {
+            var nameValue = this.value ? this.value.trim() : "";
+            if (Utilities.isEmpty(nameValue)) {
                 $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能为空</p></dd>");
+            } else if (nameValue.split(" ").length > 2) {
+                $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能有超过一个空格</p></dd>");
             } else {
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
@@ -178,14 +181,18 @@ var PersonalUtilityView = Backbone.View.extend({
 
         });
         this.$qq.on('blur', function (e) {
+            $("#qqWrong").remove();
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
-                
+                $(this).parent().parent().after("<dd id='qqWrong' class='wrong'><p>很抱歉，QQ的格式不对，请重新输入</p></dd>");
             } else {
-                
+                $(this).after("<span id='qqRight' class='right'></span>");
             }
         });
         this.$phone.on('blur', function (e) {
             $("#phoneWrong,#phoneRight").remove();
+            if (!$(this).val()) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 11 || this.value.length < 8) {
                 $(this).parent().parent().after("<dd id='phoneWrong' class='wrong'><p>很抱歉，电话的格式不对，请重新输入</p></dd>");
             } else {
@@ -198,15 +205,15 @@ var PersonalUtilityView = Backbone.View.extend({
             var m = Utilities.toInt(mi);
             var d = Utilities.toInt(di);
             $("#birthwrong").remove();
+            $("#birthdaycheck").remove();
             if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
-                $(this).parent().removeClass("wrong");
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (d < 1 || dpContent > 31) {
+                if (d < 1 || d > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
@@ -218,23 +225,17 @@ var PersonalUtilityView = Backbone.View.extend({
                     }
                 }
                 if (!bdvalid) {
-                    if ($("#birthwrong").length === 0) {
-                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                    }
+                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
                 } else {
-                    $("#birthwrong").remove();
                     if ($("#birthdaycheck").length === 0) {
                         $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
                     }
                 }
             } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
-                $(this).parent().addClass("wrong").append("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                that.registerInfo.birthday = null;
-                that.valid.birthday = false;
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                bdvalid = false;
             } else {
-                if ($("#birthwrong").length === 0) {
-                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                }
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
             }
         });
 
@@ -308,7 +309,7 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$birthday = $('input[name=birthday]');
         if (this.sessionUser.get("birthday").getFullYear() !== new Date ().getFullYear()) {
             this.$birthyear.val(this.sessionUser.get("birthday").getFullYear());
-            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth());
+            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth() + 1);
             this.$birthday.val(this.sessionUser.get("birthday").getDate());
         }
         this.$personalContent = $("#utility_personalInfo");
@@ -398,12 +399,11 @@ var PersonalUtilityView = Backbone.View.extend({
     savePersonalInfo: function () {
         var that = this, date = new Date ();
         var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
-        this.$phone.trigger("focus").trigger("blur");
         this.$name.trigger("focus").trigger("blur");
         this.$birthyear.trigger("focus").trigger("blur");
         this.$address.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
-        date.setMonth(Utilities.toInt(this.$birthmonth.val()));
+        date.setMonth(Utilities.toInt(this.$birthmonth.val()) - 1);
         date.setDate(Utilities.toInt(this.$birthday.val()));
         if ($(".wrong").length || !this.$phone.val()) {
             return;
@@ -416,11 +416,11 @@ var PersonalUtilityView = Backbone.View.extend({
     },
 
     saveSuccess: function () {
-        Info.displayNotice("成功更新用户信息");
         $("#save_personalInfo").attr("value", "更新完毕");
-        app.navigate('/temp', {
-            replace: true
-        });
+        $("#myPage_myInfo").find("p[data-id=name]").html("姓名："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=gender]").html("性别："+this.sessionUser.get("gender"));
+        $("#myPage_myInfo").find("p[data-id=age]").html("年龄："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=location]").html("地区："+this.sessionUser.get("location").get("pointName"));
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });

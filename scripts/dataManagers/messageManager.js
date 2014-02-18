@@ -43,7 +43,7 @@
 
 		var self = this;
 
-		message.overrideUrl(this.apis.DM_dianming);
+		message.overrideUrl(this.apis.message_message);
 		message.set('messageId', messageId);
 
 		message.fetch({
@@ -72,7 +72,7 @@
 	MessageManager.prototype._postSingleMessage = function(newMessage, promiseback, callback){
 		var self = this;
 
-		newMessage.overrideUrl(this.apis.DM_dianming);
+		newMessage.overrideUrl(this.apis.message_message);
 		newMessage.set('messageId', -1);
 		newMessage.set('ownerId', this.sessionManager.getUserId());
 		newMessage.save({},{
@@ -150,7 +150,7 @@
 
 		var self = this;
 
-		updatedMessage.overrideUrl(this.apis.DM_dianming);
+		updatedMessage.overrideUrl(this.apis.message_message);
 		updatedMessage.set('ownerId', this.sessionManager.getUserId());
 		updatedMessage.save({},{
             dataType:'json',
@@ -183,7 +183,7 @@
 		}
 		//do not destory the message itself
 		var message = new Message();
-		message.overrideUrl(this.apis.messages_message);
+		message.overrideUrl(this.apis.message_message);
 		message.set('messageId', messageId);
 		message.destroy({
             dataType:'json',
@@ -218,7 +218,7 @@
 		}
 
 		var userId = this.sessionManager.hasSession() ? this.sessionManager.getUserId() : -1;
-		searchResults.overrideUrl(this.apis.DM_search);
+		searchResults.overrideUrl(this.apis.message_search);
 		searchResults.fetch({
 			data: $.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId}),
             dataType:'json',
@@ -247,7 +247,7 @@
 			return;
 		}
 		var self = this;
-		recents.overrideUrl(this.apis.DM_recent);
+		recents.overrideUrl(this.apis.message_recent);
 		recents.fetch({
             dataType:'json',
             success:function(model, response){
@@ -286,7 +286,7 @@
 
 
 		var transactionList = new Transactions();
-		transactionList.overrideUrl(this.apis.DM_transaction + '/' + intendedMessageId);
+		transactionList.overrideUrl(this.apis.message_transaction + '/' + intendedMessageId);
 		transactionList.fetch({
 			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
@@ -325,7 +325,7 @@
 
 
 		var messages = new Messages();
-		messages.overrideUrl(this.apis.DM_autoMatch + '/' + messageId);
+		messages.overrideUrl(this.apis.message_autoMatch + '/' + messageId);
 		messages.fetch({
 			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',

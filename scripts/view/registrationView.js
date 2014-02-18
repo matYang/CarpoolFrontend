@@ -161,7 +161,7 @@ var RegistrationView = Backbone.View.extend({
                     $(this).parent().append("<span id='vbirth' class='right'></span>");
                     that.registerInfo.birthday = new Date();
                     that.registerInfo.birthday.setFullYear(y);
-                    that.registerInfo.birthday.setMonth(m);
+                    that.registerInfo.birthday.setMonth(m - 1);
                     that.registerInfo.birthday.setDate(d);
                     that.valid.birthday = true;
                 }
