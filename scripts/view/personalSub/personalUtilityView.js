@@ -408,7 +408,7 @@ var PersonalUtilityView = Backbone.View.extend({
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()) - 1);
         date.setDate(Utilities.toInt(this.$birthday.val()));
-        if ($(".wrong").length || !this.$phone.val()) {
+        if ($(".wrong").length) {
             return;
         }
         app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, this.editedLocation, {
