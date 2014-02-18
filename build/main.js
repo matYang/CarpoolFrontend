@@ -5039,7 +5039,8 @@ var getEnvironmentServerOrigin = function () {
     var isOnLocal = C_ENV_VAR !== 'REMOTE';
     return {
         'httpOrigin': isOnLocal ? 'http://localhost:8015' : '..',
-        'socketOrigin': isOnLocal ? 'http://localhost:3000' : 'https://www.routea.ca:3000'
+        'socketOrigin': isOnLocal ? 'http://localhost:3000' : 'https://www.routea.ca:3000',
+        'env': isOnLocal
     };
 
 };
@@ -5057,6 +5058,7 @@ var Constants = {
 
     origin: getEnvironmentServerOrigin().httpOrigin,
     socketOrigin: getEnvironmentServerOrigin().socketOrigin,
+    isOnLocal: getEnvironmentServerOrigin().isOnLocal,
 
     miliSecInDay: 86400000,
 
@@ -9650,7 +9652,8 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		var self = this;
 
 		if (this.sessionManager.hasSession()){
-			this.socket = io.connect(Constants.socketOrigin, {secure: true});
+			//this.socket = io.connect(Constants.socketOrigin, {secure: true});
+			this.socket = io.connect(Constants.socketOrigin);
 			this.timeStamp = new Date();
 
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
@@ -10367,6 +10370,8 @@ var LetterView = Backbone.View.extend({
         $(".letterId_-1").each(function (index) {
             if ($(this).text() === letter.get("content")) {
                 $(this).removeClass("letterId_-1").addClass("letterId_" + letter.get("letterId"));
+                this.letterHistories.add(letter);
+                return;
             }
         });
     },
@@ -10386,15 +10391,8 @@ var LetterView = Backbone.View.extend({
         var i = letters.length - 1, letter, buf = [], j = 0;
         for (; len > 0; len--) {
             letter = letters.at(len);
-            if (this.letterHisotries.get(letter.id)) {
-                len += 1;
-                while (len < letters.length) {
-                    letter = letters.at(len);
-                    this.letterHistories.add();
-                    buf[j] = this.buildMessageBox(letter.id, letter.get("content"), letter.get("send_time"), false);
-                    len++;
-                    j++;
-                }
+            if (!this.letterHisotries.get(letter.id)) {
+                buf[j] = this.buildMessageBox(letter.id, letter.get("content"), letter.get("send_time"), false);
                 break;
             }
         }
