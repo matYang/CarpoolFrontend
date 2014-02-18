@@ -164,6 +164,31 @@ var LetterView = Backbone.View.extend({
         this.$userList.append(buf.join(""));
     },
     switchContact: function (id) {
+        var inList = false, that = this;
+        for ( i = 0, len = this.letterUserList; i < len; i++) {
+            user = this.letterUserList.at(i);
+            if (user.id === id) {
+                inList = true;
+                break;
+            }
+        }
+        if (inList) {
+
+        } else {
+            app.userManager.fetchUser(this.toUserId, {
+                "success": function (user) {
+                    self.toUser = user;
+                    if (!self.letterUserList) {
+                        self.letterUserList = new Letters ();
+                    }
+                    self.letterUserList.add(user);
+                    $("#letter_toUser_name").html(user.get("name"));
+                    that.$userList.prepend("<li id='letter_contact_" + id + "'><img src='" + user.get("imgPath")+ "' width='30' height='30'/>" + user.get("name") + "</li>");
+                },
+                "error": function () {
+                }
+            });
+        }
         $("#chat_left").show().attr("style","margin-top: 0;");
         $("#letter_input").focus();
         this.$messagePanel.empty();

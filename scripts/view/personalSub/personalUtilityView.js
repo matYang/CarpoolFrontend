@@ -182,6 +182,9 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         this.$qq.on('blur', function (e) {
             $("#qqWrong").remove();
+            if (!this.value) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
                 $(this).parent().parent().after("<dd id='qqWrong' class='wrong'><p>很抱歉，QQ的格式不对，请重新输入</p></dd>");
             } else {
