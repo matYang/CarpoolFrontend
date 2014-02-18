@@ -23,6 +23,7 @@
 
 		if (this.sessionManager.hasSession()){
 			this.socket = io.connect(Constants.socketOrigin, {secure: true});
+			//this.socket = io.connect(Constants.socketOrigin);
 			this.timeStamp = new Date();
 
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
