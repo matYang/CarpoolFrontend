@@ -145,12 +145,12 @@ var PersonalView = Backbone.View.extend({
                 app.navigate("personal/" + that.curUserId + "/notification");
                 that.switchChildView("notification"); 
             });
-            $("#profilePage_sendLetter").on('click', function () {
-            	app.letterView.switchContact(that.curUserId);
-            });
+            $('#profilePage_sendLetter').remove();
         } else {
             $('#profilePage_notificationTab').remove();
-            $('#profilePage_sendLetter').remove();
+            $("#profilePage_sendLetter").on('click', function () {
+                app.letterView.switchContact(that.curUserId);
+            });
 
         }
         $('#profilePage_utilityTab').on('click', function () {
