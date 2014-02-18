@@ -445,3 +445,10 @@ body > .main {
 	height: 80px;
 	clear:both;
 }
+.noMessage{
+	text-align: center;
+	color:#0099CF;
+	font-size:16px;
+	margin-top:10px;
+
+}

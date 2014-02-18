@@ -15,7 +15,7 @@ var PersonalSocialView = MultiPageView.extend({
         this.entryContainer = "socialListContent";
         this.minHeight = 460;
         this.startIndex = 0;
-
+        this.noMessage = "你还没有关注的人";
         this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalSocial'));
         this.domContainer.append(this.wrapperTemplate);

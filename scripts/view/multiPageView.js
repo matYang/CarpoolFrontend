@@ -14,6 +14,7 @@ var MultiPageView = Backbone.View.extend({
     entryHeight: -1,
     entryRowNum: 1,
     minHeight: 0,
+    noMessage: "暂无消息",
     $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
@@ -41,7 +42,7 @@ var MultiPageView = Backbone.View.extend({
                 this.bindEntryEvent();
             }
         } else {
-            this.$domContainer.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+            this.$domContainer.append("<div class = 'noMessage'>"+this.noMessage+"</div>");
         }
         if (this.entryHeight) {
             var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;

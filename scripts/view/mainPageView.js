@@ -186,7 +186,7 @@ var MainPageView = Backbone.View.extend({
 
     renderError: function () {
         this.$resultp = this.$resultp || $("#searchResultDisplayPanel");
-        this.$resultp.empty().append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+        this.$resultp.empty().append("<div class = 'noMessage'>暂无消息</div>");
     },
 
     onClickTime: function (e, parentId) {
