@@ -22,7 +22,7 @@
             versionPrefix: '/v1.0',
 
             moduleResource: {
-                'DM': '/dianming',
+                'message': '/dianming',
                 'users': '/users',
                 'transaction': '/transaction',
                 'notification': '/notification',
@@ -32,12 +32,12 @@
             },
 
             moduleSufixResource: {
-                'DM': {
-                    dianming: '/dianming',
+                'message': {
                     recent: '/recent',
                     search: '/search',
                     transaction: '/transaction',
-                    autoMatch: '/autoMatch'
+                    autoMatch: '/autoMatch',
+                    message: '/dianming'
                 },
 
                 'users': {
@@ -98,12 +98,11 @@
         var api_assembler = function () {
 
             return {
-
-                DM_dianming: api_maker('DM', 'dianming'),
-                DM_recent: api_maker('DM', 'recent'),
-                DM_search: api_maker('DM', 'search'),
-                DM_transaction: api_maker('DM', 'transaction'),
-                DM_autoMatch: api_maker('DM', 'autoMatch'),
+                message_message: api_maker("message", "message"),
+                message_recent: api_maker('message', 'recent'),
+                message_search: api_maker('message', 'search'),
+                message_transaction: api_maker('message', 'transaction'),
+                message_autoMatch: api_maker('message', 'autoMatch'),
 
                 users_findSession: api_maker('users', 'findSession'), //GET added to session manaegr
                 users_user: api_maker('users', 'user'), //GET and POST added to user manager
