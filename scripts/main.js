@@ -165,7 +165,7 @@ var AppRouter = Backbone.Router.extend({
     },
 
     postMessage: function (postState) {
-        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
+        this.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
     },
 
     postMessageWithState: function (postState) {
@@ -174,7 +174,7 @@ var AppRouter = Backbone.Router.extend({
             return;
         }
 
-        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: false, replace: true});
+        this.navigate("post/" + Config.getDefaultDMPostState(), {trigger: false, replace: true});
         //if the post session not valid, start new session, creat brand new view
         // if (!this.MessagePostView || this.MessagePostView.isClosed) {
         //     if (this.MessageEditView) {
@@ -228,15 +228,15 @@ var AppRouter = Backbone.Router.extend({
         var self = this;
         this.userManager.activateAccount(authKey, {
             success: function () {
-                self.sessionManager.fetchSession(false, {
+                self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
+                        this.navigate("/main", true);
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
                     }
                 });
-                app.navigate("/main", true);
             },
             error: function (response) {
                 Info.alert('Email验证失败');

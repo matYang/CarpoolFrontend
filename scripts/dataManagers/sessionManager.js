@@ -124,6 +124,7 @@
 		}
 		if (this.hasSession()){
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
+			app.navigate("/main", true);
 		}
 		var self = this;
 
