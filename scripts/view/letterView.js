@@ -35,7 +35,7 @@ var LetterView = Backbone.View.extend({
                     $("#letter_toUser_name").html(user.get("name"));
 
                     if (!self.letterUserList) {
-                        self.letterUserList = new Letters ();
+                        self.letterUserList = new Users ();
                     }
                     self.letterUserList.add(user);
                     self.renderContacts(self.letterUserList);
@@ -110,7 +110,7 @@ var LetterView = Backbone.View.extend({
             if (style && style.indexOf("390px") >= 0) {
                 $("#chat_left").attr("style","margin-top: 0px;");
             } else {
-                 $("#chat_left").attr("style","margin-top: 390px;");
+                $("#chat_left").attr("style","margin-top: 390px;");
             }
             e.stopPropagation();
         });
@@ -156,16 +156,15 @@ var LetterView = Backbone.View.extend({
             }
         }
         var buf = [], len = this.letterUserList.length, bufLen = 1, self = this, user, id;
-        buf[0] ="<li id='letter_contact_-1'><img src='' width='30' height='30'/> 系统</li>";
+        buf[0] ="<li id='letter_contact_-1'><img src='style/images/default-avatar-male.png' width='30' height='30'/> 系统</li>";
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
-            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + '<img src="' +user.get("imgPath") + '" width="30" height="30"/>'+ user.get("name")+ "</li>";
+            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + "<img src='" + user.get("imgPath") + "' width='30' height='30'/>"+ user.get("name")+ "</li>";
         }
         this.$userList.append(buf.join(""));
     },
     switchContact: function (id) {
         var inList = false, that = this;
-        debugger;
         for ( i = 0, len = this.letterUserList.length; i < len; i++) {
             user = this.letterUserList.at(i);
             if (user.id === id || id === -1) {
@@ -173,9 +172,7 @@ var LetterView = Backbone.View.extend({
                 break;
             }
         }
-        if (inList) {
-
-        } else {
+        if (!inList) {
             app.userManager.fetchUser(id, {
                 "success": function (user) {
                     self.toUser = user;
