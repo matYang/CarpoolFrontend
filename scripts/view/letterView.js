@@ -165,9 +165,10 @@ var LetterView = Backbone.View.extend({
     },
     switchContact: function (id) {
         var inList = false, that = this;
-        for ( i = 0, len = this.letterUserList; i < len; i++) {
+        debugger;
+        for ( i = 0, len = this.letterUserList.length; i < len; i++) {
             user = this.letterUserList.at(i);
-            if (user.id === id) {
+            if (user.id === id || id === -1) {
                 inList = true;
                 break;
             }
@@ -175,9 +176,10 @@ var LetterView = Backbone.View.extend({
         if (inList) {
 
         } else {
-            app.userManager.fetchUser(this.toUserId, {
+            app.userManager.fetchUser(id, {
                 "success": function (user) {
                     self.toUser = user;
+                    self.toUserId = id;
                     if (!self.letterUserList) {
                         self.letterUserList = new Letters ();
                     }

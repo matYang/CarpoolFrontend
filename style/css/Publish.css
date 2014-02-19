@@ -165,7 +165,7 @@ dl.publish_origin dt, dl.publish_dest dt {
 	top:15px;
 	left:12px;
 	background:url(../images/icon.png) no-repeat 0 -49px;
-	z-index:9;
+	z-index:1;
 }
 .publish .select_item {
 	float:right;
