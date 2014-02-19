@@ -182,6 +182,9 @@ var PersonalUtilityView = Backbone.View.extend({
         });
         this.$qq.on('blur', function (e) {
             $("#qqWrong").remove();
+            if (!this.value) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
                 $(this).parent().parent().after("<dd id='qqWrong' class='wrong'><p>很抱歉，QQ的格式不对，请重新输入</p></dd>");
             } else {
@@ -405,7 +408,7 @@ var PersonalUtilityView = Backbone.View.extend({
         date.setYear(Utilities.toInt(this.$birthyear.val()));
         date.setMonth(Utilities.toInt(this.$birthmonth.val()) - 1);
         date.setDate(Utilities.toInt(this.$birthday.val()));
-        if ($(".wrong").length || !this.$phone.val()) {
+        if ($(".wrong").length) {
             return;
         }
         app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, this.editedLocation, {
@@ -418,8 +421,8 @@ var PersonalUtilityView = Backbone.View.extend({
     saveSuccess: function () {
         $("#save_personalInfo").attr("value", "更新完毕");
         $("#myPage_myInfo").find("p[data-id=name]").html("姓名："+this.sessionUser.get("name"));
-        $("#myPage_myInfo").find("p[data-id=gender]").html("性别："+this.sessionUser.get("gender"));
-        $("#myPage_myInfo").find("p[data-id=age]").html("年龄："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=gender]").html("性别："+ ( (this.sessionUser.get("gender") === Constants.gender.male) ? "男" : "女"));
+        $("#myPage_myInfo").find("p[data-id=age]").html("年龄："+this.sessionUser.getAge());
         $("#myPage_myInfo").find("p[data-id=location]").html("地区："+this.sessionUser.get("location").get("pointName"));
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true

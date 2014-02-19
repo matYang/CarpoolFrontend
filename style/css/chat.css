@@ -1,5 +1,5 @@
 /*即时对话框*/
-.chat_box { position:fixed; right:0; bottom:0; width:518px; height:423px;  font-size:12px; z-index:9999; pointer-events:none;}
+.chat_box { position:fixed; right:0; bottom:0; width:518px; height:423px;  font-size:12px; z-index:3000; pointer-events:none;}
 .chat_box .chat_left { float:left; width:345px; height:423px;  background:#fff; box-shadow: 0 0 5px #222; pointer-events: all;}
 .chat_box .chat_box_title { height:32px; line-height:32px; background:#333333; padding-left:15px; color:#fff; cursor:pointer;}
 .chat_box .chat_box_title .close { float:right; width:10px; height:24px; background:url(../images/chat_box.png) no-repeat 0 -97px; margin:0 20px 0 10px; text-indent:-32768px; }

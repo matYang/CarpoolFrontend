@@ -21,7 +21,10 @@ var PersonalView = Backbone.View.extend({
 
     preRender: function (user) {
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
-            "success": this.renderWatchButton
+            "success": this.renderWatchButton,
+            "error": function(response) {
+                Info.log(response);
+            }
         });
         $("#popup").attr("class", "pop message_reservation");
         var that = this;
@@ -41,13 +44,12 @@ var PersonalView = Backbone.View.extend({
             }
             //if user has watched this user
             if (this.watched) {
-                $("#profilePage_utilityTab").html(" + 已关注").append("<div id = 'deWatch'>取消关注</div>");
+                $("#profilePage_utilityTab").html(" - 取消关注");
                 this.bindDeWatchEvent();
             } else {
                 $("#profilePage_utilityTab").html(" + 关注");
                 this.bindWatchEvent();
             }
-            $("#profilePage_notificationTab").remove();
         }
     },
     render: function () {
@@ -146,6 +148,13 @@ var PersonalView = Backbone.View.extend({
                 app.navigate("personal/" + that.curUserId + "/notification");
                 that.switchChildView("notification"); 
             });
+            $('#profilePage_sendLetter').remove();
+        } else {
+            $('#profilePage_notificationTab').remove();
+            $("#profilePage_sendLetter").on('click', function () {
+                app.letterView.switchContact(that.curUserId);
+            });
+
         }
         $('#profilePage_utilityTab').on('click', function () {
             if (app.sessionManager.getUserId() === that.curUserId) {
@@ -154,9 +163,6 @@ var PersonalView = Backbone.View.extend({
             } else {
                 
             }
-        });
-        $("#profilePage_sendLetter").on('click', function () {
-        	app.letterView.switchContact(that.curUserId);
         });
     },
     bindWatchEvent: function () {
@@ -172,7 +178,7 @@ var PersonalView = Backbone.View.extend({
     },
     bindDeWatchEvent: function () {
         var that = this;
-        $("#deWatch").on("click", function () {
+        $("#profilePage_utilityTab").on("click", function () {
             app.userManager.deWatchUser(that.curUserId, {
                 "success": that.deWatchSuccess,
                 "error": that.deWatchError
@@ -181,13 +187,13 @@ var PersonalView = Backbone.View.extend({
     },
 
     watchSuccess: function () {
-        $("#profilePage_utilityTab").html("已关注").append("<div id = 'deWatch'>取消关注</div>").off();
+        $("#profilePage_utilityTab").html("- 取消关注").off();
         this.bindDeWatchEvent();
     },
     watchError: function () {
     },
     deWatchSuccess: function () {
-        $("#deWatch").off().remove();
+        $("#profilePage_utilityTab").html("+ 加关注").off();
         this.bindWatchEvent();
     },
     deWatchError: function () {
