@@ -24,12 +24,12 @@ var TopBarView = Backbone.View.extend({
 
     render: function () {
         this.listenTo(this.sessionUser, 'change:userId', this.reRender);
+        this.$ndropdown = $('#notifications').find("ul");
+        this.$ldropdown = $('#letters').find("ul");
+        this.$fdropdown = $('#favorites').find("ul");
+        this.$pdropdown = $('#profileDropdown>dd');
         if (app.sessionManager.hasSession()) {
             $(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
-            this.$ndropdown = $('#notifications').find("ul");
-            this.$ldropdown = $('#letters').find("ul");
-            this.$fdropdown = $('#favorites').find("ul");
-            this.$pdropdown = $('#profileDropdown>dd');
             this.bindEvents();
 
             //dropdown specific data binding
@@ -266,19 +266,19 @@ var TopBarView = Backbone.View.extend({
             this.$nfeedback = $('#navigate_feedBack').on('click', function () {
                 app.navigate("post", true);
             });
-            this.$nusersearch = $("#navigate_usersearch").on('click', function () {
-                app.navigate("finduser", true);
-            });
+            // this.$nusersearch = $("#navigate_usersearch").on('click', function () {
+            //     app.navigate("finduser", true);
+            // });
             //personal nav
-            this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
-            });
-            this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("letter", true);
-            });
-            this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
-            });
+            // this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
+            // });
+            // this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("letter", true);
+            // });
+            // this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
+            // });
             $('#logout').on('click', function (e) {
                 e.preventDefault();
                 self.logout();
@@ -330,18 +330,12 @@ var TopBarView = Backbone.View.extend({
             $("#remember_password").off();
         }
         else{
-            this.$logo.off();
             this.$npersonal.off();
-            //this.$nfeedBack.off();
-            this.$nusersearch.off();
-            this.$notifications.off();
-            this.$letters.off();
-            this.$favorites.off();
             this.$ndropdown.off();
             this.$ldropdown.off();
             this.$fdropdown.off();
-            this.$profilePicture.off();
         }
+        this.$logo.off();
         this.$nmain.off();
         this.stopListening();
         this.unbind();
