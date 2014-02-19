@@ -144,6 +144,9 @@ var TopBarView = Backbone.View.extend({
         this.$nmain = $('#navigate_main').on('click', function () {
             app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
+        this.$logo = $('#logo').on('click', function () {
+            app.navigate("front", true);
+        });
         if (!app.sessionManager.hasSession()) {
             this.$lb = $("#loginBox");
             this.$lbt = $("#loginBoxToggler").on("click", function (e) {
@@ -256,10 +259,6 @@ var TopBarView = Backbone.View.extend({
                 e.stopPropagation();
             });
         } else {
-            this.$logo = $('#logo').on('click', function () {
-                app.navigate("front", true);
-            });
-
             this.$npersonal = $('#navigate_personal').on('click', function () {
                 app.navigate("personal/" + app.sessionManager.getUserId(), true);
             });

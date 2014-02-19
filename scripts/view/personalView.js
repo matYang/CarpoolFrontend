@@ -20,6 +20,9 @@ var PersonalView = Backbone.View.extend({
     },
 
     preRender: function (user) {
+        if ( location.href.indexOf("personal/"+this.curUserId) < 0) {
+            return;
+        }
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
             "success": this.renderWatchButton,
             "error": function(response) {

@@ -324,6 +324,7 @@
 		}
 		if (this.sessionManager.hasSession()){
 			Constants.dWarn("UserManager::activateAccount:: session already exists, exit");
+			app.navigate("/main", true);
 			return;
 		}
 
