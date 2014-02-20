@@ -5271,7 +5271,7 @@ var Constants = {
             versionPrefix: '/v1.0',
 
             moduleResource: {
-                'DM': '/dianming',
+                'message': '/dianming',
                 'users': '/users',
                 'transaction': '/transaction',
                 'notification': '/notification',
@@ -5281,12 +5281,12 @@ var Constants = {
             },
 
             moduleSufixResource: {
-                'DM': {
-                    dianming: '/dianming',
+                'message': {
                     recent: '/recent',
                     search: '/search',
                     transaction: '/transaction',
-                    autoMatch: '/autoMatch'
+                    autoMatch: '/autoMatch',
+                    message: '/dianming'
                 },
 
                 'users': {
@@ -5347,12 +5347,11 @@ var Constants = {
         var api_assembler = function () {
 
             return {
-
-                DM_dianming: api_maker('DM', 'dianming'),
-                DM_recent: api_maker('DM', 'recent'),
-                DM_search: api_maker('DM', 'search'),
-                DM_transaction: api_maker('DM', 'transaction'),
-                DM_autoMatch: api_maker('DM', 'autoMatch'),
+                message_message: api_maker("message", "message"),
+                message_recent: api_maker('message', 'recent'),
+                message_search: api_maker('message', 'search'),
+                message_transaction: api_maker('message', 'transaction'),
+                message_autoMatch: api_maker('message', 'autoMatch'),
 
                 users_findSession: api_maker('users', 'findSession'), //GET added to session manaegr
                 users_user: api_maker('users', 'user'), //GET and POST added to user manager
@@ -6960,7 +6959,15 @@ var User = Backbone.Model.extend({
     isNew: function () {
         return this.id === -1;
     },
-
+    getAge: function () {
+        var today = new Date (), birthday = this.get('birthday');
+        var age = today.getFullYear() - birthday.getFullYear();
+        var month = today.getMonth() - birthday.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthday.getDate() )) {
+            age--;
+        }
+        return age;
+    },
     parse: function (data) {
         if ( typeof data !== 'undefined' && typeof data.userId !== 'undefined') {
             data.userId = parseInt(data.userId, 10);
@@ -6997,6 +7004,7 @@ var User = Backbone.Model.extend({
             json.location = this.get('location').toUiString();
         }
         json.name = decodeURI(json.name);
+        json.age = this.getAge();
         return json;
     },
     toJSON: function () {
@@ -7674,6 +7682,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		}
 		if (this.hasSession()){
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
+			app.navigate("/main", true);
 		}
 		var self = this;
 
@@ -8096,7 +8105,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 
 	UserManager.prototype.changeContactInfo = function(name, gender, phone, qq, birthday, location, callback) {
 		//if invalid input or is already logged in, can not change contact information
-		if (!(name && (typeof gender === 'number') && phone)){
+		if (!(name && (typeof gender === 'number'))){
 			Constants.dWarn("UserManager::changeContactInfo:: invalid parameter");
 			return;
 		}
@@ -8257,6 +8266,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		}
 		if (this.sessionManager.hasSession()){
 			Constants.dWarn("UserManager::activateAccount:: session already exists, exit");
+			app.navigate("/main", true);
 			return;
 		}
 
@@ -8807,7 +8817,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 
 		var self = this;
 
-		message.overrideUrl(this.apis.DM_dianming);
+		message.overrideUrl(this.apis.message_message);
 		message.set('messageId', messageId);
 
 		message.fetch({
@@ -8836,7 +8846,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 	MessageManager.prototype._postSingleMessage = function(newMessage, promiseback, callback){
 		var self = this;
 
-		newMessage.overrideUrl(this.apis.DM_dianming);
+		newMessage.overrideUrl(this.apis.message_message);
 		newMessage.set('messageId', -1);
 		newMessage.set('ownerId', this.sessionManager.getUserId());
 		newMessage.save({},{
@@ -8914,7 +8924,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 
 		var self = this;
 
-		updatedMessage.overrideUrl(this.apis.DM_dianming);
+		updatedMessage.overrideUrl(this.apis.message_message);
 		updatedMessage.set('ownerId', this.sessionManager.getUserId());
 		updatedMessage.save({},{
             dataType:'json',
@@ -8947,7 +8957,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		}
 		//do not destory the message itself
 		var message = new Message();
-		message.overrideUrl(this.apis.messages_message);
+		message.overrideUrl(this.apis.message_message);
 		message.set('messageId', messageId);
 		message.destroy({
             dataType:'json',
@@ -8982,7 +8992,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		}
 
 		var userId = this.sessionManager.hasSession() ? this.sessionManager.getUserId() : -1;
-		searchResults.overrideUrl(this.apis.DM_search);
+		searchResults.overrideUrl(this.apis.message_search);
 		searchResults.fetch({
 			data: $.param({'searchRepresentation': searchRepresentationObj.toString(), 'userId' : userId}),
             dataType:'json',
@@ -9011,7 +9021,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 			return;
 		}
 		var self = this;
-		recents.overrideUrl(this.apis.DM_recent);
+		recents.overrideUrl(this.apis.message_recent);
 		recents.fetch({
             dataType:'json',
             success:function(model, response){
@@ -9050,7 +9060,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 
 
 		var transactionList = new Transactions();
-		transactionList.overrideUrl(this.apis.DM_transaction + '/' + intendedMessageId);
+		transactionList.overrideUrl(this.apis.message_transaction + '/' + intendedMessageId);
 		transactionList.fetch({
 			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
@@ -9089,7 +9099,7 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 
 
 		var messages = new Messages();
-		messages.overrideUrl(this.apis.DM_autoMatch + '/' + messageId);
+		messages.overrideUrl(this.apis.message_autoMatch + '/' + messageId);
 		messages.fetch({
 			data: $.param({ 'userId': self.sessionManager.getUserId()}),
 			dataType:'json',
@@ -9652,8 +9662,8 @@ testMockObj.sampleUsers.add([testMockObj.sampleUserA, testMockObj.sampleUserA, t
 		var self = this;
 
 		if (this.sessionManager.hasSession()){
-			//this.socket = io.connect(Constants.socketOrigin, {secure: true});
-			this.socket = io.connect(Constants.socketOrigin);
+			this.socket = io.connect(Constants.socketOrigin, {secure: true});
+			//this.socket = io.connect(Constants.socketOrigin);
 			this.timeStamp = new Date();
 
 			this.socket.emit('register', {'id': this.sessionManager.getUserId()});
@@ -9716,6 +9726,7 @@ var MultiPageView = Backbone.View.extend({
     entryHeight: -1,
     entryRowNum: 1,
     minHeight: 0,
+    noMessage: "暂无消息",
     $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
@@ -9743,7 +9754,7 @@ var MultiPageView = Backbone.View.extend({
                 this.bindEntryEvent();
             }
         } else {
-            this.$domContainer.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+            this.$domContainer.append("<div class = 'noMessage'>"+this.noMessage+"</div>");
         }
         if (this.entryHeight) {
             var height = Math.ceil(length / this.entryRowNum) * this.entryHeight;
@@ -10169,7 +10180,8 @@ var LetterView = Backbone.View.extend({
         this.template = _.template(tpl.get('letter'));
         this.domContainer = $('#chat');
         this.domContainer.append(this.template);
-        this.$messagePanel = $("#letter_message_panel>ul");
+        this.$historyPanel = $("#letter_message_panel>#letter_history");
+        this.$messagePanel = $("#letter_message_panel>letter_new");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== -1) {
@@ -10182,7 +10194,7 @@ var LetterView = Backbone.View.extend({
                     $("#letter_toUser_name").html(user.get("name"));
 
                     if (!self.letterUserList) {
-                        self.letterUserList = new Letters ();
+                        self.letterUserList = new Users ();
                     }
                     self.letterUserList.add(user);
                     self.renderContacts(self.letterUserList);
@@ -10257,7 +10269,7 @@ var LetterView = Backbone.View.extend({
             if (style && style.indexOf("390px") >= 0) {
                 $("#chat_left").attr("style","margin-top: 0px;");
             } else {
-                 $("#chat_left").attr("style","margin-top: 390px;");
+                $("#chat_left").attr("style","margin-top: 390px;");
             }
             e.stopPropagation();
         });
@@ -10303,15 +10315,40 @@ var LetterView = Backbone.View.extend({
             }
         }
         var buf = [], len = this.letterUserList.length, bufLen = 1, self = this, user, id;
-        buf[0] ="<li id='letter_contact_-1'><img src='' width='30' height='30'/> 系统</li>";
+        buf[0] ="<li id='letter_contact_-1'><img src='style/images/default-avatar-male.png' width='30' height='30'/> 系统</li>";
         for ( i = 0; i < len; i++) {
             user = this.letterUserList.at(i);
-            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + '<img src="' +user.get("imgPath") + '" width="30" height="30"/>'+ user.get("name")+ "</li>";
+            buf[bufLen++] = "<li id='letter_contact_" + user.id + "'>" + "<img src='" + user.get("imgPath") + "' width='30' height='30'/>"+ user.get("name")+ "</li>";
         }
         this.$userList.append(buf.join(""));
     },
     switchContact: function (id) {
+        var inList = false, that = this;
+        for ( i = 0, len = this.letterUserList.length; i < len; i++) {
+            user = this.letterUserList.at(i);
+            if (user.id === id || id === -1) {
+                inList = true;
+                break;
+            }
+        }
+        if (!inList) {
+            app.userManager.fetchUser(id, {
+                "success": function (user) {
+                    self.toUser = user;
+                    self.toUserId = id;
+                    if (!self.letterUserList) {
+                        self.letterUserList = new Letters ();
+                    }
+                    self.letterUserList.add(user);
+                    $("#letter_toUser_name").html(user.get("name"));
+                    that.$userList.prepend("<li id='letter_contact_" + id + "'><img src='" + user.get("imgPath")+ "' width='30' height='30'/>" + user.get("name") + "</li>");
+                },
+                "error": function () {
+                }
+            });
+        }
         $("#chat_left").show().attr("style","margin-top: 0;");
+        $("#letter_input").focus();
         this.$messagePanel.empty();
         this.$letterInput.val("");
         this.toUserIdResend = null;
@@ -10333,6 +10370,7 @@ var LetterView = Backbone.View.extend({
         app.userManager.fetchLetters(option, {
             "success": this.fillRecentHistory,
             "error": function () {
+                
             }
         });
         app.storage.setLastContact(id);
@@ -10340,8 +10378,12 @@ var LetterView = Backbone.View.extend({
 
     fillRecentHistory: function (letters) {
         this.$messagePanel.empty();
-        if (!letters)
+        if (!letters || !letters.length) {
+            this.$historyPanel.hide();
             return;
+        }
+        this.$historyPanel.empty();
+        this.$historyPanel.show();
         this.letterHistories = letters;
         var len = letters.length, i = 0, buf = [], letter, bufLen = 0;
         var lastDay, send_time;
@@ -10355,12 +10397,12 @@ var LetterView = Backbone.View.extend({
             send_time.setMilliseconds(0);
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
-        this.$messagePanel.append(buf.join(""));
-        this.$messagePanel.append('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+        this.$historyPanel.append(buf.join(""));
+        this.$historyPanel.after('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
     },
     buildMessageBox: function (id, message, time, sendByMe) {
-        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + id;
-        this.messageBoxTemplate[3] = time.toLocaleString();;
+        this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + "letterId_"+id;
+        this.messageBoxTemplate[3] = time.toLocaleString();
         this.messageBoxTemplate[5] = sendByMe ? this.sessionUser.get("imgPath") : this.toUser.get("imgPath");
         this.messageBoxTemplate[7] = message;
         return this.messageBoxTemplate.join("");
@@ -12046,7 +12088,7 @@ var FrontPageView = Backbone.View.extend({
 
     renderError: function () {
         this.$resultPanel = this.$resultPanel || $("#frontPage-resultPanel");
-        this.$resultPanel.append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+        this.$resultPanel.empty().append("<div class = 'noMessage'>暂无消息</div>");
     },
 
     bindEvents: function () {
@@ -12372,7 +12414,7 @@ var MainPageView = Backbone.View.extend({
 
     renderError: function () {
         this.$resultp = this.$resultp || $("#searchResultDisplayPanel");
-        this.$resultp.empty().append("<div id = 'mainPageNoMessage'>暂无消息</div>");
+        this.$resultp.empty().append("<div class = 'noMessage'>暂无消息</div>");
     },
 
     onClickTime: function (e, parentId) {
@@ -12809,7 +12851,7 @@ var PersonalSocialView = MultiPageView.extend({
         this.entryContainer = "socialListContent";
         this.minHeight = 460;
         this.startIndex = 0;
-
+        this.noMessage = "你还没有关注的人";
         this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalSocial'));
         this.domContainer.append(this.wrapperTemplate);
@@ -13112,8 +13154,11 @@ var PersonalUtilityView = Backbone.View.extend({
         this.passwordValid = {};
         this.$name.on('blur', function (e) {
             $("#nameWrong,#nameCorrect").remove();
-            if (Utilities.isEmpty(this.value)) {
+            var nameValue = this.value ? this.value.trim() : "";
+            if (Utilities.isEmpty(nameValue)) {
                 $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能为空</p></dd>");
+            } else if (nameValue.split(" ").length > 2) {
+                $(this).parent().parent().after("<dd id='nameWrong' class='wrong'><p>名字不能有超过一个空格</p></dd>");
             } else {
                 $(this).after("<span id='nameCorrect' class='right'></span>");
             }
@@ -13122,14 +13167,21 @@ var PersonalUtilityView = Backbone.View.extend({
 
         });
         this.$qq.on('blur', function (e) {
+            $("#qqWrong").remove();
+            if (!this.value) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 10 || this.value.length < 5) {
-                
+                $(this).parent().parent().after("<dd id='qqWrong' class='wrong'><p>很抱歉，QQ的格式不对，请重新输入</p></dd>");
             } else {
-                
+                $(this).after("<span id='qqRight' class='right'></span>");
             }
         });
         this.$phone.on('blur', function (e) {
             $("#phoneWrong,#phoneRight").remove();
+            if (!$(this).val()) {
+                return;
+            }
             if (!($.isNumeric(this.value)) || this.value.length > 11 || this.value.length < 8) {
                 $(this).parent().parent().after("<dd id='phoneWrong' class='wrong'><p>很抱歉，电话的格式不对，请重新输入</p></dd>");
             } else {
@@ -13142,15 +13194,15 @@ var PersonalUtilityView = Backbone.View.extend({
             var m = Utilities.toInt(mi);
             var d = Utilities.toInt(di);
             $("#birthwrong").remove();
+            $("#birthdaycheck").remove();
             if ( yi && mi && di && !( isNaN(y) || isNaN(m) || isNaN(d))) {
-                $(this).parent().removeClass("wrong");
                 if ( y < 1910 || y > 2012 ) {
                     bdvalid = false;
                 }
                 if ( m < 1 || m > 12 ) {
                     bdvalid = false;
                 }
-                if (d < 1 || dpContent > 31) {
+                if (d < 1 || d > 31) {
                     bdvalid = false;
                 } else if (m === 4 || m === 6 ||m === 9 || m === 11){
                     bdvalid = bdvalid && (d <= 30);
@@ -13162,23 +13214,17 @@ var PersonalUtilityView = Backbone.View.extend({
                     }
                 }
                 if (!bdvalid) {
-                    if ($("#birthwrong").length === 0) {
-                        $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                    }
+                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
                 } else {
-                    $("#birthwrong").remove();
                     if ($("#birthdaycheck").length === 0) {
                         $(this).parent().append('<span id="birthdaycheck" class="right"></span>');
                     }
                 }
             } else if ( isNaN(y) || isNaN(m) || isNaN(d)) {
-                $(this).parent().addClass("wrong").append("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                that.registerInfo.birthday = null;
-                that.valid.birthday = false;
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
+                bdvalid = false;
             } else {
-                if ($("#birthwrong").length === 0) {
-                    $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
-                }
+                $(this).parent().parent().after("<dd class='wrong' id='birthwrong' title='请填写正确的日期'><p>请填写正确的日期</p></dd>");
             }
         });
 
@@ -13252,7 +13298,7 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$birthday = $('input[name=birthday]');
         if (this.sessionUser.get("birthday").getFullYear() !== new Date ().getFullYear()) {
             this.$birthyear.val(this.sessionUser.get("birthday").getFullYear());
-            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth());
+            this.$birthmonth.val(this.sessionUser.get("birthday").getMonth() + 1);
             this.$birthday.val(this.sessionUser.get("birthday").getDate());
         }
         this.$personalContent = $("#utility_personalInfo");
@@ -13342,14 +13388,13 @@ var PersonalUtilityView = Backbone.View.extend({
     savePersonalInfo: function () {
         var that = this, date = new Date ();
         var gender = Utilities.toInt($("dd[name=gender]>.radio_box_checked").attr("data-id"));
-        this.$phone.trigger("focus").trigger("blur");
         this.$name.trigger("focus").trigger("blur");
         this.$birthyear.trigger("focus").trigger("blur");
         this.$address.trigger("focus").trigger("blur");
         date.setYear(Utilities.toInt(this.$birthyear.val()));
-        date.setMonth(Utilities.toInt(this.$birthmonth.val()));
+        date.setMonth(Utilities.toInt(this.$birthmonth.val()) - 1);
         date.setDate(Utilities.toInt(this.$birthday.val()));
-        if ($(".wrong").length || !this.$phone.val()) {
+        if ($(".wrong").length) {
             return;
         }
         app.userManager.changeContactInfo(this.$name.val(), gender, this.$phone.val(), this.$qq.val(), date, this.editedLocation, {
@@ -13360,11 +13405,11 @@ var PersonalUtilityView = Backbone.View.extend({
     },
 
     saveSuccess: function () {
-        Info.displayNotice("成功更新用户信息");
         $("#save_personalInfo").attr("value", "更新完毕");
-        app.navigate('/temp', {
-            replace: true
-        });
+        $("#myPage_myInfo").find("p[data-id=name]").html("姓名："+this.sessionUser.get("name"));
+        $("#myPage_myInfo").find("p[data-id=gender]").html("性别："+ ( (this.sessionUser.get("gender") === Constants.gender.male) ? "男" : "女"));
+        $("#myPage_myInfo").find("p[data-id=age]").html("年龄："+this.sessionUser.getAge());
+        $("#myPage_myInfo").find("p[data-id=location]").html("地区："+this.sessionUser.get("location").get("pointName"));
         app.navigate("personal/" + app.sessionManager.getUserId() + "/utility", {
             trigger: true
         });
@@ -13469,8 +13514,14 @@ var PersonalView = Backbone.View.extend({
     },
 
     preRender: function (user) {
+        if ( location.href.indexOf("personal/"+this.curUserId) < 0) {
+            return;
+        }
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
-            "success": this.renderWatchButton
+            "success": this.renderWatchButton,
+            "error": function(response) {
+                Info.log(response);
+            }
         });
         $("#popup").attr("class", "pop message_reservation");
         var that = this;
@@ -13490,24 +13541,16 @@ var PersonalView = Backbone.View.extend({
             }
             //if user has watched this user
             if (this.watched) {
-                $("#profilePage_utilityTab").html(" + 已关注").append("<div id = 'deWatch'>取消关注</div>");
+                $("#profilePage_utilityTab").html(" - 取消关注");
                 this.bindDeWatchEvent();
             } else {
                 $("#profilePage_utilityTab").html(" + 关注");
                 this.bindWatchEvent();
             }
-            $("#profilePage_notificationTab").remove();
         }
     },
     render: function () {
         var userJson = this.user._toJSON();
-        var today = new Date (), birthday = this.user.get('birthday');
-        var age = today.getFullYear() - birthday.getFullYear();
-        var month = today.getMonth() - birthday.getMonth();
-        if (month < 0 || (month === 0 && today.getDate() < birthday.getDate() )) {
-            age--;
-        }
-        userJson.age = age;
         this.domContainer.append(this.template(userJson));
     },
     renderError: function () {
@@ -13602,6 +13645,13 @@ var PersonalView = Backbone.View.extend({
                 app.navigate("personal/" + that.curUserId + "/notification");
                 that.switchChildView("notification"); 
             });
+            $('#profilePage_sendLetter').remove();
+        } else {
+            $('#profilePage_notificationTab').remove();
+            $("#profilePage_sendLetter").on('click', function () {
+                app.letterView.switchContact(that.curUserId);
+            });
+
         }
         $('#profilePage_utilityTab').on('click', function () {
             if (app.sessionManager.getUserId() === that.curUserId) {
@@ -13610,9 +13660,6 @@ var PersonalView = Backbone.View.extend({
             } else {
                 
             }
-        });
-        $("#profilePage_sendLetter").on('click', function () {
-        	app.letterView.switchContact(that.curUserId);
         });
     },
     bindWatchEvent: function () {
@@ -13628,7 +13675,7 @@ var PersonalView = Backbone.View.extend({
     },
     bindDeWatchEvent: function () {
         var that = this;
-        $("#deWatch").on("click", function () {
+        $("#profilePage_utilityTab").on("click", function () {
             app.userManager.deWatchUser(that.curUserId, {
                 "success": that.deWatchSuccess,
                 "error": that.deWatchError
@@ -13637,13 +13684,13 @@ var PersonalView = Backbone.View.extend({
     },
 
     watchSuccess: function () {
-        $("#profilePage_utilityTab").html("已关注").append("<div id = 'deWatch'>取消关注</div>").off();
+        $("#profilePage_utilityTab").html("- 取消关注").off();
         this.bindDeWatchEvent();
     },
     watchError: function () {
     },
     deWatchSuccess: function () {
-        $("#deWatch").off().remove();
+        $("#profilePage_utilityTab").html("+ 加关注").off();
         this.bindWatchEvent();
     },
     deWatchError: function () {
@@ -13830,7 +13877,7 @@ var RegistrationView = Backbone.View.extend({
                     $(this).parent().append("<span id='vbirth' class='right'></span>");
                     that.registerInfo.birthday = new Date();
                     that.registerInfo.birthday.setFullYear(y);
-                    that.registerInfo.birthday.setMonth(m);
+                    that.registerInfo.birthday.setMonth(m - 1);
                     that.registerInfo.birthday.setDate(d);
                     that.valid.birthday = true;
                 }
@@ -14400,7 +14447,7 @@ var TopBarView = Backbone.View.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'close', 'logout', 'showNotificationDropdown', 'hideNotificationDropdown', 'showLetterDropdown', 'hideLetterDropdown', 'showFavoriteDropdown', 'hideFavoriteDropdown', '_clearAll');
+        _.bindAll(this, 'render', 'reRender', 'bindEvents', 'renderNotificationDropdown', 'renderLetterDropdown', 'renderFavoriteDropdown', 'bindDropdownEvents', 'close', 'login', 'logout', '_clearAll');
         app.viewRegistration.register("topBar", this, true);
         this.isClosed = false;
 
@@ -14417,13 +14464,12 @@ var TopBarView = Backbone.View.extend({
 
     render: function () {
         this.listenTo(this.sessionUser, 'change:userId', this.reRender);
+        this.$ndropdown = $('#notifications').find("ul");
+        this.$ldropdown = $('#letters').find("ul");
+        this.$fdropdown = $('#favorites').find("ul");
+        this.$pdropdown = $('#profileDropdown>dd');
         if (app.sessionManager.hasSession()) {
             $(this.el).append(this.loggedInTemplate(this.sessionUser._toJSON()));
-            this.$alldropdowns = $("#dropdowns").find("dd").hide();
-            this.$ndropdown = $('#notifications>dd');
-            this.$ldropdown = $('#letters>dd');
-            this.$fdropdown = $('#favorites>dd');
-            this.$pdropdown = $('#profileDropdown>dd');
             this.bindEvents();
 
             //dropdown specific data binding
@@ -14451,38 +14497,44 @@ var TopBarView = Backbone.View.extend({
     },
 
     renderNotificationDropdown: function (notifications) {
-        // var i = 0, htmlContext = '';
-
-        // for ( i = 0; i < this.notifications.length; i++) {
-        //     htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
-        // }
-
-        // this.notificationContainer.html(htmlContext);
+        var i = 0, htmlContext = '';
+        if ( this.notifications.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.notifications.length; i++) {
+            htmlContext += this.dropdown_notifiationTemplate(this.notifications.at(i).toDropdownJSON());
+        }
+        this.$ndropdown.empty().append(htmlContext);
     },
 
     renderLetterDropdown: function () {
-        // var i = 0, htmlContext = '';
+        var i = 0, htmlContext = '';
+        if ( this.letters.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.letters.length; i++) {
+            htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
+        }
 
-        // for ( i = 0; i < this.letters.length; i++) {
-        //     htmlContext += this.dropdown_letterTemplate(this.letters.at(i).toDropdownJSON());
-        // }
-
-        // this.letterContainer.html(htmlContext);
+        this.$ldropdown.empty().append(htmlContext);
     },
 
     renderFavoriteDropdown: function () {
-        // var i = 0, htmlContext = '';
+        var i = 0, htmlContext = '';
+        if ( this.favorites.length === 0 ) {
+            return;
+        }
+        for ( i = 0; i < this.favorites.length; i++) {
+            htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
+        }
 
-        // for ( i = 0; i < this.favorites.length; i++) {
-        //     htmlContext += this.dropdown_favoriteTemplate(this.favorites.at(i).toDropdownJSON());
-        // }
-
-        // this.favoriteContainer.html(htmlContext);
+        this.$fdropdown.empty().append(htmlContext);
     },
 
     bindDropdownEvents: function () {
         var self = this;
         this.$ndropdown.on('click', 'li', function (e) {
+            e.preventDefault();
             var n_id = parseInt($(e.target).attr("data-notificationId"), 10);
             var n_model = self.notifications.get(n_id);
             var n_evt = n_model.get('notificationEvent');
@@ -14506,6 +14558,19 @@ var TopBarView = Backbone.View.extend({
             var u_id = $(e.target).attr("data-userId");
             app.navigate("personal/" + u_id, true);
         });
+        $('#notifications').find(".more").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/" + self.sessionUser.id + "/history", true);
+        });
+        $('#letters').find(".more").on("click", function (e) {
+            e.preventDefault();
+            $("#chat_right").attr("style","margin-top: 0px;");
+        });
+        $('#favorites').find(".more").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("personal/" + self.sessionUser.id + "/social", true);
+        });
+
     },
     bindEvents: function () {
         var self = this;
@@ -14519,6 +14584,9 @@ var TopBarView = Backbone.View.extend({
         this.$nmain = $('#navigate_main').on('click', function () {
             app.navigate("main/" + self.sessionUser.get('searchRepresentation'), true);
         });
+        this.$logo = $('#logo').on('click', function () {
+            app.navigate("front", true);
+        });
         if (!app.sessionManager.hasSession()) {
             this.$lb = $("#loginBox");
             this.$lbt = $("#loginBoxToggler").on("click", function (e) {
@@ -14528,14 +14596,12 @@ var TopBarView = Backbone.View.extend({
             $('#signup_button').on('click', function () {
                 app.navigate("/register", {trigger: true, replace: true});
             });
-            var $wrong = $("#credentialWrong");
+            this.$wrong = $("#credentialWrong");
             this.$usernameInput.on("click", function (e){
                 if  ($(this).val() === ("请输入邮箱") ) {
                     $(this).val("");
                 }
-                $wrong.hide();
-                self.$usernameInput.removeClass('invalid_input');
-                self.$passwordInput.removeClass('invalid_input');
+                self.$wrong.hide();
             });
             this.$usernameInput.on("blur", function (e){
                 if  ($(this).val() === ("") ) {
@@ -14543,38 +14609,11 @@ var TopBarView = Backbone.View.extend({
                 }
             });
             this.$passwordInput.on("focus", function (e){
-                $wrong.hide();
+                self.$wrong.hide();
             });
             this.$passwordInput.add(this.$usernameInput).on("keydown", function (e) {
                 if (e.which == 13) {
-                    username = self.$usernameInput.val();
-                    password = self.$passwordInput.val();
-                    app.sessionManager.login(username, password, {
-                        success: function (response) {
-                            Constants.dLog("server login response: ");
-                            Constants.dLog(response);
-
-                            //fetching session, with async flag to true
-                            app.sessionManager.fetchSession(true, {
-                                success: function () {
-                                    app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    app.letterView = new LetterView({
-                                        "toUserId": app.storage.getLastContact()
-                                    });
-                                    $("#chat").show();
-                                },
-                                error: function () {
-                                    Info.displayNotice("登录失败，请稍后再试");
-                                }
-                            });
-                        },
-
-                        error: function (response) {
-                            $wrong.show();
-                            $('#credentialWrong').html(response.responseText);
-                            self.$passwordInput.val("");
-                        }
-                    });
+                    self.login();
                 }
             });
             $("#forget_password").on("click", function (e) {
@@ -14590,35 +14629,7 @@ var TopBarView = Backbone.View.extend({
                 }
             });
             $('#login_button').on('click', function () {
-                username = self.$usernameInput.val();
-                password = self.$passwordInput.val();
-                if (username !== "" && password !== "") {
-                    app.sessionManager.login(username, password, {
-                        success: function (response) {
-                            Constants.dLog("server login response: ");
-                            Constants.dLog(response);
-
-                            //fetching session, with async flag to true
-                            app.sessionManager.fetchSession(true, {
-                                success: function () {
-                                    app.userManager.sessionUser = app.sessionManager.getSessionUser();
-                                    location.reload();
-                                },
-                                error: function () {
-                                    $wrong.show();
-                                }
-                            });
-                        },
-
-                        error: function (response) {
-                            $wrong.show();
-                            $('#credentialWrong').html(response.responseText);
-                        }
-                    });
-                } else {
-                    //请输入密码
-                    $wrong.show();
-                }
+                self.login();
             });
             $(document).click(function (e)
             {
@@ -14631,91 +14642,25 @@ var TopBarView = Backbone.View.extend({
                 e.stopPropagation();
             });
         } else {
-            this.$logo = $('#logo').on('click', function () {
-                app.navigate("front", true);
-            });
-
             this.$npersonal = $('#navigate_personal').on('click', function () {
                 app.navigate("personal/" + app.sessionManager.getUserId(), true);
             });
             this.$nfeedback = $('#navigate_feedBack').on('click', function () {
                 app.navigate("post", true);
             });
-            this.$nusersearch = $("#navigate_usersearch").on('click', function () {
-                app.navigate("finduser", true);
-            });
+            // this.$nusersearch = $("#navigate_usersearch").on('click', function () {
+            //     app.navigate("finduser", true);
+            // });
             //personal nav
-            this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
-            });
-            this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("letter", true);
-            });
-            this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
-                app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
-            });
-
-            /*  UI events  */
-            this.$notifications = $('#notifications').on('mouseenter', function () {
-                self.showNotificationDropdown();
-            });
-            this.$letters = $('#letters').on('mouseenter', function () {
-                self.showLetterDropdown();
-            });
-            this.$favorites = $('#favorites').on('mouseenter', function () {
-                self.showFavoriteDropdown();
-            });
-            this.$profilePicture = $('#profileDropdown').on('mouseenter', function () {
-                self.showProfileDropdown();
-            });
-            this.$profilePicture.find('img').on("click", function () {
-                app.navigate("personal/" + self.sessionUser.id, true);
-            });
-            this.$notifications.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "notificationDropdown" && e.toElement.parentElement.id !== "notificationDropdown")) {
-                    self.hideNotificationDropdown();
-                }
-            });
-            this.$letters.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "letterDropdown" && e.toElement.parentElement.id !== "letterDropdown")) {
-                    self.hideLetterDropdown();
-                }
-            });
-            this.$favorites.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "favoriteDropdown" && e.toElement.parentElement.id !== "favoriteDropdown")) {
-                    self.hideFavoriteDropdown();
-                }
-            });
-            this.$profilePicture.on('mouseleave', function (e) {
-                if (!e.toElement || (e.toElement.id !== "profileDropdown" && e.toElement.parentElement.id !== "profileDropdown")) {
-                    self.hideProfileDropdown();
-                }
-            });
-            this.$fdropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "favorites" && e.toElement.parentElement.id !== "favorites") {
-                    self.hideFavoriteDropdown();
-                }
-            });
-            this.$ndropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "notifications" && e.toElement.parentElement.id !== "notifications") {
-                    self.hideNotificationDropdown();
-                }
-            });
-            this.$ldropdown.on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "letters" && e.toElement.parentElement.id !== "letters" ) {
-                    self.hideLetterDropdown();
-                }
-            });
-            $('#profileDropdown').on('mouseleave', function (e) {
-                if (!e.toElement || e.toElement.id !== "profilePicture" && e.toElement.parentElement.id !== "profilePicture") {
-                    self.hideProfileDropdown();
-                }
-            });
-        //  $('#logout').on('mouseleave', function(e) {
-        //      if (e.toElement.id !== "profilePicture") {
-        //          self.hideLikes();
-        //      }
-        //  });
+            // this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);
+            // });
+            // this.$ldropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("letter", true);
+            // });
+            // this.$fdropdown.find('.dropdownTitleCheckAll').on('click', function () {
+            //     app.navigate("personal/" + app.sessionManager.getUserId() + "/social", true);
+            // });
             $('#logout').on('click', function (e) {
                 e.preventDefault();
                 self.logout();
@@ -14731,7 +14676,39 @@ var TopBarView = Backbone.View.extend({
         }
         
     },
-
+    login: function () {
+        var username = this.$usernameInput.val(), password = this.$passwordInput.val(), self = this;
+        if (username !== "" && password !== "") {
+            $('#login_button').val("登录中...").prop("disabled", true);
+            app.sessionManager.login(username, password, {
+                success: function (response) {
+                    Constants.dLog("server login response: ");
+                    Constants.dLog(response);
+                    //fetching session, with async flag to true
+                    app.sessionManager.fetchSession(true, {
+                        success: function () {
+                            app.userManager.sessionUser = app.sessionManager.getSessionUser();
+                            app.letterView = new LetterView({
+                                "toUserId": app.storage.getLastContact()
+                            });
+                            $("#chat").show();
+                        },
+                        error: function () {
+                            Info.displayNotice("登录失败，请稍后再试");
+                        }
+                    });
+                },
+                error: function (response) {
+                    self.$wrong.show().html(response.responseText || "服务器好像睡着了，请稍后再试");
+                    $('#login_button').val("登 录").prop("disabled", false);
+                    self.$passwordInput.val("");
+                }
+            });
+        } else {
+            //请输入密码
+            self.$wrong.show().html("输入有误，请重新输入");
+        }
+    },
     logout: function () {
         app.sessionManager.logout({
             success: function (response) {
@@ -14757,35 +14734,6 @@ var TopBarView = Backbone.View.extend({
         });
     },
 
-    showNotificationDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$ndropdown.show();
-    },
-    hideNotificationDropdown: function () {
-        this.$ndropdown.hide();
-    },
-    showFavoriteDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$fdropdown.show();
-    },
-    hideFavoriteDropdown: function () {
-        this.$fdropdown.hide();
-    },
-    showLetterDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$ldropdown.show();
-    },
-    hideLetterDropdown: function () {
-        this.$ldropdown.hide();
-    },
-    showProfileDropdown: function () {
-        this.$alldropdowns.hide();
-        this.$pdropdown.show();
-    },
-    hideProfileDropdown: function () {
-        this.$pdropdown.hide();
-    },
-
     _clearAll: function () {
         if (app.sessionManager.hasSession()) {
             this.$passwordInput.off();
@@ -14796,18 +14744,12 @@ var TopBarView = Backbone.View.extend({
             $("#remember_password").off();
         }
         else{
-            this.$logo.off();
             this.$npersonal.off();
-            //this.$nfeedBack.off();
-            this.$nusersearch.off();
-            this.$notifications.off();
-            this.$letters.off();
-            this.$favorites.off();
             this.$ndropdown.off();
             this.$ldropdown.off();
             this.$fdropdown.off();
-            this.$profilePicture.off();
         }
+        this.$logo.off();
         this.$nmain.off();
         this.stopListening();
         this.unbind();
@@ -14989,7 +14931,7 @@ var AppRouter = Backbone.Router.extend({
     },
 
     postMessage: function (postState) {
-        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
+        this.navigate("post/" + Config.getDefaultDMPostState(), {trigger: true, replace: true});
     },
 
     postMessageWithState: function (postState) {
@@ -14998,7 +14940,7 @@ var AppRouter = Backbone.Router.extend({
             return;
         }
 
-        app.navigate("post/" + Config.getDefaultDMPostState(), {trigger: false, replace: true});
+        this.navigate("post/" + Config.getDefaultDMPostState(), {trigger: false, replace: true});
         //if the post session not valid, start new session, creat brand new view
         // if (!this.MessagePostView || this.MessagePostView.isClosed) {
         //     if (this.MessageEditView) {
@@ -15052,15 +14994,15 @@ var AppRouter = Backbone.Router.extend({
         var self = this;
         this.userManager.activateAccount(authKey, {
             success: function () {
-                self.sessionManager.fetchSession(false, {
+                self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
+                        this.navigate("/main", true);
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
                     }
                 });
-                app.navigate("/main", true);
             },
             error: function (response) {
                 Info.alert('Email验证失败');
