@@ -61,7 +61,7 @@ var FrontPageView = Backbone.View.extend({
 
     renderError: function () {
         this.$resultPanel = this.$resultPanel || $("#frontPage-resultPanel");
-        this.$resultPanel.append("<div class = 'noMessage'>暂无消息</div>");
+        this.$resultPanel.empty().append("<div class = 'noMessage'>暂无消息</div>");
     },
 
     bindEvents: function () {

@@ -163,7 +163,7 @@
 
 	UserManager.prototype.changeContactInfo = function(name, gender, phone, qq, birthday, location, callback) {
 		//if invalid input or is already logged in, can not change contact information
-		if (!(name && (typeof gender === 'number') && phone)){
+		if (!(name && (typeof gender === 'number'))){
 			Constants.dWarn("UserManager::changeContactInfo:: invalid parameter");
 			return;
 		}
@@ -324,6 +324,7 @@
 		}
 		if (this.sessionManager.hasSession()){
 			Constants.dWarn("UserManager::activateAccount:: session already exists, exit");
+			app.navigate("/main", true);
 			return;
 		}
 
