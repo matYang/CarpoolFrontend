@@ -273,7 +273,7 @@ var RegistrationView = Backbone.View.extend({
     acceptDefaultLocation: function(defaultLocation){
         this.registerInfo.pivot = defaultLocation;
         this.registerInfo.pivot.copy(this.registerInfo.location);
-        this.registerInfo.location.set("pointName", $("#myAddress").val());
+        this.registerInfo.location.set("pointAddress", $("#myAddress").val());
         $('#pivotLocation').val(defaultLocation.toUiString());
     },
 
