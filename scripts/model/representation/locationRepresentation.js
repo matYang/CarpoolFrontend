@@ -23,7 +23,7 @@ var UserLocation = Backbone.Model.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
+        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'toJSON',  'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
     },
 
     isNew: function (){
@@ -32,14 +32,14 @@ var UserLocation = Backbone.Model.extend({
 
     clone: function () {
         var newLocation = new UserLocation();
-        var json = this.toJSON();
+        var json = _.clone(this.attributes);
         $.each(json, function(key, value) {
             newLocation.set(key, value);
         });
         return newLocation;
     },
     copy: function (val) {
-        var json = this.toJSON();
+        var json = _.clone(this.attributes);
         $.each(json, function(key, value) {
             val.set(key, value);
         });
@@ -94,6 +94,16 @@ var UserLocation = Backbone.Model.extend({
         json.lng = parseFloat(json.lng);
         json.match_Id = parseInt(json.match_Id, 10);
 
+        return json;
+    },
+
+    toJSON: function () {
+        var json = _.clone(this.attributes);
+        json.province = encodeURI(json.province);
+        json.city = encodeURI(json.city);
+        json.region= encodeURI(json.region);
+        json.pointName = encodeURI(json.pointName);
+        json.pointAddress = encodeURI(json.pointAddress);
         return json;
     },
 
