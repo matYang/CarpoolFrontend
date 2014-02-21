@@ -164,12 +164,14 @@ var LetterView = Backbone.View.extend({
         this.$userList.append(buf.join(""));
     },
     switchContact: function (id) {
-        var inList = false, that = this;
-        for ( i = 0, len = this.letterUserList.length; i < len; i++) {
-            user = this.letterUserList.at(i);
-            if (user.id === id || id === -1) {
-                inList = true;
-                break;
+        var inList = (id === -1), that = this;
+        if (!inList) {
+            for ( i = 0, len = this.letterUserList.length; i < len; i++) {
+                user = this.letterUserList.at(i);
+                if (user.id === id) {
+                    inList = true;
+                    break;
+                }
             }
         }
         if (!inList) {
@@ -198,7 +200,6 @@ var LetterView = Backbone.View.extend({
         this.toUserId = id;
         if (this.toUserId === -1) {
             $("#letter_toUser_name").html("系统");
-            return;
         }
         var user = this.letterUserList.get(id), option = {
             "direction": 2,
