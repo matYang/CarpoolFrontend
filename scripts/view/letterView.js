@@ -247,7 +247,9 @@ var LetterView = Backbone.View.extend({
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
         this.$historyPanel.append(buf.join(""));
-        this.$historyPanel.after('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+        if (!$("#historyText").length) {
+            this.$historyPanel.after('<div id="historyText" class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+        }
     },
     buildMessageBox: function (id, message, time, sendByMe) {
         this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + "letterId_"+id;
