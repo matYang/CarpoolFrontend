@@ -23,7 +23,11 @@ var MainPageView = Backbone.View.extend({
         this.searchRepresentation = new SearchRepresentation ();
         this.currentPage = 0;
         if (params) {
-            this.searchRepresentation.castFromString(params.searchKey);
+            try {
+                this.searchRepresentation.castFromString(params.searchKey);
+            } catch (e) {
+                app.navigate("/main", true);
+            }
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         } else if (app.sessionManager.hasSession()) {
             this.searchRepresentation = this.user.get('searchRepresentation');

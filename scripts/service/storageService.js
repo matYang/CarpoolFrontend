@@ -107,6 +107,7 @@
         }
     };
 	StorageService.prototype.getLastContact = function () {
+        if (!this.isSupported) return -1;
         var ret = localStorage.lastContact[app.sessionManager.sessionUser.id];
         if ( ret ) {
             ret = Utilities.toInt(ret);

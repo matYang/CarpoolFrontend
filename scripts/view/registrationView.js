@@ -5,7 +5,7 @@ var RegistrationView = Backbone.View.extend({
     el: "",
 
     initialize: function(params){
-        _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'verifyEmail', 'close');
         app.viewRegistration.register("registration", this, true);
         this.isClosed = false;
         this.state = params.state || "default";
@@ -99,6 +99,12 @@ var RegistrationView = Backbone.View.extend({
             if (re.test(that.$email.val())) {
                 that.valid.email = true;
                 that.registerInfo.email = that.$email.val();
+                app.userManager.verifyEmail(that.registerInfo.email, {
+                    "success": that.verifyEmail,
+                    "error": function(response) {
+
+                    }
+                })
                 that.$email.after('<span id="vemail" class="right"></span>');
             } else {
                 that.valid.email = false;
@@ -280,6 +286,15 @@ var RegistrationView = Backbone.View.extend({
     closeLocationDropDown: function(){
         if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
             this.locationDropDownView.close();
+        }
+    },
+
+    verifyEmail: function (available) {
+        if (available) {
+            that.$email.after('<span id="vemail" class="right"></span>');
+        } else {
+            that.valid.email = false;
+            that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
         }
     },
 
