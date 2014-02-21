@@ -198,14 +198,22 @@ var LetterView = Backbone.View.extend({
         this.messageResend = null;
         $(".userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
-        if (this.toUserId === -1) {
-            $("#letter_toUser_name").html("系统");
-        }
         var user = this.letterUserList.get(id), option = {
             "direction": 2,
             "targetUserId": id,
             "targetType": id > -1 ? Constants.LetterType.user : Constants.LetterType.system
         };
+        app.storage.setLastContact(id);
+        if (this.toUserId === -1) {
+            $("#letter_toUser_name").html("系统");
+            app.userManager.fetchLetters(option, {
+                "success": this.fillRecentHistory,
+                "error": function () {
+                    
+                }
+            });
+            return;
+        }
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
 
@@ -215,7 +223,6 @@ var LetterView = Backbone.View.extend({
                 
             }
         });
-        app.storage.setLastContact(id);
     },
 
     fillRecentHistory: function (letters) {
