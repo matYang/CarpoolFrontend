@@ -231,7 +231,7 @@ var AppRouter = Backbone.Router.extend({
                 self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
-                        this.navigate("/main", true);
+                        self.navigate("/main", true);
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
