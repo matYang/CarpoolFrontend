@@ -22,7 +22,7 @@ var LetterView = Backbone.View.extend({
         this.domContainer = $('#chat');
         this.domContainer.append(this.template);
         this.$historyPanel = $("#letter_message_panel>#letter_history");
-        this.$messagePanel = $("#letter_message_panel>letter_new");
+        this.$messagePanel = $("#letter_message_panel>#letter_new");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== -1) {
