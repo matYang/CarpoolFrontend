@@ -231,7 +231,7 @@ var AppRouter = Backbone.Router.extend({
                 self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
-                        this.navigate("/main", true);
+                        self.navigate("/main", true);
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
@@ -251,10 +251,10 @@ tpl.loadTemplates(Constants.templateResources, function () {
     app.topBarView = new TopBarView ();
     Backbone.history.start();
     if (app.sessionManager.hasSession()) {
-    	// create letter view if use is logged in.
-    	app.letterView = new LetterView({
-    		"toUserId": app.storage.getLastContact()
-    	});
+        // create letter view if use is logged in.
+        app.letterView = new LetterView({
+            "toUserId": app.storage.getLastContact()
+        });
         $("#chat").show();
     }
 });
