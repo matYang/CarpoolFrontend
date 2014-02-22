@@ -193,7 +193,7 @@ var TransactionDetailView = Backbone.View.extend({
     },
     bookSuccess: function () {
         $("#bookedStatus").show();
-        this.$functionButton.off().html("预 约 成 功");
+        this.$functionButton.off().val("预 约 成 功");
     },
     scoreSuccess: function () {
         
