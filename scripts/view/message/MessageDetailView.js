@@ -234,6 +234,7 @@ var MessageDetailView = Backbone.View.extend({
             $("#overlay").hide();
         });
         this.$viewend.off();
+        this.$viewend.val("已经结束").removeClass("btn_R_long").attr("id", "view_expired");
     },
     cancelError: function(){
         this.$viewendConfirm.val("取消失败,请重试").removeAttr("disabled");

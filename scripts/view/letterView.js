@@ -192,6 +192,7 @@ var LetterView = Backbone.View.extend({
         }
         $("#chat_left").show().attr("style","margin-top: 0;");
         $("#letter_input").focus();
+        this.$historyPanel.empty();
         this.$messagePanel.empty();
         this.$letterInput.val("");
         this.toUserIdResend = null;
