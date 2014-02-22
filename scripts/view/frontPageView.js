@@ -56,7 +56,7 @@ var FrontPageView = Backbone.View.extend({
         this.$resultPanel = $("#frontPage-resultPanel");
         $("#frontPage-exp>dt").hide();
         $("#exp1").show();
-        $( '.cycle-slideshow' ).cycle({"slideCount":7});
+        $( '.cycle-slideshow' ).cycle({"slideCount":7, "log":false});
     },
 
     renderError: function () {

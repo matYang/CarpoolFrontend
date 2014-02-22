@@ -22,7 +22,7 @@ var LetterView = Backbone.View.extend({
         this.domContainer = $('#chat');
         this.domContainer.append(this.template);
         this.$historyPanel = $("#letter_message_panel>#letter_history");
-        this.$messagePanel = $("#letter_message_panel>letter_new");
+        this.$messagePanel = $("#letter_message_panel>#letter_new");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== -1) {
@@ -198,15 +198,22 @@ var LetterView = Backbone.View.extend({
         this.messageResend = null;
         $(".userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
-        if (this.toUserId === -1) {
-            $("#letter_toUser_name").html("系统");
-            return;
-        }
         var user = this.letterUserList.get(id), option = {
             "direction": 2,
             "targetUserId": id,
             "targetType": id > -1 ? Constants.LetterType.user : Constants.LetterType.system
         };
+        app.storage.setLastContact(id);
+        if (this.toUserId === -1) {
+            $("#letter_toUser_name").html("系统");
+            app.userManager.fetchLetters(option, {
+                "success": this.fillRecentHistory,
+                "error": function () {
+                    
+                }
+            });
+            return;
+        }
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
 
@@ -216,7 +223,6 @@ var LetterView = Backbone.View.extend({
                 Info.alert("Letter fetch fail");
             }
         });
-        app.storage.setLastContact(id);
     },
 
     fillRecentHistory: function (letters) {
@@ -241,8 +247,9 @@ var LetterView = Backbone.View.extend({
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
         this.$historyPanel.append(buf.join(""));
-        if (this.$messagePanel.find('.blank1').length === 0){
-            this.$historyPanel.after('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+
+        if (!$("#historyText").length) {
+            this.$historyPanel.after('<div id="historyText" class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
         }
     },
     buildMessageBox: function (id, message, time, sendByMe) {
