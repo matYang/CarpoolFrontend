@@ -1,15 +1,13 @@
 var PersonalMessageView = Backbone.View.extend({
-
+    el: "#profilePage_content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'loadMessage', 'close');
         this.isClosed = false;
-
-        this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalMessage'));
 
         this.curUserId = params.intendedUserId;
         this.user = app.sessionManager.getSessionUser();
-        this.domContainer.append(this.wrapperTemplate);
+        this.$el.append(this.wrapperTemplate);
         app.userManager.fetchMessageHistory(this.curUserId, {
             "success": this.render,
             "error": this.error
@@ -39,7 +37,7 @@ var PersonalMessageView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             //TODO: unbind all the events
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }

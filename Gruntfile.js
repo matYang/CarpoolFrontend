@@ -71,6 +71,7 @@ module.exports = function(grunt) {
               "scripts/view/findPasswordView.js",
               "scripts/view/popup/transactionView.js",
               "scripts/view/topBarView.js",
+              "scripts/view/howItWorksView.js",
               "scripts/main.js"
               ],
         dest: 'build/main.js'

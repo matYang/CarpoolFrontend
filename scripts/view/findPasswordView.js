@@ -1,5 +1,5 @@
 var FindPasswordView = Backbone.View.extend({
-    el: $("#content"),
+    el: "#content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'validatePassword', 'close');
         app.viewRegistration.register("findPassword", this, true);
@@ -7,7 +7,6 @@ var FindPasswordView = Backbone.View.extend({
         this.template1 = _.template(tpl.get("findPassword_1"));
         this.template2 = _.template(tpl.get("findPassword_2"));
         this.template3 = _.template(tpl.get("findPassword_3"));
-        this.$domContainer = $("#content");
         if (params.token) {
             this.token = params.token;
             this.state = 3;
@@ -19,11 +18,11 @@ var FindPasswordView = Backbone.View.extend({
     render: function (state) {
         var that = this;
         this.state = state;
-        this.$domContainer.empty();
+        this.$el.empty();
         if (state === 3) {
-            this.$domContainer.append(this.template3);
+            this.$el.append(this.template3);
         } else if (state === 2) {
-            this.$domContainer.append(this.template2);
+            this.$el.append(this.template2);
             $("#email_value").html(this.email);
             $("#go_to_email").on("click", function (e) {
                 e.preventDefault();
@@ -31,7 +30,7 @@ var FindPasswordView = Backbone.View.extend({
             });
         } else {
             this.re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            this.$domContainer.append(this.template1);
+            this.$el.append(this.template1);
         }
         this.bindEvents(this.state);
     },
@@ -135,8 +134,7 @@ var FindPasswordView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.isClosed = true;
-            this.$domContainer.empty();
-
+            this.$el.empty();
         }
     }
 

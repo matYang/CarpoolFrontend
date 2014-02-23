@@ -51,6 +51,9 @@ var Constants = {
     /*-----------  letter -------------*/
     "letter",
     
+    /*-----------  How It Works -------------*/
+    "howItWorks_base", "howItWorks_driver", "howItWorks_passenger", 
+
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
 

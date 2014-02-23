@@ -1,9 +1,8 @@
 var PersonalHistoryView = Backbone.View.extend({
-
+	el: "#profilePage_content",
 	initialize: function(params){
 		_.bindAll(this, 'renderTransactions', 'openTransactionDetail', 'close');
 		this.isClosed = false;
-		this.domContainer = $("#profilePage_content");
 
 		this.wrapperTemplate = _.template(tpl.get('personalHistory'));
 		this.transactionTemplate = _.template(tpl.get('personalTransactionHistory'));
@@ -11,7 +10,7 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.curUserId = params.intendedUserId;
 		this.user = app.sessionManager.getSessionUser();
 		this.transactionLookup = {};
-		this.domContainer.append(this.wrapperTemplate);
+		this.$el.append(this.wrapperTemplate);
 
 		app.userManager.fetchTransactionList(this.curUserId, {"success":this.renderTransactions, "error":this.renderTransactionError});
 	},
@@ -30,7 +29,7 @@ var PersonalHistoryView = Backbone.View.extend({
 		if (!this.isClosed){
 			//TODO: unbind all events
 			$("#transactionHistoryContent>.personal_transactionHistory_message").off();
-			this.domContainer.empty();
+			this.$el.empty();
 			this.isClosed = true;
 		}
 	}

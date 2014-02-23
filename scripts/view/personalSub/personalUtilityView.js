@@ -1,8 +1,8 @@
 var PersonalUtilityView = Backbone.View.extend({
+    el:"#profilePage_content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError', 'noticeError', 'noticeSuccess');
         this.isClosed = false;
-        this.domContainer = $("#profilePage_content");
         this.template = _.template(tpl.get('personalUtility'));
         this.sessionUser = app.sessionManager.getSessionUser();
         this.curUserId = params.intendedUserId;
@@ -300,7 +300,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     render: function () {
         var that = this;
-        this.domContainer.append(this.template);
+        this.$el.append(this.template);
         this.$name = $("input[name=name]").val(this.sessionUser.get("name"));
         this.$phone = $('input[name=phone]').val(this.sessionUser.get("phone"));
         this.$qq = $('input[name=qq]').val(this.sessionUser.get("qq"));
@@ -487,7 +487,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#basicInfo').off();
             $('#passwordInfo').off();
             $('#tradeInfo').off();
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     },

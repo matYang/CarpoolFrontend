@@ -32,7 +32,7 @@ var AppRouter = Backbone.Router.extend({
         "forgetPassword/*token" : "lost",
 
         "emailActivation/*authKey": "emailActivation",
-
+        "howitworks": "howItWorks",
         "*default" : "front"
     },
 
@@ -242,6 +242,9 @@ var AppRouter = Backbone.Router.extend({
                 Info.alert('Email验证失败');
             }
         });
+    },
+    howItWorks: function() {
+        this.howItWorks = new HowItWorksView();
     }
 });
 

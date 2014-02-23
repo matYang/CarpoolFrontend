@@ -66,11 +66,11 @@
 	padding-top:30px;
 	margin-bottom:100px;
 }
-.tab {
+.myPage_content .tab {
 	height:42px;
 	border-bottom:2px solid #57b7e1;
 }
-.tab li {
+.myPage_content .tab li {
 	float:left;
 	height:42px;
 	line-height:42px;
@@ -79,7 +79,7 @@
 	margin-right:10px;
 	cursor:pointer;
 }
-.tab li.active {
+.myPage_content .tab li.active {
 	background:#57b7e1;
 	color:#fff;
 }

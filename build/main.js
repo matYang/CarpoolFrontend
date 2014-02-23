@@ -5084,6 +5084,9 @@ var Constants = {
     /*-----------  letter -------------*/
     "letter",
     
+    /*-----------  How It Works -------------*/
+    "howItWorks_base", "howItWorks_driver", "howItWorks_passenger", 
+
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
 
@@ -5629,6 +5632,7 @@ var Config = {
         }
     };
 	StorageService.prototype.getLastContact = function () {
+        if (!this.isSupported) return -1;
         var ret = localStorage.lastContact[app.sessionManager.sessionUser.id];
         if ( ret ) {
             ret = Utilities.toInt(ret);
@@ -6076,6 +6080,10 @@ tpl = {
                 request: ['content'],
                 antiRequest: ['content', 'advertisement']
             },
+            'HowItWorkds': {
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
+            },
             'letter': {
                 request: ['chat'],
                 antiRequest: ['chat']
@@ -6242,7 +6250,7 @@ var UserLocation = Backbone.Model.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
+        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'toJSON',  'equals', 'isEquivalentTo', 'parse', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
     },
 
     isNew: function (){
@@ -6251,14 +6259,14 @@ var UserLocation = Backbone.Model.extend({
 
     clone: function () {
         var newLocation = new UserLocation();
-        var json = this.toJSON();
+        var json = _.clone(this.attributes);
         $.each(json, function(key, value) {
             newLocation.set(key, value);
         });
         return newLocation;
     },
     copy: function (val) {
-        var json = this.toJSON();
+        var json = _.clone(this.attributes);
         $.each(json, function(key, value) {
             val.set(key, value);
         });
@@ -6313,6 +6321,16 @@ var UserLocation = Backbone.Model.extend({
         json.lng = parseFloat(json.lng);
         json.match_Id = parseInt(json.match_Id, 10);
 
+        return json;
+    },
+
+    toJSON: function () {
+        var json = _.clone(this.attributes);
+        json.province = encodeURI(json.province);
+        json.city = encodeURI(json.city);
+        json.region= encodeURI(json.region);
+        json.pointName = encodeURI(json.pointName);
+        json.pointAddress = encodeURI(json.pointAddress);
         return json;
     },
 
@@ -7457,7 +7475,7 @@ var Letters = Backbone.Collection.extend({
     
 }).call(this);
 var testMockObj = {
-	"testMode": false,
+	"testMode": true,
 	"sampleMessages": new Messages(),
 
 	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",1560198).set("departure_time", new Date()).set("arrival_time", new Date())
@@ -10158,10 +10176,10 @@ var AdvertisementView = Backbone.View.extend({
 });
 
 var LetterView = Backbone.View.extend({
-    el: "",
+    el: "#chat",
     messageBoxTemplate: ["<li class='",
                         null,
-                        "'><div class='date'>", 
+                        "'><div class='date'>",
                         null,
                         "</div><dl><dt><img src='",
                         null,
@@ -10178,10 +10196,10 @@ var LetterView = Backbone.View.extend({
             "direction": 2
         };
         this.template = _.template(tpl.get('letter'));
-        this.domContainer = $('#chat');
-        this.domContainer.append(this.template);
+        
+        this.$el.append(this.template);
         this.$historyPanel = $("#letter_message_panel>#letter_history");
-        this.$messagePanel = $("#letter_message_panel>letter_new");
+        this.$messagePanel = $("#letter_message_panel>#letter_new");
         this.$letterInput = $("#letter_input");
         this.$userList = $("#letter_user_list");
         if (params.toUserId && params.toUserId !== -1) {
@@ -10322,18 +10340,20 @@ var LetterView = Backbone.View.extend({
         }
         this.$userList.append(buf.join(""));
     },
+
     switchContact: function (id) {
-        var inList = false, that = this;
-        for ( i = 0, len = this.letterUserList.length; i < len; i++) {
-            user = this.letterUserList.at(i);
-            if (user.id === id || id === -1) {
+        var inList = id === -1 ? true : false,
+            self = this;
+        if (!inList){
+            user = this.letterUserList.get(id);
+            if (user !== null && typeof user !== 'undefined' && user instanceof Backbone.Model){
                 inList = true;
-                break;
             }
         }
+
         if (!inList) {
             app.userManager.fetchUser(id, {
-                "success": function (user) {
+                success: function (user) {
                     self.toUser = user;
                     self.toUserId = id;
                     if (!self.letterUserList) {
@@ -10341,39 +10361,46 @@ var LetterView = Backbone.View.extend({
                     }
                     self.letterUserList.add(user);
                     $("#letter_toUser_name").html(user.get("name"));
-                    that.$userList.prepend("<li id='letter_contact_" + id + "'><img src='" + user.get("imgPath")+ "' width='30' height='30'/>" + user.get("name") + "</li>");
+                    self.$userList.prepend("<li id='letter_contact_" + id + "'><img src='" + user.get("imgPath")+ "' width='30' height='30'/>" + user.get("name") + "</li>");
                 },
-                "error": function () {
+                error: function () {
                 }
             });
         }
         $("#chat_left").show().attr("style","margin-top: 0;");
         $("#letter_input").focus();
+        this.$historyPanel.empty();
         this.$messagePanel.empty();
         this.$letterInput.val("");
         this.toUserIdResend = null;
         this.messageResend = null;
         $(".userNewMessage").removeClass("userNewMessage");
         this.toUserId = id;
-        if (this.toUserId === -1) {
-            $("#letter_toUser_name").html("系统");
-            return;
-        }
         var user = this.letterUserList.get(id), option = {
             "direction": 2,
             "targetUserId": id,
             "targetType": id > -1 ? Constants.LetterType.user : Constants.LetterType.system
         };
+        app.storage.setLastContact(id);
+        if (this.toUserId === -1) {
+            $("#letter_toUser_name").html("系统");
+            app.userManager.fetchLetters(option, {
+                "success": this.fillRecentHistory,
+                "error": function () {
+                    
+                }
+            });
+            return;
+        }
         this.toUser = user;
         $("#letter_toUser_name").html(user.get("name"));
 
         app.userManager.fetchLetters(option, {
-            "success": this.fillRecentHistory,
-            "error": function () {
-                
+            success: this.fillRecentHistory,
+            error: function () {
+                Info.alert("Letter fetch fail");
             }
         });
-        app.storage.setLastContact(id);
     },
 
     fillRecentHistory: function (letters) {
@@ -10398,7 +10425,10 @@ var LetterView = Backbone.View.extend({
             buf[bufLen++] = this.buildMessageBox(letter.get("letterId"), letter.get("content"), letter.get("send_time"), letter.get("from_userId") === this.sessionUser.id);
         }
         this.$historyPanel.append(buf.join(""));
-        this.$historyPanel.after('<div class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+
+        if (!$("#historyText").length) {
+            this.$historyPanel.after('<div id="historyText" class="blank1" style="text-align:center; color:#ccc;">以上是历史信息</div>');
+        }
     },
     buildMessageBox: function (id, message, time, sendByMe) {
         this.messageBoxTemplate[1] = (sendByMe ? "me " : "other ") + "letterId_"+id;
@@ -10475,7 +10505,7 @@ var LetterView = Backbone.View.extend({
             $("#letter_send_button").off();
             this.$letterInput.off();
             $("#letter_user_list").off();
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }
@@ -10538,7 +10568,7 @@ var LocationDropDownView = Backbone.View.extend({
 });
 var MessageDetailView = Backbone.View.extend({
 
-    el: "",
+    el: "#content",
 
     initialize: function (messageIdWrapper) {
         _.bindAll(this, 'render', 'bindEvents', 'renderAutoMatch', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'cancelSuccess', 'cancelError', 'close');
@@ -10565,7 +10595,6 @@ var MessageDetailView = Backbone.View.extend({
 
                 self.template = _.template(tpl.get('DetailMessage'));
                 self.transactionTemplate = _.template(tpl.get('Transaction'));
-                self.domContainer = $('#content');
                 self.render();
                 self.bindEvents();
                 self.showTransaction = false;
@@ -10590,7 +10619,7 @@ var MessageDetailView = Backbone.View.extend({
             destLocation: this.message.get("arrival_location"),
             clickable: false
         };
-        this.domContainer.append(this.template(this.parsedMessage));
+        this.$el.append(this.template(this.parsedMessage));
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.renderPriceList();
         if (this.message.get("isRoundTrip")) {
@@ -10772,6 +10801,7 @@ var MessageDetailView = Backbone.View.extend({
             $("#overlay").hide();
         });
         this.$viewend.off();
+        this.$viewend.val("已经结束").removeClass("btn_R_long").attr("id", "view_expired");
     },
     cancelError: function(){
         this.$viewendConfirm.val("取消失败,请重试").removeAttr("disabled");
@@ -10791,8 +10821,8 @@ var MessageDetailView = Backbone.View.extend({
             if (this.$messages) {
                 this.$messages.off();
             }
-            if ( typeof this.domContainer !== 'undefined') {
-                this.domContainer.empty();
+            if ( typeof this.$el !== 'undefined') {
+                this.$el.empty();
             }
             $("#view_profilePicture, #view_profileName").off();
             $("#popup").empty();
@@ -10805,7 +10835,7 @@ var MessageDetailView = Backbone.View.extend({
  * data*/
 var MessagePostView = Backbone.View.extend({
 
-    el: "",
+    el: "#content",
     toSubmit: {
         "origin": undefined,
         "dest": undefined,
@@ -10845,8 +10875,7 @@ var MessagePostView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
         this.userId = this.user.get("userId");
         this.inRange = {};
-        this.domContainer = $('#content');
-        this.domContainer.append(this.baseTemplate);
+        this.$el.append(this.baseTemplate);
         this.$publishContent = $('#publish_requirement');
         this.$progress = $('#publish_progress');
     },
@@ -11650,7 +11679,7 @@ var MessagePostView = Backbone.View.extend({
             this.map = null;
             this.unbindStepEvents(this.stepIndex);
             this.closeLocationDropDown();
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
             this.toSubmit = {
                 "type": Constants.messageType.ask,
@@ -12027,7 +12056,7 @@ var UserSearchResultView = MultiPageView.extend({
 
 var FrontPageView = Backbone.View.extend({
 
-    el: $('#content'),
+    el: '#content',
     displayIndex: 0,
     initialize: function () {
         _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
@@ -12079,11 +12108,11 @@ var FrontPageView = Backbone.View.extend({
     },
 
     render: function () {
-        $(this.el).append(this.template);
+        this.$el.append(this.template);
         this.$resultPanel = $("#frontPage-resultPanel");
         $("#frontPage-exp>dt").hide();
         $("#exp1").show();
-        $( '.cycle-slideshow' ).cycle({"slideCount":7});
+        $( '.cycle-slideshow' ).cycle({"slideCount":7, "log":false});
     },
 
     renderError: function () {
@@ -12219,7 +12248,7 @@ var FrontPageView = Backbone.View.extend({
 
             this.closeLocationDropDown();
             $( '.cycle-slideshow' ).cycle('destroy');
-            $(this.el).empty();
+            this.$el.empty();
             this.isClosed = true;
             clearInterval(this.rollInterval);
         }
@@ -12229,7 +12258,7 @@ var FrontPageView = Backbone.View.extend({
 var PRICE_MIN = 0, PRICE_MAX = 200;
 
 var MainPageView = Backbone.View.extend({
-    el: $('#content'),
+    el: '#content',
 
     filter: {
         "isRoundTrip": false,
@@ -12251,7 +12280,11 @@ var MainPageView = Backbone.View.extend({
         this.searchRepresentation = new SearchRepresentation ();
         this.currentPage = 0;
         if (params) {
-            this.searchRepresentation.castFromString(params.searchKey);
+            try {
+                this.searchRepresentation.castFromString(params.searchKey);
+            } catch (e) {
+                app.navigate("/main", true);
+            }
             app.storage.setSearchRepresentationCache(this.searchRepresentation);
         } else if (app.sessionManager.hasSession()) {
             this.searchRepresentation = this.user.get('searchRepresentation');
@@ -12259,7 +12292,7 @@ var MainPageView = Backbone.View.extend({
             this.searchRepresentation = app.storage.getSearchRepresentationCache();
         }
         //injecting the template
-        $(this.el).append(this.template);
+        this.$el.append(this.template);
         //TODO force target type to be all
         this.searchRepresentation.set('targetType', Constants.messageType.both);
         app.locationService.getDefaultLocations(this.render, this);
@@ -12609,7 +12642,7 @@ var MainPageView = Backbone.View.extend({
 
             //get ride of the view
             this.unbind();
-            $(this.el).empty();
+            this.$el.empty();
 
             this.isClosed = true;
         }
@@ -12835,6 +12868,7 @@ var MessageHistoryView = MultiPageView.extend({
     }
 }); 
 var PersonalSocialView = MultiPageView.extend({
+    el: "#profilePage_content",
     initialize: function (params) {
         this.isClosed = false;
         _.bindAll(this, 'render', 'entryEvent', 'error', 'close');
@@ -12852,9 +12886,8 @@ var PersonalSocialView = MultiPageView.extend({
         this.minHeight = 460;
         this.startIndex = 0;
         this.noMessage = "你还没有关注的人";
-        this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalSocial'));
-        this.domContainer.append(this.wrapperTemplate);
+        this.$el.append(this.wrapperTemplate);
 
         this.curUserId = params.intendedUserId;
         this.sessionUser = app.sessionManager.getSessionUser();
@@ -12894,17 +12927,16 @@ var PersonalSocialView = MultiPageView.extend({
     close: function () {
         if (!this.isClosed) {
 
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }
 }); 
 var PersonalHistoryView = Backbone.View.extend({
-
+	el: "#profilePage_content",
 	initialize: function(params){
 		_.bindAll(this, 'renderTransactions', 'openTransactionDetail', 'close');
 		this.isClosed = false;
-		this.domContainer = $("#profilePage_content");
 
 		this.wrapperTemplate = _.template(tpl.get('personalHistory'));
 		this.transactionTemplate = _.template(tpl.get('personalTransactionHistory'));
@@ -12912,7 +12944,7 @@ var PersonalHistoryView = Backbone.View.extend({
 		this.curUserId = params.intendedUserId;
 		this.user = app.sessionManager.getSessionUser();
 		this.transactionLookup = {};
-		this.domContainer.append(this.wrapperTemplate);
+		this.$el.append(this.wrapperTemplate);
 
 		app.userManager.fetchTransactionList(this.curUserId, {"success":this.renderTransactions, "error":this.renderTransactionError});
 	},
@@ -12931,7 +12963,7 @@ var PersonalHistoryView = Backbone.View.extend({
 		if (!this.isClosed){
 			//TODO: unbind all events
 			$("#transactionHistoryContent>.personal_transactionHistory_message").off();
-			this.domContainer.empty();
+			this.$el.empty();
 			this.isClosed = true;
 		}
 	}
@@ -12939,17 +12971,15 @@ var PersonalHistoryView = Backbone.View.extend({
 
 });
 var PersonalMessageView = Backbone.View.extend({
-
+    el: "#profilePage_content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'loadMessage', 'close');
         this.isClosed = false;
-
-        this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalMessage'));
 
         this.curUserId = params.intendedUserId;
         this.user = app.sessionManager.getSessionUser();
-        this.domContainer.append(this.wrapperTemplate);
+        this.$el.append(this.wrapperTemplate);
         app.userManager.fetchMessageHistory(this.curUserId, {
             "success": this.render,
             "error": this.error
@@ -12979,16 +13009,16 @@ var PersonalMessageView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             //TODO: unbind all the events
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }
 }); 
 var PersonalUtilityView = Backbone.View.extend({
+    el:"#profilePage_content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'close', 'prepareImgUpload', 'savePersonalInfo', 'saveFile', 'savePassword', 'passwordSuccess', 'passwordError', 'toggleNotificationMethods', 'testInput', 'bindEvents', 'saveSuccess', 'saveError', 'noticeError', 'noticeSuccess');
         this.isClosed = false;
-        this.domContainer = $("#profilePage_content");
         this.template = _.template(tpl.get('personalUtility'));
         this.sessionUser = app.sessionManager.getSessionUser();
         this.curUserId = params.intendedUserId;
@@ -13286,7 +13316,7 @@ var PersonalUtilityView = Backbone.View.extend({
     },
     render: function () {
         var that = this;
-        this.domContainer.append(this.template);
+        this.$el.append(this.template);
         this.$name = $("input[name=name]").val(this.sessionUser.get("name"));
         this.$phone = $('input[name=phone]').val(this.sessionUser.get("phone"));
         this.$qq = $('input[name=qq]').val(this.sessionUser.get("qq"));
@@ -13473,7 +13503,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('#basicInfo').off();
             $('#passwordInfo').off();
             $('#tradeInfo').off();
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     },
@@ -13721,7 +13751,7 @@ var RegistrationView = Backbone.View.extend({
     el: "",
 
     initialize: function(params){
-        _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
+        _.bindAll(this, 'render', 'bindEvents', 'finish', 'acceptDefaultLocation', 'closeLocationDropDown', 'verifyEmail', 'close');
         app.viewRegistration.register("registration", this, true);
         this.isClosed = false;
         this.state = params.state || "default";
@@ -13815,6 +13845,12 @@ var RegistrationView = Backbone.View.extend({
             if (re.test(that.$email.val())) {
                 that.valid.email = true;
                 that.registerInfo.email = that.$email.val();
+                app.userManager.verifyEmail(that.registerInfo.email, {
+                    "success": that.verifyEmail,
+                    "error": function(response) {
+
+                    }
+                })
                 that.$email.after('<span id="vemail" class="right"></span>');
             } else {
                 that.valid.email = false;
@@ -13989,13 +14025,22 @@ var RegistrationView = Backbone.View.extend({
     acceptDefaultLocation: function(defaultLocation){
         this.registerInfo.pivot = defaultLocation;
         this.registerInfo.pivot.copy(this.registerInfo.location);
-        this.registerInfo.location.set("pointName", $("#myAddress").val());
+        this.registerInfo.location.set("pointAddress", $("#myAddress").val());
         $('#pivotLocation').val(defaultLocation.toUiString());
     },
 
     closeLocationDropDown: function(){
         if (typeof this.locationDropDownView !== 'undefined' && this.locationDropDownView !== null){
             this.locationDropDownView.close();
+        }
+    },
+
+    verifyEmail: function (available) {
+        if (available) {
+            that.$email.after('<span id="vemail" class="right"></span>');
+        } else {
+            that.valid.email = false;
+            that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
         }
     },
 
@@ -14010,7 +14055,7 @@ var RegistrationView = Backbone.View.extend({
 
 });
 var FindPasswordView = Backbone.View.extend({
-    el: $("#content"),
+    el: "#content",
     initialize: function (params) {
         _.bindAll(this, 'render', 'validatePassword', 'close');
         app.viewRegistration.register("findPassword", this, true);
@@ -14018,7 +14063,6 @@ var FindPasswordView = Backbone.View.extend({
         this.template1 = _.template(tpl.get("findPassword_1"));
         this.template2 = _.template(tpl.get("findPassword_2"));
         this.template3 = _.template(tpl.get("findPassword_3"));
-        this.$domContainer = $("#content");
         if (params.token) {
             this.token = params.token;
             this.state = 3;
@@ -14030,11 +14074,11 @@ var FindPasswordView = Backbone.View.extend({
     render: function (state) {
         var that = this;
         this.state = state;
-        this.$domContainer.empty();
+        this.$el.empty();
         if (state === 3) {
-            this.$domContainer.append(this.template3);
+            this.$el.append(this.template3);
         } else if (state === 2) {
-            this.$domContainer.append(this.template2);
+            this.$el.append(this.template2);
             $("#email_value").html(this.email);
             $("#go_to_email").on("click", function (e) {
                 e.preventDefault();
@@ -14042,7 +14086,7 @@ var FindPasswordView = Backbone.View.extend({
             });
         } else {
             this.re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            this.$domContainer.append(this.template1);
+            this.$el.append(this.template1);
         }
         this.bindEvents(this.state);
     },
@@ -14146,8 +14190,7 @@ var FindPasswordView = Backbone.View.extend({
     close: function () {
         if (!this.isClosed) {
             this.isClosed = true;
-            this.$domContainer.empty();
-
+            this.$el.empty();
         }
     }
 
@@ -14348,7 +14391,7 @@ var TransactionDetailView = Backbone.View.extend({
     },
     bookSuccess: function () {
         $("#bookedStatus").show();
-        this.$functionButton.off().html("预 约 成 功");
+        this.$functionButton.off().val("预 约 成 功");
     },
     scoreSuccess: function () {
         
@@ -14764,6 +14807,53 @@ var TopBarView = Backbone.View.extend({
         }
     }
 });
+var HowItWorksView = Backbone.View.extend({
+
+    el: "#content",
+    currentPage: "driver",
+
+    initialize: function (messageIdWrapper) {
+        app.viewRegistration.register("HowItWorkds", this, true);
+        _.bindAll(this, "render", "close");
+        this.baseTemplate = _.template(tpl.get('howItWorks_base'));
+        this.driverTemplate = _.template(tpl.get('howItWorks_driver'));
+        this.passengerTemplate = _.template(tpl.get('howItWorks_passenger'));
+        this.render();
+        this.isClosed = false;
+    },
+    render: function () {
+        this.$el.append(this.baseTemplate);
+        this.$table = this.$el.find("table").append(this.driverTemplate);
+        this.bindEvents();
+    },
+    bindEvents: function () {
+        var that = this;
+        $("#howItWorks_tabs").on("click", "li", function (e) {
+            var clicked = $(e.target).attr("data-id");
+            if ( clicked === that.currentPage ) {
+                return;
+            }
+            that.currentPage = clicked;
+            $("#howItWorks_tabs").children("li").removeClass("active");
+            $("#howItWorks_tabs").find("span").remove();
+            $(e.target).addClass("active").append("<span></span>");
+            if (clicked === "driver") {
+                that.$table.empty().append(that.driverTemplate);
+            } else {
+                that.$table.empty().append(that.passengerTemplate);
+            }
+        })
+    },
+
+    close: function () {
+        if (!this.isClosed) {
+            $("#howItWorks_tabs").off();
+            this.$el.empty();
+            this.isClosed = true;
+        }
+    }
+});
+
 //IE 8 fallBack for placeholders
 $('input, textarea').placeholder();
 
@@ -14798,7 +14888,7 @@ var AppRouter = Backbone.Router.extend({
         "forgetPassword/*token" : "lost",
 
         "emailActivation/*authKey": "emailActivation",
-
+        "howitworks": "howItWorks",
         "*default" : "front"
     },
 
@@ -14997,7 +15087,7 @@ var AppRouter = Backbone.Router.extend({
                 self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
-                        this.navigate("/main", true);
+                        self.navigate("/main", true);
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
@@ -15008,6 +15098,9 @@ var AppRouter = Backbone.Router.extend({
                 Info.alert('Email验证失败');
             }
         });
+    },
+    howItWorks: function() {
+        this.howItWorks = new HowItWorksView();
     }
 });
 
@@ -15017,10 +15110,10 @@ tpl.loadTemplates(Constants.templateResources, function () {
     app.topBarView = new TopBarView ();
     Backbone.history.start();
     if (app.sessionManager.hasSession()) {
-    	// create letter view if use is logged in.
-    	app.letterView = new LetterView({
-    		"toUserId": app.storage.getLastContact()
-    	});
+        // create letter view if use is logged in.
+        app.letterView = new LetterView({
+            "toUserId": app.storage.getLastContact()
+        });
         $("#chat").show();
     }
 });

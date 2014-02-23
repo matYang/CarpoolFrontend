@@ -1,4 +1,5 @@
 var PersonalSocialView = MultiPageView.extend({
+    el: "#profilePage_content",
     initialize: function (params) {
         this.isClosed = false;
         _.bindAll(this, 'render', 'entryEvent', 'error', 'close');
@@ -16,9 +17,8 @@ var PersonalSocialView = MultiPageView.extend({
         this.minHeight = 460;
         this.startIndex = 0;
         this.noMessage = "你还没有关注的人";
-        this.domContainer = $("#profilePage_content");
         this.wrapperTemplate = _.template(tpl.get('personalSocial'));
-        this.domContainer.append(this.wrapperTemplate);
+        this.$el.append(this.wrapperTemplate);
 
         this.curUserId = params.intendedUserId;
         this.sessionUser = app.sessionManager.getSessionUser();
@@ -58,7 +58,7 @@ var PersonalSocialView = MultiPageView.extend({
     close: function () {
         if (!this.isClosed) {
 
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }

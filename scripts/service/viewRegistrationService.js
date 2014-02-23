@@ -48,6 +48,10 @@
                 request: ['content'],
                 antiRequest: ['content', 'advertisement']
             },
+            'HowItWorkds': {
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
+            },
             'letter': {
                 request: ['chat'],
                 antiRequest: ['chat']

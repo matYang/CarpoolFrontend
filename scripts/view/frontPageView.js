@@ -1,6 +1,6 @@
 var FrontPageView = Backbone.View.extend({
 
-    el: $('#content'),
+    el: '#content',
     displayIndex: 0,
     initialize: function () {
         _.bindAll(this, 'getRecents', 'render', 'bindEvents', 'bindRecentsEvents', 'renderRecents', 'updateLocation', 'scroll', 'acceptDefaultLocation', 'closeLocationDropDown', 'close');
@@ -52,7 +52,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     render: function () {
-        $(this.el).append(this.template);
+        this.$el.append(this.template);
         this.$resultPanel = $("#frontPage-resultPanel");
         $("#frontPage-exp>dt").hide();
         $("#exp1").show();
@@ -192,7 +192,7 @@ var FrontPageView = Backbone.View.extend({
 
             this.closeLocationDropDown();
             $( '.cycle-slideshow' ).cycle('destroy');
-            $(this.el).empty();
+            this.$el.empty();
             this.isClosed = true;
             clearInterval(this.rollInterval);
         }

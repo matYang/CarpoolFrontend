@@ -1,6 +1,6 @@
 var MessageDetailView = Backbone.View.extend({
 
-    el: "",
+    el: "#content",
 
     initialize: function (messageIdWrapper) {
         _.bindAll(this, 'render', 'bindEvents', 'renderAutoMatch', 'loadTransactions', 'createNewTransaction', 'openTransactionDetail', 'parseMessage', 'parseTransaction', 'renderPriceList', 'cancelSuccess', 'cancelError', 'close');
@@ -27,7 +27,6 @@ var MessageDetailView = Backbone.View.extend({
 
                 self.template = _.template(tpl.get('DetailMessage'));
                 self.transactionTemplate = _.template(tpl.get('Transaction'));
-                self.domContainer = $('#content');
                 self.render();
                 self.bindEvents();
                 self.showTransaction = false;
@@ -52,7 +51,7 @@ var MessageDetailView = Backbone.View.extend({
             destLocation: this.message.get("arrival_location"),
             clickable: false
         };
-        this.domContainer.append(this.template(this.parsedMessage));
+        this.$el.append(this.template(this.parsedMessage));
         this.map = app.storage.getViewCache("MapView", mapParams);
         this.renderPriceList();
         if (this.message.get("isRoundTrip")) {
@@ -254,8 +253,8 @@ var MessageDetailView = Backbone.View.extend({
             if (this.$messages) {
                 this.$messages.off();
             }
-            if ( typeof this.domContainer !== 'undefined') {
-                this.domContainer.empty();
+            if ( typeof this.$el !== 'undefined') {
+                this.$el.empty();
             }
             $("#view_profilePicture, #view_profileName").off();
             $("#popup").empty();

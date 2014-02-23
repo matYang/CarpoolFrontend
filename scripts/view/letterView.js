@@ -1,5 +1,5 @@
 var LetterView = Backbone.View.extend({
-    el: "",
+    el: "#chat",
     messageBoxTemplate: ["<li class='",
                         null,
                         "'><div class='date'>",
@@ -19,8 +19,8 @@ var LetterView = Backbone.View.extend({
             "direction": 2
         };
         this.template = _.template(tpl.get('letter'));
-        this.domContainer = $('#chat');
-        this.domContainer.append(this.template);
+        
+        this.$el.append(this.template);
         this.$historyPanel = $("#letter_message_panel>#letter_history");
         this.$messagePanel = $("#letter_message_panel>#letter_new");
         this.$letterInput = $("#letter_input");
@@ -328,7 +328,7 @@ var LetterView = Backbone.View.extend({
             $("#letter_send_button").off();
             this.$letterInput.off();
             $("#letter_user_list").off();
-            this.domContainer.empty();
+            this.$el.empty();
             this.isClosed = true;
         }
     }

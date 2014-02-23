@@ -1,7 +1,7 @@
 var PRICE_MIN = 0, PRICE_MAX = 200;
 
 var MainPageView = Backbone.View.extend({
-    el: $('#content'),
+    el: '#content',
 
     filter: {
         "isRoundTrip": false,
@@ -35,7 +35,7 @@ var MainPageView = Backbone.View.extend({
             this.searchRepresentation = app.storage.getSearchRepresentationCache();
         }
         //injecting the template
-        $(this.el).append(this.template);
+        this.$el.append(this.template);
         //TODO force target type to be all
         this.searchRepresentation.set('targetType', Constants.messageType.both);
         app.locationService.getDefaultLocations(this.render, this);
@@ -385,7 +385,7 @@ var MainPageView = Backbone.View.extend({
 
             //get ride of the view
             this.unbind();
-            $(this.el).empty();
+            this.$el.empty();
 
             this.isClosed = true;
         }
