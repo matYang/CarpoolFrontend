@@ -130,6 +130,7 @@ var FrontPageView = Backbone.View.extend({
             }
         });
         $("#front_howItWorks").on("click", function (e) {
+            e.preventDefault();
             app.navigate("howitworks", true);
         });
         //this.bindRecentsEvents();
