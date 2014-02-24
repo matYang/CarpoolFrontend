@@ -129,6 +129,9 @@ var FrontPageView = Backbone.View.extend({
                 $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
         });
+        $("#front_howItWorks").on("click", function (e) {
+            app.navigate("howitworks", true);
+        });
         //this.bindRecentsEvents();
     },
 
