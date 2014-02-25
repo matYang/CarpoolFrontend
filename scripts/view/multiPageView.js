@@ -68,9 +68,8 @@ var MultiPageView = Backbone.View.extend({
     bindEntryEvent: function () {
         var self = this;
         this.$domContainer.on("click", "." + this.entryClass, function (e) {
-            debugger;
             e.preventDefault();
-            var id = Utilities.getId(e.delegateTarget.id);
+            var id = Utilities.getId($(this).attr("id"));
             self.entryEvent(id);
         });
     },
@@ -156,7 +155,8 @@ var MultiPageView = Backbone.View.extend({
             if (this.$pn) {
                 this.$pn.children("." + this.pageNumberClass).off();
             }
-            this.$domContainer.find("." + this.entryClass).off();
+            this.unregisterFilterEvent();
+            this.$domContainer.off();
             this.$domContainer.empty();
             this.isClosed = true;
         }

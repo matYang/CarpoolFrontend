@@ -3,6 +3,7 @@ var TransactionHistoryView = MultiPageView.extend({
     initialize: function (messageList) {
         _.bindAll(this, 'render', 'openTransactionDetail', 'fetchMessageSuccess', 'fetchMessageError', 'close');
         this.messages = messageList;
+        this.allMessages = messageList;
         this.entryTemplate = _.template(tpl.get('personalTransactionHistory'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "transactionPageNumber";
