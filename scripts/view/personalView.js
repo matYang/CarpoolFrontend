@@ -12,6 +12,7 @@ var PersonalView = Backbone.View.extend({
         this.domContainer = $('#content');
         this.watched = false;
         this.sessionUser = app.sessionManager.getSessionUser();
+        this.query = params.query;
         app.userManager.fetchUser(this.curUserId, {
             "success": this.preRender,
             "error": this.renderError
@@ -62,7 +63,7 @@ var PersonalView = Backbone.View.extend({
     renderError: function () {
         Info.displayErrorPage("content", "个人页面加载失败，请稍后再试");
     },
-    switchChildView: function (viewState) {
+    switchChildView: function (viewState, query) {
 
         //validity of viewState is guranteed on the URL level, since deep linking is applied
         //reduncy of safety check is not necessary here because in development, we need to know where things go wrong
@@ -70,6 +71,9 @@ var PersonalView = Backbone.View.extend({
             this.activeViewState = viewState.viewState;
         } else {
             this.activeViewState = viewState;
+        }
+        if (query) {
+            this.query = query;
         }
         this.createChildView();
     },
@@ -115,7 +119,8 @@ var PersonalView = Backbone.View.extend({
                 if (this.sessionUser.get("userId") === this.curUserId) {
                     $('#profilePage_utilityTab').addClass('active');
                     this.activeChildView = new PersonalUtilityView ({
-                        'intendedUserId': this.curUserId
+                        'intendedUserId': this.curUserId,
+                        'query': this.query
                     });
                 }
                 break;

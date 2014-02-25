@@ -288,7 +288,10 @@ var Utilities = {
             }
             return _arr;
         }
+    },
+    getUrlParams: function() {
+        if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+              return decodeURIComponent(name[1]);
     }
-
 
 };

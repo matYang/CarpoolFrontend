@@ -12,7 +12,8 @@ var AppRouter = Backbone.Router.extend({
 
         "personal/:intendedUserId": "personal",
         "personal/:intendedUserId/": "personal",
-        "personal/:intendedUserId/*personalViewState": "personalWithState",
+        "personal/:intendedUserId/:personalViewState": "personalWithState",
+        "personal/:intendedUserId/:personalViewState/*query": "personalWithState",
 
         "message/:messageId": "MessageDetail",
         "message/:messageId/": "MessageDetail",
@@ -110,7 +111,7 @@ var AppRouter = Backbone.Router.extend({
 
     },
 
-    personalWithState: function (intendedUserId, personalViewState) {
+    personalWithState: function (intendedUserId, personalViewState, query) {
         if (!this.sessionManager.hasSession()) {
             this.navigate("front", {trigger: true, replace: true});
             return;
@@ -118,19 +119,18 @@ var AppRouter = Backbone.Router.extend({
         var id = Utilities.toInt(intendedUserId);
         if ( typeof id === 'number' && !isNaN(id)){
             if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
-                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
+                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState() + "/" + query, {trigger: true, replace: true});
             } else {
                 if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
                     if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
                         personalViewState = "history";
                     this.personalView = new PersonalView ({
                         'intendedUserId': intendedUserId,
-                        'viewState': personalViewState
+                        'viewState': personalViewState,
+                        "query": query
                     });
                 } else {
-                    this.personalView.switchChildView({
-                        'viewState': personalViewState
-                    });
+                    this.personalView.switchChildView(personalViewState, query);
                 }
             }
         } else {

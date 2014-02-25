@@ -16,6 +16,24 @@ var PersonalUtilityView = Backbone.View.extend({
         this.render();
         this.bindEvents();
         this.bindValidator();
+        if (params.query) {
+            switch (params.query) {
+                case "password":
+                    $('#passwordInfo').trigger("click");
+                    break;
+                case "trade":
+                    $('#tradeInfo').trigger("click");
+                    break;
+                case "avatar":
+                    $('#changeDp').trigger("click");
+                    break;
+                case "basic":
+                default:
+                    $('#basicInfo').trigger("click");
+                    break;
+
+            }
+        }
     },
 
     bindEvents: function () {
@@ -34,7 +52,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
-
+            app.navigate("personal/" + that.sessionUser.id + "/utility/basic");
         });
         $('#passwordInfo').on('click', function () {
             that.$personalContent.hide();
@@ -44,6 +62,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/password");
         });
         $('#tradeInfo').on('click', function () {
             that.$personalContent.hide();
@@ -52,16 +71,17 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$dpContent.hide();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/trade");
         });
         $('#changeDp').on('click', function () {
             that.$personalContent.hide();
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.show();
-
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/avatar");
         });
         $('#upload_picture').on('click', function () {
             //TODO:

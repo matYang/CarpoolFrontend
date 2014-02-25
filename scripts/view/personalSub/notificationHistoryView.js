@@ -105,7 +105,7 @@ var NotificationHistoryView = MultiPageView.extend({
         this.registerFilterEvent(this.$all, null, this, function(){$("#markAsRead").show();});
         $("#notificationSetting").on("click", function (e) {
             e.preventDefault();
-            app.navigate("personal/"+that.user.id+"/utility", true);
+            app.navigate("personal/"+that.user.id+"/utility/trade", true);
         });
     },
     getCheckedNotificationIds: function () {
