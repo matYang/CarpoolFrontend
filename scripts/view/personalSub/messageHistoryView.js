@@ -1,7 +1,8 @@
 var MessageHistoryView = MultiPageView.extend({
 
     initialize: function (messageList, container) {
-        _.bindAll(this, 'render', 'openDetailMessage', 'close');
+        _.bindAll(this, 'render', 'openDetailMessage', 'afterRender', 'bindEvents', 'close');
+        this.allMessages = messageList;
         this.messages = messageList;
         this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "page-messageHistory";
@@ -19,14 +20,22 @@ var MessageHistoryView = MultiPageView.extend({
     },
     render: function(){
         MultiPageView.prototype.render.call(this);
+
     },
     afterRender: function (start) {
         $(".message_simple").find(".personalInfo").remove();
+        this.bindEvents();
     },
     openDetailMessage: function (messageId) {
         app.navigate("message/" + messageId, true);
     },
-
+    bindEvents: function () {
+        this.registerFilterEvent($("#allMessageFilter"), null, this);
+        this.registerFilterEvent($("#activeMessageFilter"), 
+            function(m){ return m.get("state") !== Constants.messageState.closed; }, this);
+        this.registerFilterEvent($("#finishedMessageFilter"),
+            function(m){ return m.get("state") === Constants.messageState.closed; }, this);
+    },
     close: function () {
         this.domContainer.empty();
     }

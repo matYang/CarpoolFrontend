@@ -15,6 +15,8 @@ var MultiPageView = Backbone.View.extend({
     entryRowNum: 1,
     minHeight: 0,
     noMessage: "暂无消息",
+    filters:[],
+    eventBound: false,
     $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
@@ -22,6 +24,7 @@ var MultiPageView = Backbone.View.extend({
     },
 
     render: function () {
+        this.unregisterFilterEvent();
         this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
         this.$domContainer.empty();
         if (this.messages.length > 0) {
@@ -38,7 +41,7 @@ var MultiPageView = Backbone.View.extend({
             }
             this.$domContainer.append(buf.join(""));
             this.$domContainer.children("div").addClass(this.entryClass);
-            if (this.bindEntryEvent) {
+            if (this.entryEvent && !this.eventBound) {
                 this.bindEntryEvent();
             }
         } else {
@@ -55,6 +58,7 @@ var MultiPageView = Backbone.View.extend({
         if (this.afterRender) {
             this.afterRender();
         }
+        this.eventBound = true;
     },
     toPage: function (page) {
         this.currentPage = page;
@@ -63,7 +67,8 @@ var MultiPageView = Backbone.View.extend({
     },
     bindEntryEvent: function () {
         var self = this;
-        this.$domContainer.find("." + this.entryClass).on("click", function (e) {
+        this.$domContainer.on("click", "." + this.entryClass, function (e) {
+            debugger;
             e.preventDefault();
             var id = Utilities.getId(e.delegateTarget.id);
             self.entryEvent(id);
@@ -118,6 +123,33 @@ var MultiPageView = Backbone.View.extend({
                 self.toPage(self.currentPage + 1);
             });
         }
+    },
+    registerFilterEvent: function ($selector, filter, inst, callback) {
+        var that = this;
+        $selector.on("click", function (e) {
+            
+            $selector.siblings().removeClass("active");
+            $selector.addClass("active");
+            if (that.allMessages) {
+                if (filter) {
+                    that.messages = that.allMessages.clone();
+                    that.messages.reset(that.messages.filter(filter));
+                } else {
+                    that.messages = that.allMessages;
+                }
+            }
+            inst.render();
+            if (callback){
+                callback.call(inst);
+            }
+        });
+        this.filters.push($selector);
+    },
+    unregisterFilterEvent: function() {
+        for (var i = 0; i < this.filters.length; i++) {
+            this.filters[i].off();
+        }
+        this.filters = [];
     },
     close: function () {
         if (!this.isClosed) {

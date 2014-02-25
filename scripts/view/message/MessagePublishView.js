@@ -78,7 +78,6 @@ var MessagePublishView = MessagePostView.extend({
         });
     },
     success: function (message) {
-        Info.displayNotice("信息发布成功");
         app.navigate("message/" + message.id, true);
     },
     error: function () {

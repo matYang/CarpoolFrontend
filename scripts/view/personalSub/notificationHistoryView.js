@@ -24,12 +24,17 @@ var NotificationHistoryView = MultiPageView.extend({
     },
 
     render: function (message) {
-        this.messages = new Notifications();;
-        if (message.length) {
-            this.messages.reset(message.where({'state': Constants.notificationState.unread}));
+        this.messages = new Notifications();
+        //only Pass message as parameter when it is called as a callback of fetch
+        if (message) {
+            this.messages.reset(message);
+            this.allMessages = message;
         }
-        this.allMessages = message;
+        //Render this.messages
         MultiPageView.prototype.render.call(this);
+        this.unregisterFilterEvent();
+        this.bindFilterEvents();
+
     },
     bindNotificationEvent: function (messageId) {
         var currentNotification = this.messages.get(messageId);
@@ -70,38 +75,34 @@ var NotificationHistoryView = MultiPageView.extend({
             }
         });
         $("#markAsRead").on("click", function (e) {
-            app.notificationManager.checkNotification(that.getCheckedNotificationIds, {
-                "success":null,
-                "error":null
-            });
+            if (that.getCheckedNotificationIds && that.getCheckedNotificationIds.length) {
+                app.notificationManager.checkNotification(that.getCheckedNotificationIds, {
+                    "success":null,
+                    "error":null
+                });
+            }
         });
         $("#deleteSelected").on("click", function (e) {
-            app.notificationManager.deleteNotification(that.getCheckedNotificationIds, {
-                "success":that.deleteSuccess,
-                "error":null
-            });
+            if (that.getCheckedNotificationIds && that.getCheckedNotificationIds.length) {
+                app.notificationManager.deleteNotification(that.getCheckedNotificationIds, {
+                    "success":that.deleteSuccess,
+                    "error":null
+                });
+            }
         });
     },
     bindFilterEvents: function () {
         var that = this;
-        this.$unread = $("#unreadNotificationFilter").on("click", function (e) {
-            $("#markAsRead").show();
-            if (that.messages.length) {
-                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.unread}));
-            }
-            MultiPageView.prototype.render.call(that);
-            that.$read.removeClass("active");
-            $(this).addClass("active");
-        });
-        this.$read = $("#readNotificationFilter").on("click", function (e) {
-            $("#markAsRead").hide();
-            if (that.messages.length) {
-                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.read}));
-            }
-            MultiPageView.prototype.render.call(that);
-            that.$unread.removeClass("active");
-            $(this).addClass("active");
-        });
+        this.$all = $("#allNotificationFilter");
+        this.$unread = $("#unreadNotificationFilter");
+        this.$read = $("#readNotificationFilter");
+        this.registerFilterEvent(this.$unread,
+            function(n){n.get('state') === Constants.notificationState.unread},
+            this, function(){$("#markAsRead").show();});
+        this.registerFilterEvent(this.$read,
+            function(n){n.get('state') === Constants.notificationState.read},
+            this, function(){$("#markAsRead").hide();});
+        this.registerFilterEvent(this.$all, null, this, function(){$("#markAsRead").show();});
         $("#notificationSetting").on("click", function (e) {
             e.preventDefault();
             app.navigate("personal/"+that.user.id+"/utility", true);

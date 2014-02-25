@@ -32,6 +32,7 @@ var PersonalSocialView = MultiPageView.extend({
 
     render: function (socialList) {
         var that = this;
+        this.allMessages = socialList;
         this.messages = socialList;
         $("#social_following").html("关注（" + socialList.length + "）");
         this.sessionUser.set("socialList", socialList);
