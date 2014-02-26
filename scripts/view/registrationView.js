@@ -291,10 +291,10 @@ var RegistrationView = Backbone.View.extend({
 
     verifyEmail: function (available) {
         if (available) {
-            that.$email.after('<span id="vemail" class="right"></span>');
+            this.$email.after('<span id="vemail" class="right"></span>');
         } else {
-            that.valid.email = false;
-            that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
+            this.valid.email = false;
+            this.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
         }
     },
 
