@@ -1,4 +1,4 @@
-var MapView = Backbone.View.extend({
+var BaiduMapView = Backbone.View.extend({
     el: "",
 
     initialize: function (config) {

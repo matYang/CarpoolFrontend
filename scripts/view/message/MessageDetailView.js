@@ -52,7 +52,11 @@ var MessageDetailView = Backbone.View.extend({
             clickable: false
         };
         this.$el.append(this.template(this.parsedMessage));
-        this.map = app.storage.getViewCache("MapView", mapParams);
+        if (Config.mapType === "baidu") {
+            this.map = app.storage.getViewCache("BaiduMapView", mapParams);
+        } else {
+            this.map = app.storage.getViewCache("GoogleMapView", mapParams);
+        }
         this.renderPriceList();
         if (this.message.get("isRoundTrip")) {
             $(".messageDetail-top-location").attr("class", "messageDetail-top-location clearfix back-and-forth");

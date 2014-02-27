@@ -23,7 +23,7 @@ var UserLocation = Backbone.Model.extend({
     },
 
     initialize: function () {
-        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'toJSON',  'equals', 'isEquivalentTo', 'parse', 'parseGeocodeResult', 'parseBaiduJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
+        _.bindAll(this, 'isNew', 'isDefault','toUiString', 'toJSON',  'equals', 'isEquivalentTo', 'parse', 'parseGeocodeResult', 'parseBaiduJson', 'parseGoogleJson', 'isInRange', '_getDistanceFromLatLon', '_deg2rad');
     },
 
     isNew: function (){
@@ -108,7 +108,11 @@ var UserLocation = Backbone.Model.extend({
     },
 
     parseGeocodeResult: function (result) {
-        return this.parseBaiduJson(result);
+        if (Config.mapType === "baidu") {
+            return this.parseBaiduJson(result);
+        } else {
+            return this.parseGoogleJson(result);
+        }
     },
     //TODO
     //also need to get lat and lng
@@ -120,6 +124,30 @@ var UserLocation = Backbone.Model.extend({
         this.set('pointAddress', ac.street + ac.streetNumber);
         this.set('lat', json.point.lat);
         this.set('lng', json.point.lng);
+        return this.get('pointAddress');
+    },
+
+    parseGoogleJson: function (json) {
+        var address = json.results[0].address_components, len = address.length, i,
+            street_address, buf = [], city, province, contry, reachedFlag = false;
+
+        for (i = 0; i < len; i++) {
+            if (address[i].types[0] === "locality") {
+                this.set('region', address[i].short_name);
+                continue;
+            }
+            if (address[i].types[0] === "administrative_area_level_2") {
+                this.set('city', address[i].short_name);
+                continue;
+            }
+            if (address[i].types[0] === "administrative_area_level_1") {
+                this.set('province', address[i].short_name);
+                break;
+            }
+        }
+        this.set('pointAddress', json.results[0].formatted_address.split(",")[0]);
+        this.set('lat', json.results[0].geometry.location.lat);
+        this.set('lng', json.results[0].geometry.location.lng);
         return this.get('pointAddress');
     },
 

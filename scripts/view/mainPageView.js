@@ -87,10 +87,11 @@ var MainPageView = Backbone.View.extend({
             destLocation: this.dest,
             clickable: false
         };
-
-
-
-        this.map = app.storage.getViewCache("MapView", mapParams);
+        if (Config.mapType === "baidu") {
+            this.map = app.storage.getViewCache("BaiduMapView", mapParams);
+        } else {
+            this.map = app.storage.getViewCache("GoogleMapView", mapParams);
+        }
         this.$dateDepart = $("#searchDateInput_depart").datepicker({
             buttonImageOnly: true,
             buttonImage: "calendar.gif",

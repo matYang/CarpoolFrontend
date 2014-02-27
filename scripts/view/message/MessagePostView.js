@@ -169,7 +169,11 @@ var MessagePostView = Backbone.View.extend({
         mapConfig.init = this;
         mapConfig.clickable = true;
         if (!this.map) {
-            this.map = app.storage.getViewCache("MapView", mapConfig);
+        if (Config.mapType === "baidu") {
+                this.map = app.storage.getViewCache("BaiduMapView", mapConfig);
+            } else {
+                this.map = app.storage.getViewCache("GoogleMapView", mapConfig);
+            }
         } else if ($("#mapcache").length){
             this.map.cacheConfig(mapConfig);
         }
