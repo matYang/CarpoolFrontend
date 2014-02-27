@@ -204,14 +204,14 @@ var MessagePostView = Backbone.View.extend({
             }
         });
     },
-    updateByMapMarker: function (type, json) {
+    updateByMapMarker: function (type, result) {
         if (type === "origin") {
-            this.$page1originAddr.val(json.results[0].formatted_address.split(",")[0]);
-            this.toSubmit.origin.parseGoogleJson(json);
+            this.$page1originAddr.val(result.address);
+            this.toSubmit.origin.parseGeocodeResult(result);
             this.buildGeocodeRequest(this.toSubmit.origin, "origin");
         } else {
-            this.$page1destAddr.val(json.results[0].formatted_address.split(",")[0]);
-            this.toSubmit.dest.parseGoogleJson(json);
+            this.$page1destAddr.val(result.address);
+            this.toSubmit.dest.parseGeocodeResult(result);
             this.buildGeocodeRequest(this.toSubmit.dest, "dest");
         }
     },
