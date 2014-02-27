@@ -17,6 +17,10 @@ var FrontPageView = Backbone.View.extend({
         this.departLocation = new UserLocation();
         this.arrivalLocation = new UserLocation();
         this.locationDirection = Constants.LocationDirection.from;
+        this.messages = app.storage.getRecentMessages;
+        if (this.messages) {
+            this.renderRecents(this.messages);
+        } 
         this.render();
         //fire async API call befire entering the time consuming events binding stage
         this.getRecents();

@@ -121,6 +121,21 @@
         localStorage.lastContact[app.sessionManager.sessionUser.id] = id;
     };
 
+    StorageService.prototype.setRecentMessages = function (recentMessages) {
+        var now = new Date();
+        localStorage.recent = {"timestamp":now.getTime(), "messages": recentMessages};
+    };
+    StorageService.prototype.getRecentMessages = function (id) {
+        var now = new Date();
+        now = now.getTime();
+        if (localStorage.recent && (now - localStorage.recent.timestamp) < 90000) {
+            return localStorage.recent.messages;
+        }
+        localStorage = null;
+        return null;
+    };
+
+
     StorageService.prototype.setViewCache = function (type, view) {
         this.views[type] = view;
     };
