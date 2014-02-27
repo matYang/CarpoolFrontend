@@ -6,6 +6,7 @@ var Config = {
 
     defaultCustomDepthIndex: 3,
 
+    mapType: 'baidu',
     //-------------- PersonalView state transfer -------------
     getDefaultPersonalViewState: function () {
         return "history";

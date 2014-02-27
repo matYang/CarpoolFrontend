@@ -47,8 +47,8 @@ module.exports = function(grunt) {
               "scripts/dataManagers/letterManager.js",
               "scripts/dataManagers/generalManager.js",
               "scripts/dataManagers/socketManager.js",
-              "scripts/view/shared/multiPageView.js",
-              "scripts/view/shared/BaseFormView.js"
+              "scripts/view/multiPageView.js",
+              "scripts/view/baiduMapView.js",
               "scripts/view/mapview.js",
               "scripts/view/advertisementView.js",
               "scripts/view/letterView.js",
