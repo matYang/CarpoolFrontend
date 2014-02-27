@@ -35,6 +35,9 @@ var BaiduMapView = Backbone.View.extend({
         this.getLatLng(this.origin, this.oLatLng, true);
         this.getLatLng(this.dest, this.dLatLng, true);
         var center = new BMap.Point (116.404, 39.915);
+
+        //var center = new BMap.Point (this.oLatLng.lat, this.oLatLng.lng);
+
         var myOptions = {
             minZoom: 8,
             maxZoom: 13,
@@ -53,6 +56,7 @@ var BaiduMapView = Backbone.View.extend({
         this.oMarker = undefined;
         this.dMarker = undefined;
         var that = this;
+
         // this.map.addEventListener('tilesloaded', function(){
         //     if (that.oLatLng.lat && that.dLatLng.lat) {
         //          that.getDirection(that.oLatLng, that.dLatLng);
@@ -82,8 +86,6 @@ var BaiduMapView = Backbone.View.extend({
             });
             that.map.addOverlay(that.marker);
             this.geocoder.getLocation(e.point, that.geoCallback);
-            
-
         });
     },
     geoCallback: function(result) {
