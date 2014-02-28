@@ -34,14 +34,15 @@ var BaiduMapView = Backbone.View.extend({
         this.isClosed = false;
         this.getLatLng(this.origin, this.oLatLng, true);
         this.getLatLng(this.dest, this.dLatLng, true);
-        var center = new BMap.Point (this.oLatLng.lat, this.oLatLng.lng);
+        var center = new BMap.Point (116.404, 39.915);
         var myOptions = {
             minZoom: 8,
             maxZoom: 13,
         };
+        debugger;
         if (!this.map) {
-            this.map = new BMap.Map (this.div, myOptions);  //this should never expire
-            this.map.centerAndZoom(center, 10);
+            this.map = new BMap.Map (this.div);  //this should never expire
+            this.map.centerAndZoom(center, 12);
             this.drivingRoute = new BMap.DrivingRoute(this.map, {
                 renderOptions: {
                     map   : this.map,
@@ -53,15 +54,15 @@ var BaiduMapView = Backbone.View.extend({
         this.oMarker = undefined;
         this.dMarker = undefined;
         var that = this;
-        this.map.addEventListener('tilesloaded', function(){
-            if (that.oLatLng.lat && that.dLatLng.lat) {
-                 that.getDirection(that.oLatLng, that.dLatLng);
-            }
-            if (that.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)) {
-                that.getDirection(that.origin, that.dest);
-            }
-            this.map.removeEventListener('tilesloaded');
-        });
+        // this.map.addEventListener('tilesloaded', function(){
+        //     if (that.oLatLng.lat && that.dLatLng.lat) {
+        //          that.getDirection(that.oLatLng, that.dLatLng);
+        //     }
+        //     if (that.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)) {
+        //         that.getDirection(that.origin, that.dest);
+        //     }
+        //     that.map.removeEventListener('tilesloaded');
+        // });
         if (this.clickable) {
             this.bindClickEvent();
         }
