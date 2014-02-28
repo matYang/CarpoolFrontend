@@ -17,7 +17,6 @@ var FrontPageView = Backbone.View.extend({
         this.departLocation = new UserLocation();
         this.arrivalLocation = new UserLocation();
         this.locationDirection = Constants.LocationDirection.from;
-        this.render();
         this.messages = app.storage.getRecentMessages();
         if (this.messages) {
             this.renderRecents(this.messages);
