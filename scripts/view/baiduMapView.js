@@ -75,7 +75,7 @@ var BaiduMapView = Backbone.View.extend({
                 that.infowindow.close();
             }
             if (that.marker) {
-                that.marker.setMap(null);
+                that.map.removeOverlay(that.marker);
             }
                 
             that.marker = new BMap.Marker({
@@ -250,7 +250,7 @@ var BaiduMapView = Backbone.View.extend({
             this.map.addOverlay(this.oMarker);
         } else {
             if (this.dMarker) {
-                this.dMarker.setMap(null);
+                this.map.removeOverlay(this.dMarker);
             }
             this.dMarker = new BMap.Marker ({
                 position: result.point
@@ -269,15 +269,15 @@ var BaiduMapView = Backbone.View.extend({
     },
     close: function (destroy) {
         if (this.marker) {
-            this.marker.setMap(null);
+            this.map.removeOverlay(this.marker);
             this.marker = null;
         }
         if (this.oMarker) {
-            this.oMarker.setMap(null);
+            this.map.removeOverlay(this.oMarker);
             this.oMarker = null;
         }
         if (this.dMarker) {
-            this.dMarker.setMap(null);
+            this.map.removeOverlay(this.dMarker);
             this.dMarker = null;
         }
         this.map.removeEventListener('click');
