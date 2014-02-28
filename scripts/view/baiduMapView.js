@@ -42,35 +42,34 @@ var BaiduMapView = Backbone.View.extend({
         if (!this.map) {
             this.map = new BMap.Map (this.div, myOptions);  //this should never expire
             this.map.centerAndZoom(center, 10);
-            this.drivingRoute = new BMap.DrivingRoute(map, {
+            this.drivingRoute = new BMap.DrivingRoute(this.map, {
                 renderOptions: {
-                    map   : map,
+                    map   : this.map,
                     autoViewport: true
                 }
             });    
-            this.directionDisplay.setMap(this.map);
         }
         this.marker = undefined;
         this.oMarker = undefined;
         this.dMarker = undefined;
         var that = this;
-        BMap.event.addListenerOnce(this.map, 'idle', function(){
+        this.map.addEventListener('tilesloaded', function(){
             if (that.oLatLng.lat && that.dLatLng.lat) {
                  that.getDirection(that.oLatLng, that.dLatLng);
             }
             if (that.origin instanceof Backbone.Model && this.dest instanceof Backbone.Model && this.origin.get("city") && this.dest.get("city") && !this.origin.equals(this.dest)) {
                 that.getDirection(that.origin, that.dest);
             }
+            this.map.removeEventListener('tilesloaded');
         });
         if (this.clickable) {
             this.bindClickEvent();
         }
-        BMap.event.trigger(this.map, 'resize');
     },
     bindClickEvent: function () {
         var that = this,
             contentString;
-        this.map.addListener(this.map, 'click', function (e) {
+        this.map.addEventListener('click', function (e) {
             if (that.infowindow) {
                 that.infowindow.close();
             }
@@ -82,9 +81,7 @@ var BaiduMapView = Backbone.View.extend({
                 point: e.point
             });
             that.map.addOverlay(that.marker);
-            this.geocoder.getLocation(e.point,
-                callback: that.geoCallback,
-            );
+            this.geocoder.getLocation(e.point, that.geoCallback);
             
 
         });
@@ -111,13 +108,11 @@ var BaiduMapView = Backbone.View.extend({
             this.infowindow.setContent(contentString);
         }
         if (that.init) {
-            BMap.event.addListener(that.infowindow, 'domready', function() {
-                $(".markerButton").on('click', function(e){ 
-                    if (e.delegateTarget.id === 'markerSetOrigin') 
-                        that.setLocation("origin", result);
-                    else if (e.delegateTarget.id === 'markerSetDest') 
-                        that.setLocation("dest", result);
-                });
+            that.infowindow.addEventListener('click', function (e) {
+                if (e.target.id === 'markerSetOrigin') 
+                    that.setLocation("origin", result);
+                else if (e.target.id === 'markerSetDest') 
+                    that.setLocation("dest", result);
             });
         }
     },
@@ -181,10 +176,7 @@ var BaiduMapView = Backbone.View.extend({
             fillColor: '#2E8AE6',
             fillOpacity: 0.25
         };
-        var userCircle = new BMap.Circle (
-            center:center,
-            radius: 500,
-            opts: circleOptions);
+        var userCircle = new BMap.Circle (center, 500, circleOptions);
 
         //add a marker at the center of the circle
         var userMarker = new BMap.Marker ({
@@ -224,8 +216,8 @@ var BaiduMapView = Backbone.View.extend({
             return;
         }
 
-        this.drivingRoute.search(request.origin, request.destination, options:{
-            policy: BMap.BMAP_DRIVING_POLICY_LEAST_TIME;
+        this.drivingRoute.search(request.origin, request.destination, {
+            policy: BMap.BMAP_DRIVING_POLICY_LEAST_TIME,
             renderOptions: {    
                 map: that.map,    
                 autoViewport: true    
