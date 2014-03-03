@@ -4,7 +4,7 @@ var ServiceCenterView = Backbone.view.extend({
 		this.currentTab = params ? params.tab || "about" : "about";
 		this.isClosed = false;
 		_.bindAll(this, "preRender", "render", "bindEvents", "close");
-		this.baseTemplate = _.template(tpl.get('serviceCenter'));
+		this.baseTemplate = _.template(tpl.get('serviceCenter_base'));
 		this.preRender();
 		this.render();
 	},

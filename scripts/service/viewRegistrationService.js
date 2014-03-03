@@ -52,6 +52,10 @@
                 request: ['content'],
                 antiRequest: ['content', 'advertisement']
             },
+            'serviceCenter': {
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
+            },
             'letter': {
                 request: ['chat'],
                 antiRequest: ['chat']
