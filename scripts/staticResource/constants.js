@@ -52,7 +52,10 @@ var Constants = {
     "letter",
     
     /*-----------  How It Works -------------*/
-    "howItWorks_base", "howItWorks_driver", "howItWorks_passenger", "serviceCenter_base"
+    "howItWorks_base", "howItWorks_driver", "howItWorks_passenger", 
+
+    /*-----------  About us/service -----------*/
+    "serviceCenter_base", "serviceCenter_aboutUs", "serviceCenter_feedback", "serviceCenter_terms", "serviceCenter_terms_en", "serviceCenter_faq", "serviceCenter_career", 
 
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],

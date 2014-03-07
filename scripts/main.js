@@ -34,6 +34,9 @@ var AppRouter = Backbone.Router.extend({
 
         "emailActivation/*authKey": "emailActivation",
         "howitworks": "howItWorks",
+        "service": "serviceCenter",
+        "service/*tab": "serviceCenter",
+
         "*default" : "front"
     },
 
@@ -245,6 +248,9 @@ var AppRouter = Backbone.Router.extend({
     },
     howItWorks: function() {
         this.howItWorks = new HowItWorksView();
+    },
+    serviceCenter: function(tab) {
+        this.serviceCenter = new ServiceCenterView({"tab":tab});
     }
 });
 
