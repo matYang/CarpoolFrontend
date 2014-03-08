@@ -187,6 +187,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     close: function () {
+        debugger;
         if (!this.isClosed) {
             if (this.$messages) {
                 this.$messages.off();

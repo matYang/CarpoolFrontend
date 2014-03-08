@@ -3,11 +3,13 @@ var ServiceCenterView = Backbone.View.extend({
     initialize: function(params){
         this.currentTab = params ? params.tab || "about" : "about";
         this.isClosed = false;
+        app.viewRegistration.register("serviceCenter", this, true);
         _.bindAll(this, "preRender", "render", "bindEvents", "close");
         this.baseTemplate = _.template(tpl.get('serviceCenter_base'));
         this.aboutUsPage = _.template(tpl.get('serviceCenter_aboutUs'));
         this.feedbackPage = _.template(tpl.get('serviceCenter_feedback'));
         this.termsPage = _.template(tpl.get('serviceCenter_terms'));
+        this.termsZhPage = _.template(tpl.get('serviceCenter_terms_zh'));
         this.termsEnPage = _.template(tpl.get('serviceCenter_terms_en'));
         this.faqPage = _.template(tpl.get('serviceCenter_faq'));
         this.careerPage = _.template(tpl.get('serviceCenter_career'));
@@ -18,8 +20,13 @@ var ServiceCenterView = Backbone.View.extend({
     preRender: function() {
         this.$el.append(this.baseTemplate);
         this.$contentEl = $("#help_content");
+        $("#serviceTab").find(".active").removeClass("active");
+        $("dd[data-id="+this.currentTab+"]").addClass("active");
     },
     render: function (){
+        if ($("#terms_lang").length){
+            $("#terms_lang").off();
+        }
         switch(this.currentTab){
             case "about":
                 this.$contentEl.empty().append(this.aboutUsPage);
@@ -32,13 +39,14 @@ var ServiceCenterView = Backbone.View.extend({
                 break;
             case "term":
                 this.$contentEl.empty().append(this.termsPage);
+                $("#terms_content").append(this.termsZhPage);
                 var that = this;
                 $("#terms_lang").on("click", "li", function (e) {
-                    debugger;
-                    if ($(e.target).attr("data-id") === "zh") {
-                        that.$contentEl.empty().append(that.termsPage);
+                    $(e.delegateTarget).find(".active").removeClass("active");
+                    if ($(e.target).addClass("active").attr("data-id") === "zh") {
+                        $("#terms_content").empty().append(that.termsZhPage);
                     } else {
-                        that.$contentEl.empty().append(that.termsEnPage);
+                        $("#terms_content").empty().append(that.termsEnPage);
                     }
                 });
                 break;
@@ -62,7 +70,9 @@ var ServiceCenterView = Backbone.View.extend({
     close: function (){
         if (!this.isClosed){
             $("#serviceTab").off();
-            this.$el.close();
+            $("#terms_lang").off();
+            this.$el.empty();
+            this.isClosed = true;
         }
     }
 });

@@ -83,8 +83,19 @@ var AppRouter = Backbone.Router.extend({
         this.userLocation = new UserLocation ();
         this.curDate = new Date ();
         this.searchResult = new Messages ();
+        this.bindGlobalLinks();
     },
-
+    bindGlobalLinks: function() {
+        var that = this;
+        $("#footer_service_link").on("click", 'a', function (e) {
+            e.preventDefault();
+            if (e.target.id === "footer_about") {
+                that.navigate("service/about", true);
+            } else if (e.target.id === "footer_feedback") {
+                that.navigate("service/feedback", true);
+            }
+        });
+    },
     defaultRoute: function () {
         //if login, procees to main/:id, if not, proceed to front
         if (this.sessionManager.hasSession()) {
@@ -250,6 +261,9 @@ var AppRouter = Backbone.Router.extend({
         this.howItWorks = new HowItWorksView();
     },
     serviceCenter: function(tab) {
+        if (!tab) {
+            this.navigate("service/about", {replace: true});
+        }
         this.serviceCenter = new ServiceCenterView({"tab":tab});
     }
 });
