@@ -30,9 +30,9 @@
 .feedback dd{ line-height:40px;}
 
 .help_content_inner{ padding:20px;}
-.tab {height:42px;border-bottom:2px solid #57b7e1;}
-.tab li {float:left;height:42px;line-height:42px;padding:0 30px;background:#e8e8e8;margin-right:10px;cursor:pointer;}
-.tab li.active {background:#57b7e1;color:#fff;}
+.privacy .tab {height:42px;border-bottom:2px solid #57b7e1;}
+.privacy .tab li {float:left;height:42px;line-height:42px;padding:0 30px;background:#e8e8e8;margin-right:10px;cursor:pointer;}
+.privacy .tab li.active {background:#57b7e1;color:#fff;}
 	
 	
 

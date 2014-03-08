@@ -89,11 +89,7 @@ var AppRouter = Backbone.Router.extend({
         var that = this;
         $("#footer_service_link").on("click", 'a', function (e) {
             e.preventDefault();
-            if (e.target.id === "footer_about") {
-                that.navigate("service/about", true);
-            } else if (e.target.id === "footer_feedback") {
-                that.navigate("service/feedback", true);
-            }
+            that.navigate("service/" + e.target.id.split("_")[1], true);
         });
     },
     defaultRoute: function () {
