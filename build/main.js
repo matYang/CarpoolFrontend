@@ -5087,6 +5087,9 @@ var Constants = {
     /*-----------  How It Works -------------*/
     "howItWorks_base", "howItWorks_driver", "howItWorks_passenger", 
 
+    /*-----------  About us/service -----------*/
+    "serviceCenter_base", "serviceCenter_aboutUs", "serviceCenter_feedback", "serviceCenter_terms", "serviceCenter_terms_zh", "serviceCenter_terms_en", "serviceCenter_faq", "serviceCenter_career", 
+
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
 
@@ -5646,6 +5649,21 @@ var Config = {
         localStorage.lastContact[app.sessionManager.sessionUser.id] = id;
     };
 
+    StorageService.prototype.setRecentMessages = function (recentMessages) {
+        var now = new Date();
+        localStorage.recent = {"timestamp":now.getTime(), "messages": recentMessages};
+    };
+    StorageService.prototype.getRecentMessages = function (id) {
+        var now = new Date();
+        now = now.getTime();
+        if (localStorage.recent && (now - localStorage.recent.timestamp) < 90000) {
+            return localStorage.recent.messages;
+        }
+        localStorage = null;
+        return null;
+    };
+
+
     StorageService.prototype.setViewCache = function (type, view) {
         this.views[type] = view;
     };
@@ -5951,8 +5969,11 @@ var Utilities = {
             }
             return _arr;
         }
+    },
+    getUrlParams: function() {
+        if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+              return decodeURIComponent(name[1]);
     }
-
 
 };
 tpl = {
@@ -6081,6 +6102,10 @@ tpl = {
                 antiRequest: ['content', 'advertisement']
             },
             'HowItWorkds': {
+                request: ['content'],
+                antiRequest: ['content', 'advertisement']
+            },
+            'serviceCenter': {
                 request: ['content'],
                 antiRequest: ['content', 'advertisement']
             },
@@ -7475,94 +7500,94 @@ var Letters = Backbone.Collection.extend({
     
 }).call(this);
 var testMockObj = {
-	"testMode": true,
-	"sampleMessages": new Messages(),
+    "testMode": false,
+    "sampleMessages": new Messages(),
 
-	"sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",1560198).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 3)
-															.set("departure_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]).set("arrival_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]),
-	"sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",1560198).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("arrival_seatsBooked", 1)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [30]).set("arrival_priceList", [30]),
-	"sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageG": (new Message()).set("messageId", 1007).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleMessageH": (new Message()).set("messageId", 1008).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
-															.set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
-															.set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
-															.set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
-															.set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
-															.set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
-															.set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
-	"sampleUser": (new User()).set("userId", 1560198).set("name", "卢卡子").set("imgPath","").set("location", (new UserLocation()).set("match_Id", 4)),
-	"sampleUsers": new Users(),
-	"sampleUserA": (new User()).set("userId", 1),
-	"sampleUserB": (new User()).set("userId", 2),
-	"sampleUserC": (new User()).set("userId", 3),
-	"sampleUserD": (new User()).set("userId", 4),
-	"sampleUserE": (new User()).set("userId", 5),
-	"sampleUserF": (new User()).set("userId", 6),
+    "sampleMessageA": (new Message()).set("messageId", 1001).set("ownerId",1560198).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("arrival_seatsBooked", 3)
+                                                            .set("departure_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]).set("arrival_priceList", [30,20,10, 9,8,7,6,6,6,6,6,6,6,6,6,6,6,6,6]),
+    "sampleMessageB": (new Message()).set("messageId", 1002).set("ownerId",1560198).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15).set("isRoundTrip", true)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("arrival_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("arrival_seatsBooked", 1)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleMessageC": (new Message()).set("messageId", 1003).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [30]).set("arrival_priceList", [30]),
+    "sampleMessageD": (new Message()).set("messageId", 1004).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleMessageE": (new Message()).set("messageId", 1005).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleMessageF": (new Message()).set("messageId", 1006).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleMessageG": (new Message()).set("messageId", 1007).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleMessageH": (new Message()).set("messageId", 1008).set("ownerId",10000).set("departure_time", new Date()).set("arrival_time", new Date())
+                                                            .set("departure_timeSlot", 15).set("arrival_timeSlot", 15)
+                                                            .set("departure_location", new UserLocation().set("province", "Ontario").set("city","Waterloo"))
+                                                            .set("arrival_location", new UserLocation().set("province", "Ontario").set("city","Toronto"))
+                                                            .set("departure_seatsNumber", 3).set("departure_seatsNumber", 3).set("type", 1)
+                                                            .set("departure_seatsBooked", 1).set("departure_seatsBooked", 3)
+                                                            .set("departure_priceList", [10, 9, 8]).set("arrival_priceList", [10, 9, 8]),
+    "sampleUser": (new User()).set("userId", 1560198).set("name", "卢卡子").set("imgPath","").set("location", (new UserLocation()).set("match_Id", 4)),
+    "sampleUsers": new Users(),
+    "sampleUserA": (new User()).set("userId", 1),
+    "sampleUserB": (new User()).set("userId", 2),
+    "sampleUserC": (new User()).set("userId", 3),
+    "sampleUserD": (new User()).set("userId", 4),
+    "sampleUserE": (new User()).set("userId", 5),
+    "sampleUserF": (new User()).set("userId", 6),
 
-	"sampleTransactions": new Transactions(),
-	"sampleTransactionA": (new Transaction()).set("transactionId", 101).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
-	"sampleTransactionB": (new Transaction()).set("transactionId", 102).set("state",1).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
-	"sampleTransactionC": (new Transaction()).set("transactionId", 103).set("state",2).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
-	"sampleTransactionD": (new Transaction()).set("transactionId", 104).set("state",3).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]).set("customerId", 10000),
-	"sampleTransactionE": (new Transaction()).set("transactionId", 105).set("state",4).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
-	"sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",5).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+    "sampleTransactions": new Transactions(),
+    "sampleTransactionA": (new Transaction()).set("transactionId", 101).set("state",0).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+    "sampleTransactionB": (new Transaction()).set("transactionId", 102).set("state",1).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+    "sampleTransactionC": (new Transaction()).set("transactionId", 103).set("state",2).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+    "sampleTransactionD": (new Transaction()).set("transactionId", 104).set("state",3).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]).set("customerId", 10000),
+    "sampleTransactionE": (new Transaction()).set("transactionId", 105).set("state",4).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
+    "sampleTransactionF": (new Transaction()).set("transactionId", 106).set("state",5).set("type",1).set("departure_seatsBooked",2).set("arrival_seatsBooked",2).set("departure_priceList",[20,18, 15]),
 
-	"sampleNotifications": new Notifications(),
-	"sampleNotificationA": (new Notification()).set("notificationId", 1).set("notificationEvent", 0).set("creationTime", new Date()),
-	"sampleNotificationB": (new Notification()).set("notificationId", 2).set("notificationEvent", 1).set("creationTime", new Date()),
-	"sampleNotificationC": (new Notification()).set("notificationId", 3).set("notificationEvent", 2).set("creationTime", new Date()),
-	"sampleNotificationD": (new Notification()).set("notificationId", 4).set("notificationEvent", 3).set("creationTime", new Date()),
-	"sampleNotificationE": (new Notification()).set("notificationId", 5).set("notificationEvent", 4).set("creationTime", new Date()),
-	"sampleNotificationF": (new Notification()).set
-	("notificationId", 6).set("messageSummary", "sample message"),
+    "sampleNotifications": new Notifications(),
+    "sampleNotificationA": (new Notification()).set("notificationId", 1).set("notificationEvent", 0).set("creationTime", new Date()),
+    "sampleNotificationB": (new Notification()).set("notificationId", 2).set("notificationEvent", 1).set("creationTime", new Date()),
+    "sampleNotificationC": (new Notification()).set("notificationId", 3).set("notificationEvent", 2).set("creationTime", new Date()),
+    "sampleNotificationD": (new Notification()).set("notificationId", 4).set("notificationEvent", 3).set("creationTime", new Date()),
+    "sampleNotificationE": (new Notification()).set("notificationId", 5).set("notificationEvent", 4).set("creationTime", new Date()),
+    "sampleNotificationF": (new Notification()).set
+    ("notificationId", 6).set("messageSummary", "sample message"),
 
-	
-	"sampleLocationSZ": new UserLocation().set("province", "江苏").set("city","苏州"),
-	"sampleLocationNJ": new UserLocation().set("province", "江苏").set("city","南京"),
+    
+    "sampleLocationSZ": new UserLocation().set("province", "江苏").set("city","苏州"),
+    "sampleLocationNJ": new UserLocation().set("province", "江苏").set("city","南京"),
 };
 testMockObj.sampleNotificationA.set("initUser", testMockObj.sampleUser);
 testMockObj.sampleNotificationB.set("initUser", testMockObj.sampleUser);
@@ -9745,6 +9770,8 @@ var MultiPageView = Backbone.View.extend({
     entryRowNum: 1,
     minHeight: 0,
     noMessage: "暂无消息",
+    filters:[],
+    eventBound: false,
     $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
@@ -9752,6 +9779,7 @@ var MultiPageView = Backbone.View.extend({
     },
 
     render: function () {
+        this.unregisterFilterEvent();
         this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
         this.$domContainer.empty();
         if (this.messages.length > 0) {
@@ -9768,7 +9796,7 @@ var MultiPageView = Backbone.View.extend({
             }
             this.$domContainer.append(buf.join(""));
             this.$domContainer.children("div").addClass(this.entryClass);
-            if (this.bindEntryEvent) {
+            if (this.entryEvent && !this.eventBound) {
                 this.bindEntryEvent();
             }
         } else {
@@ -9785,6 +9813,7 @@ var MultiPageView = Backbone.View.extend({
         if (this.afterRender) {
             this.afterRender();
         }
+        this.eventBound = true;
     },
     toPage: function (page) {
         this.currentPage = page;
@@ -9793,9 +9822,9 @@ var MultiPageView = Backbone.View.extend({
     },
     bindEntryEvent: function () {
         var self = this;
-        this.$domContainer.find("." + this.entryClass).on("click", function (e) {
+        this.$domContainer.on("click", "." + this.entryClass, function (e) {
             e.preventDefault();
-            var id = Utilities.getId(e.delegateTarget.id);
+            var id = Utilities.getId($(this).attr("id"));
             self.entryEvent(id);
         });
     },
@@ -9849,12 +9878,40 @@ var MultiPageView = Backbone.View.extend({
             });
         }
     },
+    registerFilterEvent: function ($selector, filter, inst, callback) {
+        var that = this;
+        $selector.on("click", function (e) {
+            
+            $selector.siblings().removeClass("active");
+            $selector.addClass("active");
+            if (that.allMessages) {
+                if (filter) {
+                    that.messages = that.allMessages.clone();
+                    that.messages.reset(that.messages.filter(filter));
+                } else {
+                    that.messages = that.allMessages;
+                }
+            }
+            inst.render();
+            if (callback){
+                callback.call(inst);
+            }
+        });
+        this.filters.push($selector);
+    },
+    unregisterFilterEvent: function() {
+        for (var i = 0; i < this.filters.length; i++) {
+            this.filters[i].off();
+        }
+        this.filters = [];
+    },
     close: function () {
         if (!this.isClosed) {
             if (this.$pn) {
                 this.$pn.children("." + this.pageNumberClass).off();
             }
-            this.$domContainer.find("." + this.entryClass).off();
+            this.unregisterFilterEvent();
+            this.$domContainer.off();
             this.$domContainer.empty();
             this.isClosed = true;
         }
@@ -10835,7 +10892,7 @@ var MessageDetailView = Backbone.View.extend({
  * data*/
 var MessagePostView = Backbone.View.extend({
 
-    el: "#content",
+    el: "",
     toSubmit: {
         "origin": undefined,
         "dest": undefined,
@@ -10875,7 +10932,8 @@ var MessagePostView = Backbone.View.extend({
         this.user = app.sessionManager.getSessionUser();
         this.userId = this.user.get("userId");
         this.inRange = {};
-        this.$el.append(this.baseTemplate);
+        this.domContainer = $('#content');
+        this.domContainer.append(this.baseTemplate);
         this.$publishContent = $('#publish_requirement');
         this.$progress = $('#publish_progress');
     },
@@ -11679,7 +11737,7 @@ var MessagePostView = Backbone.View.extend({
             this.map = null;
             this.unbindStepEvents(this.stepIndex);
             this.closeLocationDropDown();
-            this.$el.empty();
+            this.domContainer.empty();
             this.isClosed = true;
             this.toSubmit = {
                 "type": Constants.messageType.ask,
@@ -11776,7 +11834,6 @@ var MessagePublishView = MessagePostView.extend({
         });
     },
     success: function (message) {
-        Info.displayNotice("信息发布成功");
         app.navigate("message/" + message.id, true);
     },
     error: function () {
@@ -12073,6 +12130,10 @@ var FrontPageView = Backbone.View.extend({
         this.departLocation = new UserLocation();
         this.arrivalLocation = new UserLocation();
         this.locationDirection = Constants.LocationDirection.from;
+        this.messages = app.storage.getRecentMessages();
+        if (this.messages) {
+            this.renderRecents(this.messages);
+        } 
         this.render();
         //fire async API call befire entering the time consuming events binding stage
         this.getRecents();
@@ -12185,6 +12246,10 @@ var FrontPageView = Backbone.View.extend({
                 $("#exp"+Utilities.getId(e.delegateTarget.id)).show();
             }
         });
+        $("#front_howItWorks").on("click", function (e) {
+            e.preventDefault();
+            app.navigate("howitworks", true);
+        });
         //this.bindRecentsEvents();
     },
 
@@ -12235,6 +12300,7 @@ var FrontPageView = Backbone.View.extend({
     },
 
     close: function () {
+        debugger;
         if (!this.isClosed) {
             if (this.$messages) {
                 this.$messages.off();
@@ -12654,6 +12720,7 @@ var TransactionHistoryView = MultiPageView.extend({
     initialize: function (messageList) {
         _.bindAll(this, 'render', 'openTransactionDetail', 'fetchMessageSuccess', 'fetchMessageError', 'close');
         this.messages = messageList;
+        this.allMessages = messageList;
         this.entryTemplate = _.template(tpl.get('personalTransactionHistory'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "transactionPageNumber";
@@ -12724,12 +12791,17 @@ var NotificationHistoryView = MultiPageView.extend({
     },
 
     render: function (message) {
-        this.messages = new Notifications();;
-        if (message.length) {
-            this.messages.reset(message.where({'state': Constants.notificationState.unread}));
+        this.messages = new Notifications();
+        //only Pass message as parameter when it is called as a callback of fetch
+        if (message) {
+            this.messages.reset(message);
+            this.allMessages = message;
         }
-        this.allMessages = message;
+        //Render this.messages
         MultiPageView.prototype.render.call(this);
+        this.unregisterFilterEvent();
+        this.bindFilterEvents();
+
     },
     bindNotificationEvent: function (messageId) {
         var currentNotification = this.messages.get(messageId);
@@ -12770,41 +12842,37 @@ var NotificationHistoryView = MultiPageView.extend({
             }
         });
         $("#markAsRead").on("click", function (e) {
-            app.notificationManager.checkNotification(that.getCheckedNotificationIds, {
-                "success":null,
-                "error":null
-            });
+            if (that.getCheckedNotificationIds && that.getCheckedNotificationIds.length) {
+                app.notificationManager.checkNotification(that.getCheckedNotificationIds, {
+                    "success":null,
+                    "error":null
+                });
+            }
         });
         $("#deleteSelected").on("click", function (e) {
-            app.notificationManager.deleteNotification(that.getCheckedNotificationIds, {
-                "success":that.deleteSuccess,
-                "error":null
-            });
+            if (that.getCheckedNotificationIds && that.getCheckedNotificationIds.length) {
+                app.notificationManager.deleteNotification(that.getCheckedNotificationIds, {
+                    "success":that.deleteSuccess,
+                    "error":null
+                });
+            }
         });
     },
     bindFilterEvents: function () {
         var that = this;
-        this.$unread = $("#unreadNotificationFilter").on("click", function (e) {
-            $("#markAsRead").show();
-            if (that.messages.length) {
-                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.unread}));
-            }
-            MultiPageView.prototype.render.call(that);
-            that.$read.removeClass("active");
-            $(this).addClass("active");
-        });
-        this.$read = $("#readNotificationFilter").on("click", function (e) {
-            $("#markAsRead").hide();
-            if (that.messages.length) {
-                that.messages.reset(that.allMessages.where({'state': Constants.notificationState.read}));
-            }
-            MultiPageView.prototype.render.call(that);
-            that.$unread.removeClass("active");
-            $(this).addClass("active");
-        });
+        this.$all = $("#allNotificationFilter");
+        this.$unread = $("#unreadNotificationFilter");
+        this.$read = $("#readNotificationFilter");
+        this.registerFilterEvent(this.$unread,
+            function(n){n.get('state') === Constants.notificationState.unread},
+            this, function(){$("#markAsRead").show();});
+        this.registerFilterEvent(this.$read,
+            function(n){n.get('state') === Constants.notificationState.read},
+            this, function(){$("#markAsRead").hide();});
+        this.registerFilterEvent(this.$all, null, this, function(){$("#markAsRead").show();});
         $("#notificationSetting").on("click", function (e) {
             e.preventDefault();
-            app.navigate("personal/"+that.user.id+"/utility", true);
+            app.navigate("personal/"+that.user.id+"/utility/trade", true);
         });
     },
     getCheckedNotificationIds: function () {
@@ -12837,7 +12905,8 @@ var NotificationHistoryView = MultiPageView.extend({
 var MessageHistoryView = MultiPageView.extend({
 
     initialize: function (messageList, container) {
-        _.bindAll(this, 'render', 'openDetailMessage', 'close');
+        _.bindAll(this, 'render', 'openDetailMessage', 'afterRender', 'bindEvents', 'close');
+        this.allMessages = messageList;
         this.messages = messageList;
         this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "page-messageHistory";
@@ -12855,14 +12924,22 @@ var MessageHistoryView = MultiPageView.extend({
     },
     render: function(){
         MultiPageView.prototype.render.call(this);
+
     },
     afterRender: function (start) {
         $(".message_simple").find(".personalInfo").remove();
+        this.bindEvents();
     },
     openDetailMessage: function (messageId) {
         app.navigate("message/" + messageId, true);
     },
-
+    bindEvents: function () {
+        this.registerFilterEvent($("#allMessageFilter"), null, this);
+        this.registerFilterEvent($("#activeMessageFilter"), 
+            function(m){ return m.get("state") !== Constants.messageState.closed; }, this);
+        this.registerFilterEvent($("#finishedMessageFilter"),
+            function(m){ return m.get("state") === Constants.messageState.closed; }, this);
+    },
     close: function () {
         this.domContainer.empty();
     }
@@ -12901,6 +12978,7 @@ var PersonalSocialView = MultiPageView.extend({
 
     render: function (socialList) {
         var that = this;
+        this.allMessages = socialList;
         this.messages = socialList;
         $("#social_following").html("关注（" + socialList.length + "）");
         this.sessionUser.set("socialList", socialList);
@@ -13032,6 +13110,24 @@ var PersonalUtilityView = Backbone.View.extend({
         this.render();
         this.bindEvents();
         this.bindValidator();
+        if (params.query) {
+            switch (params.query) {
+                case "password":
+                    $('#passwordInfo').trigger("click");
+                    break;
+                case "trade":
+                    $('#tradeInfo').trigger("click");
+                    break;
+                case "avatar":
+                    $('#changeDp').trigger("click");
+                    break;
+                case "basic":
+                default:
+                    $('#basicInfo').trigger("click");
+                    break;
+
+            }
+        }
     },
 
     bindEvents: function () {
@@ -13050,7 +13146,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
-
+            app.navigate("personal/" + that.sessionUser.id + "/utility/basic");
         });
         $('#passwordInfo').on('click', function () {
             that.$personalContent.hide();
@@ -13060,6 +13156,7 @@ var PersonalUtilityView = Backbone.View.extend({
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/password");
         });
         $('#tradeInfo').on('click', function () {
             that.$personalContent.hide();
@@ -13068,16 +13165,17 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$dpContent.hide();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/trade");
         });
         $('#changeDp').on('click', function () {
             that.$personalContent.hide();
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.show();
-
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/avatar");
         });
         $('#upload_picture').on('click', function () {
             //TODO:
@@ -13536,6 +13634,7 @@ var PersonalView = Backbone.View.extend({
         this.domContainer = $('#content');
         this.watched = false;
         this.sessionUser = app.sessionManager.getSessionUser();
+        this.query = params.query;
         app.userManager.fetchUser(this.curUserId, {
             "success": this.preRender,
             "error": this.renderError
@@ -13586,7 +13685,7 @@ var PersonalView = Backbone.View.extend({
     renderError: function () {
         Info.displayErrorPage("content", "个人页面加载失败，请稍后再试");
     },
-    switchChildView: function (viewState) {
+    switchChildView: function (viewState, query) {
 
         //validity of viewState is guranteed on the URL level, since deep linking is applied
         //reduncy of safety check is not necessary here because in development, we need to know where things go wrong
@@ -13594,6 +13693,9 @@ var PersonalView = Backbone.View.extend({
             this.activeViewState = viewState.viewState;
         } else {
             this.activeViewState = viewState;
+        }
+        if (query) {
+            this.query = query;
         }
         this.createChildView();
     },
@@ -13639,7 +13741,8 @@ var PersonalView = Backbone.View.extend({
                 if (this.sessionUser.get("userId") === this.curUserId) {
                     $('#profilePage_utilityTab').addClass('active');
                     this.activeChildView = new PersonalUtilityView ({
-                        'intendedUserId': this.curUserId
+                        'intendedUserId': this.curUserId,
+                        'query': this.query
                     });
                 }
                 break;
@@ -14037,10 +14140,10 @@ var RegistrationView = Backbone.View.extend({
 
     verifyEmail: function (available) {
         if (available) {
-            that.$email.after('<span id="vemail" class="right"></span>');
+            this.$email.after('<span id="vemail" class="right"></span>');
         } else {
-            that.valid.email = false;
-            that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
+            this.valid.email = false;
+            this.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
         }
     },
 
@@ -14854,6 +14957,84 @@ var HowItWorksView = Backbone.View.extend({
     }
 });
 
+var ServiceCenterView = Backbone.View.extend({
+    el: "#content",
+    initialize: function(params){
+        this.currentTab = params ? params.tab || "about" : "about";
+        this.isClosed = false;
+        app.viewRegistration.register("serviceCenter", this, true);
+        _.bindAll(this, "preRender", "render", "bindEvents", "close");
+        this.baseTemplate = _.template(tpl.get('serviceCenter_base'));
+        this.aboutUsPage = _.template(tpl.get('serviceCenter_aboutUs'));
+        this.feedbackPage = _.template(tpl.get('serviceCenter_feedback'));
+        this.termsPage = _.template(tpl.get('serviceCenter_terms'));
+        this.termsZhPage = _.template(tpl.get('serviceCenter_terms_zh'));
+        this.termsEnPage = _.template(tpl.get('serviceCenter_terms_en'));
+        this.faqPage = _.template(tpl.get('serviceCenter_faq'));
+        this.careerPage = _.template(tpl.get('serviceCenter_career'));
+        this.preRender();
+        this.render();
+        this.bindEvents();
+    },
+    preRender: function() {
+        this.$el.append(this.baseTemplate);
+        this.$contentEl = $("#help_content");
+        $("#serviceTab").find(".active").removeClass("active");
+        $("dd[data-id="+this.currentTab+"]").addClass("active");
+    },
+    render: function (){
+        if ($("#terms_lang").length){
+            $("#terms_lang").off();
+        }
+        switch(this.currentTab){
+            case "about":
+                this.$contentEl.empty().append(this.aboutUsPage);
+                break;
+            case "faq":
+                this.$contentEl.empty().append(this.faqPage);
+                break;
+            case "career":
+                this.$contentEl.empty().append(this.careerPage);
+                break;
+            case "term":
+                this.$contentEl.empty().append(this.termsPage);
+                $("#terms_content").append(this.termsZhPage);
+                var that = this;
+                $("#terms_lang").on("click", "li", function (e) {
+                    $(e.delegateTarget).find(".active").removeClass("active");
+                    if ($(e.target).addClass("active").attr("data-id") === "zh") {
+                        $("#terms_content").empty().append(that.termsZhPage);
+                    } else {
+                        $("#terms_content").empty().append(that.termsEnPage);
+                    }
+                });
+                break;
+            case "feedback":
+                this.$contentEl.empty().append(this.feedbackPage);
+                break;
+            default:
+            break;
+        }
+    },
+    bindEvents: function (){
+        var that = this;
+        $("#serviceTab").on("click", "dd", function (e) {
+            $("#terms_lang").off();
+            $(e.delegateTarget).find(".active").removeClass("active");
+            that.currentTab = $(e.target).addClass("active").attr("data-id");
+            app.navigate("/service/"+that.currentTab)
+            that.render();
+        });
+    },
+    close: function (){
+        if (!this.isClosed){
+            $("#serviceTab").off();
+            $("#terms_lang").off();
+            this.$el.empty();
+            this.isClosed = true;
+        }
+    }
+});
 //IE 8 fallBack for placeholders
 $('input, textarea').placeholder();
 
@@ -14868,7 +15049,8 @@ var AppRouter = Backbone.Router.extend({
 
         "personal/:intendedUserId": "personal",
         "personal/:intendedUserId/": "personal",
-        "personal/:intendedUserId/*personalViewState": "personalWithState",
+        "personal/:intendedUserId/:personalViewState": "personalWithState",
+        "personal/:intendedUserId/:personalViewState/*query": "personalWithState",
 
         "message/:messageId": "MessageDetail",
         "message/:messageId/": "MessageDetail",
@@ -14889,6 +15071,9 @@ var AppRouter = Backbone.Router.extend({
 
         "emailActivation/*authKey": "emailActivation",
         "howitworks": "howItWorks",
+        "service": "serviceCenter",
+        "service/*tab": "serviceCenter",
+
         "*default" : "front"
     },
 
@@ -14935,8 +15120,19 @@ var AppRouter = Backbone.Router.extend({
         this.userLocation = new UserLocation ();
         this.curDate = new Date ();
         this.searchResult = new Messages ();
+        this.bindGlobalLinks();
     },
-
+    bindGlobalLinks: function() {
+        var that = this;
+        $("#footer_service_link").on("click", 'a', function (e) {
+            e.preventDefault();
+            if (e.target.id === "footer_about") {
+                that.navigate("service/about", true);
+            } else if (e.target.id === "footer_feedback") {
+                that.navigate("service/feedback", true);
+            }
+        });
+    },
     defaultRoute: function () {
         //if login, procees to main/:id, if not, proceed to front
         if (this.sessionManager.hasSession()) {
@@ -14966,7 +15162,7 @@ var AppRouter = Backbone.Router.extend({
 
     },
 
-    personalWithState: function (intendedUserId, personalViewState) {
+    personalWithState: function (intendedUserId, personalViewState, query) {
         if (!this.sessionManager.hasSession()) {
             this.navigate("front", {trigger: true, replace: true});
             return;
@@ -14974,19 +15170,18 @@ var AppRouter = Backbone.Router.extend({
         var id = Utilities.toInt(intendedUserId);
         if ( typeof id === 'number' && !isNaN(id)){
             if (!personalViewState || !Config.validatePersonalViewState(personalViewState)) {
-                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState(), {trigger: true, replace: true});
+                this.navigate("personal/" + intendedUserId + "/" + Config.getDefaultPersonalViewState() + "/" + query, {trigger: true, replace: true});
             } else {
                 if (!this.personalView || this.personalView.isClosed || this.personalView.getCurrentUserId() !== Utilities.toInt(intendedUserId)) {
                     if (personalViewState === "utility" && this.sessionManager.getSessionUser().id !== Utilities.toInt(intendedUserId))
                         personalViewState = "history";
                     this.personalView = new PersonalView ({
                         'intendedUserId': intendedUserId,
-                        'viewState': personalViewState
+                        'viewState': personalViewState,
+                        "query": query
                     });
                 } else {
-                    this.personalView.switchChildView({
-                        'viewState': personalViewState
-                    });
+                    this.personalView.switchChildView(personalViewState, query);
                 }
             }
         } else {
@@ -15101,6 +15296,12 @@ var AppRouter = Backbone.Router.extend({
     },
     howItWorks: function() {
         this.howItWorks = new HowItWorksView();
+    },
+    serviceCenter: function(tab) {
+        if (!tab) {
+            this.navigate("service/about", {replace: true});
+        }
+        this.serviceCenter = new ServiceCenterView({"tab":tab});
     }
 });
 
