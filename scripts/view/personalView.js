@@ -24,15 +24,20 @@ var PersonalView = Backbone.View.extend({
         if ( location.href.indexOf("personal/"+this.curUserId) < 0) {
             return;
         }
+        var that = this;
+        this.user = user;
+        var userJson = this.user._toJSON();
+        this.domContainer.append(this.template(userJson));
         app.userManager.fetchWatchedUsers(this.sessionUser.id, {
             "success": this.renderWatchButton,
             "error": function(response) {
                 Info.log(response);
+                if (that.curUserId.id !== that.sessionUser.id) {
+                    $("#profilePage_utilityTab").hide();
+                }
             }
         });
         $("#popup").attr("class", "pop message_reservation");
-        var that = this;
-        this.user = user;
         this.render();
         this.switchChildView(this.activeViewState);
         this.bindEvents();
@@ -57,10 +62,12 @@ var PersonalView = Backbone.View.extend({
         }
     },
     render: function () {
-        var userJson = this.user._toJSON();
-        this.domContainer.append(this.template(userJson));
     },
     renderError: function () {
+        debugger;
+        if (this.curUserId.id !== that.sessionUser.id) {
+            $("#profilePage_utilityTab").hide();
+        }
         Info.displayErrorPage("content", "个人页面加载失败，请稍后再试");
     },
     switchChildView: function (viewState, query) {

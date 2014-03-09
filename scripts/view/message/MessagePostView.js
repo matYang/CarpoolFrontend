@@ -843,8 +843,10 @@ var MessagePostView = Backbone.View.extend({
     },
     close: function () {
         if (!this.isClosed) {
-            this.map.close();
-            this.map = null;
+            if (this.map) {
+                this.map.close();
+                this.map = null;
+            }
             this.unbindStepEvents(this.stepIndex);
             this.closeLocationDropDown();
             this.domContainer.empty();

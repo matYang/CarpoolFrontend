@@ -12,7 +12,11 @@ var PersonalUtilityView = Backbone.View.extend({
         if (testMockObj.testMode === true) {
             this.sessionUser = testMockObj.sampleUser;
         }
-        this.geocoder = new google.maps.Geocoder();
+        try {
+            this.geocoder = new google.maps.Geocoder();
+        } catch (e) {
+            this.geocoderNotAvailable = true;
+        }
         this.render();
         this.bindEvents();
         this.bindValidator();
@@ -358,13 +362,18 @@ var PersonalUtilityView = Backbone.View.extend({
             that.locationDropDownView = new LocationDropDownView($("#myPage_location"), that);
             e.stopPropagation();
         });
-        this.$address.on('blur', function (e) {
-            if ($(this).val()) {
-                that.editedLocation.set("defaultId", -1);
-                that.editedLocation.set("pointAddress", $(this).val());
-                that.getLatLng(that.editedLocation);
-            }
-        });
+        if (this.geocoderNotAvailable) {
+            this.$address.prop("disabled", "true");
+            this.$address.attr("title", "暂时无法连接geocoder，无法更改地址");
+        } else {
+            this.$address.on('blur', function (e) {
+                if ($(this).val()) {
+                    that.editedLocation.set("defaultId", -1);
+                    that.editedLocation.set("pointAddress", $(this).val());
+                    that.getLatLng(that.editedLocation);
+                }
+            });
+        }
         $("#accountEmailValue").html(this.sessionUser.get("email"));
         if (this.sessionUser.get("emailNotice")) {
             $("#notice_toggle").children("div[data-id=email]").addClass("checked");
@@ -388,28 +397,32 @@ var PersonalUtilityView = Backbone.View.extend({
     getLatLng: function (loc) {
         var request = {}, that = this;
         request.address = loc.get("pointAddress") + "," + loc.get("city") + "," + loc.get("province");
-        var result = this.geocoder.geocode(request, function (geocodeResults, status) {
-            $("#addrWrong, #addrCorrect").remove();
-            if (status == google.maps.GeocoderStatus.OK) {
-                loc.set("lat", geocodeResults[0].geometry.location.lat());
-                loc.set("lng", geocodeResults[0].geometry.location.lng());
-                loc.set("pointAddress", geocodeResults[0].formatted_address);
-                loc.set("pointName", geocodeResults[0].formatted_address.split(",")[0]);
-                if (!that.pivotLocation) {
-                    that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("match_Id")})[0];
-                }
-                if (!that.pivotLocation.isInRange(loc) && $("#addrWrong").length === 0) {
-                    that.$address.parent().parent().after("<dd class='wrong'><p>很抱歉，该地址不在服务区内</p></dd>");
-                    return;
-                } else {
-                    if ($("#addrCorrect").length === 0) {
-                        that.$address.after("<span id='addrCorrect' class='right'></span>");
+        if (this.geocoderNotAvailable) {
+            var result = this.geocoder.geocode(request, function (geocodeResults, status) {
+                $("#addrWrong, #addrCorrect").remove();
+                if (status == google.maps.GeocoderStatus.OK) {
+                    loc.set("lat", geocodeResults[0].geometry.location.lat());
+                    loc.set("lng", geocodeResults[0].geometry.location.lng());
+                    loc.set("pointAddress", geocodeResults[0].formatted_address);
+                    loc.set("pointName", geocodeResults[0].formatted_address.split(",")[0]);
+                    if (!that.pivotLocation) {
+                        that.pivotLocation = app.locationService.getDefaultLocations().where({"defaultId":app.sessionManager.getSessionUser().get("location").get("match_Id")})[0];
                     }
+                    if (!that.pivotLocation.isInRange(loc) && $("#addrWrong").length === 0) {
+                        that.$address.parent().parent().after("<dd class='wrong'><p>很抱歉，该地址不在服务区内</p></dd>");
+                        return;
+                    } else {
+                        if ($("#addrCorrect").length === 0) {
+                            that.$address.after("<span id='addrCorrect' class='right'></span>");
+                        }
+                    }
+                } else {
+                    Info.warn('Geocode was not successful for the following reason: ' + status);
                 }
-            } else {
-                Info.warn('Geocode was not successful for the following reason: ' + status);
-            }
-        });
+            });
+        } else {
+
+        }
     },
     acceptDefaultLocation: function(defaultLocation){
         if (this.editedLocation.get("match_Id") !== defaultLocation.get("defaultId")) {

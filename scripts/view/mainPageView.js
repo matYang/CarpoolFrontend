@@ -9,7 +9,7 @@ var MainPageView = Backbone.View.extend({
         "time2": "all",
         "type": Constants.messageType.both,
         "priceMin": PRICE_MIN,
-        "priceMax": PRICE_MAX
+        "priceMax": 0
     },
 
     initialize: function (params) {
@@ -236,7 +236,7 @@ var MainPageView = Backbone.View.extend({
             this.searchResultView.close();
         }
         this.filteredMessages = this.filterMessage(this.allMessages);
-        this.searchResultView = new SearchResultView (this.filteredMessages, true);
+        this.searchResultView.set("messages", this.filteredMessages);
 
     },
 
@@ -264,7 +264,9 @@ var MainPageView = Backbone.View.extend({
 
             // }
             if (this.filter.type === Constants.messageType.both || this.filter.type === m.get("type")) {
-                filtered.add(m);
+                if (m.get("departure_priceList")[0] < filter.maxPrice) {
+                    filtered.add(m);
+                }
             }
         }
         return filtered;
@@ -282,6 +284,10 @@ var MainPageView = Backbone.View.extend({
         } else {
             return false;
         }
+    },
+
+    filterPrice: function (price, maxPrice) {
+        return price <= maxPrice;
     },
 
     updateLocation: function (id) {
@@ -350,7 +356,9 @@ var MainPageView = Backbone.View.extend({
         this.$type.children("span").on('click', function (e) {
             self.onClickType(e);
         });
-
+        $("#priceFilter").on("change", function (e) {
+            self.filterMessage(self.allMessages);
+        });
         $("#refreshButton").on('click', function (e) {
             self.refresh(e);
         });

@@ -3,6 +3,7 @@ var SearchResultView = MultiPageView.extend({
     initialize: function (messageList, isSearchResult) {
         _.bindAll(this, 'render', 'transferURL', 'close');
         this.messages = messageList;
+        this.allMessages = messageList;
         this.isSearchResult = isSearchResult;
         this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "searchResultPageNumber";
@@ -25,14 +26,25 @@ var SearchResultView = MultiPageView.extend({
             this.$domContainer = $("#quickStart_resultPanel");
             this.minHeight = 300;
         }
-
+        var that = this;
+        this.render();
+    },
+    render: function () {
         MultiPageView.prototype.render.call(this);
-
     },
     transferURL: function (messageId) {
         app.navigate("message/" + messageId, true);
     },
-    
+    calculateInfo: function() {
+        this.averagePrice = 0;
+        this.minPrice = 9999999999;
+        for (var i = 0; i < this.messages.length; i++) {
+            var price = this.messages.at(i).get("departure_priceList")[0];
+            this.averagePrice+=price;
+            this.minPrice = this.minPrice > price ?  price : this.minPrice;
+        }
+        this.averagePrice /= this.messages.length;
+    },
     close: function () {
         this.$domContainer.empty();
     }

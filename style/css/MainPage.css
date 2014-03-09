@@ -31,7 +31,7 @@
 .mainPage-searchResult-multiPage-pageNum a, .mainPage-searchResult-multiPage-pageNum span { width:25px; height:25px; line-height:25px; text-align:center; margin:0 10px; font-size:14px; cursor:pointer;}
 .mainPage-searchResult-multiPage-pageNum a.active { color:#57b7e1; }
 .mainPage-map { width:269px; height:344px; border:3px solid #57b7dd; }/*地图*/
-.mainPage-filter { position:relative; height:70px; background:#efefef; margin-bottom:30px; font-size:14px; }
+.mainPage-filter { position:relative; height:90px; background:#efefef; margin-bottom:30px; font-size:14px; }
 .mainPage-filter dl { height:30px; line-height:30px; background:#cacaca; margin-bottom:10px; color:#fff; }
 .mainPage-filter dt, .mainPage-filter dd { float:left; }
 .mainPage-filter dt { position:relative; width:87px; text-align:center; }

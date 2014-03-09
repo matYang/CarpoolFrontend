@@ -117,7 +117,7 @@ var NotificationHistoryView = MultiPageView.extend({
         return idList;
     },
     fetchNotificationError: function () {
-
+        this.domContainer.append("<div class = 'noMessage'>暂无消息</div>");
     },
     deleteSuccess: function (idlist) {
         for (var i = 0; i < idlist.length; i ++) {
