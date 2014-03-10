@@ -185,7 +185,7 @@ var MainPageView = Backbone.View.extend({
         $("#numberText").html(searchResults.length);
         this.allMessages = searchResults;
         this.filteredMessages = this.filterMessage(this.allMessages);
-        this.searchResultView = new SearchResultView (this.filteredMessages, true);
+        this.searchResultView = new SearchResultView (this.allMessages, this.filteredMessages, true);
     },
 
     renderError: function () {
@@ -236,7 +236,7 @@ var MainPageView = Backbone.View.extend({
             this.searchResultView.close();
         }
         this.filteredMessages = this.filterMessage(this.allMessages);
-        this.searchResultView.set("messages", this.filteredMessages);
+        this.searchResultView.messages.reset(this.filteredMessages);
 
     },
 

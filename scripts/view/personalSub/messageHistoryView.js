@@ -3,7 +3,7 @@ var MessageHistoryView = MultiPageView.extend({
     initialize: function (messageList, container) {
         _.bindAll(this, 'render', 'openDetailMessage', 'afterRender', 'bindEvents', 'close');
         this.allMessages = messageList;
-        this.messages = messageList;
+        this.messages = messageList.clone();
         this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "page-messageHistory";
         this.pageNumberId = "MessagePageNumber";

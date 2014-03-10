@@ -23,12 +23,12 @@ var NotificationHistoryView = MultiPageView.extend({
         this.bindFilterEvents();
     },
 
-    render: function (message) {
+    render: function (messages) {
         this.messages = new Notifications();
         //only Pass message as parameter when it is called as a callback of fetch
-        if (message) {
-            this.messages.reset(message);
-            this.allMessages = message;
+        if (messages) {
+            this.allMessages = messages.clone();
+            this.messages.reset(messages);
         }
         //Render this.messages
         MultiPageView.prototype.render.call(this);

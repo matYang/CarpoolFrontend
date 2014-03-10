@@ -1,9 +1,9 @@
 var SearchResultView = MultiPageView.extend({
     
-    initialize: function (messageList, isSearchResult) {
+    initialize: function (allMessages, messageList, isSearchResult) {
         _.bindAll(this, 'render', 'transferURL', 'close');
         this.messages = messageList;
-        this.allMessages = messageList;
+        this.allMessages = allMessages;
         this.isSearchResult = isSearchResult;
         this.entryTemplate = _.template(tpl.get('SimpleMessage'));
         this.pageNumberClass = "searchResultPageNumber";

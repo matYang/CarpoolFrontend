@@ -33,7 +33,7 @@ var PersonalSocialView = MultiPageView.extend({
     render: function (socialList) {
         var that = this;
         this.allMessages = socialList;
-        this.messages = socialList;
+        this.messages = socialList.clone();
         $("#social_following").html("关注（" + socialList.length + "）");
         this.sessionUser.set("socialList", socialList);
         MultiPageView.prototype.render.call(this);
