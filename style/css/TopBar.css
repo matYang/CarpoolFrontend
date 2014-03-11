@@ -19,7 +19,7 @@
 .topBar-dropdown dl.message dt:hover { background-position:0 -164px; }
 .topBar-dropdown dl.notice dt:hover { background-position:0 -223px; }
 .topBar-dropdown dl.my_following dt:hover { background-position:0 -286px; }
-.topBar-dropdown dd { display:none; position:absolute; left:-149px; top:48px; width:350px; height:360px; background: url(../images/nav_spites.png) no-repeat 159px -354px; padding-top:12px; z-index:9999; }
+.topBar-dropdown dd { display:none; position:absolute; left:-149px; top:48px; width:350px; background: url(../images/nav_spites.png) no-repeat 159px -354px; padding-top:12px; z-index:9999; }
 .topBar-dropdown dl:hover dd { display:block; }
 .topBar-dropdown ul { background:#fff; max-height:322px; overflow-y:auto; }
 .topBar-dropdown ul li { position:relative; overflow:hidden; padding:14px 15px 10px; border-bottom:1px solid #e7e7e7; cursor:pointer; }
