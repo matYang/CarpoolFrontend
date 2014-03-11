@@ -25,10 +25,14 @@ var NotificationHistoryView = MultiPageView.extend({
 
     render: function (messages) {
         this.messages = new Notifications();
+        this.allMessages = new Notifications();
         //only Pass message as parameter when it is called as a callback of fetch
-        if (messages) {
-            this.allMessages = messages.clone();
-            this.messages.reset(messages);
+        if (messages && messages instanceof Array) {
+            this.allMessages.add(messages);
+            this.messages.add(messages);
+        } else if (messages instanceof Backbone.Collection){
+            this.allMessages.add(messages.toArray());
+            this.messages.add(messages.toArray());
         }
         //Render this.messages
         MultiPageView.prototype.render.call(this);

@@ -232,10 +232,7 @@ var MainPageView = Backbone.View.extend({
     },
 
     refresh: function () {
-        if (this.searchResultView) {
-            this.searchResultView.close();
-        }
-        this.filteredMessages = this.filterMessage(this.allMessages);
+        this.filteredMessages.reset(this.filterMessage(this.allMessages));
         this.searchResultView.messages.reset(this.filteredMessages);
 
     },
@@ -356,8 +353,8 @@ var MainPageView = Backbone.View.extend({
         this.$type.children("span").on('click', function (e) {
             self.onClickType(e);
         });
-        $("#priceFilter").on("change", function (e) {
-            self.filterMessage(self.allMessages);
+        $("#priceFilter>input").on("input", function (e) {
+            self.searchResultView.messages.reset(self.filterMessage(self.allMessages));
         });
         $("#refreshButton").on('click', function (e) {
             self.refresh(e);

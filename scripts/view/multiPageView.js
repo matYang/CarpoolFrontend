@@ -173,10 +173,9 @@ var MultiPageView = Backbone.View.extend({
             $selector.addClass("active");
             if (that.allMessages) {
                 if (filter) {
-                    that.messages = that.allMessages.clone();
-                    that.messages.reset(that.messages.filter(filter));
+                    that.messages.reset(that.allMessages.filter(filter));
                 } else {
-                    that.messages.reset(that.allMessages);
+                    that.messages.reset(that.allMessages.toArray());
                 }
             }
             inst.render();
