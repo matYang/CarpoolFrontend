@@ -1,7 +1,7 @@
 var FindPasswordView = Backbone.View.extend({
     el: "#content",
     initialize: function (params) {
-        _.bindAll(this, 'render', 'validatePassword', 'close');
+        _.bindAll(this, 'render', 'validatePassword', 'submitNewPassword', 'close');
         app.viewRegistration.register("findPassword", this, true);
         this.isClosed = false;
         this.template1 = _.template(tpl.get("findPassword_1"));
@@ -44,16 +44,9 @@ var FindPasswordView = Backbone.View.extend({
             this.$password.add(this.$confirm).on("blur", function (e) {
                 that.validatePassword();
             });
-            $("#confirmChange").on("click", function (e) {
-                that.validatePassword();
-                if (that.valid.password){
-                    app.userManager.findPassword(that.token, that.$password.val(), that.$confirm.val(), {
-                        "success": that.changeSuccess,
-                        "error": that.changeError
-                    });
-                }
-                
-            });
+            $("#confirmChange").on("click", this.submitNewPassword );
+            $('#newPassword, #confirmPassword').on("keyup", this.submitNewPassword);
+
         } else if (state === 2) {
             $("#go_to_email").on("click", function (e) {
                 e.preventDefault();
@@ -66,25 +59,42 @@ var FindPasswordView = Backbone.View.extend({
                 }
                 email = $("#emailAddress").val();
                 if (!email || !that.re.test(email)) {
-                    $("#forgot_container").append("<div id='forgotWrong' class='wrong'><p>邮箱格式不正确，请输入正确的邮箱</p>邮箱格式不正确，请输入正确的邮箱</div>");
+                    $("#forgot_container .btns").before("<div id='forgotWrong' class='wrong'><p>邮箱格式不正确，请输入正确的邮箱</p></div>");
                     that.email = "";
                 } else {
                     that.email = $(this).val();
+                }
+            }).on("keyup", function (e) {
+                if (e.which === 13) {
+                    $(this).trigger("blur");
+                    $("#resetButton").trigger("click");
                 }
             });
             $("#resetButton").on("click", function() {
                 email = $("#emailAddress").val();
                 if (email && that.re.test(email)) {
                     that.email = $("#emailAddress").val();
+                    app.userManager.forgetPassword(that.email, {
+                        "success": that.render,
+                        "error": that.forgetError
+                    });
+                    $("#resetButton").val("重置中...");
                 }
-
-                app.userManager.forgetPassword(that.email, {
-                    "success": that.render,
-                    "error": that.forgetError
-                });
-
             });
         }
+    },
+    submitNewPassword: function (e) {
+        if ( e!== 1 && e!==13 ) {
+            return;
+        }
+        this.validatePassword();
+        if (this.valid.password){
+            app.userManager.findPassword(this.token, this.$password.val(), this.$confirm.val(), {
+                "success": this.changeSuccess,
+                "error": this.changeError
+            });
+            $("#confirmChange").val("更改中...");
+        } 
     },
     validatePassword: function(){
         var p = this.$password.val();
@@ -110,13 +120,16 @@ var FindPasswordView = Backbone.View.extend({
     forgetError: function (response) {
         if (!$("#forgotWrong").length) {
             $("#forgot_container").append("<div id='forgotWrong' class='wrong'><p>"+response.responseText+"</p></div>");
+            $("#resetButton").val("重置密码");
         }
     },
     changeSuccess: function () {
-        Info.alert("密码修改成功");
-        app.navigate('front', {trigger: true});
+        $("#confirmChange").val("修改成功");
+        setTimeout(function(){app.navigate('front', {trigger: true})},5000 );
+        
     },
     changeError: function (data) {
+        $("#confirmChange").val("确定");
         if (data.status == 401){
             $("#forgot_container").children('.wrong').remove();
             $("#forgot_container").append("<div class='wrong'><p>更改密码请求无效或已过期</p></div>");

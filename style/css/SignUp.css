@@ -129,6 +129,9 @@
 .sign_up .email_verification .btns {
 	padding-left:0;
 }
+#forgot_wrong{
+	margin-left: 70px;
+}
 .forgot_password {
 	margin:90px 0 100px 130px;
 }
