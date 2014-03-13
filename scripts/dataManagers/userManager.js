@@ -309,7 +309,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::changePassword:: action failed");
 				if(callback){
-					callback.error(response);
+					callback.error(data);
 				}
 			}
 		});
@@ -346,7 +346,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::activateAccount:: action failed");
 				if(callback){
-					callback.error(response);
+					callback.error(data);
 				}
 			}
 		});
@@ -376,7 +376,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::resendActivationEmail:: action failed");
 				if(callback){
-					callback.error(response);
+					callback.error(data);
 				}
 			}
 		});
@@ -408,7 +408,7 @@
 				alert("请稍后再试");
 				Constants.dWarn("UserManager::forgetPassword:: action failed");
 				if(callback){
-					callback.error(response);
+					callback.error(data);
 				}
 			}
 		});

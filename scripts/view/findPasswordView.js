@@ -120,8 +120,8 @@ var FindPasswordView = Backbone.View.extend({
     forgetError: function (response) {
         if (!$("#forgotWrong").length) {
             $("#forgot_container").append("<div id='forgotWrong' class='wrong'><p>"+response.responseText+"</p></div>");
-            $("#resetButton").val("重置密码");
         }
+        $("#resetButton").val("重置密码");
     },
     changeSuccess: function () {
         $("#confirmChange").val("修改成功");
