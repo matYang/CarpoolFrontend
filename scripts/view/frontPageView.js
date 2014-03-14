@@ -162,7 +162,7 @@ var FrontPageView = Backbone.View.extend({
     scroll: function () {
 
         var buf, self = this;
-        if (this.displayMessage instanceof Messages) {
+        if (this.displayMessages instanceof Messages) {
             buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON());
         } else {
             buf = this.messageTemplate(this.displayMessages[this.displayIndex++]);
