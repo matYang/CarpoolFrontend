@@ -47,6 +47,7 @@ var MultiPageView = Backbone.View.extend({
     minHeight: 0,
     noMessage: "暂无消息",
     _filters:[],
+    _sorter:[],
     eventBound: false,
     $domContainer: null,
     initialize: function () {
@@ -190,6 +191,36 @@ var MultiPageView = Backbone.View.extend({
             this._filters[i].off();
         }
         this._filters = [];
+    },
+    registerSortEvent: function ($selector, sorter, desc, inst, callback) {
+        $selector.on("click", function (e) {
+            $selector.siblings().removeClass("active");
+            $selector.addClass("active");
+            if (that.allMessages) {
+                if (typeof sorter === "string") {
+                    that.messages.reset(that.allMessages.sortBy(sorter));
+                } else if (typeof sorter === "function"){
+                    that.allMessages.Comparator = sorter;
+                    that.messages.reset(that.allMessages.sortBy(sorter));
+                } else {
+                    that.messages.reset(that.allMessages.toArray());
+                }
+            }
+            if (desc) {
+                that.messages.reverse();
+            }
+            inst.render();
+            if (callback){
+                callback.call(inst);
+            }
+        });
+        this._sorter.push($selector);
+    },
+    unregisterSortEvent: function () {
+        for (var i = 0; i < this._sorter.length; i++) {
+            this._sorter[i].off();
+        }
+        this._sorter = [];
     },
     close: function () {
         if (!this.isClosed) {

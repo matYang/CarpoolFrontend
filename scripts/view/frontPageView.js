@@ -160,7 +160,13 @@ var FrontPageView = Backbone.View.extend({
         this.getRecents();
     },
     scroll: function () {
-        var buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()), self = this;
+
+        var buf, self = this;
+        if (this.displayMessage instanceof Messages) {
+            buf = this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON());
+        } else {
+            buf = this.messageTemplate(this.displayMessages[this.displayIndex++]);
+        }
         var $resp = this.$resultPanel.prepend(buf);
         var $respdiv = $resp.children("div").first().css("margin-top",-100);
         $respdiv.first().animate({"margin-top":0}, 600);
