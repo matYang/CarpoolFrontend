@@ -108,30 +108,48 @@
     };
 	StorageService.prototype.getLastContact = function () {
         if (!this.isSupported) return -1;
-        var ret = localStorage.lastContact[app.sessionManager.sessionUser.id];
-        if ( ret ) {
-            ret = Utilities.toInt(ret);
-            return isNaN(ret) ? -1 : ret;
+        var ret = localStorage.lastContact.split("|");
+        if ( Utilities.toInt(ret[0]) === app.sessionManager.sessionUser.id ) {
+            return Utilities.toInt(ret[1]);
         } else {
             return -1;
         }
     };
 
     StorageService.prototype.setLastContact = function (id) {
-        localStorage.lastContact[app.sessionManager.sessionUser.id] = id;
+        localStorage.lastContact = app.sessionManager.sessionUser.id + "|" + id;
     };
 
     StorageService.prototype.setRecentMessages = function (recentMessages) {
         var now = new Date();
-        localStorage.recent = {"timestamp":now.getTime(), "messages": recentMessages};
+        var json = "";
+        for (var i = 0; i < recentMessages.length; i++){
+            json+=JSON.stringify(recentMessages.at(i)._toJSON())+"$"; 
+        }
+
+        localStorage.recent = now.getTime()+"|"+json;
     };
     StorageService.prototype.getRecentMessages = function (id) {
+        if (!this.isSupported) return null;
         var now = new Date();
         now = now.getTime();
-        if (localStorage.recent && (now - localStorage.recent.timestamp) < 90000) {
-            return localStorage.recent.messages;
+        var timestamp, json, raw;
+        if (localStorage.recent) {
+            raw = localStorage.recent.split("|");
+            timestamp = Utilities.toInt(raw[0]);
+            json = raw[1];
+            if (now - timestamp < 90000){
+                json = json.split("$") ;
+                for (var i = 0; i < json.length; i++){
+                    if (json[i]) {
+                        json[i] = JSON.parse(json[i]);
+                        
+                    }
+                }
+                return json;
+            }
         }
-        localStorage = null;
+        localStorage.recent = "";
         return null;
     };
 

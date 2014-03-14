@@ -17,13 +17,14 @@ var FrontPageView = Backbone.View.extend({
         this.departLocation = new UserLocation();
         this.arrivalLocation = new UserLocation();
         this.locationDirection = Constants.LocationDirection.from;
+        this.render();
         this.messages = app.storage.getRecentMessages();
         if (this.messages) {
             this.renderRecents(this.messages);
-        } 
-        this.render();
+        } else {
         //fire async API call befire entering the time consuming events binding stage
-        this.getRecents();
+            this.getRecents();
+        }
         //app.sessionManager.fetchSession();
         this.bindEvents();
 
@@ -43,10 +44,18 @@ var FrontPageView = Backbone.View.extend({
             this.renderError();
             return;
         }
+        var jsons = recents;
+        if (jsons instanceof Messages) {
+            app.storage.setRecentMessages(recents);
+            jsons = recents.toArray();
+            for (var i = 0; i < jsons.length; i++) {
+                jsons[i] = jsons[i]._toJSON();
+            }
+        }
         this.displayMessages = recents;
         var buf = [];
         while (this.displayIndex < 3 && this.displayIndex < recents.length) {
-            buf.push(this.messageTemplate(this.displayMessages.at(this.displayIndex++)._toJSON()));
+            buf.push(this.messageTemplate(jsons[this.displayIndex++]));
         }
         this.displayIndex = this.displayIndex % recents.length;
         this.$resultPanel.append(buf.join(""));
