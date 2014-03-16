@@ -113,7 +113,7 @@ var Message = Backbone.Model.extend({
         json.expired = false;
         if (this.get("isRoundTrip") && this.get('arrival_time').getTime() < now ) {
             json.expired = true;
-        } else if (this.get("isRoundTrip") && this.get('departure_time').getTime() < now ) {
+        } else if (!this.get("isRoundTrip") && this.get('departure_time').getTime() < now ) {
             json.expired = true;
         }
         json.creationTime = Utilities.getDateString(this.get('creationTime'));
