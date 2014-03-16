@@ -93,16 +93,16 @@ var Utilities = {
 
         var curDayOfWeek = curDate.getDay();
         var todayOfWeek = today.getDay();
-
-        if ((todayOfWeek + dayDifference) > 13) {
+        var days = todayOfWeek + dayDifference;
+        if (days > 13 || days <= -8) {
             return (curDate.getMonth() + 1) + "月" + curDate.getDate() + "日";
         }
 
-        if ((todayOfWeek + dayDifference) <= 6) {
+        if (days <= 6) {
             return "这" + Constants.weekDayArray[curDayOfWeek];
         }
 
-        if ((todayOfWeek + dayDifference) > 6) {
+        if (days > 6) {
             return "下" + Constants.weekDayArray[curDayOfWeek];
         } else {
             return "date display error";
