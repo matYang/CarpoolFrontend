@@ -58,7 +58,7 @@ var FrontPageView = Backbone.View.extend({
             buf.push(this.messageTemplate(jsons[this.displayIndex++]));
         }
         this.displayIndex = this.displayIndex % recents.length;
-        this.$resultPanel.append(buf.join(""));
+        this.$resultPanel.append(buf.reverse().join(""));
         this.bindRecentsEvents();
         this.rollInterval = setInterval(this.scroll, 5000);
 

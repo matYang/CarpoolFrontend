@@ -318,11 +318,6 @@
 			Constants.dWarn("MessageManager::autoMatch:: invalid parameter, exit");
 			return;
 		}
-		if (!this.sessionManager.hasSession()){
-			Constants.dWarn("MessageManager::autoMatch:: session does not exist, exit");
-			return;
-		}
-
 
 		var messages = new Messages();
 		messages.overrideUrl(this.apis.message_autoMatch + '/' + messageId);

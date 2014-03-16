@@ -30,6 +30,12 @@ var ServiceCenterView = Backbone.View.extend({
         switch(this.currentTab){
             case "about":
                 this.$contentEl.empty().append(this.aboutUsPage);
+                $("#aboutUs_toTerms").off().on("click", function (e) {
+                    e.preventDefault();
+                    that.currentTab = "term";
+                    app.navigate("/service/term")
+                    that.render();
+                });
                 break;
             case "faq":
                 this.$contentEl.empty().append(this.faqPage);
@@ -41,7 +47,7 @@ var ServiceCenterView = Backbone.View.extend({
                 this.$contentEl.empty().append(this.termsPage);
                 $("#terms_content").append(this.termsZhPage);
                 var that = this;
-                $("#terms_lang").on("click", "li", function (e) {
+                $("#terms_lang").off().on("click", "li", function (e) {
                     $(e.delegateTarget).find(".active").removeClass("active");
                     if ($(e.target).addClass("active").attr("data-id") === "zh") {
                         $("#terms_content").empty().append(that.termsZhPage);
