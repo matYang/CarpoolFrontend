@@ -192,6 +192,32 @@ var Constants = {
         'to': 1
     },
 
+    LicenseType: {
+        "idCard": 0,
+        "driverLisence_a": 1,
+        "driverLisence_b": 2,
+        "driverLisence_c": 3
+    },
+
+
+    VerificationType: {
+        "driver": 0,
+        "passenger": 1
+    },
+    
+    VerificationState: {
+        "pending": 0,
+        "rejected": 1,
+        "verified": 2,
+        "expired": 3
+    },
+
+    PassengerVerificationOrigin: {
+        "passenger": 0,
+        "driver": 1
+    },
+    
+
     weekDayArray: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
 
     /*---------------  Personal view constants   --------------*/
@@ -206,7 +232,6 @@ var Constants = {
         "sina.com":"mail.sina.com",
         "163.com":"mail.163.com",
         "126.com":"mail.126.com",
-        "163.com":"mail.163.com",
         "sohu.com":"mail.sohu.com",
         "yahoo.com.cn":"mail.yahoo.com.cn",
         "yahoo.com":"mail.yahoo.com",

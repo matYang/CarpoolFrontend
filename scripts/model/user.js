@@ -49,7 +49,7 @@ var User = Backbone.Model.extend({
             "accountToken": "",
             "accountValue": 0,
 
-            "sessionCode": "default",
+            "sessionCode": "default"
         };
     },
 
