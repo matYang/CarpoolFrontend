@@ -105,7 +105,9 @@ var RegistrationView = Backbone.View.extend({
 
                     }
                 })
-                that.$email.after('<span id="vemail" class="right"></span>');
+                if ($("#vemail").length === 0){
+                    that.$email.after('<span id="vemail" class="right"></span>');
+                }
             } else {
                 that.valid.email = false;
                 that.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="邮箱地址有误"><span>邮箱地址有误</span></p>');
