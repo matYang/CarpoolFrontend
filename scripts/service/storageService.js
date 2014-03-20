@@ -146,6 +146,7 @@
                         
                     }
                 }
+                json.length-=1;
                 return json;
             }
         }

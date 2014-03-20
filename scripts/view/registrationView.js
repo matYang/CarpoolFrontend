@@ -305,7 +305,16 @@ var RegistrationView = Backbone.View.extend({
 
     close: function(){
         if (!this.isClosed){
-            $("#register-modal-closeButton").off();
+            this.$name.off();
+            this.$email.off();
+            this.$password.off();
+            this.$year.off();
+            $("#registerGenderSelect").off();
+
+            $('#pivotLocation').off();
+
+            $("#myAddress").off();
+            $("#complete").off();
             this.domContainer.empty();
             this.isClosed = true;
         }
