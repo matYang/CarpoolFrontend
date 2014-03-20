@@ -242,12 +242,17 @@ var AppRouter = Backbone.Router.extend({
                 self.sessionManager.fetchSession(true, {
                     success: function () {
                         Info.log("session fetch success");
+                        app.letterView = new LetterView({
+                            "toUserId": app.storage.getLastContact()
+                        });
                         self.navigate("/main", true);
+    
                     },
                     error: function () {
                         Info.log("session fetch failed, user not logged in");
                     }
                 });
+
             },
             error: function (response) {
                 Info.alert('Email验证失败');

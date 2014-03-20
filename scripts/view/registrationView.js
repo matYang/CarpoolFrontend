@@ -62,6 +62,13 @@ var RegistrationView = Backbone.View.extend({
         } else {
             this.domContainer.append(this.finishTemplate);
             $("#emailValue").html(this.emailCache);
+            
+            if (!this.emailCache) {
+                this.emailCache = Utilities.getCookie("registrationEmail");
+            }
+            if (!this.emailCache) {
+                app.navigate("front", {trigger:true, replace:true});
+            }
             var domain = this.emailCache.split("@")[1];
             var emailDomain = Constants.emailLink[domain] || domain;
             $("#gotoEmail").on("click", function (e) {
@@ -257,6 +264,7 @@ var RegistrationView = Backbone.View.extend({
             app.userManager.registerUser(user, {
                 success: function(){
                     that.emailCache = user.get('email');
+                    document.cookie="registrationEmail=" + that.registerInfo.email;
                     app.navigate("register/finish", {trigger: true});
                 },
 
@@ -305,10 +313,13 @@ var RegistrationView = Backbone.View.extend({
 
     close: function(){
         if (!this.isClosed){
-            this.$name.off();
-            this.$email.off();
-            this.$password.off();
-            this.$year.off();
+            if (this.state !== "finish") {
+                this.$name.off();
+                this.$email.off();
+                this.$password.off();
+                this.$year.off();
+            }
+            document.cookie="registrationEmail=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             $("#registerGenderSelect").off();
 
             $('#pivotLocation').off();
