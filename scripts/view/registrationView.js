@@ -293,10 +293,13 @@ var RegistrationView = Backbone.View.extend({
 
     verifyEmail: function (available) {
         if (available) {
-            this.$email.after('<span id="vemail" class="right"></span>');
+            if ($("#vemail").length === 0) {
+                this.$email.after('<span id="vemail" class="right"></span>');
+            }
         } else {
             this.valid.email = false;
-            this.$email.parent().addClass("wrong").append('<p class="sign_up_err" id="vemail" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
+            $("#vemail").remove();
+            this.$email.parent().addClass("wrong").append('<p class="sign_up_err" title="该邮箱已经被注册"><span>该邮箱已经被注册</span></p>');
         }
     },
 
