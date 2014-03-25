@@ -84,7 +84,7 @@ var FindPasswordView = Backbone.View.extend({
         }
     },
     submitNewPassword: function (e) {
-        if ( e!== 1 && e!==13 ) {
+        if ( e.which!== 1 && e.which !==13 ) {
             return;
         }
         this.validatePassword();
