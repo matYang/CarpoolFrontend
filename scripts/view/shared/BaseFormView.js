@@ -1,3 +1,4 @@
+//TODO: test
 //Do not initialize this directly, extend it.
 var baseFormView = Backbone.View.extend({
     el: "",
@@ -5,9 +6,16 @@ var baseFormView = Backbone.View.extend({
     template: ""
     fields:[],
     submitButtonId: "",
-    initialize: function(){
-        _.bindAll(this, "bindEvents", "render",, "submitAction");
+    initialize: function(params){
+        _.bindAll(this, "bindEvents", "render", "submitAction");
         this.closed = false;
+        this.el = params.el;
+        this.template = params.template;
+        this.fields = params.fields;
+        this.formElem = params.formElem;
+        this.action = params.action;
+        this.callback = params.callback;
+        this.successCallback = params.successCallback;
     },
     submitAction: function(){},
     render: function () {
@@ -20,16 +28,23 @@ var baseFormView = Backbone.View.extend({
         for ( i = 0; i < this.fieldNum; i++ ){
 
             var field = this.fields[i], $field = $("#"+ field.get("fieldId")), fieldType = field.get("fieldType");
-            $field.on("keydown", function (e) {
-                if (fieldType === "number" && !(e.which >= 48 && e.which <= 57) && !(e.which >= 96 && e.which <= 105) && e.which > 13) {
-                    e.preventDefault();
-                } else if (fieldType == "file") {
-                    e.preventDefault();
-                } 
-            }).on('blur', function (e) {
-                var div, val = $(this).val();
-                field.testValue(val);
-            });
+            if (fieldType !== "select") {
+                $field.on("keydown", function (e) {
+                    if (fieldType === "number" && !(e.which >= 48 && e.which <= 57) && !(e.which >= 96 && e.which <= 105) && e.which > 13) {
+                        e.preventDefault();
+                    } else if (fieldType == "file") {
+                        e.preventDefault();
+                    } 
+                }).on('blur', function (e) {
+                    var val = $(this).val();
+                    field.testValue(val);
+                });
+            } else {
+                $field.on("change", function (e) {
+                    var val = $(this).val();
+                    field.testValue(val);
+                });
+            }
         },
         $("#"+this.submitButtonId).on("click", function (e) {
             var valid = true;
@@ -40,6 +55,35 @@ var baseFormView = Backbone.View.extend({
             if (valid) {
                 that.submitAction();
             }
+        });
+        if (this.form) {
+            this.formReady(this.formElem, this.action, this.callback);
+        }
+    },
+    formReady: function (formElem, action, callback) {
+        var iframe = document.createElement('iframe'), that = this;
+        action = action + (action.indexOf('?') == -1 ? '?' : '&');
+
+        // we create an iframe and use the callback as its name (why not).
+        iframe.setAttribute('name', callback);
+        iframe.style.display = 'none';
+
+        // we add the target and edit the action of the form
+        formElem.setAttribute('target', callback);
+        formElem.setAttribute('action', action);
+
+        // we add the hidden iframe after the form
+        formElem.parentNode.appendChild(iframe);
+
+        $(iframe).one("load", function () {
+            app.sessionManager.fetchSession(true, {
+                "success": function () {
+                    that.successCallback();
+                },
+                "error":function(response) {
+                    location.reload();
+                }
+            });
         });
     },
     close: function () {
@@ -71,8 +115,17 @@ var baseField = Backbone.Model.extend({
     },
     idAttribute: "fieldId",
 
-    initialize: function (fieldId, fieldType, mandatory) {
+    initialize: function (params) {
         _.bindAll(this, 'buildValidatorDiv', 'removeValidatorDiv', 'testValue');
+        this.fieldId = params.fieldId;
+        this.fieldType = params.fieldType;
+        this.mandatory = params.mandatory || this.mandatory;
+        this.regex = params.regex;
+        this.errorText = params.errorText;
+        this.errorClass = params.errorClass || this.errorClass;
+        this.validClass = params.validClass || this.validClass;
+        this.validatorContainer = params.validatorContainer;
+        this.name = params.name;
     },
 
     buildValidatorDiv: function (valid, type, text) {
