@@ -23,35 +23,12 @@ var identityView =  Backbone.View.extend({
             "formElem": 'idForm',
             "action":  Constants.origin + '/api/v1.0/users/id/' + app.sessionManager.getUserId(),
             "callback": 'uploadTarget',
+            "successCallback": this.successCallback
         });
         this.form.render();
-        
     },
-    formReady: function (formElem, action, callback) {
-        var iframe = document.createElement('iframe');
-        action = action + (action.indexOf('?') == -1 ? '?' : '&');
+    successCallback: function() {
 
-        // we create an iframe and use the callback as its name (why not).
-        iframe.setAttribute('name', callback);
-        iframe.style.display = 'none';
-
-        // we add the target and edit the action of the form
-        formElem.setAttribute('target', callback);
-        formElem.setAttribute('action', action);
-
-        // we add the hidden iframe after the form
-        formElem.parentNode.appendChild(iframe);
-
-        $(iframe).one("load", function () {
-            app.sessionManager.fetchSession(true, {
-                "success": function () {
-
-                },
-                "error":function(response) {
-                    location.reload();
-                }
-            });
-        });
     },
     close: function(){
 
