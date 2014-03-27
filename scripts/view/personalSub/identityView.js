@@ -63,7 +63,7 @@ var passengerIdentityVerificationView = identityView.extend({
             }),
             imageField1 = new baseField({
                 name: "身份证正面扫描",
-                fieldId: "image_personalId_1",
+                fieldId: "image_personalId_0",
                 type: "file",
                 mandatory: true,
                 validatorFunction: this.fileValid,

@@ -356,7 +356,7 @@
 	padding-right:20px;
 }
 
-#selectImg{
+.hidden-file-field{
 	opacity:0;
 	filter: alpha(opacity=0);
 	position:absolute;

@@ -1,5 +1,10 @@
 //TODO: test
 //Do not initialize this directly, extend it.
+//workflow:
+//  Initialize, append form to the active view.
+//  bind validators to all fields
+//  If it's a form (using <form>), then prepare iframe for post action
+
 var baseFormView = Backbone.View.extend({
     el: "",
     form: true,
@@ -49,11 +54,13 @@ var baseFormView = Backbone.View.extend({
         $("#"+this.submitButtonId).on("click", function (e) {
             var valid = true;
             for ( i = 0; i < that.fieldNum; i++ ){
-                var field = that.fields[i], $field = $("#"+  field.get("fieldId");
+                var field = that.fields[i], $field = $("#"+  field.get("fieldId"));
                 valid = valid && field.testValue($field.val());
             }
             if (valid) {
                 that.submitAction();
+            } else {
+                e.preventDefault();
             }
         });
         if (this.form) {
