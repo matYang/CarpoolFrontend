@@ -10,10 +10,9 @@ var identityView =  Backbone.View.extend({
         if (this.curUserId !== this.sessionUser.get("userId")) {
             throw "unexpected userId";
         }
-        
-        this.render();
-        this.bindEvents();
-        this.bindValidator();
+    },
+    loadVerificationStatus: function (callback) {
+
     },
     render: function() {
         this.form = new baseFormView({
@@ -40,7 +39,8 @@ var passengerIdentityVerificationView = identityView.extend({
     form:"idform",
     initialize: function (params) {
         _.bind(this, 'render', 'close');
-        this.formTemplate = _.template(tpl.get('passengerIdentity'));
+        this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
+        this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
         this.render();
     }, 
     render: function () {
@@ -67,7 +67,7 @@ var passengerIdentityVerificationView = identityView.extend({
                 type: "file",
                 mandatory: true,
                 validatorFunction: this.fileValid,
-                failText: 
+                failText: "身份证不能为空"
             }), 
             imageField2 = new baseField({
                 name: "身份证背面扫描",
@@ -105,12 +105,63 @@ var driverIdentityVerificationView = identityView.extend({
 
     initialize: function (params) {
         _.bind(this, 'render', 'close');
-        this.viewForm = _.template(tpl.get('driverIdentity'));
+        this.formTemplate = _.template(tpl.get('driverIdentity_form'));
+        this.landingTemplate = _.template(tpl.get('driverIdentity_landing'));
         this.render();
     },
     render: function () {
         identityView.prototype.render.call(this);
     }, 
+    setValidator: function() {
+        var nameField = new baseField({
+                name: "姓名",
+                fieldId: "name",
+                type: "text",
+                mandatory: true,
+                validatorFunction: this.textValid
+            }), 
+            idField = new baseField({
+                name: "驾照号码",
+                fieldId: "id_number",
+                type: "number",
+                mandatory: true,
+                validatorFunction: this.textValid
+            }),
+            typeField = new baseField({
+                name: "驾照类型",
+                fieldId: "id_type",
+                type: "select",
+                mandatory: true,
+                validatorFunction: this.textValid
+            })，
+            imageField1 = new baseField({
+                name: "驾照扫描",
+                fieldId: "image_personalId_0",
+                type: "file",
+                mandatory: true,
+                validatorFunction: this.fileValid,
+                failText: "驾照不能为空"
+            }), 
+
+        nameField.set()
+        nameField
+        this.fields = [nameField, idField, imageField1, imageField1];
+    },
+    textValid: function (val, type) {
+        return true;
+    },
+    fileValid: function (file) {
+        if (file === '') {
+            return { "valid":false, "text":"身份证不能为空" };
+        } else {
+            //Check file extension
+            var ext = file.split('.').pop().toLowerCase();   //Check file extension if valid or expected
+            if ($.inArray(ext, ['png', 'jpg', 'jpeg', 'bmp']) === -1) {
+                return { "valid":false, "text":"后缀名必须是png, jpg, jpeg, 或者bmp" };
+            }
+            return  { "valid":true};
+        }
+    },
     close: function() {
         
     }

@@ -531,15 +531,23 @@ var PersonalUtilityView = Backbone.View.extend({
 
         app.userManager.toggleNotices(to, this.sessionUser.get(""), {
             "success": this.noticeSuccess,
-            "error": this.noticeError
+            "error": this.passengerIdentityVerificationView();
         });
-
+        "error": this.driverIdentityVerificationView();
     },
     noticeSuccess: function () {
 
     },
     noticeError: function () {
 
+    },
+
+    switchToIdentityView: function (type) {
+        if (type === "passenger") {
+            this.identityView = new passengerIdentityVerificationView();
+        } else {
+            this.identityView = new driverIdentityVerificationView();
+        }
     },
     close: function () {
         if (!this.isClosed) {
