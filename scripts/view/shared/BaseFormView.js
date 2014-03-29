@@ -8,7 +8,7 @@
 var baseFormView = Backbone.View.extend({
     el: "",
     form: true,
-    template: ""
+    template: "",
     fields:[],
     submitButtonId: "",
     initialize: function(params){
@@ -50,7 +50,7 @@ var baseFormView = Backbone.View.extend({
                     field.testValue(val);
                 });
             }
-        },
+        }
         $("#"+this.submitButtonId).on("click", function (e) {
             var valid = true;
             for ( i = 0; i < that.fieldNum; i++ ){
@@ -64,10 +64,11 @@ var baseFormView = Backbone.View.extend({
             }
         });
         if (this.form) {
-            this.formReady(this.formElem, this.action, this.callback);
+            this.formReady(document.getElementById(this.formElem), this.action, this.callback);
         }
     },
     formReady: function (formElem, action, callback) {
+
         var iframe = document.createElement('iframe'), that = this;
         action = action + (action.indexOf('?') == -1 ? '?' : '&');
 

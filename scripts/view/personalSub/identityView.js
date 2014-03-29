@@ -12,22 +12,24 @@ var identityView =  Backbone.View.extend({
         }
     },
     loadVerificationStatus: function (callback) {
-
+        //TODO: get PassengerVerification/DriverVerification Model from backend, render base on the status
+        var state = model.get("state");
+        
     },
     render: function() {
         this.form = new baseFormView({
             "template":this.formTemplate,
             "fields": this.fields,
-            "el": this.el,
-            "formElem": 'idForm',
-            "action":  Constants.origin + '/api/v1.0/users/id/' + app.sessionManager.getUserId(),
+            "el": this.container,
+            "formElem": this.form,
+            "action": this.action,
             "callback": 'uploadTarget',
             "successCallback": this.successCallback
         });
         this.form.render();
     },
     successCallback: function() {
-
+        
     },
     close: function(){
 
@@ -36,11 +38,14 @@ var identityView =  Backbone.View.extend({
 });
 
 var passengerIdentityVerificationView = identityView.extend({
-    form:"idform",
+    container:"#utility_passengerIdentity",
+    form:"passengerIdForm",
+    action: PassengerVerification.prototype.urlRoot,
     initialize: function (params) {
-        _.bind(this, 'render', 'close');
+        _.bindAll(this, 'render', 'close');
         this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
         this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
+        this.setValidator();
         this.render();
     }, 
     render: function () {
@@ -77,8 +82,6 @@ var passengerIdentityVerificationView = identityView.extend({
                 validatorFunction: this.fileValid,
                 failText: "身份证不能为空"
             });
-        nameField.set()
-        nameField
         this.fields = [nameField, idField, imageField1, imageField1];
     },
     textValid: function (val, type) {
@@ -102,11 +105,14 @@ var passengerIdentityVerificationView = identityView.extend({
 });
 
 var driverIdentityVerificationView = identityView.extend({
-
+    container:"#utility_driverIdentity",
+    form: "driverIdForm",
+    action: DriverVerification.prototype.urlRoot,
     initialize: function (params) {
-        _.bind(this, 'render', 'close');
+        _.bindAll(this, 'render', 'close');
         this.formTemplate = _.template(tpl.get('driverIdentity_form'));
         this.landingTemplate = _.template(tpl.get('driverIdentity_landing'));
+        this.setValidator();
         this.render();
     },
     render: function () {
@@ -133,7 +139,7 @@ var driverIdentityVerificationView = identityView.extend({
                 type: "select",
                 mandatory: true,
                 validatorFunction: this.textValid
-            })，
+            }),
             imageField1 = new baseField({
                 name: "驾照扫描",
                 fieldId: "image_personalId_0",
@@ -141,10 +147,8 @@ var driverIdentityVerificationView = identityView.extend({
                 mandatory: true,
                 validatorFunction: this.fileValid,
                 failText: "驾照不能为空"
-            }), 
+            });
 
-        nameField.set()
-        nameField
         this.fields = [nameField, idField, imageField1, imageField1];
     },
     textValid: function (val, type) {

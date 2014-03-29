@@ -58,7 +58,7 @@ var Constants = {
     "serviceCenter_base", "serviceCenter_aboutUs", "serviceCenter_feedback", "serviceCenter_terms", "serviceCenter_terms_zh", "serviceCenter_terms_en", "serviceCenter_faq", "serviceCenter_career", 
 
     /*-----------  IdentityVerification -----------*/
-    "tpl_passengerIdentity_form", "tpl_passengerIdentity_landing", "tpl_driverIdentity_form", "tpl_driverIdentity_landing",
+    "passengerIdentity_form", "passengerIdentity_landing", "driverIdentity_form", "driverIdentity_landing",
 
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
