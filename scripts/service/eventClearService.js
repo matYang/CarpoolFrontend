@@ -7,7 +7,6 @@
     this.EventClearService = function () {
         var self = this;
         $('body').on('click', function(){
-            debugger;
             self.clearViews();
         });
 

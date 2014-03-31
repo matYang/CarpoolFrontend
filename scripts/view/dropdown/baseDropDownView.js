@@ -40,7 +40,6 @@ var baseDropDownView = Backbone.View.extend({
     },
 
     _clearAll: function () {
-        debugger;
         this.$ul.children('li').off();
         this.$ul.remove();
     },

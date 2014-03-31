@@ -64,7 +64,6 @@ var PersonalView = Backbone.View.extend({
     render: function () {
     },
     renderError: function () {
-        debugger;
         if (this.curUserId.id !== that.sessionUser.id) {
             $("#profilePage_utilityTab").hide();
         }
