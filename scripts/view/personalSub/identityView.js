@@ -115,7 +115,7 @@ var passengerIdentityVerificationView = identityView.extend({
                 validatorFunction: this.fileValid,
                 failText: "身份证不能为空"
             });
-        this.fields = [nameField, idField, imageField1, imageField1];
+        this.fields = [nameField, idField, imageField1, imageField2];
     },
     textValid: function (val, type) {
         return true;
@@ -181,8 +181,7 @@ var driverIdentityVerificationView = identityView.extend({
                 validatorFunction: this.fileValid,
                 failText: "驾照不能为空"
             });
-
-        this.fields = [nameField, idField, imageField1, imageField1];
+        this.fields = [nameField, idField, typeField, imageField1];
     },
     textValid: function (val, type) {
         return true;

@@ -35,6 +35,7 @@ var baseFormView = Backbone.View.extend({
 
             var field = this.fields[i], $field = $("#"+ field.get("fieldId")), fieldType = field.get("fieldType");
             if (fieldType !== "select") {
+                $field.attr("data-field-index", i);
                 $field.on("keydown", function (e) {
                     if (fieldType === "number" && !(e.which >= 48 && e.which <= 57) && !(e.which >= 96 && e.which <= 105) && e.which > 13) {
                         e.preventDefault();
@@ -43,7 +44,7 @@ var baseFormView = Backbone.View.extend({
                     } 
                 }).on('blur', function (e) {
                     var val = $(this).val();
-                    field.testValue(val, $(e.target));
+                    that.fields[Utilities.toInt($(this).data("field-index"))].testValue(val, $(e.target));
                 });
             } else {
                 $field.on("change", function (e) {
@@ -129,39 +130,38 @@ var baseField = Backbone.Model.extend({
 
     initialize: function (params) {
         _.bindAll(this, 'buildValidatorDiv', 'removeValidatorDiv', 'testValue');
-        this.fieldId = params.fieldId;
-        this.fieldType = params.fieldType;
-        this.mandatory = params.mandatory || this.mandatory;
-        this.regex = params.regex;
-        this.errorText = params.errorText;
-        this.errorClass = params.errorClass || this.errorClass;
-        this.validClass = params.validClass || this.validClass;
-        this.validatorContainer = params.validatorContainer;
-        this.name = params.name;
+        this.set("fieldId", params.fieldId);
+        this.set("fieldType", params.fieldType);
+        this.set("mandatory", params.mandatory || this.get("mandatory"));
+        this.set("regex", params.regex);
+        this.set("errorText", params.errorText);
+        this.set("errorClass", params.errorClass || this.get("errorClass"));
+        this.set("validClass", params.validClass || this.get("validClass"));
+        this.set("validatorContainer", params.validatorContainer);
+        this.set("name", params.name);
     },
 
     buildValidatorDiv: function (valid, type, text) {
         if (valid) {
-            return "<div class='" + this.validClass + "' id='"+this.fieldId+"_right'></div>";
+            return "<div class='" + this.get("validClass") + "' id='"+this.get("fieldId")+"_right'></div>";
         } else if (type === "empty") {
-            return "<div class='" + this.errorClass + "' id='"+this.fieldId+"_wrong' title='"+this.name+"不能为空'>"+this.name+"不能为空</div>";
+            return "<div class='" + this.get("errorClass") + "' id='" + this.get("fieldId") + "_wrong' title='"+this.get("name")+"不能为空'>" + this.get("name") + "不能为空</div>";
         } else if (text) {
-            return "<div class='" + this.errorClass + "' id='"+this.fieldId+"_wrong' title='"+text+"'>"+text+"</div>";
+            return "<div class='" + this.get("errorClass") + "' id='" + this.get("fieldId") + "_wrong' title='" + text + "'>" + text + "</div>";
         } else {
-            return "<div class='" + this.errorClass + "' id='"+this.fieldId+"_wrong' title='"+this.errorText+"'>"+this.errorText+"</div>";
+            return "<div class='" + this.get("errorClass") + "' id='" + this.get("fieldId") + "_wrong' title='" + this.get("errorText") + "'>" + this.get("errorClass") + "</div>";
         }
     }, 
     removeValidatorDiv: function () {
-        $("#"+this.fieldId+"_right").remove();
-        $("#"+this.fieldId+"_wrong").remove();
+        $("#"+this.get("fieldId")+"_right").remove();
+        $("#"+this.get("fieldId")+"_wrong").remove();
     },
     testValue: function(val, $input) {
         var div, valid;
         var valid = false;
-        if (this.mandatory && !val ) {
+        if (this.get("mandatory") && !val ) {
             div = this.buildValidatorDiv(false, "empty");
-        }
-        if (this.regex) {
+        } else if (this.get("regex")) {
             if (this.regex.test(val) ) {
                 div = this.buildValidatorDiv(true);
                 valid = true;
