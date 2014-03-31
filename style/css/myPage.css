@@ -392,7 +392,7 @@
 .credentials dd {
 	margin-left: 90px;
 }
-.credentials div {
+.credentials dd.blank div {
 	float: left;
 	width: 250px;
 	height: 150px;

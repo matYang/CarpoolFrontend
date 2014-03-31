@@ -27,6 +27,20 @@ var identityView =  Backbone.View.extend({
             "successCallback": this.successCallback
         });
         this.form.render();
+        var that = this;
+        $('#id_type_select').on('focus', function (e) {
+            if (that.idDropDown){
+                that.idDropDown.close();
+            }
+            that.idDropDown = new idTypeDropdownView($("#id_dropdown_container"), this);
+            e.stopPropagation();
+        }).on('click', function (e) {
+            e.stopPropagation();
+        }).on('keypress', function (e) {
+            e.preventDefault();
+        }).on('change', function (e) {
+            
+        });
     },
     successCallback: function() {
         
