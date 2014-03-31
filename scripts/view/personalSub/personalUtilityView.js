@@ -553,9 +553,9 @@ var PersonalUtilityView = Backbone.View.extend({
 
     switchToIdentityView: function (type) {
         if (type === "passenger" && !this.passengerIdentityView) {
-            this.passengerIdentityView = new passengerIdentityVerificationView();
+            this.passengerIdentityView = new passengerIdentityVerificationView({"curUserId": this.curUserId});
         } else if (type === "driver" && !this.driverIdentityView) {
-            this.driverIdentityView = new driverIdentityVerificationView();
+            this.driverIdentityView = new driverIdentityVerificationView({"curUserId": this.curUserId});
         }
     },
     close: function () {

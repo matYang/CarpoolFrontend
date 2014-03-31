@@ -12,7 +12,7 @@ var baseFormView = Backbone.View.extend({
     fields:[],
     submitButtonId: "",
     initialize: function(params){
-        _.bindAll(this, "bindEvents", "render", "submitAction");
+        _.bindAll(this, "bindEvents", "render", "unbindValidators", "submitAction", "formReady");
         this.closed = false;
         this.el = params.el;
         this.template = params.template;
@@ -95,12 +95,15 @@ var baseFormView = Backbone.View.extend({
             });
         });
     },
+    unbindValidators: function () {
+        $("#"+this.submitButtonId).off();
+        for ( i = 0; i < this.fieldNum; i++ ){
+            $("#"+ this.fields[i].get("fieldId")).off();
+        }
+    },
     close: function () {
         if (!this.closed) {
-            $("#"+this.submitButtonId).off();
-            for ( i = 0; i < this.fieldNum; i++ ){
-                $("#"+ this.fields[i].get("fieldId")).off();
-            }
+            this.unbindValidators();      
             this.$el.empty();
         }
     }

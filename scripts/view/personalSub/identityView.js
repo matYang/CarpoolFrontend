@@ -4,19 +4,38 @@ var identityView =  Backbone.View.extend({
     initialize: function (params) {
         _.bindAll(this, 'close');
         this.isClosed = false;
-        
-        this.sessionUser = app.sessionManager.getSessionUser();
         this.curUserId = params.intendedUserId;
+        this.sessionUser = app.sessionManager.getSessionUser();
         if (this.curUserId !== this.sessionUser.get("userId")) {
             throw "unexpected userId";
         }
+        this.loadVerificationStatus();
     },
     loadVerificationStatus: function (callback) {
-        //TODO: get PassengerVerification/DriverVerification Model from backend, render base on the status
-        var state = model.get("state");
-        
+        var vs = this.sessionUser.get("verifications");
+        for (var i = 0; i < vs.length; i++) {
+            if (verifications[i].get("type") === this.type ){
+                this.verification = verifications[i];
+            }
+        }
     },
     render: function() {
+        var that = this;
+        if (!this.verification) {
+            this.renderForm();
+        } else {
+            this.form.close();
+            this.$content.empty().append(this.landingTemplate(this.verification._toJSON()));
+            $("#re-verify").on("click", function() {
+                that.renderForm();
+            });
+        }
+    },
+    successCallback: function() {
+        this.loadVerificationStatus();
+        this.$content.empty().append(this.landingTemplate(this.verification._toJSON()));
+    },
+    renderForm: function () {
         this.form = new baseFormView({
             "template":this.formTemplate,
             "fields": this.fields,
@@ -43,9 +62,6 @@ var identityView =  Backbone.View.extend({
 
         });
     },
-    successCallback: function() {
-        
-    },
     close: function(){
 
     }
@@ -56,7 +72,9 @@ var passengerIdentityVerificationView = identityView.extend({
     container:"#utility_passengerIdentity",
     form:"passengerIdForm",
     action: PassengerVerification.prototype.urlRoot,
+    type: Constants.VerificationType.passenger,
     initialize: function (params) {
+        identityView.prototype.initialize.call(this, params);
         _.bindAll(this, 'render', 'close');
         this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
         this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
