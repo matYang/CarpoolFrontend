@@ -21,6 +21,7 @@ var baseFormView = Backbone.View.extend({
         this.action = params.action;
         this.callback = params.callback;
         this.successCallback = params.successCallback;
+        this.submitButtonId = params.submitButtonId;
     },
     submitAction: function(){},
     render: function () {
@@ -42,12 +43,12 @@ var baseFormView = Backbone.View.extend({
                     } 
                 }).on('blur', function (e) {
                     var val = $(this).val();
-                    field.testValue(val);
+                    field.testValue(val, $(e.target));
                 });
             } else {
                 $field.on("change", function (e) {
                     var val = $(this).val();
-                    field.testValue(val);
+                    field.testValue(val, $(e.target));
                 });
             }
         }
@@ -55,7 +56,7 @@ var baseFormView = Backbone.View.extend({
             var valid = true;
             for ( i = 0; i < that.fieldNum; i++ ){
                 var field = that.fields[i], $field = $("#"+  field.get("fieldId"));
-                valid = valid && field.testValue($field.val());
+                valid = valid && field.testValue($field.val(), $field);
             }
             if (valid) {
                 that.submitAction();
@@ -151,7 +152,7 @@ var baseField = Backbone.Model.extend({
         $("#"+this.fieldId+"_right").remove();
         $("#"+this.fieldId+"_wrong").remove();
     },
-    testValue: function(val) {
+    testValue: function(val, $input) {
         var div, valid;
         var valid = false;
         if (this.mandatory && !val ) {
@@ -176,7 +177,7 @@ var baseField = Backbone.Model.extend({
             valid = true;
         }
         this.removeValidatorDiv();
-        (this.validatorContainer) ? this.validatorContainer.append(div) : $this.after(div);
+        (this.validatorContainer) ? this.validatorContainer.append(div) : $input.after(div);
         return true;
     }
 });

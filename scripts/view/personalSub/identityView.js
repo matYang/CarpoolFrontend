@@ -24,7 +24,8 @@ var identityView =  Backbone.View.extend({
             "formElem": this.form,
             "action": this.action,
             "callback": 'uploadTarget',
-            "successCallback": this.successCallback
+            "successCallback": this.successCallback,
+            "submitButtonId": "driver_identity_submit"
         });
         this.form.render();
         var that = this;
@@ -39,7 +40,7 @@ var identityView =  Backbone.View.extend({
         }).on('keypress', function (e) {
             e.preventDefault();
         }).on('change', function (e) {
-            
+
         });
     },
     successCallback: function() {
