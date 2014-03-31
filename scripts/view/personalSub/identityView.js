@@ -4,10 +4,10 @@ var identityView =  Backbone.View.extend({
     initialize: function (params) {
         _.bindAll(this, 'close');
         this.isClosed = false;
-        this.curUserId = params.intendedUserId;
+        this.curUserId = params.curUserId;
         this.sessionUser = app.sessionManager.getSessionUser();
         if (this.curUserId !== this.sessionUser.get("userId")) {
-            throw "unexpected userId";
+            throw "invalid user exception";
         }
         this.loadVerificationStatus();
     },
@@ -74,12 +74,17 @@ var passengerIdentityVerificationView = identityView.extend({
     action: PassengerVerification.prototype.urlRoot,
     type: Constants.VerificationType.passenger,
     initialize: function (params) {
-        identityView.prototype.initialize.call(this, params);
-        _.bindAll(this, 'render', 'close');
-        this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
-        this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
-        this.setValidator();
-        this.render();
+        try {
+            identityView.prototype.initialize.call(this, params);
+            _.bindAll(this, 'render', 'close');
+            this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
+            this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
+            this.setValidator();
+            this.render();
+        } catch (e) {
+            app.navigate("front", true);
+            this.remove();
+        }
     }, 
     render: function () {
         identityView.prototype.render.call(this);
@@ -142,11 +147,17 @@ var driverIdentityVerificationView = identityView.extend({
     form: "driverIdForm",
     action: DriverVerification.prototype.urlRoot,
     initialize: function (params) {
-        _.bindAll(this, 'render', 'close');
-        this.formTemplate = _.template(tpl.get('driverIdentity_form'));
-        this.landingTemplate = _.template(tpl.get('driverIdentity_landing'));
-        this.setValidator();
-        this.render();
+        try {
+            identityView.prototype.initialize.call(this, params);
+            _.bindAll(this, 'render', 'close');
+            this.formTemplate = _.template(tpl.get('driverIdentity_form'));
+            this.landingTemplate = _.template(tpl.get('driverIdentity_landing'));
+            this.setValidator();
+            this.render();
+        } catch (e) {
+            app.navigate("front", true);
+            this.remove();
+        }
     },
     render: function () {
         identityView.prototype.render.call(this);
