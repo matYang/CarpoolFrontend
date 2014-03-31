@@ -18,7 +18,9 @@ var DriverVerification = Backbone.Model.extend({
             "recommenderId": -1,
 
             "licenseIssueDate": new Date(),
-            "licenseImgLink": "default"
+            "licenseImgLink": "default",
+
+            "_associatedPVId": -1
 
         };
     },
@@ -64,6 +66,8 @@ var DriverVerification = Backbone.Model.extend({
             data.realName = decodeURI(data.realName);
 
             data.licenseIssueDate = Utilities.castFromAPIFormat(data.licenseIssueDate);
+
+            data._associatedPVId = parseInt(data._associatedPVId, 10);
         }
 
         return data;
