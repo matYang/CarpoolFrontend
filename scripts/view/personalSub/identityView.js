@@ -12,18 +12,14 @@ var identityView =  Backbone.View.extend({
         this.loadVerificationStatus();
     },
     loadVerificationStatus: function (callback) {
-        var vs = this.sessionUser.get("verifications");
-        if (vs) {
-            for (var i = 0; i < vs.length; i++) {
-                if (verifications[i].get("type") === this.type ){
-                    this.verification = verifications[i];
-                }
-            }
-        }
+        this.passengerVerification =  this.sessionUser.get("passengerVerification");
+        this.driverVerification =  this.sessionUser.get("driverVerification");
     },
     render: function() {
         var that = this;
-        if (!this.verification) {
+        if (this.type === Constants.VerificationType.passenger && !this.passengerVerification) {
+            this.renderForm();
+        } else if (this.type === Constants.VerificationType.driver && !this.driverVerification)   {
             this.renderForm();
         } else {
             this.form.close();
