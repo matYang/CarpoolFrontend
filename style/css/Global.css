@@ -460,3 +460,8 @@ body > .main {
 	height: 80px;
 	clear: both;
 }
+
+.account .blank img, .account .credentials img {
+	max-height: 100%;
+	max-width: 100%;
+}

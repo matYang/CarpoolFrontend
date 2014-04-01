@@ -13,9 +13,11 @@ var identityView =  Backbone.View.extend({
     },
     loadVerificationStatus: function (callback) {
         var vs = this.sessionUser.get("verifications");
-        for (var i = 0; i < vs.length; i++) {
-            if (verifications[i].get("type") === this.type ){
-                this.verification = verifications[i];
+        if (vs) {
+            for (var i = 0; i < vs.length; i++) {
+                if (verifications[i].get("type") === this.type ){
+                    this.verification = verifications[i];
+                }
             }
         }
     },
@@ -44,7 +46,7 @@ var identityView =  Backbone.View.extend({
             "action": this.action,
             "callback": 'uploadTarget',
             "successCallback": this.successCallback,
-            "submitButtonId": "driver_identity_submit"
+            "submitButtonId": this.submitButtonId
         });
         this.form.render();
         var that = this;
@@ -73,6 +75,7 @@ var passengerIdentityVerificationView = identityView.extend({
     form:"passengerIdForm",
     action: PassengerVerification.prototype.urlRoot,
     type: Constants.VerificationType.passenger,
+    submitButtonId: "passenger_identity_submit",
     initialize: function (params) {
         try {
             identityView.prototype.initialize.call(this, params);
@@ -82,6 +85,7 @@ var passengerIdentityVerificationView = identityView.extend({
             this.setValidator();
             this.render();
         } catch (e) {
+            debugger;
             app.navigate("front", true);
             this.remove();
         }
@@ -106,19 +110,21 @@ var passengerIdentityVerificationView = identityView.extend({
             }),
             imageField1 = new baseField({
                 name: "身份证正面扫描",
-                fieldId: "image_personalId_0",
+                fieldId: "passengerIdImg1",
                 type: "file",
                 mandatory: true,
                 validatorFunction: this.fileValid,
-                failText: "身份证不能为空"
+                failText: "身份证不能为空",
+                previewId: "passengerIdPreview1"
             }), 
             imageField2 = new baseField({
                 name: "身份证背面扫描",
-                fieldId: "image_personalId_1",
+                fieldId: "passengerIdImg2",
                 type: "file",
                 mandatory: true,
                 validatorFunction: this.fileValid,
-                failText: "身份证不能为空"
+                failText: "身份证不能为空",
+                previewId: "passengerIdPreview2"
             });
         this.fields = [nameField, idField, imageField1, imageField2];
     },
@@ -146,6 +152,8 @@ var driverIdentityVerificationView = identityView.extend({
     container:"#utility_driverIdentity",
     form: "driverIdForm",
     action: DriverVerification.prototype.urlRoot,
+    type: Constants.VerificationType.driver,
+    submitButtonId: "driver_identity_submit",
     initialize: function (params) {
         try {
             identityView.prototype.initialize.call(this, params);
@@ -186,11 +194,12 @@ var driverIdentityVerificationView = identityView.extend({
             }),
             imageField1 = new baseField({
                 name: "驾照扫描",
-                fieldId: "image_personalId_0",
+                fieldId: "driverIdImg",
                 type: "file",
                 mandatory: true,
                 validatorFunction: this.fileValid,
-                failText: "驾照不能为空"
+                failText: "驾照不能为空",
+                previewId: "driverIdPreview"
             });
         this.fields = [nameField, idField, typeField, imageField1];
     },

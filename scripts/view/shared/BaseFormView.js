@@ -12,7 +12,7 @@ var baseFormView = Backbone.View.extend({
     fields:[],
     submitButtonId: "",
     initialize: function(params){
-        _.bindAll(this, "bindEvents", "render", "unbindValidators", "submitAction", "formReady");
+        _.bindAll(this, "bindEvents", "render", "unbindValidators", "submitAction", "formReady", "displayImagePreview");
         this.closed = false;
         this.el = params.el;
         this.template = params.template;
@@ -33,23 +33,28 @@ var baseFormView = Backbone.View.extend({
         var i, that = this;
         for ( i = 0; i < this.fieldNum; i++ ){
 
-            var field = this.fields[i], $field = $("#"+ field.get("fieldId")), fieldType = field.get("fieldType");
-            if (fieldType !== "select") {
+            var field = this.fields[i], $field = $("#"+ field.get("fieldId")), fieldType = field.get("type");
+            if (fieldType === "file") {
+                var preview = $("#"+field.get("previewId"));
+                $field.on("change", preview, function (e) {
+                    that.displayImagePreview(e);
+                }).on("keydown", function (e) {
+                    e.preventDefault()
+                });
+            } else if (fieldType !== "select") {
                 $field.attr("data-field-index", i);
-                $field.on("keydown", function (e) {
-                    if (fieldType === "number" && !(e.which >= 48 && e.which <= 57) && !(e.which >= 96 && e.which <= 105) && e.which > 13) {
+                $field.on("keydown", {"fileType": fieldType}, function (e) {
+                    if (e.data.fieldType === "number" && !(e.which >= 48 && e.which <= 57) && !(e.which >= 96 && e.which <= 105) && e.which > 13) {
                         e.preventDefault();
-                    } else if (fieldType == "file") {
-                        e.preventDefault();
-                    } 
+                    }
                 }).on('blur', function (e) {
                     var val = $(this).val();
                     that.fields[Utilities.toInt($(this).data("field-index"))].testValue(val, $(e.target));
                 });
             } else {
-                $field.on("change", function (e) {
+                $field.on("change", {"field":field}, function (e) {
                     var val = $(this).val();
-                    field.testValue(val, $(e.target));
+                    e.data.field.testValue(val, $(e.target));
                 });
             }
         }
@@ -96,6 +101,36 @@ var baseFormView = Backbone.View.extend({
             });
         });
     },
+    displayImagePreview: function (evt) {
+        if (!(window.File && window.FileReader && window.FileList)) {
+            return;
+        }
+        var files = evt.target.files; // FileList object
+
+        // Loop through the FileList and render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+          // Only process image files.
+            if (!f.type.match('image.*')) {
+                continue;
+            }
+
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+            return function(e) {
+              // Render thumbnail.
+                if (evt.data) {
+                    evt.data.attr("src", e.target.result).attr("title", escape(theFile.name));
+                }
+            };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    },
     unbindValidators: function () {
         $("#"+this.submitButtonId).off();
         for ( i = 0; i < this.fieldNum; i++ ){
@@ -124,6 +159,7 @@ var baseField = Backbone.Model.extend({
             validClass: "right",
             validatorContainer: null,
             name: "", //Used for error Text
+            $preview: null
         }
     },
     idAttribute: "fieldId",
@@ -139,6 +175,7 @@ var baseField = Backbone.Model.extend({
         this.set("validClass", params.validClass || this.get("validClass"));
         this.set("validatorContainer", params.validatorContainer);
         this.set("name", params.name);
+        this.set("$preview", params.$preview);
     },
 
     buildValidatorDiv: function (valid, type, text) {
