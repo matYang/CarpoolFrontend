@@ -84,6 +84,7 @@ var DriverVerification = Backbone.Model.extend({
         json.licenseIssueDate = Utilities.castToAPIFormat(this.get('licenseIssueDate'));
         return json;
     },
-
-
+    _toJSON: function () {
+        return this.toJSON();
+    }
 });

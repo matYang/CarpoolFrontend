@@ -1,6 +1,5 @@
 var identityView =  Backbone.View.extend({
     el: "#utility_identity",
-    $content: $("#utility_identity_content"),
     initialize: function (params) {
         _.bindAll(this, 'close');
         this.isClosed = false;
@@ -9,6 +8,7 @@ var identityView =  Backbone.View.extend({
         if (this.curUserId !== this.sessionUser.get("userId")) {
             throw "invalid user exception";
         }
+        this.$content = $(this.container);
         this.loadVerificationStatus();
     },
     loadVerificationStatus: function (callback) {
@@ -22,8 +22,14 @@ var identityView =  Backbone.View.extend({
         } else if (this.type === Constants.VerificationType.driver && !this.driverVerification)   {
             this.renderForm();
         } else {
-            this.form.close();
-            this.$content.empty().append(this.landingTemplate(this.verification._toJSON()));
+            if (this.formView) {
+                this.formView.close();
+            }
+            if (this.type === Constants.VerificationType.passenger) {
+                this.$content.empty().append(this.landingTemplate(this.passengerVerification._toJSON()));
+            } else {
+                this.$content.empty().append(this.landingTemplate(this.driverVerification._toJSON()));
+            }
             $("#re-verify").on("click", function() {
                 that.renderForm();
             });
@@ -34,7 +40,7 @@ var identityView =  Backbone.View.extend({
         this.$content.empty().append(this.landingTemplate(this.verification._toJSON()));
     },
     renderForm: function () {
-        this.form = new baseFormView({
+        this.formView = new baseFormView({
             "template":this.formTemplate,
             "fields": this.fields,
             "el": this.container,
@@ -44,7 +50,7 @@ var identityView =  Backbone.View.extend({
             "successCallback": this.successCallback,
             "submitButtonId": this.submitButtonId
         });
-        this.form.render();
+        this.formView.render();
         var that = this;
         $('#id_type_select').on('focus', function (e) {
             if (that.idDropDown){
@@ -73,18 +79,18 @@ var passengerIdentityVerificationView = identityView.extend({
     type: Constants.VerificationType.passenger,
     submitButtonId: "passenger_identity_submit",
     initialize: function (params) {
-        try {
+        // try {
             identityView.prototype.initialize.call(this, params);
             _.bindAll(this, 'render', 'close');
             this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
             this.landingTemplate = _.template(tpl.get('passengerIdentity_landing'));
             this.setValidator();
             this.render();
-        } catch (e) {
-            debugger;
-            app.navigate("front", true);
-            this.remove();
-        }
+        // } catch (e) {
+        //     debugger;
+        //     app.navigate("front", true);
+        //     this.remove();
+        // }
     }, 
     render: function () {
         identityView.prototype.render.call(this);

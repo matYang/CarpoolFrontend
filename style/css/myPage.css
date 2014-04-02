@@ -271,8 +271,9 @@
 .account dd .radio_box {
 	margin-top:8px;
 }
-.account dd.wrong {
-	margin-left:90px;
+.account dd.wrong, .account div.wrong {
+	float:left;
+	margin-left:10px;
 }
 .account dd.wrong p {
 	font-size:14px;

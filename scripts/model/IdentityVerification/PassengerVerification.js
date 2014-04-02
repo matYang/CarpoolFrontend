@@ -79,5 +79,7 @@ var PassengerVerification = Backbone.Model.extend({
         return json;
     },
 
-
+    _toJSON: function () {
+        return this.toJSON();
+    }
 });
