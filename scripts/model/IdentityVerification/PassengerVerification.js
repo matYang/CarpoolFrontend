@@ -80,6 +80,10 @@ var PassengerVerification = Backbone.Model.extend({
     },
 
     _toJSON: function () {
-        return this.toJSON();
+        var json = this.toJSON();
+        json.expireDate = Utilities.getDateString(this.get('expireDate'));
+        json.submissionDate = Utilities.getDateString(this.get('submissionDate'));
+        json.reviewDate = Utilities.getDateString(this.get('reviewDate'));
+        return json;
     }
 });

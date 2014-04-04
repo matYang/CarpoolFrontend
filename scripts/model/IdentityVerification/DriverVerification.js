@@ -85,6 +85,11 @@ var DriverVerification = Backbone.Model.extend({
         return json;
     },
     _toJSON: function () {
-        return this.toJSON();
+        var json = this.toJSON();
+        json.submissionDate = Utilities.getDateString(this.get('submissionDate'));
+        json.expireDate = Utilities.getDateString(this.get('expireDate'));
+        json.reviewDate = Utilities.getDateString(this.get('reviewDate'));
+        json.licenseIssueDate = Utilities.getDateString(this.get('licenseIssueDate'));
+        return json;
     }
 });
