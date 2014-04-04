@@ -9,7 +9,7 @@ var MainPageView = Backbone.View.extend({
         "time2": "all",
         "type": Constants.messageType.both,
         "priceMin": PRICE_MIN,
-        "priceMax": 0
+        "priceMax": PRICE_MAX
     },
 
     initialize: function (params) {
@@ -261,7 +261,7 @@ var MainPageView = Backbone.View.extend({
 
             // }
             if (this.filter.type === Constants.messageType.both || this.filter.type === m.get("type")) {
-                if (m.get("departure_priceList")[0] < filter.maxPrice) {
+                if (m.get("departure_priceList")[0] < this.filter.priceMax) {
                     filtered.add(m);
                 }
             }

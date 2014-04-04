@@ -25,7 +25,7 @@ var PassengerVerification = Backbone.Model.extend({
 
     idAttribute: "verificationId",
 
-    urlRoot: Constants.origin + "/api/v1.0/verifications/passenger",
+    urlRoot: Constants.origin + "/api/v1.0/users/passengerVerification/",
 
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl', 'isNew', 'parse', 'toJSON');

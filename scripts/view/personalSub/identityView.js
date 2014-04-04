@@ -5,9 +5,6 @@ var identityView =  Backbone.View.extend({
         this.isClosed = false;
         this.curUserId = params.curUserId;
         this.sessionUser = app.sessionManager.getSessionUser();
-        if (this.curUserId !== this.sessionUser.get("userId")) {
-            throw "invalid user exception";
-        }
         this.$content = $(this.container);
         this.loadVerificationStatus();
     },
@@ -26,7 +23,11 @@ var identityView =  Backbone.View.extend({
                 this.formView.close();
             }
             if (this.type === Constants.VerificationType.passenger) {
-                this.$content.empty().append(this.landingTemplate(this.passengerVerification._toJSON()));
+                if (this.passengerVerification.get("origin") === 0) {
+                    this.$content.empty().append(this.landingTemplate(this.passengerVerification._toJSON()));
+                } else {
+                    //TODO: inform user that he has passed the driver verification   
+                }
             } else {
                 this.$content.empty().append(this.landingTemplate(this.driverVerification._toJSON()));
             }
@@ -75,11 +76,11 @@ var identityView =  Backbone.View.extend({
 var passengerIdentityVerificationView = identityView.extend({
     container:"#utility_passengerIdentity",
     form:"passengerIdForm",
-    action: PassengerVerification.prototype.urlRoot,
     type: Constants.VerificationType.passenger,
     submitButtonId: "passenger_identity_submit",
     initialize: function (params) {
         // try {
+            this.action = PassengerVerification.prototype.urlRoot + app.sessionManager.getUserId();
             identityView.prototype.initialize.call(this, params);
             _.bindAll(this, 'render', 'close');
             this.formTemplate = _.template(tpl.get('passengerIdentity_form'));
@@ -153,11 +154,11 @@ var passengerIdentityVerificationView = identityView.extend({
 var driverIdentityVerificationView = identityView.extend({
     container:"#utility_driverIdentity",
     form: "driverIdForm",
-    action: DriverVerification.prototype.urlRoot,
     type: Constants.VerificationType.driver,
     submitButtonId: "driver_identity_submit",
     initialize: function (params) {
         try {
+            this.action = DriverVerification.prototype.urlRoot + app.sessionManager.getUserId();
             identityView.prototype.initialize.call(this, params);
             _.bindAll(this, 'render', 'close');
             this.formTemplate = _.template(tpl.get('driverIdentity_form'));

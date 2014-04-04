@@ -27,7 +27,7 @@ var DriverVerification = Backbone.Model.extend({
 
     idAttribute: "verificationId",
 
-    urlRoot: Constants.origin + "/api/v1.0/verifications/driver",
+    urlRoot: Constants.origin + "/api/v1.0/users/driverVerification/",
 
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl', 'isNew', 'parse','toJSON');
