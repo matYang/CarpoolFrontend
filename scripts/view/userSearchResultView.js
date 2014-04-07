@@ -4,15 +4,16 @@ var UserSearchResultView = MultiPageView.extend({
         _.bindAll(this, "render", "entryEvent", "bindEvents", "updateLocation", "close");
         app.viewRegistration.register("findUser", this, true);
         this.user = app.sessionManager.getSessionUser();
-        this.entryTemplate = _.template(tpl.get('personalSocialCard'));
+        this.entryTemplate = _.template(tpl.get('findUserPageEntry'));
         this.pageNumberClass = "searchResultPageNumber";
         this.pageNumberId = "searchResultPageNumber";
         this.pageNavigator = "pageNavigator";
+        this.pageNavigatorClass = "FindUserpage-searchResult-multiPage-pageNum clearfix";
         this.entryHeight = 117;
-        this.pageEntryNumber = 18;
+        this.pageEntryNumber = 10;
         this.minHeight = 648;
         this.entryHeight = 105;
-        this.entryClass = "social_card";
+        this.entryClass = "userSearchEntry";
         this.entryContainer = "searchResultDisplayPanel";
         this.$domContainer = $("#searchResultDisplayPanel");
         this.startIndex = 0;
@@ -28,7 +29,7 @@ var UserSearchResultView = MultiPageView.extend({
         }
     },
     render: function (userList) {
-        this.messages = userList;
+        this.allMessages = userList;
         $("#content").append(_.template(tpl.get("userSearch")));
         $("#searchResultDisplayPanel").css("width", 938);
         MultiPageView.prototype.render.call(this);
