@@ -2,7 +2,7 @@ var UserSearchResultView = MultiPageView.extend({
     searchCriteria:"byLocation",
     initialize: function (params) {
 
-        _.bindAll(this, "render", "entryEvent", "bindEvents", "updateLocation", "close");
+        _.bindAll(this, "render", "entryEvent", "bindEvents", "acceptDefaultLocation", "close");
         app.viewRegistration.register("findUser", this, true);
         this.user = app.sessionManager.getSessionUser();
         this.entryTemplate = _.template(tpl.get('findUserEntry'));
@@ -77,10 +77,17 @@ var UserSearchResultView = MultiPageView.extend({
                     "error": function(){}
                 });
             }
-        }).on("click", function (e) {
-            if (that.searchCriteria === "byLocation") {
-                that.locationPickerView = new LocationPickerView (that.sr.get("location"), that, "#userSearchInput");
+        }).on("focus", function (e) {
+            if (typeof that.locationDropDownView !== 'undefined' && that.locationDropDownView !== null){
+                that.locationDropDownView.close();
             }
+            if (that.searchCriteria === "byLocation") {
+                that.locationDropdown = new LocationDropDownView($("#userSearchInputContainer"),that);
+                $("#default-location-dropdown").css("margin-left","290px").css("margin-top","19px");
+                e.stopPropagation();
+            }
+        }).on("click", function (e) {
+            e.stopPropagation();
         });
         $("#searchButton").on("click", function () {
             if (that.searchCriteria === "byName") {
@@ -100,13 +107,8 @@ var UserSearchResultView = MultiPageView.extend({
     filter: function(){
 
     },
-    updateLocation: function () {
-        var custTemp;
-        $("#userSearchInput").val(this.searchRepresentation.get("location").get("city"));
-        custTemp = this.searchRepresentation.get("departureLocation").get("point");
-        if (custTemp !== "undetermined") {
-            $("#customizeLocationInput_from").val(custTemp);
-        }
+    acceptDefaultLocation: function(defaultLocation){
+        $("#userSearchInput").val(this.departLocation.toUiString());
     },
     close: function () {
         if (!this.isClosed) {
