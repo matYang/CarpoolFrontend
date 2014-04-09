@@ -158,15 +158,7 @@ var TopBarView = Backbone.View.extend({
             });
             this.$wrong = $("#credentialWrong");
             this.$usernameInput.on("click", function (e){
-                if  ($(this).val() === ("请输入邮箱") ) {
-                    $(this).val("");
-                }
                 self.$wrong.hide();
-            });
-            this.$usernameInput.on("blur", function (e){
-                if  ($(this).val() === ("") ) {
-                    $(this).val("请输入邮箱");
-                }
             });
             this.$passwordInput.on("focus", function (e){
                 self.$wrong.hide();

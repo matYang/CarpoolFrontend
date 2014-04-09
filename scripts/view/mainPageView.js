@@ -1,4 +1,4 @@
-var PRICE_MIN = 0, PRICE_MAX = 200;
+﻿var PRICE_MIN = 0, PRICE_MAX = 200;
 
 var MainPageView = Backbone.View.extend({
     el: '#content',

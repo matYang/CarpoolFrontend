@@ -31,6 +31,12 @@ var PersonalUtilityView = Backbone.View.extend({
                 case "avatar":
                     $('#changeDp').trigger("click");
                     break;
+                case "passengerVerification":
+                    $('#passengerVerification').trigger("click");
+                    break;
+                case "driverVerification":
+                    $('#driverVerification').trigger("click");
+                    break;
                 case "basic":
                 default:
                     $('#basicInfo').trigger("click");
@@ -53,6 +59,8 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.hide();
+            that.$passengerIdentityContent.hide();
+            that.$driverIdentityContent.hide();
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
@@ -63,6 +71,8 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.show();
             that.$dpContent.hide();
+            that.$passengerIdentityContent.hide();
+            that.$driverIdentityContent.hide();
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
@@ -73,6 +83,8 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.show();
             that.$passwordContent.hide();
             that.$dpContent.hide();
+            that.$passengerIdentityContent.hide();
+            that.$driverIdentityContent.hide();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
             app.navigate("personal/" + that.sessionUser.id + "/utility/trade");
@@ -82,11 +94,41 @@ var PersonalUtilityView = Backbone.View.extend({
             that.$settingContent.hide();
             that.$passwordContent.hide();
             that.$dpContent.show();
+            that.$passengerIdentityContent.hide();
+            that.$driverIdentityContent.hide();
             $('.wrong').remove();
             $('#myPage_edit_control>.active').removeClass("active");
             $(this).addClass("active");
             app.navigate("personal/" + that.sessionUser.id + "/utility/avatar");
         });
+        $('#passengerVerification').on("click", function (e) {
+            that.$personalContent.hide();
+            that.$settingContent.hide();
+            that.$passwordContent.hide();
+            that.$dpContent.hide();
+            that.$passengerIdentityContent.show();
+            that.$driverIdentityContent.hide();
+            $('.wrong').remove();
+            $('#myPage_edit_control>.active').removeClass("active");
+            $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/passengerVerification");
+            that.switchToIdentityView("passenger");
+
+        });
+        $('#driverVerification').on("click", function (e) {
+            that.$personalContent.hide();
+            that.$settingContent.hide();
+            that.$passwordContent.hide();
+            that.$dpContent.hide();
+            that.$driverIdentityContent.show();
+            that.$passengerIdentityContent.hide();
+            $('.wrong').remove();
+            $('#myPage_edit_control>.active').removeClass("active");
+            $(this).addClass("active");
+            app.navigate("personal/" + that.sessionUser.id + "/utility/driverVerification");
+            that.switchToIdentityView("driver");
+        });
+
         $('#upload_picture').on('click', function () {
             //TODO:
         });
@@ -343,6 +385,8 @@ var PersonalUtilityView = Backbone.View.extend({
         this.$passwordContent = $('#utility_password').hide();
         this.$settingContent = $('#utility_accountSetting').hide();
         this.$dpContent = $('#utility_dp').hide();
+        this.$passengerIdentityContent = $('#utility_passengerIdentity').hide();
+        this.$driverIdentityContent = $('#utility_driverIdentity').hide();
         this.$dpContent.find('img').attr("src", this.sessionUser.get("imgPath"));
 
         var notificationMethod;
@@ -499,13 +543,20 @@ var PersonalUtilityView = Backbone.View.extend({
             "success": this.noticeSuccess,
             "error": this.noticeError
         });
-
     },
     noticeSuccess: function () {
 
     },
     noticeError: function () {
 
+    },
+
+    switchToIdentityView: function (type) {
+        if (type === "passenger" && !this.passengerIdentityView) {
+            this.passengerIdentityView = new passengerIdentityVerificationView({"curUserId": this.curUserId});
+        } else if (type === "driver" && !this.driverIdentityView) {
+            this.driverIdentityView = new driverIdentityVerificationView({"curUserId": this.curUserId});
+        }
     },
     close: function () {
         if (!this.isClosed) {

@@ -57,6 +57,9 @@ var Constants = {
     /*-----------  About us/service -----------*/
     "serviceCenter_base", "serviceCenter_aboutUs", "serviceCenter_feedback", "serviceCenter_terms", "serviceCenter_terms_zh", "serviceCenter_terms_en", "serviceCenter_faq", "serviceCenter_career", 
 
+    /*-----------  IdentityVerification -----------*/
+    "passengerIdentity_form", "passengerIdentity_landing", "driverIdentity_form", "driverIdentity_landing",
+
     /*-----------  top level moduels  ----------*/
     "tadv", "front", "main", "userSearch"],
 

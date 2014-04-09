@@ -18,14 +18,16 @@ var DriverVerification = Backbone.Model.extend({
             "recommenderId": -1,
 
             "licenseIssueDate": new Date(),
-            "licenseImgLink": "default"
+            "licenseImgLink": "default",
+
+            "_associatedPVId": -1
 
         };
     },
 
     idAttribute: "verificationId",
 
-    urlRoot: Constants.origin + "/api/v1.0/verifications/driver",
+    urlRoot: Constants.origin + "/api/v1.0/users/driverVerification/",
 
     initialize: function (urlRootOverride) {
         _.bindAll(this, 'overrideUrl', 'isNew', 'parse','toJSON');
@@ -64,6 +66,8 @@ var DriverVerification = Backbone.Model.extend({
             data.realName = decodeURI(data.realName);
 
             data.licenseIssueDate = Utilities.castFromAPIFormat(data.licenseIssueDate);
+
+            data._associatedPVId = parseInt(data._associatedPVId, 10);
         }
 
         return data;
@@ -80,6 +84,7 @@ var DriverVerification = Backbone.Model.extend({
         json.licenseIssueDate = Utilities.castToAPIFormat(this.get('licenseIssueDate'));
         return json;
     },
-
-
+    _toJSON: function () {
+        return this.toJSON();
+    }
 });

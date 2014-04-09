@@ -39,7 +39,6 @@ var BaiduMapView = Backbone.View.extend({
             minZoom: 8,
             maxZoom: 13,
         };
-        debugger;
         if (!this.map) {
             this.map = new BMap.Map (this.div);  //this should never expire
             this.map.centerAndZoom(center, 12);

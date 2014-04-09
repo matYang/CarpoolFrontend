@@ -34,6 +34,12 @@ var User = Backbone.Model.extend({
             "averageScore": 0,
             "totalTranscations": 0,
 
+            "passengerVerificationId": -1,
+            "driverVerificationId": -1,
+            "passengerVerification": null,
+            "driverVerification": null,
+
+            /*
             "verifications": [],
             "googleToken": "",
             "facebookToken": "",
@@ -43,6 +49,7 @@ var User = Backbone.Model.extend({
             "id_docNum": "",
             "id_path": "",
             "id_vehicleImgPath": "",
+            */
 
             "accountId": "",
             "accountPass": "",
@@ -107,6 +114,20 @@ var User = Backbone.Model.extend({
             data.averageScore = parseInt(data.averageScore, 10);
             data.totalTranscations = parseInt(data.totalTranscations, 10);
 
+            data.passengerVerificationId = parseInt(data.passengerVerificationId, 10);
+            data.driverVerificationId = parseInt(data.driverVerificationId, 10);
+            if (typeof data.passengerVerification !== 'undefined' && !$.isEmptyObject(data.passengerVerification)){
+                data.passengerVerification = new PassengerVerification(data.passengerVerification, {
+                    'parse': true
+                });
+            }
+            if (typeof data.driverVerification !== 'undefined' && !$.isEmptyObject(data.driverVerification)){
+                data.driverVerification = new DriverVerification(data.driverVerification, {
+                    'parse': true
+                });
+            }
+
+
             data.name = decodeURI(data.name);
             //this is just used for presentation, no direct API call to update it
             data.accountValue = parseFloat(data.accountValue);
@@ -132,6 +153,12 @@ var User = Backbone.Model.extend({
         if (this.get('searchRepresentation') instanceof Backbone.Model) {
             json.searchRepresentation = this.get('searchRepresentation').toJSON();
         }
+        if (this.get('passengerVerification') instanceof Backbone.Model) {
+            json.passengerVerification = this.get('passengerVerification').toJSON();
+        }
+        if (this.get('driverVerification') instanceof Backbone.Model) {
+            json.driverVerification = this.get('driverVerification').toJSON();
+        }
         //these 2 are actually ignored by server side, placing here for uniformity
         json.lastLogin = Utilities.castToAPIFormat(this.get('lastLogin'));
         json.creationTime = Utilities.castToAPIFormat(this.get('creationTime'));
@@ -148,6 +175,12 @@ var User = Backbone.Model.extend({
         json.gender = this.get('gender');
         json.averageScore = this.get('averageScore');
         json.location = this.get('location').toUiString();
+        if (this.get('passengerVerification') instanceof Backbone.Model) {
+            json.passengerVerification = this.get('passengerVerification').toJSON();
+        }
+        if (this.get('driverVerification') instanceof Backbone.Model) {
+            json.driverVerification = this.get('driverVerification').toJSON();
+        }
         return json;
     }
 });

@@ -380,4 +380,9 @@
 		}
 	};
 
+
+	SessionManager.prototype.fetchUserVerificationStatus = function (callback) {
+
+	}
+
 }).call(this);
