@@ -41,7 +41,7 @@ var MultiPageView = Backbone.View.extend({
     pageNumberId: "",
     entryEvent: "",
     allMessages: [],
-    messages: [],
+    messages: null,
     entryHeight: -1,
     entryRowNum: 1,
     minHeight: 0,
@@ -52,10 +52,12 @@ var MultiPageView = Backbone.View.extend({
     $domContainer: null,
     initialize: function () {
         _.bindAll(this, "render", "toPage", "bindEntryEvent", "setPageNavigator", "close");
-        this.isClosed = false;
     },
 
     render: function () {
+        if (!this.messages instanceof Backbone.Collection) {
+            this.messages = this.allMessages;
+        }
         this.unregisterFilterEvent();
         this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
         this.$domContainer.empty();
@@ -103,7 +105,7 @@ var MultiPageView = Backbone.View.extend({
         this.$domContainer.on("click", "." + this.entryClass, function (e) {
             e.preventDefault();
             var id = Utilities.getId($(this).attr("id"));
-            self.entryEvent(id);
+            self.entryEvent(id, e);
         });
         this.entryBound = true;
     },
@@ -169,21 +171,37 @@ var MultiPageView = Backbone.View.extend({
     */
     registerFilterEvent: function ($selector, filter, inst, callback) {
         var that = this;
-        $selector.on("click", function (e) {
-            $selector.siblings().removeClass("active");
-            $selector.addClass("active");
-            if (that.allMessages) {
-                if (filter) {
-                    that.messages.reset(that.allMessages.filter(filter));
-                } else {
-                    that.messages.reset(that.allMessages.toArray());
+        if ($selector.prop("tagName") === "SELECT") {
+            $selector.on("change", function (e) {
+                if (that.allMessages) {
+                    if (filter) {
+                        that.messages.reset(that.allMessages.filter(filter));
+                    } else {
+                        that.messages.reset(that.allMessages.toArray());
+                    }
                 }
-            }
-            inst.render();
-            if (callback){
-                callback.call(inst);
-            }
-        });
+                inst.render();
+                if (callback){
+                    callback.call(inst);
+                }
+            });
+        } else {
+            $selector.on("click", function (e) {
+                $selector.siblings().removeClass("active");
+                $selector.addClass("active");
+                if (that.allMessages) {
+                    if (filter) {
+                        that.messages.reset(that.allMessages.filter(filter));
+                    } else {
+                        that.messages.reset(that.allMessages.toArray());
+                    }
+                }
+                inst.render();
+                if (callback){
+                    callback.call(inst);
+                }
+            });
+        }
         this._filters.push($selector);
     },
     unregisterFilterEvent: function() {

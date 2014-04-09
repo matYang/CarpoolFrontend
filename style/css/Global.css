@@ -465,3 +465,7 @@ body > .main {
 	max-height: 100%;
 	max-width: 100%;
 }
+
+.noMessage{
+	text-align: center;
+}

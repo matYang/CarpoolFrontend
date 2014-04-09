@@ -200,9 +200,9 @@ var TopBarView = Backbone.View.extend({
             this.$nfeedback = $('#navigate_feedBack').on('click', function () {
                 app.navigate("post", true);
             });
-            // this.$nusersearch = $("#navigate_usersearch").on('click', function () {
-            //     app.navigate("finduser", true);
-            // });
+            this.$nusersearch = $("#navigate_usersearch").on('click', function () {
+                app.navigate("finduser", true);
+            });
             //personal nav
             // this.$ndropdown.find('.dropdownTitleCheckAll').on('click', function () {
             //     app.navigate("personal/" + app.sessionManager.getUserId() + "/history", true);

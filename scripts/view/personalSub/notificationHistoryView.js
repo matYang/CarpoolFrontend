@@ -14,6 +14,8 @@ var NotificationHistoryView = MultiPageView.extend({
         this.entryClass = "notice_viewDetail";
         this.entryContainer = "personalNotificationContainer";
         this.domContainer = $("#personalNotificationContainer");
+        this.messages = new Notifications();
+        this.allMessages = new Notifications();
         app.sessionManager.fetchCurUserNotifications({
             "success": this.render,
             "error": this.fetchNotificationError 
@@ -24,8 +26,7 @@ var NotificationHistoryView = MultiPageView.extend({
     },
 
     render: function (messages) {
-        this.messages = new Notifications();
-        this.allMessages = new Notifications();
+
         //only Pass message as parameter when it is called as a callback of fetch
         if (messages && messages instanceof Array) {
             this.allMessages.add(messages);

@@ -26,6 +26,7 @@ var SearchResultView = MultiPageView.extend({
             this.$domContainer = $("#quickStart_resultPanel");
             this.minHeight = 300;
         }
+        this.isClosed = false;
         var that = this;
         this.render();
     },

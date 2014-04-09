@@ -9,7 +9,7 @@
 .topBar-navigation li { float:left; height:60px; line-height:60px; margin-right:52px; font-family:'幼圆', '微软雅黑', '黑体', '宋体'; font-size:18px; color:#fff; font-weight:bold; cursor:pointer; }
 .topBar-navigation li:hover { color:#b9eaff; }
 .topBar-navigation li.active { background:url(../images/nav_arrow.png) no-repeat center bottom; }
-.topBar-dropdown { float:left; margin-left:135px; }
+.topBar-dropdown { float:left; margin-left:65px; }
 /*右侧工具*/
 .topBar-dropdown dl { float:left; width:70px; position:relative; }
 .topBar-dropdown dl dt { display:block; height:60px; background:url(../images/nav_spites.png) no-repeat; text-indent: -32768px; cursor:pointer; }
