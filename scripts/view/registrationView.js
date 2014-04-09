@@ -143,6 +143,16 @@ var RegistrationView = Backbone.View.extend({
                 that.valid.password = false;
             }
         });
+        this.clicked = {};
+        this.$year.on("click", function (e) {
+            that.clicked.year = true;
+        });
+        this.$month.on("click", function (e) {
+            that.clicked.month = true;
+        });
+        this.$day.on("click", function (e) {
+            that.clicked.day = true;
+        });
         this.$year.add(this.$month).add(this.$day).on("blur", function (e) {
             var yi = that.$year.val(), mi = that.$month.val(), di = that.$day.val(), bdvalid = true;
             var y = Utilities.toInt(yi);
@@ -169,9 +179,11 @@ var RegistrationView = Backbone.View.extend({
                     }
                 }
                 if (!bdvalid) {
-                    $(this).parent().addClass("wrong").append("<p class='sign_up_err' id='vbirth' title='请填写正确的日期'><span>请填写正确的日期</span></p>");
-                    that.registerInfo.birthday = null;
-                    that.valid.birthday = false;
+                    if (this.clicked.year && this.clicked.month && this.clicked.day) {
+                        $(this).parent().addClass("wrong").append("<p class='sign_up_err' id='vbirth' title='请填写正确的日期'><span>请填写正确的日期</span></p>");
+                        that.registerInfo.birthday = null;
+                        that.valid.birthday = false;
+                    }
                 } else {
                     $(this).parent().append("<span id='vbirth' class='right'></span>");
                     that.registerInfo.birthday = new Date();
@@ -290,6 +302,7 @@ var RegistrationView = Backbone.View.extend({
         this.registerInfo.pivot = defaultLocation;
         this.registerInfo.pivot.copy(this.registerInfo.location);
         this.registerInfo.location.set("pointAddress", $("#myAddress").val());
+        $("#vlocation").remove();
         $('#pivotLocation').val(defaultLocation.toUiString());
     },
 

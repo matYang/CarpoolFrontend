@@ -237,10 +237,10 @@
 	margin-top:20px;
 }
 /*账号管理*/
-.account dl {
+.mypage_account dl {
 	margin:20px 0;
 }
-.account dt {
+.mypage_account dt {
 	float:left;
 	width:80px;
 	text-align:right;
@@ -248,14 +248,14 @@
 	line-height:34px;
 	margin-right:10px;
 }
-.account dt span {
+.mypage_account dt span {
 	color:#ff5500;
 	margin-right:3px;
 }
-.account dd {
+.mypage_account dd {
 	line-height:34px;
 }
-.account dd .text {
+.mypage_account dd .text {
 	float:left;
 	width:372px;
 	height:34px;
@@ -264,22 +264,22 @@
 	padding-left:10px;
 }
 
-.account dd .search_down {
+.mypage_account dd .search_down {
 	margin-left: 90px;
 	margin-top: -11px;
 }
-.account dd .radio_box {
+.mypage_account dd .radio_box {
 	margin-top:8px;
 }
-.account dd.wrong, .account div.wrong {
+.mypage_account dd.wrong, .mypage_account div.wrong {
 	float:left;
 	margin-left:10px;
 }
-.account dd.wrong p {
+.mypage_account dd.wrong p {
 	font-size:14px;
 	line-height:22px;
 }
-.account dd .right {
+.mypage_account dd .right {
 	float:left;
 	width:14px;
 	height:14px;
@@ -287,16 +287,16 @@
 	margin-top:7px;
 	margin-left:5px;
 }
-.account .btns {
+.mypage_account .btns {
 	padding-left:90px;
 	margin-top:50px;
 }
-.account .birthday .text {
+.mypage_account .birthday .text {
 	float:left;
 	width:88px;
 	margin-right:5px;
 }
-.account .birthday label {
+.mypage_account .birthday label {
 	float:left;
 	margin-right:12px;
 }
@@ -406,13 +406,13 @@
 	float: left;
 	margin-top: 130px;
 }
-.account h2 {
+.mypage_account h2 {
 	font-weight: normal;
 	font-size: 24px;
 	color: #ff5500;
 	padding-left: 10px;
 }
-.account h2 span {
+.mypage_account h2 span {
 	display: block;
 	color: #333;
 	font-size: 14px;
