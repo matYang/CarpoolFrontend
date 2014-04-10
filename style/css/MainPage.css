@@ -16,7 +16,7 @@
 .mainPage-searchBanner-searchBox .date-return-disabled input.text { background-position:0 -165px; cursor:default; }
 .mainPage-searchBanner-searchBox .search {float:left; margin-top: 16px; margin-left:10px;}
 .mainPage-searchBanner-searchBox .search input{width:115px; height:50px; background:url(../images/btns.png) no-repeat -367px -288px; cursor:pointer; border:none; font-size:18px; color:#fff;}
-.mainPage-searchBanner-searchBox .search_down{width:258px;}
+.mainPage-searchBanner-searchBox .search_down{width:300px;}
 
 .mainPage-middle { width:1000px; margin:25px auto 45px; }
 .mainPage-middle-right { float:right; width:275px; }

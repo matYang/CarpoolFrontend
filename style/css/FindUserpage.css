@@ -70,4 +70,7 @@ a.follow_two,a.follow_two:visited{padding-left: 20px;color: #2fba46;background: 
     font-family: 微软雅黑;
     padding-left: 10px;
 }
+
+#userSearchInputContainer ul {
+    min-width:300px;
 }
