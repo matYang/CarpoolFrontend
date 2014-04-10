@@ -37,9 +37,6 @@ var NotificationHistoryView = MultiPageView.extend({
         }
         //Render this.messages
         MultiPageView.prototype.render.call(this);
-        this.unregisterFilterEvent();
-        this.bindFilterEvents();
-
     },
     bindNotificationEvent: function (messageId) {
         var currentNotification = this.messages.get(messageId);

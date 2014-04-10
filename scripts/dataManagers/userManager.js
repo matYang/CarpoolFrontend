@@ -794,6 +794,7 @@
 	};
 
 	UserManager.prototype.searchUsers = function(userSearchRepresentation, callback) {
+		debugger;
 		if (testMockObj.testMode) {
 			callback.success(testMockObj.sampleUsers);
 			return;

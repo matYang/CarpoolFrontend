@@ -217,7 +217,6 @@ var baseField = Backbone.Model.extend({
             div = this.buildValidatorDiv(true);
             valid = true;
         }
-        debugger;
         this.removeValidatorDiv();
         (this.validatorContainer) ? this.validatorContainer.append(div) : $input.after(div);
         return true;

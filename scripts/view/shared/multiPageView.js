@@ -58,7 +58,6 @@ var MultiPageView = Backbone.View.extend({
         if (!this.messages instanceof Backbone.Collection) {
             this.messages = this.allMessages;
         }
-        this.unregisterFilterEvent();
         this.$domContainer = this.$domContainer || $("#"+this.entryContainer);
         this.$domContainer.empty();
         if (this.messages.length > 0) {
@@ -77,6 +76,7 @@ var MultiPageView = Backbone.View.extend({
             this.$domContainer.children("div").addClass(this.entryClass);
             if (this.entryEvent && !this.eventBound) {
                 this.bindEntryEvent();
+                this.eventBound = true;
             }
         } else {
             this.$domContainer.append("<div class = 'noMessage'>"+this.noMessage+"</div>");
@@ -93,7 +93,6 @@ var MultiPageView = Backbone.View.extend({
             this.afterRender();
         }
         this.messages.on("change", this.render);
-        this.eventBound = true;
     },
     toPage: function (page) {
         this.currentPage = page;

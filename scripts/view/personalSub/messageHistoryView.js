@@ -17,6 +17,7 @@ var MessageHistoryView = MultiPageView.extend({
         this.domContainer = $("#" + container);
         this.minHeight = 700;
         this.render();
+        this.bindEvents();
     },
     render: function(){
         MultiPageView.prototype.render.call(this);
@@ -24,7 +25,6 @@ var MessageHistoryView = MultiPageView.extend({
     },
     afterRender: function (start) {
         $(".message_simple").find(".personalInfo").remove();
-        this.bindEvents();
     },
     openDetailMessage: function (messageId) {
         app.navigate("message/" + messageId, true);

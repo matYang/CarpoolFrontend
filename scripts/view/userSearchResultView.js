@@ -2,7 +2,7 @@ var UserSearchResultView = MultiPageView.extend({
     searchCriteria:"byLocation",
     initialize: function (params) {
 
-        _.bindAll(this, "render", "entryEvent", "bindEvents", "acceptDefaultLocation", "close");
+        _.bindAll(this, "render", "entryEvent", "bindEvents", "acceptDefaultLocation", "filterByGender", "filterByFriend", "close");
         app.viewRegistration.register("findUser", this, true);
         this.user = app.sessionManager.getSessionUser();
         this.entryTemplate = _.template(tpl.get('findUserEntry'));
@@ -15,10 +15,10 @@ var UserSearchResultView = MultiPageView.extend({
         this.minHeight = 405;
         this.entryClass = "findUserResultEntry";
         this.entryContainer = "findUserPageResultPanel";
-        this.$domContainer = $("#findUserPageResultPanel");
         this.startIndex = 0;
         this.allMessages = new Users();
         this.messages = this.allMessages;
+        this.noMessage = "没有找到符合条件的用户";
         $("#content").append(_.template(tpl.get("userSearch")));
         if (params && params.userSearchRepresentation) {
             this.sr = params.userSearchRepresentation;
@@ -34,9 +34,15 @@ var UserSearchResultView = MultiPageView.extend({
         this.bindEvents();
     },
     render: function (userList) {
-        this.allMessages = userList;
-        this.messages = this.allMessages;
+        if (userList) {
+            this.allMessages = userList || new Users();
+            this.messages = this.allMessages.clone();
+            $("#filter_gender").val("all");
+            $("#filter_friend").val("all");
+        } else {
+        }
         MultiPageView.prototype.render.call(this);
+        $("#result-num").html(this.messages.length);
     },
     entryEvent: function (userId, e) {
         var $target = $(e.target);
@@ -52,7 +58,7 @@ var UserSearchResultView = MultiPageView.extend({
             app.userMaanger.watchUser(userId, function (e) {
                 $target.removeClass("remove_follow").addClass("addClass").html("关注TA");
             });
-        } else {
+        } else if ($target.hasClass("linkToUserPage")){
             app.navigate("personal/" + userId, true);
         }
     },
@@ -71,15 +77,15 @@ var UserSearchResultView = MultiPageView.extend({
                     that.sr.set("name", $("#userSearchInput").val());
                     that.sr.set("location", null);
                 } 
-                app.navigate("finduser/" + that.sr.toString());
+                // app.navigate("finduser/" + that.sr.toString());
                 app.userManager.searchUsers(that.sr, {
                     "success": that.render,
                     "error": function(){}
                 });
             }
         }).on("focus", function (e) {
-            if (typeof that.locationDropDownView !== 'undefined' && that.locationDropDownView !== null){
-                that.locationDropDownView.close();
+            if (typeof that.locationDropdown !== 'undefined' && that.locationDropdown !== null){
+                that.locationDropdown.close();
             }
             if (that.searchCriteria === "byLocation") {
                 that.locationDropdown = new LocationDropDownView($("#userSearchInputContainer"),that);
@@ -89,6 +95,9 @@ var UserSearchResultView = MultiPageView.extend({
         }).on("click", function (e) {
             e.stopPropagation();
         });
+
+        this.registerFilterEvent($("#filter_gender"), this.filterByGender, this);
+        this.registerFilterEvent($("#filter_friend"), this.filterByFriend, this);
         $("#searchButton").on("click", function () {
             if (that.searchCriteria === "byName") {
                 that.sr.set("name", $("#userSearchInput").val());
@@ -97,18 +106,49 @@ var UserSearchResultView = MultiPageView.extend({
                 that.sr.set("location", $("#userSearchInput").val());
                 that.sr.set("name", null);
             }
-            app.navigate("finduser/" + that.sr.toString());
+            // app.navigate("finduser/" + that.sr.toString());
             app.userManager.searchUsers(that.sr, {
                 "success": that.render,
                 "error": function(){}
             });
         });
     },
-    filter: function(){
-
+    filterByGender: function(m){
+        var val = $("#filter_gender").val();
+        if (val === "male") {
+            return m.get("gender") === Constants.gender.male;
+        } else if (val === "female") {
+            return m.get("gender") === Constants.gender.female;
+        } else {
+            return true;
+        }
+    },
+    filterByFriend: function(m){
+        var val = $("#filter_friend").val(), friendlist = this.user.get("watchList"), ret = false, i = 0;
+        if (friendlist instanceof Users) {
+            friendlist = friendlist.toArray();
+        }
+        if (val === "friend") {
+            for (i=0;i<friendlist.length;i++) {
+                if (friendlist[i].id === m.id) {
+                    return true;
+                }
+            }
+            return false;
+        } else if (val === "non-friend") {
+            for (i=0;i<friendlist.length;i++) {
+                if (friendlist[i].id === m.id) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return true;
+        }
     },
     acceptDefaultLocation: function(defaultLocation){
-        $("#userSearchInput").val(this.departLocation.toUiString());
+        $("#userSearchInput").val(defaultLocation.toUiString());
+        this.sr.set("location", defaultLocation);
     },
     close: function () {
         if (!this.isClosed) {

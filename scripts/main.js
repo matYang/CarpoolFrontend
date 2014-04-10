@@ -24,7 +24,7 @@ var AppRouter = Backbone.Router.extend({
         "post/*postState": "postMessageWithState",
 
         "finduser": "finduser",
-        "finduser/*encodedSearchkey": "finduser",
+        //"finduser/*encodedSearchkey": "finduser",
 
         "register": "register",
         "register/*registerState": "register",
@@ -207,14 +207,14 @@ var AppRouter = Backbone.Router.extend({
 
     finduser: function (encodedSearchkey) {
         var sr = new UserSearchRepresentation ();
-        if (encodedSearchkey) {
-            sr.castFromString(encodedSearchkey);
-            this.userSearchResultView = new UserSearchResultView ({
-                "encodedSearchKey": sr
-            });
-        } else {
+        // if (encodedSearchkey) {
+        //     sr.castFromString(encodedSearchkey);
+        //     this.userSearchResultView = new UserSearchResultView ({
+        //         "encodedSearchKey": sr
+        //     });
+        // } else {
             this.userSearchResultView = new UserSearchResultView ();
-        }
+        // }
     },
 
     register: function (registrationState) {

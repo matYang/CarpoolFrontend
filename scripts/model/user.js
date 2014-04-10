@@ -141,6 +141,7 @@ var User = Backbone.Model.extend({
         }
         json.name = decodeURI(json.name);
         json.age = this.getAge();
+        json.genderText = json.gender === Constants.gender.male ? "男" : "女";
         return json;
     },
     toJSON: function () {

@@ -13,7 +13,7 @@ var UserSearchRepresentation = Backbone.Model.extend({
     },
 
     toString: function () {
-        return encodeURI(this.get("name")) + Config.urlSeperator + this.get('gender') + Config.urlSeperator + this.get('location').toString();
+        return encodeURI(this.get("name")) + Config.urlSeperator + this.get('gender') + Config.urlSeperator + this.get('location').get("defaultId");
     },
 
     castFromString: function (str) {
@@ -21,7 +21,7 @@ var UserSearchRepresentation = Backbone.Model.extend({
 
         this.set('name', decodeURI(strArray[0]));
         this.set('gender', parseInt(strArray[1], 10));
-        var loc = new UserLocation ();
+        
         loc.castFromString(strArray[2]);
         this.set('location', loc);
 
