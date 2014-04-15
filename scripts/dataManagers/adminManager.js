@@ -5,6 +5,7 @@
 	this.AdminManager = function(sessionManager, userManager){
 
 		this.apis = new ApiResource();
+		this.adminApis = new AdminApiResource();
 
 		this.sessionManager = sessionManager;
 		this.user_pendingVerify = new Users();
@@ -57,6 +58,7 @@
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
 			app.navigate("/login", true);
 		}
+		this.user_pendingVerify.overrideUrl(this.);
 		this.user_pendingVerify.fetch({
 			data: $.param({ 'userId': this.sessionManager.getUserId(),
 							'type': type
@@ -76,7 +78,26 @@
 		});
 	};
 
-	AdminManager.prototype.verifyRequest = function (verification, callback) {
+	/*
+
+	*/
+	AdminManager.prototype.processRequest = function (request, callback) {
+		var url = this.adminApis.admin_verification;
+		rerqust.overrideUrl(url);
+		request.set("reviewerId", this.sessionManager.getUserId());
+		request.save({
+			dataType:'json',
+			success: function (model, response) {
+				if (callback) {
+					callback.success(response);
+				}
+			},
+			error: function (model, response) {
+				if (callback) {
+					callback.error(response);
+				}
+			}
+		});
 
 	};
 
