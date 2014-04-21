@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+.login { background:#5a9bae url(../images/login_bg.jpg) repeat-x;height: 100%;width:100%;}
+.login_box{ position:relative; width:522px; height:442px;  margin:170px auto 0; background:url(../images/login_box.png) no-repeat;}
+.login_box input.text{width:354px; height:30px; line-height:30px\9; padding-left:10px; border:none; font-size:14px; }
+.login_box .user_name{ position:absolute; left:74px; top:90px;}
+.login_box .password{ position:absolute; left:74px; top:152px;}
+.login_box .btn{ position:absolute; left:74px; top:212px;}
+.login_box .btn_login{width:125px; height:40px; background:url(../images/btn_login.png) no-repeat; font-size:14px; color:#fff; border:none;}
+
+
+
+
+
+
