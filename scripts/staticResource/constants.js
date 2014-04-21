@@ -244,6 +244,6 @@ var Constants = {
     getDefaultUserLocation: function () {
         return new UserLocation();
     },
-
+    baiduAK: "vtNHLHRxF7FA2SmKcRBeqf3X"
 
 };
