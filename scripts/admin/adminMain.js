@@ -14,18 +14,11 @@ var AppRouter = Backbone.Router.extend({
         this.viewRegistration = new ViewRegistrationService ();
         //initializing the storage services, some resuable user information will be persisted by local storage
         this.storage = new StorageService ();
-
-        this.locationService = new LocationService();
         this.eventClearService = new EventClearService();
 
         //initializing all the data managers
         this.sessionManager = new SessionManager ();
         this.userManager = new UserManager (this.sessionManager);
-        // this.messageManager = new MessageManager (this.sessionManager, this.userManager);
-        // this.transactionManager = new TransactionManager (this.sessionManager, this.userManager);
-        // this.notificationManager = new NotificationManager (this.sessionManager, this.userManager);
-        // this.generalManager = new GeneralManager (this.sessionManager, this.userManager);
-        // this.letterManager = new LetterManager (this.sessionManager);
         this.adminManager = new AdminManager ();
 
         //determine if the user has logged in or not
@@ -56,7 +49,7 @@ var AppRouter = Backbone.Router.extend({
 });
 
 //warning: tpl is the global object for templating services, do not name any variable "tpl" in any context in any files
-tpl.loadTemplates(Constants.templateResources, 'skcripts/admin/adminTemplate.js', function () {
+tpl.loadTemplates(AdminConstants.templateResources, 'scripts/admin/adminTemplate.js', function () {
     app = new AppRouter ();
     app.sideBarView = new sideBarView();
     Backbone.history.start();

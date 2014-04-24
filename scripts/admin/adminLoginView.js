@@ -1,13 +1,22 @@
 var adminLoginView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render", "bindEvents", "login", "close");
-
+        this.messageTemplate = _.template(tpl.get('adminLogin'));
     },
     render: function () {
+        $("body").attr("class","login").append();
 
     },
     bindEvents: function (){
-
+        var that = this;
+        $('#login_button').on("click", function() {
+            that.login();
+        });
+        $('#login_password,#login_username').on("keyup", function (e) {
+            if (e.which === 13) {
+                that.login();
+            }
+        });
     },
     login: function () {
         var username = this.$usernameInput.val(), password = this.$passwordInput.val(), self = this;
@@ -32,17 +41,17 @@ var adminLoginView = Backbone.View.extend({
                     });
                 },
                 error: function (response) {
-                    self.$wrong.show().html(response.responseText || "服务器好像睡着了，请稍后再试");
                     $('#login_button').val("登 录").prop("disabled", false);
                     self.$passwordInput.val("");
                 }
             });
+        } else if (username) {
+            $('#login_password').focus();
         } else {
-            //请输入密码
-            self.$wrong.show().html("输入有误，请重新输入");
+            
         }
     },
     close: function () {
-
+        $("body").removeClass("login");
     }
 });

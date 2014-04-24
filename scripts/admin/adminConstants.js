@@ -1,6 +1,6 @@
-var adminConstants = {
+var AdminConstants = {
     templateResource: [
-
+    	"adminLogin"
     ],
     verifcationResult: {
         "rejected": 0,
