@@ -19,7 +19,7 @@ var AppRouter = Backbone.Router.extend({
         //initializing all the data managers
         this.sessionManager = new SessionManager ();
         this.userManager = new UserManager (this.sessionManager);
-        this.adminManager = new AdminManager ();
+        this.adminManager = new AdminManager (this.sessionManager);
 
         //determine if the user has logged in or not
         this.sessionManager.fetchSession(false, {
@@ -30,20 +30,15 @@ var AppRouter = Backbone.Router.extend({
                 Info.log("session fetch failed, user not logged in");
             }
         });
-
-        //intializing search query states & filter states, look into localStorage to find previous history
-        this.searchQueryState = this.storage.getSearchQueryState();
-        this.searchFilterState = this.storage.getSearchFilterState();
-
         this.userLocation = new UserLocation ();
         this.curDate = new Date ();
         this.searchResult = new Messages ();
-        this.bindGlobalLinks();
     },
     defaultRoute: function () {
-
+        this.navigate("login", true);
     },
     login: function () {
+        this.loginView = new adminLoginView();
 
     }
 });
@@ -51,7 +46,7 @@ var AppRouter = Backbone.Router.extend({
 //warning: tpl is the global object for templating services, do not name any variable "tpl" in any context in any files
 tpl.loadTemplates(AdminConstants.templateResources, 'scripts/admin/adminTemplate.js', function () {
     app = new AppRouter ();
-    app.sideBarView = new sideBarView();
+    // app.sideBarView = new sideBarView();
     Backbone.history.start();
 });
 

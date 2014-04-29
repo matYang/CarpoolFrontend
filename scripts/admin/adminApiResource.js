@@ -29,7 +29,7 @@
                 'admin': {
                     verify: '/verififcation/verify',
                     stateChange: "/stateChange",
-                    statAnalysis: "/stat"
+                    statAnalysis: "/stat",
                     routine: "/routine"
                 }
             }

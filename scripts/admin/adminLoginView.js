@@ -1,11 +1,17 @@
 var adminLoginView = Backbone.View.extend({
+    el:"#content",
     initialize: function () {
+        this.isClosed = false;
         _.bindAll(this, "render", "bindEvents", "login", "close");
-        this.messageTemplate = _.template(tpl.get('adminLogin'));
+        this.loginTemplate = _.template(tpl.get('adminLogin'));
+        this.render();
+        this.bindEvents();
     },
     render: function () {
-        $("body").attr("class","login").append();
-
+        $("body").attr("class","login");
+        this.$el.attr("class", "login_box").append(this.loginTemplate);
+        this.$usernameInput = $("#login_username");
+        this.$passwordInput = $("#login_password");
     },
     bindEvents: function (){
         var that = this;
@@ -52,6 +58,10 @@ var adminLoginView = Backbone.View.extend({
         }
     },
     close: function () {
-        $("body").removeClass("login");
+        if (!this.isClosed){
+            $("body").removeClass("login");
+            this.$el.attr("class", "").empty();
+            this.isClosed = false;
+        }
     }
 });

@@ -2,7 +2,7 @@
 	'use strict';
 
 
-	this.AdminManager = function(sessionManager, userManager){
+	this.AdminManager = function(sessionManager){
 
 		this.apis = new ApiResource();
 		this.adminApis = new AdminApiResource();
@@ -12,6 +12,7 @@
 		this.timeStamp = new Date();
 
         this.sessionManager.resgisterManager(this);
+        this.sessionUser = this.sessionManager.getSessionUser();
 
 	};
 
@@ -21,7 +22,7 @@
 			Constants.dWarn("SessionManager::lougout:: invalid parameter");
 			return;
 		}
-		if (this.hasSession()){
+		if (this.sessionManager.hasSession()){
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
 			app.navigate("", true);
 		}
@@ -58,7 +59,7 @@
 			Constants.dWarn("SessionManager::login::already logged in, conflict, still sending the login request");
 			app.navigate("/login", true);
 		}
-		this.user_pendingVerify.overrideUrl(this.);
+		// this.user_pendingVerify.overrideUrl(this.);
 		this.user_pendingVerify.fetch({
 			data: $.param({ 'userId': this.sessionManager.getUserId(),
 							'type': type

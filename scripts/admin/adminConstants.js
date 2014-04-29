@@ -1,5 +1,5 @@
 var AdminConstants = {
-    templateResource: [
+    templateResources: [
     	"adminLogin"
     ],
     verifcationResult: {
