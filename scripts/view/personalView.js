@@ -64,8 +64,7 @@ var PersonalView = Backbone.View.extend({
     render: function () {
     },
     renderError: function () {
-        debugger;
-        if (this.curUserId.id !== that.sessionUser.id) {
+        if (this.curUserId.id !== this.sessionUser.id) {
             $("#profilePage_utilityTab").hide();
         }
         Info.displayErrorPage("content", "个人页面加载失败，请稍后再试");
